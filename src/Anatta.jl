@@ -4,8 +4,8 @@
 
 Anatta Evolving Computation Project
 
-This is the central switchboard for the Anatta project, which will build
-gradually into a full-scale course in using Julia to implement evolutionary
+This is the central switchboard for the Anatta project, which will gradually build up into
+ into a full-scale course in using Julia to implement evolutionary
 and rheolectic solutions to understanding the world.
 
 Author: Niall Palfreyman, 7/12/2021
@@ -53,9 +53,8 @@ Hi Niall! Wait just half a second ...
 function letsgo( learner::String = "")
 	global session					# We're setting up the global session
 
-	# Create path to Anatta labs and learner registry:
+	# Create path to Anatta labs registry:
 	session.lab_path = normpath(joinpath(dirname(@__FILE__),"..","Labs"))
-	lnrpath = normpath(joinpath(dirname(@__FILE__),"..","Learners"))
 
 	if isempty(learner)
 		# Learner's name hasn't been provided - request it:
@@ -78,8 +77,8 @@ function letsgo( learner::String = "")
 		println()
 	end
 
-	# Establish lnr_file:
-	session.lnr_file = joinpath( lnrpath, learner*".lnr")
+	# Establish session learner file:
+	session.lnr_file = learner*".lnr"
 	if !(isfile(session.lnr_file))
 		# Register info for new learner:
 		stream = open(session.lnr_file,"w")
