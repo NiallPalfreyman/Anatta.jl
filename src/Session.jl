@@ -1,5 +1,5 @@
 #========================================================================================#
-#	Ingolstadt
+#	Anatta
 #
 # This include file defines the structure of Activities and Sessions.
 #
@@ -14,7 +14,7 @@
 
 A single activity to be performed and responded to by the learner.
 
-An Activity is the basic unit of learning in Ingolstadt. It contains ... 
+An Activity is the basic unit of learning in Anatta. It contains ... 
 
 # Fields
 * `affordance`	: Text affording an activity to the learner.

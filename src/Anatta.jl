@@ -2,18 +2,17 @@
 """
 	Anatta
 
-Anatta Evolving Computation Project
+Anatta: Understanding Nature in terms of processes instead of things.
 
-This is the central switchboard for the Anatta project, which will gradually build up into
- into a full-scale course in using Julia to implement evolutionary
-and rheolectic solutions to understanding the world.
+This is the central switchboard for the Anatta project, which will gradually build up into a
+full course in using Julia to understand the world in terms of non-self (anatta).
 
-Author: Niall Palfreyman, 7/12/2021
+Author: Niall Palfreyman, 01/01/2023
 """
 module Anatta
 
 # Externally callable methods of Anatta
-export gimme, lab, act, reply, hint, menu, nextlab, nextact
+export letsgo, gimme, lab, act, reply, hint, ani, nextlab, nextact
 
 using Pluto								# We want to be able to use Pluto notebooks
 
@@ -29,53 +28,40 @@ session = Session()						# Create the single Anatta session
 
 #-----------------------------------------------------------------------------------------
 """
-	letsgo!(learner = "")
+	letsgo()
 
-Initiate an Anatta session for the given learner.
+Initiate an Anatta session.
 
 Establish the name of the learner, then look up whether we possess persistent registry
 information on that learner. If not, create a new registry entry for the learner. In either
 case, decide which laboratory and current Activity this learner requires, and initialise
 the session accordingly.
 
-# Arguments
-* `learner`: The name of the individual logging into session to continue learning.
-
 # Notes
 * This module is a work in progress 😃 ...
 
 # Examples
 ```julia
-julia> letsgo("Niall")
-Hi Niall! Wait just half a second ...
+julia> letsgo()
+Welcome to the pedagogical playground of Anatta!! ...
 ```
 """
-function letsgo( learner::String = "")
+function letsgo()
 	global session					# We're setting up the global session
 
 	# Create path to Anatta labs registry:
 	session.lab_path = normpath(joinpath(dirname(@__FILE__),"..","Labs"))
 
-	if isempty(learner)
-		# Learner's name hasn't been provided - request it:
-		println( "\nWelcome to the pedagogical playground of Anatta!! :)")
-		print( "My name's Ingo! What's yours?  ")
-		learner = readline()
-	end
+	println()
+	println( "Welcome to the pedagogical playground of Anatta!! :)")
+	println()
+	println( "Anatta is the idea that Nature is based not on things, but on processes. In this")
+	println( "course, we use the programming language julia to investigate how this change of")
+	println( "focus completely alters the way we think about our experience of Nature.")
+	println()
+	print( "My name is Ani! What's yours?  ")
+	learner = readline()
 	println( "\nHi ", learner, "! Just setting things up for you ...\n")
-
-	if !isdefined(Main,:ingo)
-		# ingo() is not yet defined - suggest setting it up:
-		ingo_root_path = replace( normpath(joinpath(dirname(@__FILE__),"..")), "\\"=>"\\\\")
-		println( "You may find it convenient to insert the following method definition into the")
-		println( "startup.jl file in your ~\\.julia\\config folder:\n")
-		println( "    function ingo()")
-		println( "        cd(\"$ingo_root_path\")")
-		println( "        include(\"src\\\\Anatta.jl\")")
-		println( "    end\n")
-		println( "The function call \"ingo()\" will always bring you to this folder and start me up! :)")
-		println()
-	end
 
 	# Establish session learner file:
 	session.lnr_file = learner*".lnr"
@@ -100,12 +86,17 @@ end
 
 #-----------------------------------------------------------------------------------------
 """
-menu()
+ani()
 
-Display a menu of Anatta commands.
+Display a friendly menu of Anatta commands.
 """
-function menu()
-	println( "List of Anatta commands:")
+function ani()
+	greeting = [
+		"Hi, here I am!", "Interesting stuff this, isn't it?", "G'day cobber!",
+		"You're doing a grand job!", "Has anyone ever told you, you have lovely eyes!"
+	]
+
+	println( rand(greeting)*" :) Here's a list of Anatta commands:")
 	println( "   hint()               : Display a hint for the current activity")
 	println( "   gimme()              : Give me the current activity")
 	println( "   act()                : Display the current activity number")
