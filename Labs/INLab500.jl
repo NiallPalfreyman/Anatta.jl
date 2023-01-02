@@ -1,7 +1,7 @@
 #========================================================================================#
 #	Laboratory 500
 #
-# Welcome to course 500: An Introduction to Agent-Based Systems!
+# Welcome to course 500: An Introduction to Enactive Simulation!
 #
 # Authors:  Emilio Borelli, Nick Diercksen, Stefan Hausner, Dominik Pfister (July 2022)
 #========================================================================================#
@@ -15,38 +15,26 @@
 [
 	Activity(
 		"""
-		"Agent-based modelling (ABM) is a technique for understanding how the behaviour
-		of a complex biological system arises from the traits and behaviours of the
-		component agents that make up that system."
-
-		...
-
-		# TODO: proper introduction to this topic
-		""",
-		"???",
-		x -> true
-	),
-	Activity(
-		"""
-		To use Agent Based Models in Julia, there is already a package available called
-			
+		Hi! Welcome to course component 5 on Enactive Simulation (ES)! :)
+        ES makes use of two important tools: System Dynamics (SD) and Agent-Based Modelling (ABM).
+        Both SD and ABM are based on the idea that the behaviour of biological systems is caused
+        not by complex planning routines, but by the structure of interactions between many
+        ABM dives deep into the ways in which behaviour in complex biological system arises not
+        from planning, but rather out of interactions between many component processes. In ABM,
+        we call these components Agents. We shall make use of the Julia package for ABM:
 			Agents.jl
 
-		on which this course relies on.
-		We will be covering some of the basics to use this package, but if you find
-		yourself interested, I recommend checking out the official tuorial:
-			https://juliadynamics.github.io/Agents.jl/stable/tutorial/
+		will discover how to use the Agents package, but to start off with, it would be good for
+        you to acquaint yourself with the package using either the written or video introduction:
+			Text:  juliadynamics.github.io/Agents.jl/stable/tutorial/
+            Video: youtu.be/fgwAfAa4kt0
 
-		This package should already be installed in your (Ingolstadt) environment, but
-		if not, you can add it via the package manager.
-		As always, start by loading this package into your environment:
-
-			using Agents
-
-		When done, go to the next activity ...
+		I have already installed the Agents package in Anatta; it only remains for you to load
+        the package into your environment. Do this now, then give me a symbol representing the
+		julia command you used to load it:
 		""",
-		"package not installed? Open the package manager with `]`, then type `add Agents`",
-		x -> true
+		"Recall that you can form a symbol by prefixing it with a colon (:)",
+		x -> x == :using
 	),
 	Activity(
 		"""
