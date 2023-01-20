@@ -1,297 +1,210 @@
 #========================================================================================#
 #	Laboratory 500
 #
-# Welcome to course 500: An Introduction to Enactive Simulation!
+# Welcome to course 500: An Introduction to Dynamical Systems Modelling!
 #
 # Authors:  Emilio Borelli, Nick Diercksen, Stefan Hausner, Dominik Pfister (July 2022)
 #========================================================================================#
-
-# TODO: upgrade all Chapters to Agents@5.4 https://github.com/JuliaDynamics/Agents.jl/releases/tag/v5.4.0
-# * `spacing` is now a keyword in e.g. ContiousSpace / Gridspace
 # * `move_agent` now needs to specify `dt` for an agent to move correspondong to its vel
 # * nearby_ids has no longer a kw `exact`
-# (upgrade is not done yet, to not interfere with agent exploration (research) group)
-
 [
 	Activity(
 		"""
-		Hi! Welcome to course component 5 on Enactive Simulation (ES)! :)
-        ES makes use of two important tools: System Dynamics (SD) and Agent-Based Modelling (ABM).
-        Both SD and ABM are based on the idea that the behaviour of biological systems is caused
-        not by complex planning routines, but by the structure of interactions between many
-        ABM dives deep into the ways in which behaviour in complex biological system arises not
-        from planning, but rather out of interactions between many component processes. In ABM,
-        we call these components Agents. We shall make use of the Julia package for ABM:
-			Agents.jl
+		Hi! Welcome to course component 5 on Dynamical Systems Modelling (DSM)! :)
 
-		will discover how to use the Agents package, but to start off with, it would be good for
-        you to acquaint yourself with the package using either the written or video introduction:
-			Text:  juliadynamics.github.io/Agents.jl/stable/tutorial/
-            Video: youtu.be/fgwAfAa4kt0
+		DSM develops the idea that behaviour in biological systems arises not from complex
+		planning algorithms, but from random interactions between many independent components. The
+		massive advantage of this dynamical architecture is that it DEGRADES GRACEFULLY. That is,
+		if conditions are not ideal, dynamical systems will typically not crash, but will instead
+		perform les well, but still correctly.
 
-		I have already installed the Agents package in Anatta; it only remains for you to load
-        the package into your environment. Do this now, then give me a symbol representing the
-		julia command you used to load it:
+		DSM uses two important tools: Agent-Based Modelling (ABM) and System Dynamics (SD).
+		In ABM, we call the components AGENTS; in SD we call them STOCKS. For our experimental
+		work, we will use the two julia packages Agents and DynamicalSystems; to display this work,
+		we will use the packages GLMakie and InteractiveDynamics.
+
+		You can find video and text introductions to the Agents package here:
+			Video: youtu.be/fgwAfAa4kt0
+			Text:  juliadynamics.github.io/Agents.jl/stable/tutorial
+
+		I have already installed the packages Agents, GLMakie and InteractiveDynamics, but you will
+		need to load them yourself. What keyword do you use to do this?
 		""",
-		"Recall that you can form a symbol by prefixing it with a colon (:)",
-		x -> x == :using
+		"Please make sure you have loaded these 3 packages - you will need them!",
+		x -> x == "using"
 	),
 	Activity(
 		"""
-		Agents are nothing else than modifiable objects, that we will program to interact with
-		each other or the environment/world/model they exist in.
+		Object-oriented software development considers processes to 'belong' to software agents -
+		after all, it is YOU who performs the processes of breathing and speaking, isn't it?
+		However, a major emphasis of the julia language is that PROCESSES are the primary actors
+		of a system, whereas agents are only the localised nodes that store (or STOCK) the
+		properties created and manipulated by these processes.
+		
+		In other words, an Agent is a mutable struct - a collection of local properties that can
+		influence, or CONDITION, the processes, which in turn are able to change those same
+		properties at that agent's location.
 
-		In Julia, we can implement them with `mutable struct`s (as introduced in Lab 02).
-		They need to be subtypes of `AbstractAgent`.
-
-		Now create such a subtype with some suitable attributes (fields) together with an `id`!
-		The `id` will be necessary to uniquely identify our agent instances later on.
+		OK, so let's try making use of all this information. First, derive a new concrete type
+		`Beetle` from the abstract type AbstractAgent. Your Beetles should be mutable and
+		contain two fields: first an integer field `id` to uniquely identify the Beetle, and
+		second a float field `speed` ...
 		""",
-		"""
-		\t Remember with <: you can create a subtype of an abstract type.
-		\t The type of `id` needs to be an integer
-		""",
-		x -> x <: Main.AbstractAgent && fieldtype(x, :id) <: Signed
+		"You will need to load the Agents package and recall how to use the `<:` operator.",
+		x -> Main.Beetle <: Main.AbstractAgent && fieldnames(Main.Beetle) == (:id,:speed)
 	),
 	Activity(
 		"""
-		Agents will live in a model defined by a specific space. Agents offers multiple
-		spaces tailored to specific applications and agent types. For simplicity we will
-		only be using `ContiuousSpace` in two dimensions
-		(for more details have a look at the Agents.jl documentation).
-
-		A space defines the size of the model. In two dimensions it has a width and a
-		height, which are usually the same. Together we will call them `extent`:
-
-			worldsize = height = weight = 40
-			extent = (worldsize, worldsize)
-
-		Now create a space with dimensions 80x80
+		Now create a vector `beetles` of six Beetles with id's from 0:5 and random speeds between
+		0 and 1. Use comprehension to do this, then give me the expression beetles[3].speed
 		""",
-		"""
-		\tMake sure to forward the extent as one parameter (Tuple): ContinuousSpace(extent)
-		\tDid you choose the right size?
-		""",
-		x -> x isa Main.ContinuousSpace && x.extent == (80.0, 80.0)
+		"agents = [Beetle(i,rand()) for i in 0:5]",
+		x -> (0.0<x<1.0)
 	),
 	Activity(
 		"""
-		So far we learned about Agents and Spaces, now we want to create a model with both.
-		We can do that with the function `AgentBasedModel` or in short `ABM`.
+		Execute the following code:
+			beetles[3].speed = 0.5
 
-		Use the julia help to see how to use AgentBasedModel to create a model with your
-		previously created custom agent and space.
-
+		Check the resulting effect on your beetles Vector, then give me the expression beetles[3]:
 		""",
-		"type ?AgentBasedModel",
+		"This code should have changed the speed of Beetle number 3 to 0.5",
+		x -> x isa Main.AbstractAgent && x.id == 4 && x.speed == 0.5
+	),
+	Activity(
+		"""
+		We now know how to create agents using a constructor, but there is a problem with using
+		constructors to create agents. In an AgentBasedModel (ABM), agents are not just free-
+		floating nodes: they live within a space that defines how near they are to each other, so
+		they can decide with whom they will interact. This means we must always create our agents
+		with a unique id, a valid location within the space, plus various other constraints that
+		agents must fulfill. All this book-keeping is quite tedious to do, so in practice, we
+		hand over the job of agent-construction to a very useful macro: @agent().
+		
+		OK, so let's start again and do things properly. We will use @agent() to create and display
+		a mall ABM of gas particles flying around in a 2-dimensional space. First, we create the
+		agent type Particle:
+			@agent Particle ContinuousAgent{2} begin
+				speed::Float64
+			end
+	
+		Execute this code at the julia prompt, then show me the list of fieldnames of a Particle:
+		""",
+		"Use the method fieldnames()",
+		x -> x == (:id, :pos, :vel, :speed)
+	),
+	Activity(
+		"""
+		Notice that @agents() has added several book-keeping fields to your Particle agents that
+		match the specification of a continuous, 2-dimensional space:
+			id::Int64							# Turtle's unique identifier
+			pos::Tuple{Float64, Float64}		# Turtle's position in 2-dimensional space
+			vel::Tuple{Float64, Float64}		# Turtle's bearing (facing direction)
+			speed::Float64						# Turtle's speed property (that we added)
+
+		The Agents package offers us several useful spaces that our Particles can move in. For now,
+		we will represent the space in which our Particles move as a ContinuousSpace in two
+		dimensions with coordinate extent (100,40):
+			space = ContinuousSpace( (100,40))
+
+		Define this coordinate space, then show it to me please:
+		""",
+		"Use the above code to create space",
+		x -> x isa Main.ContinuousSpace && x.extent == (100.0, 40.0)
+	),
+	Activity(
+		"""
+		Now we put our Particle agent type together with our coordinate space to build a container
+		in which our Particles can move around:
+			box = ABM(Particle,space)
+
+		Let's have a look at your box:
+		""",
+		"",
 		x -> x isa Main.AgentBasedModel
 	),
 	Activity(
 		"""
-		We will now combine all the new information.
-		Excute the following commands, maybe run `demo()` a few times and then have a
-		look at the associated file.
+		Let's get this straight: So far, you have created a box 100 units long and 40 units high,
+		which can contain Particles, but currently doesn't contain any. So let's now place three
+		Particles into the box with random direction and respective speeds 0.5, 1.0 and 1.5:
+			add_agent!( box, Tuple(2rand(2).-1), 0.5)
+			add_agent!( box, Tuple(2rand(2).-1), 1.0)
+			add_agent!( box, Tuple(2rand(2).-1), 1.5)
 
-			include("src/Development/PBM/IN500SimpleWorld.jl")
-			using .SimpleWorld
-			SimpleWorld.demo()
-		
-		See if you understand everything, if not use either
-		the Julia help or directly visit the API documentation of Agents:
-		https://juliadynamics.github.io/Agents.jl/stable/api/
+		You can inspect the Particles in your container by entering:
+			box.agents
 
-		How is the function called to obtain agents near a position?
+		May I see your container again, please?
 		""",
-		"have a look at the IN500SimpleWorld.jl file",
-		# input as string and as function is accepted:
-		x -> string(x) |> x -> (x == "nearby_agents" || x == "nearby_ids")
+		"Make sure you have 3 Particles with appropriate parameters vel and speed",
+		x -> -1 < x.agents[3].vel[2] < 1
 	),
 	Activity(
 		"""
-		In the last example we only changed the model once via simple commands.
-		But the whole benefit of ABMs is that you can do that iteratively.
-		To do this, we need to define two stepping functions:
-        
-            * agent_step!(agent, model)
-            * model_step!(model)
-        
-        As the names suggest, `agent_step!` will contain the behaviour each agent
-        will perform in one iteration. `model_step!` will represent general behaviour,
-        like changing environment, data collection, ...
+		OK, so we now have three Particles in our container. Let's get them moving! You can move
+		a single agent 5 units within its model like this:
+			move_agent!( box.agents[3], box, 5)
 
-        You will soon enough see and use those in action.
-        Jump to the next activity ...
+		Do this now, and check that the third agent really has moved about 5 units:
+		""",
+		"Again, inspect the :agents field of your box",
+		x -> true
+	),
+	Activity(
+		"""
+		But it is tedious to have to move each agent by hand. Instead, we want to tell all agents
+		in the model to move at once with their own respective speed. To make this happen, we need
+		to define what it means for an agent to step:
+			function agent_step!( particle, model)
+				move_agent!( particle, model, turtle.speed)
+			end
+
+		Now enter:
+			step!( box, agent_step!)
+
+		and again inspect the agents to check that they have all moved appropriately. Then move
+		on to the next activity.
 		""",
 		"",
 		x -> true
 	),
 	Activity(
 		"""
-        Before we look at custom models and stepping functions, we will now look at
-        visualizations:
-        `GLMakie.jl` is a backend for the large plotting library `Makie.jl` (which has a lot of
-        functionality). `GLMakie` can be used e.g. for plotting line charts, heat maps and diagrams.
-		
-        Do you remember Observables from Lab06? Since the Makie plotting framework is based
-        on them, we can create dynamic and interactive plots.
-        Imagine we want to do this ourselves for all our changed agents and model. We can do this,
-        no question, but it will be tedious. 
-        The julia package `InteractiveDynamics.jl` already did all this work for us and provides
-        a simple form of plotting your agents dynamically. The function doing all the magic is
-        called `abmexploration`.        
-        Plots will change dynamiclly if anything in the model changes. The plots will be refreshed
-        after every model_step!.
-        
-        To explore an example, Agents provides some predefined models:
+		Finally, we would like to create an animation of our set of Particles. Do you remember
+		Observables from Lab06? Since the GLMakie plotting framework is based on Observables, we
+		can use GLMakie together with InteractiveDynamics to create dynamic and interactive plots
+		of our agent-based models. To do this, use the following function call:
+			abmvideo( "Particles.mp4", box, agent_step!)
 
-            using InteractiveDynamics, GLMakie
-            model, agent_step!, model_step! = Agents.Models.flocking()
-            figure, p = abmplot(model;agent_step!,model_step!)
-            figure
-        
-        When done exploring, go to the next activity ...
+		This will take a while to compile, but when it is finished, open the movie-file that it
+		has created and enjoy the show! :)
+
+		While watching the video, notice what is happening when the Particles reach the edge of
+		the space in the box. This behaviour is called "wrapping", and is very common in ABMs,
+		and is a way of avoiding the problem of particles drifting out of the ABM's space.
+
+		Can you work out the topological shape of the space in our box?
 		""",
-		"Make sure that `Agents.jl` is loaded as well",
-		x -> true
+		"Think about the fact that the left- and right-edges (and top and bottom) are linked!",
+		x -> contains(lowercase(x),"tor") || contains(lowercase(x),"nut")
 	),
 	
 	Activity(
-        """
-        often we want the ground/surrounding of the Simulation to have properties/behaviour too.
-        In order to do so, we can define a Matrix with the size of the model space.
-        we can either define one 2d matrix for every property or we can create a multidimensional matrix
-
-        i.e.: patches = <some 3 dimensional matrix size 200x200>
-        patches[:,:,1] would then correspond to one of the tile`s propperties
-
-        for readability purposes however, it makes more sense to define several space matricies 
-        i.e.: patches_property1 = <somne one dimensional matrix>
-              patches_property2 = <somne one dimensional matrix>
-              etc.
-              now: initialize a 200x200 patches Matrix called nutrients
-        """,    
-        
-        "try zeros(200,200)",
-        x -> x==zeros(200,200)
-    ),
-    Activity(
-        """
-        Most of the time you want to work with continuous spaces, because it gives your agents more flexibility to move.
-        the problem, as you might imagine, is that you cannot use the agent's position (usually a Float) to index the patches matrix.
-            to solve that problem, you can round the agent`s position to an int: i.e.: 
-
-        
-            now you can make the agent interact with his surrounding. you can make him pick something up, or drop something for other agents to interact with.
-            It gives your simulation a lot of possibilities!
-            try to use posistion = [50.7 67.88] to idex your nutrients matrix and set its value to 2. return to me the index
-        """,
-
-        "try position = [round(Int, position[1]) round(Int, position[1])]",
-        x -> x==[51 68]
-    ),
-
-    # maybe other chapters:
-    Activity(
-        """
-        Agents.jl will deal with space boundaries for you when moving your agent. If you work with own matricies however, you need to deal with that yourself.
-        What do you do if you want to check a tile on your nutrients matrix, that is in front of your agent, but your agent already is standing at the border of the map?
-        One technique is, to make him check the first tile on the opposite side of the matrix. You can achive this, by following funktion:
-        
-            function wrapMatrix(mat,index)
-
-                for ids in 1:size(index)[1]
-                    if index[ids][1] == 0
-                        index[ids][1] = -1
-                    end
-                    if index[ids][1] == size_row
-                        index[ids][1] = size_row + 1
-                    end
-                    if index[ids][2] == 0
-                        index[ids][2] = -1
-                    end
-                    if index[ids][2] == size_col
-                        index[ids][2] = size_col + 1
-                    end
-            
-                    index1 = rem(index[ids][1]+size_row,size_row)
-                    index2 = rem(index[ids][2]+size_col,size_col)
-                    return [index1, index2]
-            end
-
-        Hint: rem() gives you the remain/rest after division
-
-        now you canmake an agent interact with his surrounding, wherever he is standing!
-
-        """,
-        "no Hint here",
-        x -> true
-    ),
-	Activity(
-        """
-        One thing, that Agent based Simulations are not so efficient at, are differential equations. There is an other disciplline called equation based moddeling for that.
-        So if you want to model something like diffusion, you have to find a workaround, or an approximation, that is good enough. Either way can work.
-        Lets stick to the example of diffusion!
-        In this case I personally have two options in mind. You could take advantage of techniques from Image processing, and apply an blurr filter
-        to your matrix of diffusing values. Read a little about Immage filtering and kernels in google and return once youre done!
-        But we can simplify a little more! take a look at the following function:
-
-        function diffuse4(mat::Matrix{Float64},rDiff::Float64)
-
-            map(CartesianIndices(( 1:size(mat)[1]-1, 1:size(mat)[2]-1))) do x
-              iX=x[1]
-              iY=x[2]
-              neighbours = [wrapMat(mat,[iX+1,iY]), wrapMat(mat,[iX-1,iY]), wrapMat(mat,[iX,iY-1]),  wrapMat(mat,[iX,iY+1])]           
-              flow = mat[iX,iY]*rDiff
-              mat[iX,iY] *= 1-rDiff
-        
-              map(neighbours) do j
-                mat[j[1],j[2]] += flow/4
-              end
-            end
-            return mat
-          end
-
-
-          basicly we are applying a small, simple kernell to our matrix and tell every tile, to split a certain ammount of its value to its 4 neighbours.
-          This works good enogh for most of our use cases. 
-          see how we take advantage of our previous functions? (i.e.: wrapMat)
-        """,
-        "no hint here",
-        x -> true
-    ),
-    Activity(
-        """
-        Taka a matrix n x m : I bet you are used to iterate through something like this using two for loops...
-        But that is actually really inefficient.
-        it is better to use an array of cartesian indicees, and apply the map function like this:
-
-        map(CartesianIndices(( 1:size(mat)[1]-1, 1:size(mat)[2]-1))) do x
-
-            ... do something with each element x i.e.:
-            println(matrix[x[1],x[2]])
-        end
-
-        now we have only one loop! That is so much faster!
-
-        """,
-        "no hint here",
-        x -> true
-    ),
-	Activity(
 		"""
-		While running an abmexploration-Model you can stop the simulation at any moment.
-		When the model is paused you can hover over the plot and retrieve information
-		about the background of the plot or specific agents.
-		Every agent will show a list of its attributes with its values and for every
-		background-patch it will show you the position and the plotted variable and value.
-		You should try it out whenever you want to know how components of a plot work and
-		maybe use the step-button to see the values change.
+		Now you know how to write an ABM, you can perform your final task: The above code that
+		you have entered in the Julia console is also contained in the file SimpleParticles.jl.
+		Study and run this file to be sure you understand the extra code I have added there.
 		
-		INFO: When the marker polygon_marker was used it is not possible to see the data of
-		the agents. It also rarely happens that the model is unable to get the data for
-		the background too.
+		Next, look for the TODO tag in the file SimpleParticles.jl. It would be nice if our
+		particles bounced off each other - like in a real gas. I have written the skeleton code
+		for this in the method agent_step!(). However, I have left out the code that calculates
+		the bearing direction from one particle to another. It is your task to add this code
+		(it's only a couple of lines) starting from the TODO line. When you have done this, run
+		SimpleParticles.demo() again to make sure the particles are behaving properly (that is,
+		that they are bouncing away from each other in the correct directions). Have fun! :)
 		""",
-		"???",
+		"",
 		x -> true
 	),
 ]

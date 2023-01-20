@@ -1,129 +1,124 @@
 module Boids
-export Bird, demo
 
-using Agents, LinearAlgebra
-using Random # hides
-using Pkg
-Pkg.add("CairoMakie")
-Pkg.add("GLMakie")
-Pkg.status("InteractiveDynamics")
+using Agents, LinearAlgebra, Random, GLMakie, InteractiveDynamics
 
+"""
+	Boid
 
-mutable struct Bird <: AbstractAgent
-    id::Int
-    pos::NTuple{2,Float64}
-    vel::NTuple{2,Float64}
-    speed::Float64
-    cohere_factor::Float64
-    separation::Float64
-    separate_factor::Float64
-    match_factor::Float64
-    visual_distance::Float64
+The populating agents in the Boids model.
+"""
+@agent Boid ContinuousAgent{2} begin
+	speed::Float64					# Speed of this Boid
 end
 
-function initialize_model(;
-    n_birds = 100,
-    speed = 1.0,
-    cohere_factor = 0.25,
-    separation = 4.0,
-    separate_factor = 0.25,
-    match_factor = 0.01,
-    visual_distance = 5.0,
-    extent = (100, 100),
-    spacing = visual_distance / 1.5,
+"""
+	initialise_model( kwargs)
+
+Create and initialise the Boids model.
+"""
+function initialise_model(;
+    n_boids = 100,					# Number of Boids in model
+    speed = 1.0,					# Initial speed of Boids in model
+    priority_coherence = 0.25,		# Priority of coherence between Boids
+    min_separation = 4.0,			# Preferred minimum separation between Boids
+    priority_separation = 0.25,		# Priority of separation between Boids
+    priority_matching = 0.01,		# Priority of matching speed between Boids
+    visual_distance = 5.0,			# Eyesight distance of Boids
+    extent = (100, 100),			# Extend of model space
 )
-    # setting the slider properties to default values
-    properties = Dict(:n_birds => n_birds,
-                      :visual_distance =>  visual_distance,
-                      :separation => separation,
-                      :cohere_factor => cohere_factor,
-                      :separate_factor =>  separate_factor,
-                      :match_factor => match_factor)
-  
-    space2d = ContinuousSpace(extent, spacing)
-    model = ABM(Bird, space2d; properties, scheduler = Schedulers.randomly)
-    for _ in 1:model.n_birds
+    space2d = ContinuousSpace(extent; spacing = visual_distance/1.5)
+    model = ABM( Boid, space2d;
+		properties = (	# Model properties (will apply to all Boids in model):
+			priority_coherence = priority_coherence,
+			min_separation = min_separation,
+			priority_separation = priority_separation,
+			priority_matching = priority_matching,
+			visual_distance = visual_distance,
+		),
+		scheduler = Schedulers.Randomly()
+	)
+    for _ in 1:n_boids
         vel = Tuple(rand(model.rng, 2) * 2 .- 1)
-        add_agent!(
-            model,
-            vel,
-            speed,
-            cohere_factor,
-            separation,
-            separate_factor,
-            match_factor,
-            visual_distance,
-        )
+        add_agent!( model, vel, speed)
     end
     return model
 end
 
-function agent_step!(bird, model)
-    # Obtain the ids of neighbors within the bird's visual distance
-    neighbor_ids = nearby_ids(bird, model, model.visual_distance)
-    N = 0
-    match = separate = cohere = (0.0, 0.0)
-    # Calculate behaviour properties based on neighbors
-    for id in neighbor_ids
-        N += 1
-        neighbor = model[id].pos
-        heading = neighbor .- bird.pos
+"""
+	agent_step!( kwargs)
 
-        # `cohere` computes the average position of neighboring birds
-        cohere = cohere .+ heading
-        if edistance(bird.pos, neighbor, model) < model.separation
-            # `separate` repels the bird away from neighboring birds
-            separate = separate .- heading
-        end
-        # `match` computes the average trajectory of neighboring birds
-        match = match .+ model[id].vel
-    end
-    N = max(N, 1)
-    # Normalise results based on model input and neighbor count
-    cohere = cohere ./ N .* model.cohere_factor
-    separate = separate ./ N .* model.separate_factor
-    match = match ./ N .* model.match_factor
-    # Compute velocity based on rules defined above
-    bird.vel = (bird.vel .+ cohere .+ separate .+ match) ./ 2
-    bird.vel = bird.vel ./ norm(bird.vel)
-    # Move bird according to new velocity and speed
-    move_agent!(bird, model, bird.speed)
+This is the heart of the Boids model: It calculates precisely how each agent (Boid) behaves in
+response to the behaviour of its nearest neighbours.
+"""
+function agent_step!(boid, model)
+	neighbour_ids = nearby_ids(boid, model, model.visual_distance)
+	n_nbrs = 0									# Number of visual neighbours
+	match = separate = cohere = (0.0, 0.0)		# Upcoming adjustments to boid's behaviour
+
+	for id in neighbour_ids
+		n_nbrs += 1
+		neighbour = model[id].pos
+		heading = neighbour .- boid.pos
+
+		# `cohere` computes the average position of neighbouring birds:
+		cohere = cohere .+ heading
+		if edistance(boid.pos, neighbour, model) < model.min_separation
+			# `separate` repels the bird away from neighbouring birds:
+			separate = separate .- heading
+		end
+		# `match` computes the average trajectory of neighbouring birds:
+		match = match .+ model[id].vel
+	end
+	n_nbrs = max(n_nbrs, 1)
+	# Calculate average velocity adjustments biased by priority:
+	cohere		= cohere	./ n_nbrs .* model.priority_coherence
+	separate	= separate	./ n_nbrs .* model.priority_separation
+	match		= match		./ n_nbrs .* model.priority_matching
+	# Compute velocity based on Reynolds' flocking rules defined above:
+	boid.vel = (boid.vel .+ cohere .+ separate .+ match) ./ 2
+	boid.vel = boid.vel ./ norm(boid.vel)
+	# Move boid according to new velocity and speed
+	move_agent!(boid, model, boid.speed)
 end
 
-function bird_marker(b::Bird)
-    bird_polygon = Polygon(Point2f[(-0.5, -0.5), (1, 0), (-0.5, 0.5)])
-    φ = atan(b.vel[2], b.vel[1]) #+ π/2 + π
-    scale(rotate2D(bird_polygon, φ), 2)
+"""
+	boid_polygon
+
+Shape of the Boid marker.
+"""
+const boid_polygon = Polygon(Point2f[(-0.5, -0.5), (1, 0), (-0.5, 0.5)])
+
+"""
+	boid_marker(boid)
+
+Plotting function for the marker of a boid.
+"""
+function boid_marker(boid::Boid)
+	φ = atan(boid.vel[2], boid.vel[1])		# Facing direction of boid
+	scale(rotate2D(boid_polygon, φ), 2)
 end
 
 ## Plotting the flock
-using InteractiveDynamics
-using GLMakie
- # hide
 function demo()
-    
-
-# the sliders youre gonna play around with!
-    params = Dict(:n_birds => 100:500,
-                    :visual_distance =>  0:10,
-                    :separation => 0:10,
-                    :cohere_factor => 0:0.1:10,
-                    :separate_factor => 0:0.1:10,
-                    :match_factor => 0:0.1:10)
-    #initialize the model 
-    model = initialize_model()
-    #create the interactive plot with our sliders
-    fig, p = abmexploration(model; agent_step! = agent_step!,  params, am = bird_marker)
-    fig
+	model = initialise_model()
+	abmvideo(
+		"flocking.mp4", model, agent_step!;
+		am = boid_marker,
+		framerate = 20, frames = 100,
+		title = "Flocking"
+	)
+#=	params = Dict(
+		:n_boids => 100:500,
+		:visual_distance => 0:10,
+		:min_separation => 0:10,
+		:priority_coherence => 0:0.1:10,
+		:priority_separation => 0:0.1:10,
+		:priority_matching => 0:0.1:10
+	)
+	#create the interactive plot with our sliders
+	fig, p = abmexploration(model; (agent_step!)=agent_step!, params, am=boid_marker)
+#	reinit_model_on_reset!(p, fig, initialise_model)
+	fig=#
 end
+
 end
-# figure, = abmplot(model; am = bird_marker)
-# figure
-
-
-# abmvideo(
-#     "flocking.mp4", model, agent_step!;
-#     am = bird_marker,
-#     framerate = 20, frames = 100,
-#     title = "Flocking"
-# )
