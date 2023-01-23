@@ -237,8 +237,9 @@
 			run!( model, agent_step!, 50; adata=[(momentum,sum),(energy,sum)])
 
 		You can do this either in the demo() method or from the Julia command prompt. In either
-		case, you need to display and study a Dataframe for the total momentum and energy of the
-		particles in the box. Is the total energy of the particles in the model constant?
+		case, you will need to look up run!() in the juliadynamics documentation and find out
+		how to capture  and display the returned Dataframe for the total momentum and energy of
+		the particles in the box. Is the total energy of the particles in the model constant?
 		""",
 		"",
 		x -> occursin('y',lowercase(x))
@@ -252,6 +253,9 @@
 	),
 	Activity(
 		"""
+		Oops! It seems we have a problem, Houston! Our little universe violates the conservation
+		of momentum!
+
 		OK, so we have a job to do. In the next lab, we must re-implement our ideal gas model
 		so that the collisions between particle satisfy momentum and energy conservation.
 
