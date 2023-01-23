@@ -46,6 +46,7 @@ function init_simpleparticles(;
 	)
     for _ in 1:n_particles
         vel = Tuple( 2rand(2).-1)
+		vel = vel ./ norm(vel)
         add_agent!( box, vel, speed)
     end
 
@@ -54,7 +55,7 @@ end
 
 #-----------------------------------------------------------------------------------------
 """
-	agent_step!( kwargs)
+	agent_step!( particle, box::ABM)
 
 This is the heart of the SimpleParticles model: It calculates precisely how each SimpleParticle
 agent behaves in order to be repulsed away from its nearest SimpleParticle neighbours.
@@ -85,17 +86,43 @@ end
 
 #-----------------------------------------------------------------------------------------
 """
+	momentum( particle)
+
+Return the momentum of this particle.
+"""
+function momentum(particle)
+	particle.speed * collect(particle.vel)
+end
+
+#-----------------------------------------------------------------------------------------
+"""
+	energy( particle)
+
+Return the energy of this particle.
+"""
+function energy(particle)
+	particle.speed^2 / 2
+end
+
+#-----------------------------------------------------------------------------------------
+"""
 	demo()
 
 Run a simulation of the SimpleParticles model.
 """
 function demo()
-	model = init_simpleparticles()
+	box = init_simpleparticles()
 	abmvideo(
-		"SimpleParticles.mp4", model, agent_step!;
+		"SimpleParticles.mp4", box, agent_step!;
 		framerate = 20, frames = 1000,
-		title = "Simple particles in an ideal gas"
+		title = "Simple particles in an ideal gas",
+		adata = [(:speed,s->sum(s.^2))]
 	)
+
+	agentdata, = run!( box, agent_step!, 500; adata=[(momentum,sum),(energy,sum)])
+
+	# Return momentum and energy statistics:
+	agentdata
 end
 
 end	# of module SimpleParticles

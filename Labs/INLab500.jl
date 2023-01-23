@@ -23,9 +23,8 @@
 		work, we will use the two julia packages Agents and DynamicalSystems; to display this work,
 		we will use the packages GLMakie and InteractiveDynamics.
 
-		You can find video and text introductions to the Agents package here:
-			Video: youtu.be/fgwAfAa4kt0
-			Text:  juliadynamics.github.io/Agents.jl/stable/tutorial
+		You can find an introduction to the Agents package here:
+			juliadynamics.github.io/Agents.jl/stable/tutorial
 
 		I have already installed the packages Agents, GLMakie and InteractiveDynamics, but you will
 		need to load them yourself. What keyword do you use to do this?
@@ -35,15 +34,15 @@
 	),
 	Activity(
 		"""
-		Object-oriented software development considers processes to 'belong' to software agents -
-		after all, it is YOU who performs the processes of breathing and speaking, isn't it?
+		In object-oriented software development, we think of processes as belonging to software
+		agents - after all, it is YOU who performs the processes of breathing and speaking, isn't
+		it? So it makes sense to think of these processes as belonging to you.
+
 		However, a major emphasis of the julia language is that PROCESSES are the primary actors
 		of a system, whereas agents are only the localised nodes that store (or STOCK) the
-		properties created and manipulated by these processes.
-		
-		In other words, an Agent is a mutable struct - a collection of local properties that can
-		influence, or CONDITION, the processes, which in turn are able to change those same
-		properties at that agent's location.
+		properties created and manipulated by these processes. We therefore think of an Agent as a
+		struct - a collection of local properties that can influence, or CONDITION, the processes,
+		which in turn are able to change those same properties at that agent's location.
 
 		OK, so let's try making use of all this information. First, derive a new concrete type
 		`Beetle` from the abstract type AbstractAgent. Your Beetles should be mutable and
@@ -78,11 +77,11 @@
 		floating nodes: they live within a space that defines how near they are to each other, so
 		they can decide with whom they will interact. This means we must always create our agents
 		with a unique id, a valid location within the space, plus various other constraints that
-		agents must fulfill. All this book-keeping is quite tedious to do, so in practice, we
+		agents must fulfill. All this book-keeping is quite boring to do, so in practice, we
 		hand over the job of agent-construction to a very useful macro: @agent().
 		
 		OK, so let's start again and do things properly. We will use @agent() to create and display
-		a mall ABM of gas particles flying around in a 2-dimensional space. First, we create the
+		a small ABM of gas particles flying around in a 2-dimensional space. First, we create the
 		agent type Particle:
 			@agent Particle ContinuousAgent{2} begin
 				speed::Float64
@@ -97,10 +96,10 @@
 		"""
 		Notice that @agents() has added several book-keeping fields to your Particle agents that
 		match the specification of a continuous, 2-dimensional space:
-			id::Int64							# Turtle's unique identifier
-			pos::Tuple{Float64, Float64}		# Turtle's position in 2-dimensional space
-			vel::Tuple{Float64, Float64}		# Turtle's bearing (facing direction)
-			speed::Float64						# Turtle's speed property (that we added)
+			id::Int64							# Particle's unique identifier
+			pos::Tuple{Float64, Float64}		# Particle's position in 2-dimensional space
+			vel::Tuple{Float64, Float64}		# Particle's bearing (facing direction)
+			speed::Float64						# Particle's speed property (that we added)
 
 		The Agents package offers us several useful spaces that our Particles can move in. For now,
 		we will represent the space in which our Particles move as a ContinuousSpace in two
@@ -109,7 +108,7 @@
 
 		Define this coordinate space, then show it to me please:
 		""",
-		"Use the above code to create space",
+		"Use the above code to create a continuous space of the correct size",
 		x -> x isa Main.ContinuousSpace && x.extent == (100.0, 40.0)
 	),
 	Activity(
@@ -153,25 +152,25 @@
 	),
 	Activity(
 		"""
-		But it is tedious to have to move each agent by hand. Instead, we want to tell all agents
+		But it is hard work to have to move each agent by hand. Instead, we want to tell all agents
 		in the model to move at once with their own respective speed. To make this happen, we need
 		to define what it means for an agent to step:
 			function agent_step!( particle, model)
-				move_agent!( particle, model, turtle.speed)
+				move_agent!( particle, model, particle.speed)
 			end
 
 		Now enter:
 			step!( box, agent_step!)
 
-		and again inspect the agents to check that they have all moved appropriately. Then move
-		on to the next activity.
+		and again inspect the agents to check that they have all moved appropriately. Now go on to
+		the next activity.
 		""",
 		"",
 		x -> true
 	),
 	Activity(
 		"""
-		Finally, we would like to create an animation of our set of Particles. Do you remember
+		Now we would like to create an animation of our set of Particles. Do you remember
 		Observables from Lab06? Since the GLMakie plotting framework is based on Observables, we
 		can use GLMakie together with InteractiveDynamics to create dynamic and interactive plots
 		of our agent-based models. To do this, use the following function call:
@@ -181,28 +180,82 @@
 		has created and enjoy the show! :)
 
 		While watching the video, notice what is happening when the Particles reach the edge of
-		the space in the box. This behaviour is called "wrapping", and is very common in ABMs,
-		and is a way of avoiding the problem of particles drifting out of the ABM's space.
+		the space in the box. This behaviour is called "wrapping". It is very common in ABMs,
+		and is a way of avoiding the problem of particles drifting outside the ABM's space.
 
-		Can you work out the topological shape of the space in our box?
+		What is the correct topological name for the shape of the space in our box?
 		""",
 		"Think about the fact that the left- and right-edges (and top and bottom) are linked!",
 		x -> contains(lowercase(x),"tor") || contains(lowercase(x),"nut")
 	),
-	
 	Activity(
 		"""
-		Now you know how to write an ABM, you can perform your final task: The above code that
+		Congratulations - now you know how to design and run an ABM! :)
+
+		Now let's make our ABM a little more useful: We will turn it into a model of particles
+		flying around and bounce off each other within an ideal gas. The above code that
 		you have entered in the Julia console is also contained in the file SimpleParticles.jl.
 		Study and run this file to be sure you understand the extra code I have added there.
-		
-		Next, look for the TODO tag in the file SimpleParticles.jl. It would be nice if our
-		particles bounced off each other - like in a real gas. I have written the skeleton code
-		for this in the method agent_step!(). However, I have left out the code that calculates
-		the bearing direction from one particle to another. It is your task to add this code
-		(it's only a couple of lines) starting from the TODO line. When you have done this, run
-		SimpleParticles.demo() again to make sure the particles are behaving properly (that is,
-		that they are bouncing away from each other in the correct directions). Have fun! :)
+
+		Don't expect the particles to bounce off each other yet - that will be our next job! :)
+		""",
+		"",
+		x -> true
+	),
+	Activity(
+		"""
+		Next, look for the TODO tag in the file SimpleParticles.jl. I have written the skeleton
+		code for making the particles bounce off each other in the method agent_step!(). However,
+		I have left out the code that calculates the bearing direction from one particle to
+		another. It is your task to add this code (it's only a couple of lines) starting from the
+		TODO line. When you have done this, run SimpleParticles.demo() again to make sure the
+		particles are behaving properly (that is, that they are bouncing away from each other in
+		the correct directions).
+		""",
+		"Only move on when your particles are successfully bouncing off each other.",
+		x -> true
+	),
+	Activity(
+		"""
+		Our simulation certainly looks good, doesn't it? But is it a physically accurate model
+		of an ideal gas? The whole point of ABMs is to test our theories on systems that are too
+		complex for us to do without a computer, and we can only test a theory if our model is a
+		physically accurate model of an N-particle ideal gas. This means that our model should
+		satisfy momentum and energy conservation.
+
+		We need to test this. First write in the SimpleParticles module two new methods that
+		calculate the momentum and energy of a particle, for example:
+			momentum(particle) = particle.speed * collect(particle.vel)
+		""",
+		"Don't worry about the mass of the particles - just assume it is equal to 1.0",
+		x -> true
+	),
+	Activity(
+		"""
+		Now use the following function call to run the SimpleParticles model for 50 iterations,
+		while collecting data on the sum of all momenta and energy of the particles in the box:
+			run!( model, agent_step!, 50; adata=[(momentum,sum),(energy,sum)])
+
+		You can do this either in the demo() method or from the Julia command prompt. In either
+		case, you need to display and study a Dataframe for the total momentum and energy of the
+		particles in the box. Is the total energy of the particles in the model constant?
+		""",
+		"",
+		x -> occursin('y',lowercase(x))
+	),
+	Activity(
+		"""
+		What about the momentum? Is the total momentum of the particles in the model constant?
+		""",
+		"",
+		x -> occursin('n',lowercase(x))
+	),
+	Activity(
+		"""
+		OK, so we have a job to do. In the next lab, we must re-implement our ideal gas model
+		so that the collisions between particle satisfy momentum and energy conservation.
+
+		See you later in lab 501! :)
 		""",
 		"",
 		x -> true

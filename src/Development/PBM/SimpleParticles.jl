@@ -54,7 +54,7 @@ end
 
 #-----------------------------------------------------------------------------------------
 """
-	agent_step!( kwargs)
+	agent_step!( particle, box::ABM)
 
 This is the heart of the SimpleParticles model: It calculates precisely how each SimpleParticle
 agent behaves in order to be repulsed away from its nearest SimpleParticle neighbours.
@@ -71,7 +71,7 @@ function agent_step!(particle, box)
 		;									# TODO: Calculate bearing from me to this neighbour:
 
 		# `repulsion` REPELS me away from the neighbouring particle:
-		repulsion = repulsion .- bearing ./ norm(bearing)
+		# repulsion = repulsion .- bearing ./ norm(bearing)
 	end
 
 	n_nbrs = max(n_nbrs, 1)
@@ -89,9 +89,9 @@ end
 Run a simulation of the SimpleParticles model.
 """
 function demo()
-	model = init_simpleparticles()
+	box = init_simpleparticles()
 	abmvideo(
-		"SimpleParticles.mp4", model, agent_step!;
+		"SimpleParticles.mp4", box, agent_step!;
 		framerate = 20, frames = 1000,
 		title = "Simple particles in an ideal gas"
 	)
