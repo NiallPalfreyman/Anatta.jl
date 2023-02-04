@@ -3,7 +3,7 @@
 #
 # Welcome to course 500: An Introduction to Dynamical Systems Modelling!
 #
-# Authors:  Emilio Borelli, Nick Diercksen, Stefan Hausner, Dominik Pfister (July 2022)
+# Author:  Niall Palfreyman, 1/7/2022.
 #========================================================================================#
 # * `move_agent` now needs to specify `dt` for an agent to move correspondong to its vel
 # * nearby_ids has no longer a kw `exact`
@@ -221,10 +221,12 @@
 		of an ideal gas? The whole point of ABMs is to test our theories on systems that are too
 		complex for us to do without a computer, and we can only test a theory if our model is a
 		physically accurate model of an N-particle ideal gas. This means that our model should
-		satisfy momentum and energy conservation.
+		satisfy conservation of both momentum and kinetic energy.
 
-		We need to test this. First write in the SimpleParticles module two new methods that
-		calculate the momentum and energy of a particle, for example:
+		We call such rules a REFERENCE MODE: A model is only valid if it satisfies reference modes
+		that ensure its faithfulness to the "real system" we wish to model. So let's test our
+		reference mode right now. First write in the SimpleParticles module two new methods that
+		calculate the momentum and kinetic energy of a particle, for example:
 			momentum(particle) = particle.speed * collect(particle.vel)
 		""",
 		"Don't worry about the mass of the particles - just assume it is equal to 1.0",
@@ -233,13 +235,14 @@
 	Activity(
 		"""
 		Now use the following function call to run the SimpleParticles model for 50 iterations,
-		while collecting data on the sum of all momenta and energy of the particles in the box:
-			run!( model, agent_step!, 50; adata=[(momentum,sum),(energy,sum)])
+		while collecting the required agent data (adata) on the sum of all momenta and
+		kinetic_energy of the particles in the box:
+			run!( model, agent_step!, 50; adata=[(momentum,sum),(kinetic_energy,sum)])
 
-		You can do this either in the demo() method or from the Julia command prompt. In either
-		case, you will need to look up run!() in the juliadynamics documentation and find out
-		how to capture  and display the returned Dataframe for the total momentum and energy of
-		the particles in the box. Is the total energy of the particles in the model constant?
+		You can call this either in the demo() method or from the Julia command prompt. In either
+		case, you will need to look up run!() in the juliadynamics documentation and find out how
+		to capture and display the returned Dataframe for the total momentum and kinetic_energy of
+		the particles in the box. Is the particles' total kinetic energy constant?
 		""",
 		"",
 		x -> occursin('y',lowercase(x))
@@ -253,13 +256,57 @@
 	),
 	Activity(
 		"""
-		Oops! It seems we have a problem, Houston! Our little universe violates the conservation
-		of momentum!
+		Oops! We have a problem, Houston! Our little universe violates the conservation of momentum!
 
-		OK, so we have a job to do. In the next lab, we must re-implement our ideal gas model
-		so that the collisions between particle satisfy momentum and energy conservation.
+		So, we need to re-implement our ideal gas model so that the collisions between particles
+		satisfy momentum conservation. You will see that I have done this in the file IdealGas.jl.
+		To create this file, I simply did the following:
+			1. I copied SimpleParticles.jl to IdealGas.jl and renamed internals accordingly;
+			2. I added some nice-to-haves like putting mass and radius into Particle;
+			3. I ensured strict normalisation of Agent.vel into a unit vector;
+			4. I stripped out agent_step!() and reimplemented it.
 
-		See you later in lab 501! :)
+		Study my implementation of IdealGas now and test whether it solves the problem of
+		conserving momentum in the system. This will be of absolute importance if we wish to write
+		ABMs that will deliver understanding and insights into real-life thermodynamical systems!
+
+		So: Does my implementation of IdealGas obey strict conservation of momentum?
+		""",
+		"",
+		x -> occursin("n",lowercase(x))
+	),
+	Activity(
+		"""
+		Ok, I have to confess that I purposely built one small bug into the IdealGas model. If you
+		correct this bug now, you will find that IdealGas works properly. In which line of code
+		is my bug?
+		""",
+		"",
+		x -> x==93
+	),
+	Activity(
+		"""
+		Now you have one last job to do. It is of ultimate importance to satisfy the reference
+		modes of our simulations. If I advise the Berlin City Services to invest in one kind of
+		sewage system or bridge design rather than another, I am putting my reputation, career and
+		the lives of others on the line: I need to KNOW that my advice is based on sound reasoning.
+
+		Here is the point: My model is not reality, but an approximation. If lives depend on that
+		approximation, I need to ensure that fufils all essential laws of physics, chemistry and
+		biology! Think back to your Altruism project: Suppose a child died as a result of relying on
+		your conclusions from that project. Could you SWEAR before a court of law that your
+		implmentation was an absolutely accurate model of context-dependent selection in social
+		systems?!
+
+		So now: Analyse my implementation of agent_step!() carefully, discussing with others the
+		following issues that might make this implementation unreliable:
+			1. Did I do it right?
+			2. Which simplifying assumptions did I make? Do these invalidate my model?
+			3. Did I exclude any cases that might occur in reality?
+			4. Which mathematical tricks did I use?
+			5. Which physical laws did I make use of?
+			6. Which of these considerations might make you worry about relying on my implementation
+				for the success of your assessed project for this course???!!
 		""",
 		"",
 		x -> true

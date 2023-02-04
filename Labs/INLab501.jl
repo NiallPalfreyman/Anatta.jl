@@ -1,119 +1,201 @@
 #========================================================================================#
 #	Laboratory 501
 #
-# Welcome to course 501: A first look at agent-based modelling with a simple Ecosystem
+# A first look at dynamical systems modelling with a simple Ecosystem.
 #
 # Author: Niall Palfreyman (24/04/2022), Dominik Pfister (July 2022)
 #========================================================================================#
 [
 	Activity(
 		"""
-		Welcome to Lab 501: Ecosystem.
-        This first lab of agent-based modelling will show you, how some simple rules let
-        organisms interact with each other in an ecosystem.
+		Welcome to Lab 501!
 
-        In this module turtles live in a world filled with algae. The turtles move around
-        and eat the algae if they happen to find some and gain some energy off it. If a 
-        turtle has enough energy it will reproduce and if its energy falls to zero it
-        will die. The algae that was eaten by the turtles will also rgro after some time.
+		Now we understand the general structure of ABMs, we will turn from physics to a more
+		biological example: Organisms interacting with each other in an ecosystem.
 
-        With this mixture of rules the turtles will live on and the algae will regrow.
+		The file Ecosystem.jl implements a model of a world in which turtles walk around and gain
+		energy from eating algae, if they can find some. If a turtle gains enough energy, it will
+		reproduce, and if its energy falls to zero, it will die. Algae that have been eaten by the
+		turtles will also regrow with a certain specified regrowth probability.
+		
+		Again, I started developing this model by simply copying IdealGas.jl, then stripping out
+		the functionality I wanted to change.
 
-        But there are some new things to notice in this lab. Have a look at the next
-        activities to understand the code behind the model a little bit better.
-
+		One reference mode for this system is that it is sustainable: that the turtles survive and
+		the algae can regrow. Run Ecosystem.demo() to verify whether it does indeed fulfil this
+		reference mode.
 		""",
-		"???",
+		"",
 		x -> true
 	),
-    Activity(
+	Activity(
 		"""
-		In this first lab and model you will learn some basic information, that will be used
-        from this point forward in the following labs.
+		We will use this simple Ecosystem model to learn a bit more about how to create Agents, and
+		also some useful ways of representing Agents on the screen.
 
-        First thing to notice are the properties, which are defined in initialize_model().
-        Proprties includes all the models global variables and data-matrices which the
-        model interacts with.
-        The properties-variable itself contains symbols mapped to their value inside 
-        a dictionary so that any reference of the symbol at a different position in the code 
-        will change the value for the model.
-        This is used when working with sliders. Further down in the code inside 
-        the demo()-function you will notice the reference to the models variable via symbols
-        inside the params-dictionary. This dictionary defines all sliders that you see when
-        running a model. The slider-values are stored in the symbols of the variables that
-        are used when initializing the model.
-
-        When working with sliders it is important to notice that the change in value of the
-        slider will only affect the model after pressing the "reset model"-button.
-        This will reinitialize the model with the changed values.
-        You can also use this button to create new random initial model layouts in some labs.
-        
+		First, run the video clip a few times to get a feeling for what's happening. You can't see
+		the algae yet, but you can verify that they are there by experimenting with the value of
+		the model property prob_regrowth in the initialisation method ecosys(). Notice its effect
+		on the turtle population.
 		""",
-		"???",
+		"prob_regrowth=0 prevents algae from regrowing; prob_regrowth=1 will probably explode!",
 		x -> true
 	),
-    Activity(
+	Activity(
 		"""
-		The first new function that is used is rotate_2dvector(φ, vector) and is implemented in the AgentToolBox.
-        It rotates a vector by the radiant φ with a positive value counter-clockwise and with a negative value
-        clockwise. The internal logic is just a simple vector transformation.
-        Let's test this new function. First make the AgentToolBox available to your environment:
-
-        include("./src/Development/PBM/AgentToolBox.jl")
-        import .AgentToolBox: rotate_2dvector
-
-        Now we can use the rotate_2dvector(φ, vector)-function.
-        Try to rotate the vector
-            
-            a = (1,1)
-
-        by 90 degrees clockwise and return me its values.
-
+		At the beginning of a run, you may notice that sometimes a string of turtles appears that
+		are moving together in a line that then breaks up. Think carefully about how this might
+		be happening, then tell me which method is causing it:
 		""",
-		"Remember to use radiants instead of degrees when using the function rotate_2dvector()!",
-		x -> (-1,1) == round.(x, digits=4) 
+		"Investigate how new turtles are born",
+		x -> occursin("repr",lowercase(x))
 	),
-
-    Activity(
+	Activity(
 		"""
-		Correct!
-        The other new feature is a system to show a colored background depending on values,
-        which you have heard of already in Lab 500. Here is a direct example how it is
-        implemented in Code.
+		The circles representing the turtles don't show us which way the turtles are facing (vel),
+		so it would be nice to change their representation accordingly. You can achieve this by
+		doing the following:
+			- include() the file AgentTools.jl from the DSM folder;
+			- In demo(), specifiy agent marker `AgentTools.wedge`;
+			- Specify also agent colour `:red` and agent size 10;
+			- Recompile and run Ecosystem.jl.
 
-        These background-values have to be specified in the properties of a model (in this 
-        case in line 61 of the file IN501Ecosystem.jl).
-        Later on this matrix of values has to be plotted with the correct colors and the correct
-        range of values. These plot-arguments are specified in the demo()-function.
-
-        Then next activity will explain this way of plotting a little bit more detailed.
+		Which kwarg specifies the agent marker?
 		""",
-		"???",
+		"",
+		x -> x=="am"
+	),
+	Activity(
+		"""
+		It would be helpful if we could see the algae and their reaction to the presence of
+		turtles. In order to visualise them, we shall add them in as a "heatarray" (this is
+		abmvideo's rather strange name for a background field). The values of the algae are
+		already contained in the Ecosystem model property :algae, and we can easily include these
+		values in the video by inserting into abmvideo() the following kwargs:
+			heatarray=(model->model.algae), 						# Background map of algae
+			heatkwargs=(colormap=[:black,:lime],colorrange=(0,1)),	# Algae's colours
+			add_colorbar=false,										# No need for algae colour bar
+
+		Do this now, then tell me the colour of the algae:
+		""",
+		"",
+		x -> x==:lime
+	),
+	Activity(
+		"""
+		Before proceeding with this lab, you may first like to experiment with different colours
+		for the heatmap. You can find a full list of colorschemes here: ???
+			https://docs.juliaplots.org/latest/generated/colorschemes/
+		""",
+		"",
 		x -> true
 	),
-    Activity(
+	Activity(
 		"""
-		When plotting data there are many customizations you can choose from. The most important ones
-		that will be used in the following labs are heatmaps that contain heatarrays and heatkwargs, 
-		which include colormaps and colorranges. Heatmaps create colors in plots, which are bound to
-		values, e.g. if a variables value is 1 it will be plotted in a specific color, other than 
-		another variable containing the value 2.
-		A heatarray describes the data that has to be interpreted. Like in the example that would be
-		the values 1 and 2.
-		heatkwargs (heat-Keyword-Arguments) are a set of multiple arguments which are specified in
-		the plotting libraries.
-		The most important heatkwargs you will find in the following labs are colormaps and colorranges.
-		Colormaps contain the range of colors that should be depicted in the plot, 
-		e.g. colormap = [:red, :blue] would create a gradual change starting at red and turning into blue.
-		Colorranges specify over which values the colormap will be applied. Taking the example colormap
-		with colorrange = (0:1:10) would distribute the change of the color over the steps from 1 to 10.
-		1 would be represented as red and 10 would be represented as blue.
-		For detailed information about plotting with colors have a look at the plotting documentations 
-		for heatmaps: https://docs.juliaplots.org/latest/generated/colorschemes/
-
-        And with this you are now set to explore IN501Ecosystem.
+		Notice how the number of arguments in the call to abmvideo() is getting rather large
+		and difficult to understand. In such situations it is useful to pull out the relevant
+		keyword arguments into a separate variable - for example called plotkwargs = and then to
+		insert this variable into the call to abmvideo() like this:
+			abmvideo(
+				"Ecosys.mp4", ecosys, agent_step!, model_step!;
+				framerate = 50, frames = 2000,
+				plotkwargs...
+			)
+	
+		Do this now, and ensure that your simulation is still working correctly.
 		""",
-		"???",
+		"",
+		x -> true
+	),
+	Activity(
+		"""
+		In order to understand our Ecosystem better, it would be nice to be able to work more
+		interactively with it, changing parameters and immediately seeing the results. For this
+		reason, we will now replace our call to abmvideo() by a call to abmexploration(). This
+		method builds an exploratory playground around the Ecosystem model. Do this now:
+			playground, = abmexploration( ecosys;
+				agent_step!, model_step!,
+				plotkwargs...
+			)
+
+		Then make sure that Ecosystem.demo() returns the Figure `playground`, so that you can
+		view and use the resulting app. Which slider bar enables you to reduce the speed of the
+		simulation?
+		""",
+		"",
+		x -> occursin("sleep",lowercase(x))
+	),
+	Activity(
+		"""
+		Now we will install our own slider bars for the model parameters that we wish to experiment
+		with. Make the following changes to Ecosystem.demo(), then run it again to make sure your
+		new sliders are working correctly. Note that it is important that your variable is named
+		'params', since that is the correct keyword for calling abmexploration():
+			params = Dict(
+				:n_turtles		=> 1:200,
+				:turtle_speed	=> 0.1:0.1:3.0,
+				:prob_regrowth	=> 0:0.0001:0.01,
+				:initial_energy	=> 10.0:200.0,
+				:Δenergy		=> 0:0.1:5.0,
+			)
+		
+			playground, = abmexploration( ecosys;
+				agent_step!, model_step!, params,
+				plotkwargs...
+			)
+		""",
+		"",
+		x -> true
+	),
+	Activity(
+		"""
+		Finally, I would like to investigate some time-series statistics in the output: I'd like to
+		view the ongoing numbers of turtles and algae. To do this, please insert the following two
+		extra lines of arguments into plotkwargs and rerun your simulation:
+			adata=[(a->isa(a,Turtle),count)], alabels=["Turtles"],
+			mdata=[(m->sum(m.algae))], mlabels=["Algae"],
+		""",
+		"",
+		x -> true
+	),
+	Activity(
+		"""
+		You should observe that for certain values of `prob_regrowth`, the numbers of turtles and
+		algae converge reliably towards oscillation around a more-or-less constant value. Now, this
+		may not seem very special to you yet, but it actually underlies our understanding of how
+		life works. This 'decision' to converge is not made by any individual turtle, nor even by
+		the population of turtles, but by the entire Ecosystem of turtles+algae. In system dynamics,
+		we say that the system's "structure determines behaviour".
+
+		We use the term "emergent" to describe such system-level behaviours that cannot be
+		predicted from the individual behaviour of the system components. Emergence is an idea
+		that is very difficult to define, but which describes well the fact that we cannot predict
+		YOUR behaviour based only on your individual component cells.
+
+		We would like to test how reliable this emergent oscillation of the Ecosystem model is, but
+		at the moment it is difficult to test this because the Reset button of abmexploration()
+		doesn't reinitialise the model. Try this out now: rerun the model several times and notice
+		that the initial configuration of the agents is always the same...
+		""",
+		"",
+		x -> true
+	),
+	Activity(
+		"""
+		This problem is fixed by the AgentTools function abmplayground(). In your Ecosystem
+		model, replace the call to abmexploration() by a call to abmplayground(). Leave all the
+		arguments the same, but insert the name of the initialiser function "ecosystem" as a
+		second argument between the model name "ecosys" and the semicolon indicating the start
+		of the keyword arguments - like this:
+			playground, = abmplayground( ecosys, ecosystem;
+				agent_step!, model_step!, params,
+				plotkwargs...
+			)
+
+		Now run the model again and check that oscillations reliably emerge for all initial
+		configurations of turtles in the Ecosystem ...
+		""",
+		"",
 		x -> true
 	),
 ]

@@ -26,11 +26,11 @@ end
 # Module methods:
 
 """
-	init_simpleparticles( kwargs)
+	simpleparticles( kwargs)
 
 Create and initialise the SimpleParticles model.
 """
-function init_simpleparticles(;
+function simpleparticles(;
     n_particles = 100,				# Number of SimpleParticles in box
     speed = 1.0,					# Initial speed of SimpleParticles in box
 	radius = 1,						# Radius of SimpleParticles in the box
@@ -111,7 +111,7 @@ end
 Run a simulation of the SimpleParticles model.
 """
 function demo()
-	box = init_simpleparticles()
+	box = simpleparticles()
 	abmvideo(
 		"SimpleParticles.mp4", box, agent_step!;
 		framerate = 20, frames = 1000,

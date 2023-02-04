@@ -26,11 +26,11 @@ end
 # Module methods:
 
 """
-	init_simpleparticles( kwargs)
+	simpleparticles( kwargs)
 
 Create and initialise the SimpleParticles model.
 """
-function init_simpleparticles(;
+function simpleparticles(;
     n_particles = 100,				# Number of SimpleParticles in box
     speed = 1.0,					# Initial speed of SimpleParticles in box
 	radius = 1,						# Radius of SimpleParticles in the box
@@ -38,9 +38,8 @@ function init_simpleparticles(;
 )
     space = ContinuousSpace(extent; spacing = radius/1.5)
     box = ABM( SimpleParticle, space;
-		properties = (
-			# Box properties (apply to all SimpleParticles in the box):
-			radius = radius,
+		properties = (				# We can define model properties either as a named Tuple (as
+			radius = radius,		# here) or else as a Dict (as you will see in the next lab)
 		),
 		scheduler = Schedulers.Randomly()
 	)
@@ -89,7 +88,7 @@ end
 Run a simulation of the SimpleParticles model.
 """
 function demo()
-	box = init_simpleparticles()
+	box = simpleparticles()
 	abmvideo(
 		"SimpleParticles.mp4", box, agent_step!;
 		framerate = 20, frames = 1000,
