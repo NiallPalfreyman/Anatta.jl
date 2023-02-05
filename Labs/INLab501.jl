@@ -161,18 +161,22 @@
 	Activity(
 		"""
 		You should observe that for certain values of `prob_regrowth`, the numbers of turtles and
-		algae converge reliably towards oscillation around a more-or-less constant value. Now, this
-		may not seem very special to you yet, but it actually underlies our understanding of how
-		life works. This 'decision' to converge is not made by any individual turtle, nor even by
-		the population of turtles, but by the entire Ecosystem of turtles+algae. In system dynamics,
-		we say that the system's "structure determines behaviour".
+		algae converge reliably towards oscillations around a more-or-less constant value. Now,
+		this may not yet seem very special to you, but it actually underlies our understanding of
+		how life works. This 'decision' to converge is not made by any individual turtle, nor even
+		by the population of turtles, but by the entire Ecosystem of turtles+algae. In system
+		dynamics, we say that the system's "structure determines behaviour".
 
-		We use the term "emergent" to describe such system-level behaviours that cannot be
-		predicted from the individual behaviour of the system components. Emergence is an idea
-		that is very difficult to define, but which describes well the fact that we cannot predict
-		YOUR behaviour based only on your individual component cells.
+		There are two different kinds of system-level, structurally determined behaviour:
+		"collective" and "emergent" behaviour. The oscillations of our Ecosystem are an example of
+		collective behaviour: they are _determined_, but not _chosen_, by the system. "Collective"
+		behaviour arises from the behaviour of many interacting individuals, but the system itself
+		does not yet select between different possible individual behaviours. "Emergent" behaviour
+		is less easy to define, but we will look more closely at it in the next lab. Emergence
+		describes well the fact that we cannot predict YOUR behaviour based only on your individual
+		component cells.
 
-		We would like to test how reliable this emergent oscillation of the Ecosystem model is, but
+		We would like to test how reliable this collective oscillation of the Ecosystem model is, but
 		at the moment it is difficult to test this because the Reset button of abmexploration()
 		doesn't reinitialise the model. Try this out now: rerun the model several times and notice
 		that the initial configuration of the agents is always the same...
@@ -182,18 +186,21 @@
 	),
 	Activity(
 		"""
-		This problem is fixed by the AgentTools function abmplayground(). In your Ecosystem
-		model, replace the call to abmexploration() by a call to abmplayground(). Leave all the
-		arguments the same, but insert the name of the initialiser function "ecosystem" as a
-		second argument between the model name "ecosys" and the semicolon indicating the start
-		of the keyword arguments - like this:
+		The AgentTools function abmplayground() enforces complete initialisation of our ABM models,
+		and we will mostly use abmplayground() in this course. It requires the initialiser function
+		ecosystem() as an argument, but all other arguments are simply passed to abmexploration().
+
+		In your Ecosystem model, replace the call to abmexploration() by a call to abmplayground().
+		Leave all the arguments the same, but insert the name of the initialiser function
+		"ecosystem" as a second argument between the model name "ecosys" and the semicolon
+		indicating the start of the keyword arguments - like this:
 			playground, = abmplayground( ecosys, ecosystem;
 				agent_step!, model_step!, params,
 				plotkwargs...
 			)
 
-		Now run the model again and check that oscillations reliably emerge for all initial
-		configurations of turtles in the Ecosystem ...
+		Now run the model again and confirm that the collectively determined oscillations occur
+		reliably for all initial configurations of turtles in the Ecosystem ...
 		""",
 		"",
 		x -> true
