@@ -8,7 +8,7 @@ generating them does not make use of downward selection by the system. However, 
 properties can arise reliably from the random behaviour of individual system components, yet
 CANNOT be computed from those individual behaviours.
 
-Author: Niall Palfreyman (January 2020), Nick Diercksen (May 2022)
+Author: Niall Palfreyman (January 2023), Nick Diercksen (May 2022)
 """
 module Computability
 
@@ -17,7 +17,7 @@ include( "../../Tools/AgentTools.jl")
 using Agents, GLMakie, InteractiveDynamics, .AgentTools
 
 #-----------------------------------------------------------------------------------------
-# Module data:
+# Module types:
 #-----------------------------------------------------------------------------------------
 """
 	Particle

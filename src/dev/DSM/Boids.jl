@@ -1,3 +1,15 @@
+#========================================================================================#
+"""
+	Boids
+
+This module generates system-level properties that illustrate an important aspect of emergence:
+"Non-computability". Non-computable properties are not yet emergent, since the process of
+generating them does not make use of downward selection by the system. However, non-computable
+properties can arise reliably from the random behaviour of individual system components, yet
+CANNOT be computed from those individual behaviours.
+
+Author: Niall Palfreyman (January 2020), Nick Diercksen (May 2022)
+"""
 module Boids
 
 using Agents, LinearAlgebra, Random, GLMakie, InteractiveDynamics

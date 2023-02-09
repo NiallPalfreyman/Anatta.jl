@@ -13,7 +13,7 @@ include( "../../Tools/AgentTools.jl")
 using Agents, GLMakie, InteractiveDynamics, .AgentTools
 
 #-----------------------------------------------------------------------------------------
-# Module data:
+# Module types:
 #-----------------------------------------------------------------------------------------
 """
 	Particle
