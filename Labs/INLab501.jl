@@ -8,7 +8,7 @@
 [
 	Activity(
 		"""
-		Welcome to Lab 501!
+		Lab 501: Collective behaviour.
 
 		Now we understand the general structure of ABMs, we will turn from physics to a more
 		biological example: Organisms interacting with each other in an ecosystem.
@@ -22,7 +22,7 @@
 		the functionality I wanted to change.
 
 		One reference mode for this system is that it is sustainable: that the turtles survive and
-		the algae can regrow. Run Ecosystem.demo() to verify whether it does indeed fulfil this
+		the algae can regrow. Run Ecosystem.demo() to verify whether it does indeed satisfy this
 		reference mode.
 		""",
 		"",

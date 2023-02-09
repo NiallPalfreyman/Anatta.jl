@@ -1,170 +1,227 @@
-"""
-Author: Stefan Hausner
-"""
-
-[	
+#========================================================================================#
+#	Laboratory 502
+#
+# Computability.
+#
+# Author: Niall Palfreyman (February 2023), Nick Diercksen (July 2022)
+#========================================================================================#
+[
 	Activity(
-	"""
-	Another important function from the Toolbox is eigvec. An eigenvector can
-	be created with a linear transformation and is a scaled vector.
-	This concept is especially important if we want to find the best agent value (nutrient source)
-	in a neighbourhood. If the model has two agent positions a you want to go from
-	one to another. It is recommended to use eigvec if the model searches for an better
-	value. 
+		"""
+		Lab 502: (Non-)Computable patterns.
 
-	include("./src/Development/PBM/AgentToolBox.jl")
-	
-	using .AgentToolBox: eivec
-	
-	calculate the eigenvector of Tuple([-1.0,3.0])
+		"Reductionism" is the belief that we can always understand system-level behaviours by
+		reducing them to individual component behaviours, but this is certainly not always possible,
+		as we saw in the previous lab. For example, we cannot reduce the collective oscillations of
+		the Ecosystem model to the behaviour of individual agents, since they are determined by the
+		entire system. Nevertheless, reductionists may still argue that we can reduce the Ecosystem
+		oscillations to the structure of relationships _between_ individual agents.
+
+		This argument assumes that we can always compute the effects of agents' relationships and
+		behaviours. However, there exists a whole class of patterns that we can generate, yet can
+		never predict using computation. In this lab, we will demonstrate this important feature of
+		NON-COMPUTABILITY.
 		
-	"""
-	"eigvec(Tuple([-1.0,3.0]))",
-	x -> x == (-0.31622776601683794, 0.9486832980505138)	
-	),
-
-	Activity(	
-	"""
-	Another important function provided by the Agent package is edistance.
-	https://juliadynamics.github.io/Agents.jl/stable/api/
-
-	With this function the model can calculate the euclidian distance between two agents.
-	The function edistance needs these parameters edistance(pos1,pos2,model)
-	For this Activity you should use an GlMakie graph to plot the euclidian distances.
-	https://makie.juliaplots.org/v0.17.8/examples/plotting_functions/lines/index.html
-
-	Copy this code in your julia repl try to copy every function seperatly.
-	You can execute the plot with 
-	plot_distance()
-	
-	using Agents
-	using  GLMakie: lines	
-
-	mutable struct Agent <: AbstractAgent
-		id::Int                   
-		pos::NTuple{2,Float64}              
-	end   	
-
-	function initialize_model(  
-		;n_particles::Int = 5, 
-		worldsize::Int64=50,
-		extent::Tuple{Int64, Int64} = (worldsize, worldsize)
-		,euclidiandist::Matrix{Float64} = zeros(Float64,n_particles,1),)
-
-		properties = Dict(
-			:euclidiandist => euclidiandist,
-		)
-		space = ContinuousSpace(extent, 1.0)
-		model = ABM(Agent, space, scheduler = Schedulers.fastest,properties = properties)
-
-		for id in 1:n_particles
-			pos = Tuple(rand(2:1:worldsize-1,2,1))
-			euclidiandist[id,1] = edistance(pos,Tuple([worldsize/2, worldsize/2]),model)
-			add_agent!(
-				pos,
-				model,
-			)
-		end
-		return model
-	end
-
-	function plot_distance()
-
-		model = initialize_model()
-		x = range(0, 5, length=5)
-		println(model.euclidiandist[1:5])
-		figure, axis, lineplot = lines(x, model.euclidiandist[1:5])
-		figure
-	end
-	"""
-	),
-
-	Activity(
-	"""
-	After that you should create a model to position our agents on
-	the circle ring.
-	Now you can create our Agent.
-	First of all we need to create an basic struct.
-
-	using Agents,InteractiveDynamics,GLMakie
-	include("./src/Development/PBM/AgentToolBox.jl")
-	using .AgentToolBox: rotate_2dvector,polygon_marker
-
-	mutable struct Agent <: AbstractAgent
-		id::Int                    
-		pos::NTuple{2,Float64}             
-		vel:: NTuple{2,Float64}
-	end   
-
-	you can alternativly use 
-
-	ContinuousAgent{D}
-
-	D is the dimension in this example is it two
-	The ContinuousAgent has the following attributes the fields id::Int, pos::NTuple{D,Float64}, vel::NTuple{D,Float64} 
-
-	For our purpose use the struct Agent
-	""",
-	x -> true	
-	),
-
-	Activity(
-	"""
-	In the previous Activity you created an struct now you should 
-	position our agents on the circle ring. Here we use the 
-	rotate method previous used. It is recommended to use 
-	a separate file to cod initialize_model
-
-
-	function initialize_model(
-		;n_agents=5,worldsize=50)
-
-		extent = (worldsize,worldsize)
-		space2d = ContinuousSpace(extent, 1.0)
-		model = ABM(Agent, space2d, scheduler = Schedulers.randomly)
-
-		for id in 1:n_agents
-			#vel = ... #rotate random in an radius of 10
-			#pos = ... #position the agents on the circle ring.(tangent)
-			vel = rotate_2dvector(0.5*π,[vel[1], vel[2]])
-			#vel rotates the vector to look at the right direction
-			add_agent!(
-				pos,
-				model,
-				vel,
-			)
-		end
-		return model
-	end
-
-	function demo()
-		model = initialize_model();
-		figure, p = abmexploration(model;dummystep,params = Dict(),am = polygon_marker)
-		figure;
-	end
-		
-	""" 
-	"vel = rotate_2dvector([10 10])
-	pos = Tuple([worldsize/2 worldsize/2]').+vel",
-	x -> true
+		Non-computable patterns are not collective, since they can be generated by a very simple
+		system containing just one agent. However, non-computable patterns can arise reliably out
+		of an agent's random behaviour, yet we can never predict the pattern simply by knowing that
+		agent's behaviour. This has to do with the limits of computability ...
+		""",
+		"",
+		x -> true
 	),
 	Activity(
 		"""
-		If you want to create an plot to observe an model variable you should use 
-		mdata or adata. In the LabIn502RegularCollectiveBehaviour the model 
-		uses mdata to observe the meandistance of every agent to the origin (0,0)
-
-        https://juliadynamics.github.io/InteractiveDynamics.jl/dev/agents/
-
-		You can observe this in the model. Use these two commands to 
-		observe the linegraph on the right.
-
-		include("src/Development/PBM/IN502RegularCollectiveBehaviour.jl")
-		CollectiveBehaviour.demo()
-
+		Include the file Computability.jl. At each step of Computability.demo(), the single agent
+		in the model chooses at random one of the three available food sources (the red vertices),
+		then moves halfway towards it. To see what happens, press the Step button several times -
+		you will see that the agent jumps around, and wherever it lands, it leaves behind a tiny
+		(1pt) black footprint. Keep stepping the agent until you notice that these footprints are
+		forming a pattern. Do you know the name of the non-computable figure that this pattern
+		approximates?
 		""",
+		"If you're unsure, just keep stepping through the simulation :)",
+		x -> occursin("sierpinsk",lowercase(x))
+	),
+	Activity(
+		"""
+		Now you know the structure of this pattern, press the Run button to watch it being
+		generated at speed. You might also like to move the "spu" slider all the way to the right
+		to make things go a bit faster.
+		""",
+		"",
 		x -> true
 	),
+	Activity(
+		"""
+		Now press the Reset button to randomise the simulation, and then Run the simulation from a
+		new starting position. What might be a good reference mode for this model?
+		""",
+		"",
+		x -> occursin("sierpinsk",lowercase(x))
+	),
+	Activity(
+		"""
+		Experiment with the various sliders, changing the number of particles, vertices and the
+		contraction factor r. What exactly does r do? Study the method agent_step!() to answer the
+		question: Which aspect of the particle's movement does r influence?
+		""",
+		"", 
+		x -> occursin("fract",lowercase(x))
+	),
+	Activity(
+		"""
+		I now have a few questions - very important ones - about the patterns you have been
+		generating. Set r=0.5 again to recover the original pattern, maximise the playground window
+		and generate lots of points to see the pattern in the greatest possible detail.
 
+		Now consider first the point in the centre of the pattern. Do you think the particles can
+		ever in principle visit this point?
+		""",
+		"", 
+		x -> occursin("no",lowercase(x))
+	),
+	Activity(
+		"""
+		How long do you think it would take to prove your answer to the previous activity?
+		""",
+		"", 
+		x -> true
+	),
+	Activity(
+		"""
+		Now focus your attention on one of the tiniest triangles in your pattern, and pick a point
+		at the centre of this tiny triangle. Do you think the particles can ever in principle visit
+		this point?
+		""",
+		"", 
+		x -> occursin("no",lowercase(x))
+	),
+	Activity(
+		"""
+		Do you think it would take longer or shorter to prove your answer for the tiny triangle,
+		than it would take to prove your answer for the point at the centre of the whole pattern?
+		""",
+		"", 
+		x -> occursin("longer",lowercase(x))
+	),
+	Activity(
+		"""
+		Now focus your attention on one of the dark areas between the triangles in your pattern.
+		Imagine a point somewhere within that dark area. Do you think the particles can ever in
+		principle visit that point?
+		""",
+		"", 
+		x -> occursin("dunno",lowercase(x)) || occursin("know",lowercase(x))
+	),
+	Activity(
+		"""
+		How long do you think it might take a computer to verify your answer to the previous
+		activity?
+		""",
+		"", 
+		x -> occursin("infinit",lowercase(x))
+	),
+	Activity(
+		"""
+		The Sierpinski triangle is an example of a NON-COMPUTABLE figure. The agents' motion
+		generates a structural pattern that suggests certain properties like whether or not any
+		given point lies within that figure. Yet it can take an infinitely long time for a
+		computer to verify that suggestion!
 
-		]
+		Notice this important difference: You and I see an infinite sequence of nested triangles;
+		a computer, however, sees only a set of points with different distances between them. At
+		best, the computer sees an algorithm for generating new points.
+
+		Clearly, we are able to do something that a computer can't!
+		""",
+		"", 
+		x -> occursin("infinit",lowercase(x))
+	),
+	Activity(
+		"""
+		Before proceeding further with this lab, I want to draw your attention to a small coding
+		issue. Look at the graphics code in Computability.demo(). After setting up the playground,
+		we want to superimpose onto the basic abmplot all the footprints of each agent in the
+		model. To achieve this, we "lift" (i.e., add a listener to) the abmplot Observable, so that
+		every time the abmplot changes (for example, after each call to model_step!()), we can plot
+		the new agent footprints.
+
+		It's a pity that we have to concern ourselves here with these messy graphics details, and I
+		promise that in future implementations, I will make this all a little easier. However, for
+		the moment, just notice how we solved this particular problem - it might be useful later
+		for your own course project. :)
+		
+		What is the name of the other variable that is plotted in exactly the same way?
+		""",
+		"",
+		x -> occursin("corners",lowercase(x))
+	),
+	Activity(
+		"""
+		Now create your own demonstration of a non-computable reference pattern by renaming the
+		module Computability into a new file Leafy.jl, then modifying its code to construct another
+		non-computable figure. To do this, create a 2-D continuous world with extent 10x10, define
+		a model property :base_point=>[5.0,0.0], and initialise all particles in the Leafy model
+		at this base_point location.
+		
+		Next, modify the method Leafy.agent_step!() to implement the following movement rule for
+		particles: At each step, move the particle as shown below with the associated probabilities,
+		where (x,y) are the particle's current position coordinates _relative_ to leafy.base_point:
+				- 85%:				(x,y) -> (0.85x+0.04y, -0.04x+0.85y+1.6);
+				- 7%:				(x,y) -> (0.20x-0.26y, 0.23x+0.22y+1.6);
+				- 7%:				(x,y) -> (-0.15x+0.28y, 0.26x+0.24y+0.44);
+				- Otherwise (1%):	(x,y) -> (0, 0.16y).
+		""",
+		"Reference mode: The graphical footprints should remind you of a kind of leaf",
+		x -> true
+	),
+	Activity(
+		"""
+		OK, now the following point is very important for developing your own course project later:
+		Notice how easily you can check whether your program is working correctly, by simply seeing
+		whether it generates a leaf-like pattern. I have not drawn you a leaf or told you what the
+		leaf should look like, but you will immediately know when your program works because it
+		will produce a leaf-like pattern. This way of checking program correctness against an
+		output pattern is called "pattern-oriented modelling":
+			The reference modes of Agent-Based Modelling are PATTERNS!
+
+		What pattern formed the reference mode of the Ecosystem model?
+		""",
+		"", 
+		x -> occursin("sustain",lowercase(x))
+	),
+	Activity(
+		"""
+		When your program is satisfying its reference mode, investigate the 'magic parameters' in the
+		generating procedure by setting up sliders to change their values. Discuss with your partners
+		the meaning of the various parameters for the developing leaf pattern.
+		""",
+		"", 
+		x -> true
+	),
+	Activity(
+		"""
+		Computability is very closely related to the term Incompleteness in logic. In 1931, Kurt
+		Gödel proved that mathematical logic is 'incomplete' in the sense that there are
+		mathematical truths that we can never prove, but must simply decide for ourselves - like
+		for example the idea that two parallel lines never meet. We cannot prove this, but we can
+		state it as an axiom of Euclidean geometry.
+
+		Similarly, we have discovered in this lab that computation is incomplete in the sense that
+		there are certain geometrical figures whose properties we can never compute, but must
+		decide for ourselves - like for example whether a certain point is, or is not, contained in
+		the edge of your leaf. We cannot compute this, but we can state it as an axiom that we must
+		then confirm or disconfirm by experiment.
+
+		And that is what we shall do in this course: We shall use ABM to discover how the emergent
+		figures of biology are generated. We have good reason to suspect that these figures are
+		non-computable, but maybe we can use ABM to compute patterns that are sufficiently close
+		that we can guess the biological dynamics underlying those figures.
+
+		But, of course, we still haven't said what exactly "emergence" is ... :)
+		""",
+		"", 
+		x -> true
+	),
+]
