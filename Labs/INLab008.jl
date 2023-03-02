@@ -17,7 +17,7 @@
 		now is the time to make sure we understand how to write code that is clear enough for
 		others to understand! Look now at the method eratosthenes_bad() in the following file:
 			
-			src/Development/Utilities/Utilities.jl
+			src/Tools/Utilities.jl
 
 		The function eratosthenes_bad() generates prime numbers up to a user specified maximum N.
 		It uses the algorithm known as the Sieve of Eratosthenes, which is quite simple: Given an

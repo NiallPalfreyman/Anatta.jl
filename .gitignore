@@ -2,7 +2,7 @@
 *.jl.cov
 *.jl.*.cov
 *.jl.mem
-*.jl.niall
+*.sol.*
 deps/deps.jl
 
 # client specific

@@ -27,7 +27,7 @@ export diffuse4!
 Diffuse heatarray via 4-neighbourhoods with periodic boundary conditions and the given
 diffusion rate.
 """
-function diffuse4!( heatarray::Matrix{Float64}, diffrate=1.0, periodic=true)
+function diffuse4!( heatarray::Matrix{Float64}, diffrate=1.0)
 	nrows = size(heatarray)[1]
 	ncols = size(heatarray)[2]
 	map(CartesianIndices((1:size(heatarray)[1], 1:size(heatarray)[2]))) do x

@@ -14,7 +14,7 @@ using Agents, GLMakie, InteractiveDynamics, LinearAlgebra, Observables
 
 import InteractiveUtils: @which
 
-export abmplayground, colour, dejong2, diffuse4, diffuse4!, diffuse8, diffuse8!,
+export abmplayground, multicoloured, dejong2, diffuse4, diffuse4!, diffuse8, diffuse8!,
 		size, turn!, valleys, wedge
 
 #-----------------------------------------------------------------------------------------
@@ -29,12 +29,12 @@ Base.size(cs::Agents.ContinuousSpace) = cs.dims
 
 #-----------------------------------------------------------------------------------------
 """
-	colour(agent)
+	multicoloured(agent)
 
-Return colour depending on the id of the agent.
+Return different colours depending on the id of the agent.
 """
 const spectrum = [:red,:orange,:yellow,:green,:blue,:violet,:magenta,:white]
-function colour( agent::AbstractAgent)
+function multicoloured( agent::AbstractAgent)
 	spectrum[1+agent.id%length(spectrum)]
 end
 
