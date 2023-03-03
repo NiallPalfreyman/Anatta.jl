@@ -2,10 +2,11 @@
 *.jl.cov
 *.jl.*.cov
 *.jl.mem
-*.sol.*
 deps/deps.jl
 
 # client specific
+*.sol.*
+*.lnr
 .vscode
 .vscode/settings.json
 .DS_Store
