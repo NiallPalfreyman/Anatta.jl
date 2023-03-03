@@ -12,22 +12,24 @@
 		"""
 		Hi! Welcome to course component 5 on Dynamical Systems Modelling (DSM)! :)
 
-		DSM develops the idea that behaviour in biological systems arises not from complex
-		planning algorithms, but from random interactions between many independent components. The
-		massive advantage of this dynamical architecture is that it DEGRADES GRACEFULLY. That is,
-		if conditions are not ideal, dynamical systems will typically not crash, but will instead
-		perform les well, but still correctly.
+		We will use DSM to study biological organism systems that consist of many interacting,
+		NON-LIVING components. Organisms generate behaviour that is emergent, complex and autonomous:
+			- EMERGENT behaviour is COLLECTIVE (arises from the interactions of many individual
+				components) and UNPREDICTABLE (is not computable from the component behaviours).
+			- COMPLEX behaviour is emergent, and is also easy to describe at the system level.
+			- AUTONOMOUS behaviour is complex behaviour that we can describe at the system level as
+				maintaining the existence of the system that generates that autonomous behaviour.
 
-		DSM uses two important tools: Agent-Based Modelling (ABM) and System Dynamics (SD).
-		In ABM, we call the components AGENTS; in SD we call them STOCKS. For our experimental
-		work, we will use the two julia packages Agents and DynamicalSystems; to display this work,
-		we will use the packages GLMakie and InteractiveDynamics.
+		The great advantage of autonomous systems is that they DEGRADE GRACEFULLY. That is, if
+		conditions are not ideal, an autonomous systems will typically not crash, but will instead
+		continue to perform its function, although less efficiently than before.
 
-		You can find an introduction to the Agents package here:
+		DSM uses two important tools: Agent-Based Modelling (ABM) and System Dynamics (SD). In ABM,
+		we call the components AGENTS; in SD we call them STOCKS. For our experimental work, we
+		will use the two julia packages Agents and DynamicalSystems; to display this work, we will
+		use the packages GLMakie and InteractiveDynamics. Make sure you have loaded the Agents
+		package, then go and read this introduction to its functionality:
 			juliadynamics.github.io/Agents.jl/stable/tutorial
-
-		I have already installed the packages Agents, GLMakie and InteractiveDynamics, but you will
-		need to load them yourself. What keyword do you use to do this?
 		""",
 		"Please make sure you have loaded these 3 packages - you will need them!",
 		x -> x == "using"

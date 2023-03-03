@@ -21,7 +21,7 @@ export abmplayground, multicoloured, dejong2, diffuse4, diffuse4!, diffuse8, dif
 # Module methods:
 #-----------------------------------------------------------------------------------------
 """
-	size( cs::ContinuousSpace
+	size( cs::ContinuousSpace)
 
 Extend Base.size to ContinuousSpaces to allow heatmaps to work in abmplot.
 """
