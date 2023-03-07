@@ -1,57 +1,70 @@
 #========================================================================================#
 #	Laboratory 505
 #
-# Welcome to course 505: Flow of a resource in a world, initialized and run by
-#                        a central turtle producing and pumping the resource.
+# Flows
 #
 # Author: Niall Palfreyman (24/04/2022), Dominik Pfister (July 2022)
 #========================================================================================#
 [
-	Activity( # nr 1
+	Activity(
 		"""
-		Welcome to Lab 505: Flow.
-        This lab focuses on the diffusion and evaporation of a resource "u" inside a world.
-        The resource is being produced and pumped from one point to another by a trutle at the 
-        center of the world. The resource u flows from patch to patch through diffusion and
-        a small percentage of u evaporates.
+		Lab 505: Flows.
 
-        There is one new function used in this lab that will be explained in the next activity.
+		This lab focuses on the diffusion and evaporation of a resource "poo" in the environment.
+		This poo is produced and consumed by a single turtle that moves around the world, and
+		it also diffuses and evaporates. In biology, such flows provide the topological structure
+		that guides the development of organism and their behaviours.
+
+		Run the module Flows now and explore the effect of varying the rates of diffusion (dPoo)
+		and evaporation (αPoo). What diffusion rate enables you to draw stable lines in the
+		environment? 
 		""",
-		"???",
+		"",
+		x -> x==0
+	),
+	Activity(
+		"""
+		Can you find diffusion and evaporation rates that generate a movement like a comet and tail
+		around the world?
+		""",
+		"",
 		x -> true
 	),
-    Activity( # nr 2
+	Activity(
 		"""
-		The mentioned function is diffuse8(model, diffuse_value, diffusion_rate) and is also
-        implemented in the AgentToolBox. 
-        The following example explains the simple logic that is happening, when diffusing
-        a value of a matrix:
-        If we have a matrix
-    
-        m = [
-            1 1 1
-            1 8 1
-            1 1 1
-        ]
-
-        and we would use the function diffuse on the 8 in the middle of the matrix m with a 
-        diffusion_rate of 0.5, the result would be the matrix
-
-        m = [
-            1.5 1.5 1.5
-            1.5 4 1.5
-            1.5 1.5 1.5
-        ]
-
-        What happened when we used that function was that a part of 8, 8*diffusion_rate to be exact,
-        got split up and added to the 8 surrounding patches in equal amounts. When calling the function,
-        this way of diffusion is added to every single value in the matrix (not only the 8).
-        Using the function on the whole matrix, it would check for matrix bounds and add the
-        remainder of otherwise out-of-bounds-values to the closest value that is in-bounds. 
-
-        With this information you are free to explore IN505Flow.
+		Can you find diffusion and evaporation rates that generate a relatively stable and even
+		distribution of poo across the entire world?
 		""",
-		"???",
+		"",
+		x -> true
+	),
+	Activity(
+		"""
+		When ants forage for food, they wander out from the nest in random directions, leaving a
+		persistent pheromone trail P that tells them how to return home to the nest. If the search
+		takes too long, the ant returns to the nest to feed before going out again to forage. If
+		the ant discovers a food source, she carries some back to the nest, while leaving a trail
+		of a second (food) pheromone F. Other ants that discover this F-trail follow it to the
+		food source and fetch food to the nest, again leaving a trail of F. Over time, the ant
+		colony will develop a highly efficient (i.e. straight) communal F-trail between nest and
+		food source.
+
+		If we built an ABM of this ant-foraging system, what might be suitable outcome-patterns
+		for testing the validity of the model?
+		""",
+		"What emerging patterns would indicate that your ant-agents are behaving correctly?",
+		x -> occursin("straight",lowercase(x)) && occursin("trail",lowercase(x))
+	),
+	Activity(
+		"""
+		Develop your own ABM of ant foraging to discover what behaviours are required by ants in
+		order for them to construct this efficient route.
+
+		IMPORTANT: Nature is always parsimonious! Simplicity and modularity are crucial features
+		of any successful ABM. Make sure that your model is as simple and as modular as possible
+		in order to achieve the required behaviour.
+		""",
+		"",
 		x -> true
 	),
 ]
