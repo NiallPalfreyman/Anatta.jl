@@ -10,7 +10,7 @@ redistributed equally between the 4 adjacent neighbours of that location (right,
 with the result that the heat diffuses out from high-value areas of the heatarray into low-value
 areas of the array.
 		
-Author: Niall Palfreyman, 1/2/2023.
+Author: Som Ebody, 20/21/2021.
 """
 module Diffusion
 
@@ -22,7 +22,7 @@ export diffuse4!
 # Module methods:
 #-----------------------------------------------------------------------------------------
 """
-	diffuse4!( heatarray::Matrix{Float64}, diffrate::Float64)
+diffuse4!( heatarray::Matrix{Float64}, diffrate::Float64)
 
 Diffuse heatarray via 4-neighbourhoods with periodic boundary conditions and the given
 diffusion rate.
@@ -32,15 +32,15 @@ function diffuse4!( heatarray::Matrix{Float64}, diffrate=1.0)
 	ncols = size(heatarray)[2]
 	map(CartesianIndices((1:size(heatarray)[1], 1:size(heatarray)[2]))) do x
 
-		if (x[1] == 1 || x[1] == nrows || x[2] == 1 || x[2] == ncols)
-			neighbours = wrapMat(nrows, ncols, neuman_neighbourhood(x[1], x[2]))
-		else
-			neighbours = neumann_cartini(ncols, x[1], x[2])
-		end
-		flow = heatarray[x[1], x[2]] * diffrate
-		heatarray[x[1], x[2]] *= 1 - diffrate
-		heatarray[neighbours] = heatarray[neighbours] .+ (flow / 4)
+	if (x[1] == 1 || x[1] == nrows || x[2] == 1 || x[2] == ncols)
+		neighbours = wrapMat(nrows, ncols, neuman_neighbourhood(x[1], x[2]))
+	else
+		neighbours = neumann_cartini(ncols, x[1], x[2])
 	end
+	flow = heatarray[x[1], x[2]] * diffrate
+	heatarray[x[1], x[2]] *= 1 - diffrate
+	heatarray[neighbours] = heatarray[neighbours] .+ (flow / 4)
+end
 
 	heatarray
 end
@@ -80,7 +80,7 @@ function neumann_cartini(size_col, rowindex, colindex)
 	i = rowindex
 	j = colindex
 	return [cartesian_indices(size_col, i + 1, j), cartesian_indices(size_col, i - 1, j),
-		cartesian_indices(size_col, i, j - 1), cartesian_indices(size_col, i, j + 1)]
+	cartesian_indices(size_col, i, j - 1), cartesian_indices(size_col, i, j + 1)]
 end
 
 # TODO: finish description! (I have little clue what is expected as input nor what will be returned)
@@ -98,16 +98,16 @@ function wrapMat(size_row, size_col, index::Union{Vector{Vector{Int64}},Vector{I
 
 	for ids in 1:size(index)[1]
 		if index[ids][1] == 0
-			index[ids][1] = -1
+		index[ids][1] = -1
 		end
 		if index[ids][1] == size_row
-			index[ids][1] = size_row + 1
+		index[ids][1] = size_row + 1
 		end
 		if index[ids][2] == 0
-			index[ids][2] = -1
+		index[ids][2] = -1
 		end
 		if index[ids][2] == size_col
-			index[ids][2] = size_col + 1
+		index[ids][2] = size_col + 1
 		end
 
 		index1 = rem(index[ids][1] + size_row, size_row)
