@@ -12,7 +12,7 @@ Author: Niall Palfreyman, 01/01/2023
 module Anatta
 
 # Externally callable methods of Anatta
-export ani, gimme, lab, act, reply, hint, menu, nextlab, nextact
+export ani, gimme, lab, act, reply, hint, nextlab, nextact
 
 using Pluto								# We want to be able to use Pluto notebooks
 
@@ -28,7 +28,7 @@ session = Session()						# Create the single Anatta session
 
 #-----------------------------------------------------------------------------------------
 """
-	ani()
+	run()
 
 Initiate an Anatta session.
 
@@ -42,11 +42,11 @@ the session accordingly.
 
 # Examples
 ```julia
-julia> ani()
+julia> Anatta.run()
 Welcome to the pedagogical playground of Anatta!! ...
 ```
 """
-function ani()
+function run()
 	global session					# We're setting up the global session
 
 	# Create path to Anatta labs registry:
@@ -86,7 +86,7 @@ end
 
 #-----------------------------------------------------------------------------------------
 """
-	menu()
+	ani()
 
 Display a friendly menu of Anatta commands.
 """
@@ -260,7 +260,7 @@ function nextlab( lab_num::Int = 0, current_act::Int = 1)
 	println( "Great - I've set up the laboratory. Please note that if you have just completed")
 	println( "another lab in this Julia console, name conflicts may arise. You can clear these")
 	println( "by simply restarting the console and restarting Anatta.")
-	println( "Enter menu() at any time to ask me about your available options. Have fun! :)")
+	println( "Enter ani() at any time to ask me about your available options. Have fun! :)")
 	println()
 
 	# Display the new laboratory number:
