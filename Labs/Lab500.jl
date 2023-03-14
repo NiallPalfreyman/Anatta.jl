@@ -224,8 +224,8 @@
 		"""
 		Our simulation certainly looks good, doesn't it? But is it a physically accurate model
 		of an ideal gas? The whole point of ABMs is to test our theories on systems that are too
-		complex for us to do without a computer, and we can only test a theory if our model is a
-		physically accurate model of an N-particle ideal gas. This means that our model should
+		complex for us to manage without a computer, and we can only test a theory if our model is
+		a physically accurate model of an N-particle ideal gas. This means that our model should
 		satisfy conservation of both momentum and kinetic energy.
 
 		We call such rules REFERENCE MODES: A reference mode is any behaviour of our model that
