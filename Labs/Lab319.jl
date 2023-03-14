@@ -146,7 +146,7 @@
 
 		There is just one thing we need to do first. Our modules can get quite complex, so we
 		will build them up step-by-step within the Ingolstadt filesystem. If you look in the
-		directory Ingolstadt/Development/Casinos, you will find a file named Casinos.jl. At
+		directory Development/Casinos, you will find a file named Casinos.jl. At
 		present, this is just a dummy file that doesn't do anything except create a module named
 		Casinos that contains the single variable test. Notice that the module Casinos is prefixed
 		by a triple-quoted multi-line string that describes its purpose.
@@ -166,7 +166,7 @@
 		Now we'll test the Casinos module by reading and parsing the file Casinos.jl. Enter the
 		following line from inside the Ingolstadt folder:
 
-		include("src/Development/Casinos/Casinos.jl")
+		include("Development/Casinos/Casinos.jl")
 
 		Now you can test the Casinos module by telling me the answer to the following line of code:
 
@@ -216,7 +216,7 @@
 		"""
 		You can test your new module by reincluding Casinos.jl:
 
-		include("src/Development/Casinos/Casinos.jl")
+		include("Development/Casinos/Casinos.jl")
 
 		If you enter Casinos.unittest() at the Julia prompt, you will see that the command
 		runs, but throws lots of errors (exceptions). We'll now start fixing those errors...
@@ -373,7 +373,7 @@
 		Congratulations! You have written your first Julia module! You can test its functionality
 		for yourself by doing something like this at the Julia prompt:
 
-		include("src/Development/Casinos/Casinos.jl")
+		include("Development/Casinos/Casinos.jl")
 		casino = Casinos.Casino(3,3,5)
 		Casinos.draw(casino,3,3)
 

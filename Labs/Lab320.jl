@@ -19,7 +19,7 @@
 		and tell me to the nearest integer value the x-coordinate of the global minimum of
 		the 7-th function in our test-suite of Objective functions:
 
-			include("src/Development/SimpleGAs/Objectives.jl")
+			include("Development/SimpleGAs/Objectives.jl")
 			using .Objectives
 			Objectives.demo1()
 		""",

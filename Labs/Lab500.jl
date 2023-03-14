@@ -197,9 +197,12 @@
 		Now let's make our ABM a little more useful: We will turn it into a model of particles
 		flying around and bounce off each other within an ideal gas. The above code that
 		you have entered in the Julia console is also contained in the file SimpleParticles.jl.
-		Study and run this file to be sure you understand the extra code I have added there.
+		Fetch the Dynamical Systems Modelling code now:
+			fetchcode("DSM")
 
-		Don't expect the particles to bounce off each other yet - that will be our next job! :)
+		Now study and run the file Development\\DSM\\SimpleParticles.jl to be sure you understand
+		the extra code I have added there. Don't expect the particles to bounce off each other yet -
+		that will be our next job! :)
 		""",
 		"",
 		x -> true
@@ -225,13 +228,15 @@
 		physically accurate model of an N-particle ideal gas. This means that our model should
 		satisfy conservation of both momentum and kinetic energy.
 
-		We call such rules a REFERENCE MODE: A model is only valid if it satisfies reference modes
-		that ensure its faithfulness to the "real system" we wish to model. So let's test our
-		reference mode right now. First write in the SimpleParticles module two new methods that
-		calculate the momentum and kinetic energy of a particle, for example:
+		We call such rules REFERENCE MODES: A reference mode is any behaviour of our model that
+		will reassure us that we have implemented the model correctly. A model is only valid if
+		it satisfies all reference modes that ensure its faithfulness to the "real system" we wish
+		to model. So let's test our reference mode right now. First write in the SimpleParticles
+		module two new methods that calculate the momentum and kinetic energy of a particle, for
+		example:
 			momentum(particle) = particle.speed * collect(particle.vel)
 		""",
-		"Don't worry about the mass of the particles - just assume it is equal to 1.0",
+		"Don't worry about the mass of the particles for now - just assume it is equal to 1.0",
 		x -> true
 	),
 	Activity(
@@ -263,7 +268,7 @@
 		So, we need to re-implement our ideal gas model so that the collisions between particles
 		satisfy momentum conservation. You will see that I have done this in the file IdealGas.jl.
 		To create this file, I simply did the following:
-			1. I copied SimpleParticles.jl to IdealGas.jl and renamed internals accordingly;
+			1. I copied SimpleParticles.jl to IdealGas.jl and renamed its internals accordingly;
 			2. I added some nice-to-haves like putting mass and radius into Particle;
 			3. I ensured strict normalisation of Agent.vel into a unit vector;
 			4. I stripped out agent_step!() and reimplemented it.

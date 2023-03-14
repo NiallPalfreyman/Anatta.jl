@@ -138,17 +138,24 @@
 		Great! Now that we know how to hide variables and functions inside a module, we can do
 		some real live software development! In later laboratories we will develop our own
 		software modules; however, these modules can get quite complex, so we must first learn
-		to build them up step-by-step within a file. If you look in the directory
-		Ingolstadt/Development/Altruism, you will find a file named Replicators.jl. Open this file
-		now and study its contents. What is the name of the data type defined in the file?
+		to build them up step-by-step within a file.
+
+		We will start by modifying some code that I have written. Enter now the following Anatta
+		command at the Julia prompt:
+			fetchcode("Altruism")
+
+		This will create a new directory `Development\\Altruism` within your working directory,
+		and also copies into that directory several files, of which one is named Replicators.jl.
+		Open this file now in VSC and study its contents. What is the name of the data type
+		defined in the file Replicators.jl?
 		""",
 		"The definition is in line 22 of Replicators.jl",
 		x -> x=="Replicator"
 	),
 	Activity(
 		"""
-		You can use Replicators.jl as a general template for designing any new module. Whenever
-		you want to create a new module, I recommend that you simply copy the file Replicators.jl
+		I recommend that you use Replicators.jl as a general template for designing any new module
+		of your own. Whenever you want to create a new module, simply copy the file Replicators.jl
 		to a new file, then change its contents to suit your own needs.
 
 		Notice several things about Replicators.jl. First, it contains just one module called
@@ -158,10 +165,10 @@
 		to write a function run!() that will run a Replicator simulation, so unittest() calls this
 		function, but for now I have commented out the call because we haven't yet implemented it.
 
-		Now read and parse the file Replicator.jl. You can do this either by using the Play button
-		in VSC or else by entering the following Julia code from inside the Ingolstadt folder:
-
-		include("src/Development/Altruism/Replicators.jl")
+		Now read and parse the file Replicator.jl. You can do this either by opening the file in
+		VSC and pressing the Play button, or else by entering the following Julia code from within
+		your working folder:
+			include("Development/Altruism/Replicators.jl")
 
 		It is important that our use-case runs correctly, because it is the starting-point for
 		developing and testing all our software. Run the use-case now by calling the function

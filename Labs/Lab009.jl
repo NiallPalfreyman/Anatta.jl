@@ -22,7 +22,7 @@
 		because it is the source of the spontaneity that we observe in living organisms. To see how
 		chaos works, start by loading my Julia implementation of the Mathematica function nestlist():
 
-			include("src/Development/Utilities/Utilities.jl")
+			include("Tools/Utilities.jl")
 			using .Utilities
 
 		Take a look at the implementation of nestlist(), and then experiment with it. For example,
@@ -262,9 +262,9 @@
 	Activity(
 		"""
 		Now we will see how to build up a complex scientific program starting from a set of
-		requirements. Take a look at version 0 of my NBodies module:
-
-			src/Development/NBodies/NBodies0.jl
+		requirements. Use VSC to take a look at version 0 of my NBodies module:
+			fetchcode("NBodies")
+			Development/NBodies/NBodies0.jl
 
 		The aim of this module is to simulate N-body motion. If you look at the unittest()
 		function, you will see that my basic use-case creates an instance of the type NBody,

@@ -1,68 +1,110 @@
 #========================================================================================#
 #	Laboratory 505
 #
-# Flows
+# Flow dynamics, wave sources and pedagogical simulation.
 #
-# Author: Niall Palfreyman (24/04/2022), Dominik Pfister (July 2022)
+# Author: Niall Palfreyman (7/3/2023)
 #========================================================================================#
 [
 	Activity(
 		"""
-		Lab 505: Flows.
+		Lab 505: Flow dynamics and pedagogical simulation.
 
-		This lab focuses on the diffusion and evaporation of a resource "poo" in the environment.
-		This poo is produced and consumed by a single turtle that moves around the world, and
-		it also diffuses and evaporates. In biology, such flows provide the topological structure
-		that guides the development of organism and their behaviours.
+		Flows are not only produced and utilised by agents; they also possess their own dynamics.
+		In fact, ALL biological systems contain two essential features: An agent structure that
+		generates and consumes flows LOCALLY, and a set of dynamical flows that interact NONLOCALLY
+		and influence the changes of state of the agent structure. The structures may be organisms,
+		cells, neurons or genomes, and the flows may be food resources, cell-signalling proteins,
+		neurotransmitters or genetic transcription factors.
 
-		Run the module Flows now and explore the effect of varying the rates of diffusion (dPoo)
-		and evaporation (αPoo). What diffusion rate enables you to draw stable lines in the
-		environment? 
+		In this lab, we first model the nonlocal flow dynamics of wave phenomena, then we look at
+		how we can use this model to demonstrate a process that beginning students often find
+		difficult to visualise. This pedagogical use of agent-based simulation has become
+		increasingly important in computer-aided instruction applications.
+		
+		Run the module WaveDynamics. What is the correct name for the interaction that you observe
+		between the two sets of waves?
 		""",
 		"",
-		x -> x==0
+		x -> occursin("interference",lowercase(x))
 	),
 	Activity(
 		"""
-		Can you find diffusion and evaporation rates that generate a movement like a comet and tail
-		around the world?
+		I have used the parameter "attenuation" to ensure that the wave pattern is not complicated
+		by waves that flow over the edge of the model's world. Adjust the value of attenuation to
+		notice its effect on the pattern, and then return it to its original value.
 		""",
 		"",
 		x -> true
 	),
 	Activity(
 		"""
-		Can you find diffusion and evaporation rates that generate a relatively stable and even
-		distribution of poo across the entire world?
+		I have set the value of wm.dt to 0.001 to slow down the simulation and let you see what is
+		happening. Set the value now to a more reasonable one of 0.1, then use the "sleep" slider
+		to slow down the simulation to a comfortable level.
 		""",
 		"",
 		x -> true
 	),
 	Activity(
 		"""
-		When ants forage for food, they wander out from the nest in random directions, leaving a
-		persistent pheromone trail P that tells them how to return home to the nest. If the search
-		takes too long, the ant returns to the nest to feed before going out again to forage. If
-		the ant discovers a food source, she carries some back to the nest, while leaving a trail
-		of a second (food) pheromone F. Other ants that discover this F-trail follow it to the
-		food source and fetch food to the nest, again leaving a trail of F. Over time, the ant
-		colony will develop a highly efficient (i.e. straight) communal F-trail between nest and
-		food source.
-
-		If we built an ABM of this ant-foraging system, what might be suitable outcome-patterns
-		for testing the validity of the model?
+		Bragg's formula for interference maxima states that:
+			n λ = d sin(θ_n) ,
+		
+		where n is the order of the interference maximum, λ is the wavelength of the waves, d is
+		the spacing between the sources and θ_n is the angle between the maxima and a normal to
+		the line through the sources. ???
 		""",
-		"What emerging patterns would indicate that your ant-agents are behaving correctly?",
-		x -> occursin("straight",lowercase(x)) && occursin("trail",lowercase(x))
+		"",
+		x -> true
 	),
 	Activity(
 		"""
-		Develop your own ABM of ant foraging to discover what behaviours are required by ants in
-		order for them to construct this efficient route.
-
-		IMPORTANT: Nature is always parsimonious! Simplicity and modularity are crucial features
-		of any successful ABM. Make sure that your model is as simple and as modular as possible
-		in order to achieve the required behaviour.
+		Experiment with other source configurations
+		""",
+		"",
+		x -> true
+	),
+	Activity(
+		"""
+		??? Study how the wave equation works (in model_step!)
+		""",
+		"",
+		x -> true
+	),
+	Activity(
+		"""
+		Implement stonewalling at boundary?
+		""",
+		"",
+		x -> true
+	),
+	Activity(
+		"""
+		""",
+		"",
+		x -> true
+	),
+	Activity(
+		"""
+		""",
+		"",
+		x -> true
+	),
+	Activity(
+		"""
+		""",
+		"",
+		x -> true
+	),
+	Activity(
+		"""
+		""",
+		"",
+		x -> true
+	),
+	Activity(
+		"""
 		""",
 		"",
 		x -> true

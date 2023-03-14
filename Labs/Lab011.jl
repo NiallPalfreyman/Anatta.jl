@@ -179,7 +179,7 @@
 		This is exactly what I have done in the graphics function Simplex.plot3(), which takes a 3-d
 		state vector and displays it graphically in a 3-simplex based on three populations x, y and
 		z. To see this in action, enter the following at the Julia prompt:
-			include("src/Development/Altruism/Simplex.jl")
+			include("Development/Altruism/Simplex.jl")
 			Simplex.plot3([1,2,3])
 			
 		Simplex.plot3() automatically normalises your state vector so that the sum of the three
