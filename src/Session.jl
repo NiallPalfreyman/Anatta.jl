@@ -44,8 +44,9 @@ Current state of a laboratory of learning activities.
 A Session maintains the current state of a learning laboratory experience. It contains ... 
 
 # Fields
-* `lnr_file :: String`				: Registration file of the current learner
-* `lab_path :: String`				: Path of the file containing the current laboratory
+* `anatta_home :: String`			: Path of the Anatta package
+* `working_dir :: String`			: Registration file of the current learner
+* `learner :: String`				: Name of session learner
 * `lab_num :: Int`					: Number of the current laboratory
 * `is_pluto :: Bool`				: Is the current laboratory a Pluto workshop?
 * `current_act :: Int`				: Number of the current activity in the laboratory
@@ -60,15 +61,16 @@ julia> sesh = Session()
 ```
 """
 mutable struct Session
-	lnr_file :: String					# Learner registration file
-	lab_path :: String					# Path of current labfile
+	anatta_home :: String				# Anatta home path
+	working_dir :: String				# Present working directory
+	learner :: String						# Name of session learner
 	lab_num :: Int						# Number of current lab
 	is_pluto :: Bool					# Is this a Pluto session?
 	current_act :: Int					# Number of current activity
 	activities :: Vector{Activity}		# Set of activities in this session
 
 	# One and only constructor of Sessions:
-	Session() = new( "", "", 1, false, 1, Vector{Activity}())
+	Session() = new( "", "", "", 1, false, 1, Vector{Activity}())
 end
 
 #-----------------------------------------------------------------------------------------
@@ -159,5 +161,7 @@ labfile( path::String, labnum::Int)
 Construct a valid labfile name from the given path and laboratory number.
 """
 function labfile( path, labnum)
-	joinpath( path, "INLab" * lpad("$labnum",3,'0')[1:3] * ".jl")
+	normpath(
+		joinpath(path,"..","Labs", "Lab" * lpad("$labnum",3,'0')[1:3] * ".jl")
+	)
 end
