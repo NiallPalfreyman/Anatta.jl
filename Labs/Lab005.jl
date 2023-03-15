@@ -25,8 +25,7 @@
 		how to pass data in ways that protect it from being changed by accident.
 
 		In our first experiment, enter the following code, then tell me the value of paula:
-
-		linus = [5,4,3,2,1]; paula = 5
+			linus = [5,4,3,2,1]; paula = 5
 		""",
 		"",
 		x -> x==5
@@ -34,11 +33,10 @@
 	Activity(
 		"""
 		Now enter the following function:
-
-		function change_paula()
-			paula = 7
-			paula
-		end
+			function change_paula()
+				paula = 7
+				paula
+			end
 
 		Then call the function change_paula() and tell me the value you get back:
 		""",
@@ -53,7 +51,7 @@
 
 		Now tell me the current value of paula:
 		""",
-		"Ask Julia for the value of paula",
+		"Ask julia for the value of paula",
 		x -> x==5
 	),
 	Activity(
@@ -66,11 +64,10 @@
 
 		If we REALLY want to change the global value of paula, we can do so by redefining the
 		function change_paula():
-
-		function change_paula()
-			global paula = 7
-			paula
-		end
+			function change_paula()
+				global paula = 7
+				paula
+			end
 
 		NOTE: Doing this is a Very Bad Idea! Tell me the value of paula now:
 		""",
@@ -79,15 +76,14 @@
 	),
 	Activity(
 		"""
-		So Julia does allow us to make use of global values inside a local scope, but it forces us
+		So julia does allow us to make use of global values inside a local scope, but it forces us
 		to announce this by using the keyword "global".
 
 		There is a further issue here. Enter this code:
-
-		function change_linus()
-			linus[3] = 7
-			linus
-		end
+			function change_linus()
+				linus[3] = 7
+				linus
+			end
 
 		Again, the return value tells us that we are able to change the value of a local variable
 		named linus. But now tell me the value of the GLOBAL variable named linus:
@@ -97,7 +93,7 @@
 	),
 	Activity(
 		"""
-		The point here is that linus is a Vector that refers to its contents (5,4,3,2,1). Julia
+		The point here is that linus is a Vector that refers to its contents (5,4,3,2,1). julia
 		does not allow us to change the value of linus, however it DOES allow us to change the
 		CONTENTS that linus refers to. So global variables are still unsafe! What are we to do?
 		The solution is this:
@@ -106,13 +102,12 @@
 
 		Modules offer a very effective of preventing our variables and code from being changed by
 		other programmers. Let's see how to do this. Enter the following code:
-
-		module MyModule
-			function change_paula1()
-				global paula = 9
-				paula
+			module MyModule
+				function change_paula1()
+					global paula = 9
+					paula
+				end
 			end
-		end
 
 		Now call MyModule.change_paula1(), then tell me the value of paula afterwards:
 		""",
@@ -125,8 +120,7 @@
 		with the value of our global variable paula. But wait! We know that we can load
 		modules into global scope by means of the keyword "using": will that make it possible
 		for users change paula's value by accident? Load the module MyModule now:
-
-		using .MyModule
+			using .MyModule
 
 		Repeat the previous experiment - what is the value of paula afterwards?
 		""",
@@ -141,7 +135,7 @@
 		to build them up step-by-step within a file.
 
 		We will start by modifying some code that I have written. Enter now the following Anatta
-		command at the Julia prompt:
+		command at the julia prompt:
 			fetchcode("Altruism")
 
 		This will create a new directory `Development\\Altruism` within your working directory,
@@ -166,7 +160,7 @@
 		function, but for now I have commented out the call because we haven't yet implemented it.
 
 		Now read and parse the file Replicator.jl. You can do this either by opening the file in
-		VSC and pressing the Play button, or else by entering the following Julia code from within
+		VSC and pressing the Play button, or else by entering the following julia code from within
 		your working folder:
 			include("Development/Altruism/Replicators.jl")
 
@@ -179,7 +173,7 @@
 	),
 	Activity(
 		"""
-		As you can see, Julia tells us that we have not yet defined a method for the function
+		As you can see, julia tells us that we have not yet defined a method for the function
 		run!(). We will have to do that later, but for now, just comment out the three lines in
 		which run!() is called, and check that Replicators.unittest() now runs correctly without
 		errors.
@@ -190,7 +184,6 @@
 		don't know the value of the timeseries until the Replicator simulation has run. Also, it
 		is more convenient for users if they only have to enter the duration and timestep of the
 		simulation in line 41. For example, change line 41 to look like this:
-
 			repl = Replicator(5,1)
 
 		Now recompile and run unittest() and tell me in which line you get an error:
@@ -251,7 +244,7 @@
 	),
 	Activity(
 		"""
-		Congratulations! You have written your first simulation in Julia! Now remove the comment
+		Congratulations! You have written your first simulation in julia! Now remove the comment
 		markers in front of the remaining calls to run!() and make sure everything runs correctly.
 		""",
 		"",
@@ -262,8 +255,7 @@
 		Now we can use our Replicator to start doing some experiments with replicating populations.
 		You have already seen from unittest() how to change the values of dt and mu, but we'd like
 		to do this manually for ourselves outside unittest(). Enter the following command at the
-		Julia prompt - does it run successfully?
-		
+		julia prompt - does it run successfully?
 			yeast = Replicator(5,1)
 		""",
 		"You should get at error",
@@ -273,7 +265,6 @@
 		"""
 		Of course we can't call Replicator() - we haven't yet loaded the module into our global
 		Ingolstadt environment! So let's do that now:
-
 			using .Replicators
 
 		Can you now successfully create your Replicator?
@@ -285,15 +276,13 @@
 		"""
 		What has happened?! Well, using a module doesn't load all of the methods in that module.
 		After all, we sometimes want to write some private methods in the module that should not
-		be used by users outside the module. For this reason, Julia requires us to explicitly
+		be used by users outside the module. For this reason, julia requires us to explicitly
 		export any names in our module to which we want external users to have access. Insert the
 		following line between lines 11 and 12 in Replicators.jl:
-
 			export Replicator, run!
 
 		This makes the data type Replicator and the method run!() available to external users.
-		Now save the file, re-include it, then enter the following at the Julia prompt:
-
+		Now save the file, re-include it, then enter the following at the julia prompt:
 			using .Replicators
 			yeast = Replicator(5,1)
 			run!(yeast,1)
@@ -311,7 +300,6 @@
 		actually behave this way?)
 
 		Let's now see what happens when our population grows in steps of 0.5 instead of 1:
-
 			yeast = Replicator(5,0.5)
 			run!(yeast,1)
 
@@ -326,7 +314,6 @@
 		So if we study the population over ever smaller timesteps, will it grow infinitely
 		quickly? Let's investigate this phenomenon by looking at the population's growth more
 		closely over the timescale 0-1:
-	
 			yeast = Replicator(1,0.2)
 			run!(yeast,1)
 
@@ -341,7 +328,7 @@
 		increase towards an upper limit? Find out by mapping the population over the timescale
 		0-1 with a timestep of 0.001. Even this value is not yet accurate, since the sequence
 		converges only very slowly, so you may want to investigate the case dt=1e-6. (You can
-		suppress output from the Julia prompt by ending your input with a semicolon ;)
+		suppress output from the julia prompt by ending your input with a semicolon ;)
 
 		What symbol do we use to represent the value of this limit?
 		""",

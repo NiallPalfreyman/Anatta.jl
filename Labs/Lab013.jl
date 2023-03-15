@@ -87,7 +87,7 @@
 		If both play strategy D, each will again get the sandwich half the time (benefit b/2),
 		and will pay no injury cost.
 
-		At the Julia prompt, define the benefit and cost parameters b = 4 and c = 2.
+		At the julia prompt, define the benefit and cost parameters b = 4 and c = 2.
 		""",
 		"",
 		x -> true
@@ -109,7 +109,7 @@
 		then I will achieve payoff 1 if I use the hawk strategy H, and 0 if I use a dove strategy:
 			A*h = [1,0]
 
-		Use matrix multiplication at the Julia prompt to find out what payoff I will typically
+		Use matrix multiplication at the julia prompt to find out what payoff I will typically
 		achieve if I play a hawk strategy against a dove.
 		""",
 		"Calculate A*d",
@@ -170,7 +170,7 @@
 		out and leave the piste) or D (ski Directly ahead). The loser is the one who chickens out
 		first; in this case, the other skier gets the prestige benefit b = 3. If neither chickens
 		out, both are injured with a cost c = 5, and if both chicken out, they share the benefit. At
-		the Julia prompt, set up a general payoff matrix A for the game of Chicken. Use the Replicator
+		the julia prompt, set up a general payoff matrix A for the game of Chicken. Use the Replicator
 		Equation to calculate the population average payoff R for the two population frequency
 		vectors cc = [0.75,0.25] and dd = [0.25,0.75]. Which population is LEAST successful?
 		""",
@@ -200,7 +200,7 @@
 	),
 	Activity(
 		"""
-		Define three strategy vectors r = [1,0,0], s = [0,1,0] and p = [0,0,1] at the Julia prompt.
+		Define three strategy vectors r = [1,0,0], s = [0,1,0] and p = [0,0,1] at the julia prompt.
 		Using your simplified payoff matrix Arsp, find the results of playing these strategies
 		against each other by comparing products like r'*A*s and s'*A*r . Do your results support
 		your expectations from the RSP game?
@@ -211,7 +211,7 @@
 	Activity(
 		"""
 		Now set up the Replicator Equation for the RSP game using the simplified matrix A. Build a
-		Julia module Interactors comtaining a datatype Interactor that simulates 3-strategy
+		julia module Interactors comtaining a datatype Interactor that simulates 3-strategy
 		population dynamics. To test your Interactor type, implement a use-case in which the
 		payoff matrix is that of the RSP game. Simulate this game and display its results in a
 		3-simplex.

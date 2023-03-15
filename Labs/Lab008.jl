@@ -16,7 +16,6 @@
 		is to communicate to others your understanding of how to solve a particular problem. Well,
 		now is the time to make sure we understand how to write code that is clear enough for
 		others to understand! Look now at the method eratosthenes_bad() in the following file:
-			
 			src/Tools/Utilities.jl
 
 		The function eratosthenes_bad() generates prime numbers up to a user specified maximum N.
@@ -146,7 +145,7 @@
 		"""
 		Finally, check out George Datseris' solution, which I have implemented in Utilities.jl
 		as the function senehtsotare(). Make any additional changes that you think appropriate
-		to your eratosthenes() function
+		to your eratosthenes() function.
 		""",
 		"",
 		x -> true

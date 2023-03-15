@@ -14,7 +14,6 @@
 
 		... But first we start with Ranges. A Range is an interval of values between start
 		and stop boundaries. Here is a range of values between 1 and 5:
-
 			r = 1:5
 
 		What is the type of r?
@@ -25,7 +24,6 @@
 	Activity(
 		"""
 		We can collect() the individual values of a Range into a collection:
-
 			collect(1:5)
 
 		What is the type of this data structure?
@@ -37,7 +35,6 @@
 		"""
 		We can also construct ranges for other types, and we can also specify our own
 		steplength between the values:
-
 			0.0:0.2:1.0
 
 		Use collect() to list the values in this range and find out how many different
@@ -51,7 +48,6 @@
 		collect() turns a Range into an Array. Arrays are the daily workhorse of data science:
 		they collect elements into tables of 1 or more dimensions. A 1-dimensional Array is
 		called a Vector. Here is a COLUMN vector:
-
 			v = [5,4,7,6,3]
 
 		What is its size()?
@@ -73,12 +69,10 @@
 
 		If you want to write a really super-duper-speedy program, you can create arrays
 		using the values that are accidentally hanging around in memory:
-
 			A = Array{Int}(undef,2,3)
 
 		However, more usually we want to INITIALISE the elements of a new array. What
 		is the value of the elements in this array:
-
 			A = ones(2,3)
 		""",
 		"A[1]",
@@ -95,7 +89,6 @@
 		"""
 		A MATRIX is an Array with just two dimensions. We often want to fill a matrix
 		with a particular value. For example:
-
 			B = Matrix{Int}(undef,3,2)
 			fill!( B, 42)
 
@@ -108,7 +101,6 @@
 		"""
 		We can create an array literal by explicitly naming the array's elements
 		in square brackets:
-
 			C = [2 4 7;3 9 1.2]
 
 		Which value determines the type of the array elements here?
@@ -119,7 +111,6 @@
 	Activity(
 		"""
 		We can also use square brackets to concatenate arrays, for example:
-
 			[ones(2,3) zeros(2,4)]
 
 		Find the symbol for using square brackets to concatenate two arrays vertically:
@@ -132,7 +123,6 @@
 		A very powerful way of constructing arrays is by COMPREHENSION. That is, we
 		write a formula in square brackets that specifies (comprehends) the entire
 		contents of the array. For example, here is a vector of square values:
-
 			[x^2 for x in 1:12]
 
 		What do you get if you add the condition "if isodd(x)" to the end of this
@@ -144,7 +134,6 @@
 	Activity(
 		"""
 		We can use several comprehension variables:
-
 			[x*y for x in 1:5, y in 1:5]
 
 		Use array comprehension to generate a matrix of values for the function
@@ -158,7 +147,6 @@
 		"""
 		Once we have created an array, we usually want to inspect it. First create
 		this array:
-		
 			my_matrix = ((1:3)*(1:4)')//3
 		
 		Now use eltype() to find the type of the elements in the array my_matrix:
@@ -195,7 +183,6 @@
 		Matrix-based languages like Julia offer very many different ways of inspecting
 		individual parts of an array. To experiment with this various ways, first define
 		the following two arrays:
-
 			my_vector = collect(1:5)
 			my_matrix = [1 2 3;4 5 6;7 8 9]
 
@@ -248,7 +235,6 @@
 		"""
 		We can also use slices to change the values in an array. What is the new
 		value of the array my_matrix if we perform the following operation:
-
 			my_matrix[3,:] = [17,18,19]
 		""",
 		"reply(my_matrix)",
@@ -257,7 +243,6 @@
 	Activity(
 		"""
 		What is the value of the array new_matrix if we construct it like this:
-
 			new_matrix = reshape(my_matrix,1,9)
 		""",
 		"reshape(my_matrix,1,9)",
@@ -278,7 +263,6 @@
 		"""
 		We can perform any function on all elements of an array by using the
 		broadcast operator "." like this:
-
 			log.(my_matrix)
 
 		What is the sin() of all elements of my_matrix?
@@ -289,7 +273,6 @@
 	Activity(
 		"""
 		We can also use broadcasting with infix operators, for example:
-
 			my_matrix .+ 5
 
 		What is the result of taking the reciprocal (1/x) of each element
@@ -302,7 +285,6 @@
 		"""
 		Another way of operating on all elements in an array is to map() the
 		operation over the array:
-
 			map(log,my_matrix)
 
 		What is the sin() of my_matrix?
@@ -314,7 +296,6 @@
 		"""
 		The map() function is particularly useful when we are using anonymous
 		functions:
-
 			map(x->5x,my_matrix)
 
 		What do we obtain if we apply the function (x->5sin(x+3)) to my_matrix?
@@ -325,7 +306,6 @@
 	Activity(
 		"""
 		We can combine mapping with slicing:
-
 			map(x->5x,my_matrix[:,3])
 
 		What is the result of applying the function (x->5sin(x+3)) to the central
@@ -337,7 +317,6 @@
 	Activity(
 		"""
 		We can also iterate (i.e.: loop) over the elements in any array:
-
 			for m in my_array
 				print( m, ", ")
 			end

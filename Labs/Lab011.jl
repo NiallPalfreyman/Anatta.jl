@@ -17,14 +17,14 @@
 			x(t) = x0 exp(r*t), with doubling time T2 = ln(2)/r
 		
 		Suppose a particular bacteria population has a specific growth rate of r = 0.035 /min . Use
-		the Julia REPL to calculate the population's doubling time.
+		the julia REPL to calculate the population's doubling time.
 		""",
-		"You will need to look up the Julia function for ln()",
+		"You will need to look up the julia function for ln()",
 		x -> true
 	),
 	Activity(
 		"""
-		Use Julia as a calculator to calculate the number of minutes in a day. How many cells will
+		Use julia as a calculator to calculate the number of minutes in a day. How many cells will
 		one bacterium generate over 3 days?
 		""",
 		"The population doubles in each doubling time over the three days",
@@ -142,7 +142,7 @@
 
 		We will find these relations very useful when we study the growth and decline of types
 		within a population. In particular, we shall want to make use of the dot product between two
-		vectors. At the Julia prompt, create two vectors a = [1,2,3] and b = [4,5,6], then verify
+		vectors. At the julia prompt, create two vectors a = [1,2,3] and b = [4,5,6], then verify
 		that a'*b calculates the dot product of a and b. Then look up and tell me which library we
 		need to load in order to make use of the dot product function: dot(a,b).
 		""",
@@ -178,7 +178,7 @@
 
 		This is exactly what I have done in the graphics function Simplex.plot3(), which takes a 3-d
 		state vector and displays it graphically in a 3-simplex based on three populations x, y and
-		z. To see this in action, enter the following at the Julia prompt:
+		z. To see this in action, enter the following at the julia prompt:
 			include("Development/Altruism/Simplex.jl")
 			Simplex.plot3([1,2,3])
 			

@@ -58,11 +58,11 @@
 		
 		This is the Prisoners' Dilemma (PD): Shall I risk cooperating, because that will reap
 		benefits in the long-term, or shall I profit by defecting against the other's willingness
-		to cooperate? Set up the following PD payoff matrix in Julia, then show it to me:
-		           C  D          C  D
-		          ------        ------
+		to cooperate? Set up the following PD payoff matrix in julia, then show it to me:
+				   C  D          C  D
+				  ------        ------
 		 A_pd = C |4  0|  =   C |R  S|
-		        D |5  1|      D |T  P|
+				D |5  1|      D |T  P|
 		""",
 		"Define A_pd = ..., then show me your A",
 		x -> x == [4 0;5 1]
@@ -109,15 +109,15 @@
 		"""
 		Cooperation only becomes beneficial in the ITERATED PD, where the same two players play the
 		game m > 1 times. Consider the following two strategies from Martin Nowak:
-		    Grim: cooperates in first round, then cooperates if other player doesn't defect; if the
-		        other player defects just once, Grim never forgives, but will always defect.
-		    AllD: always defects, in all eternity, amen.
+			Grim: cooperates in first round, then cooperates if other player doesn't defect; if the
+				other player defects just once, Grim never forgives, but will always defect.
+			AllD: always defects, in all eternity, amen.
 
 		Discuss with your partner why this is the payoff matrix for these strategies:
-		               Grim              AllD
-		          ------------------------------
-		    Grim: |    m*R        S + (m - 1)*P|
-		    AllD: |T + (m -1)*P         m*P    |
+					   Grim              AllD
+				  ------------------------------
+			Grim: |    m*R        S + (m - 1)*P|
+			AllD: |T + (m -1)*P         m*P    |
 		""",
 		"Imagine each of the scenarios in which two strategies meet, then play for m rounds",
 		x -> true
@@ -150,10 +150,10 @@
 
 		Explain why the following matrix correctly describes the average payoff for TFT against
 		AllD, where m is the number of rounds over which PD is iterated:
-		                TFT            AllD
-		          ------------------------------
-		    TFT:  |     m*R       S + (m - 1)*P|
-		    AllD: |T + (m -1)*P         m*P    |
+						TFT            AllD
+				  ------------------------------
+			TFT:  |     m*R       S + (m - 1)*P|
+			AllD: |T + (m -1)*P         m*P    |
 		""",
 		"",
 		x -> true
@@ -195,8 +195,8 @@
 		a sequence of probabilistic transitions from the state (CC, CD, DC or DD) of one round to
 		the state (CC, CD, DC or DD) in the following round. That is, x[t+1] == M*x[t], where M is
 		the following transition matrix:
-		                 CC                   CD                   DC                   DD
-		        ----------------------------------------------------------------------------------
+						 CC                   CD                   DC                   DD
+				----------------------------------------------------------------------------------
 		   CC:  |      p1*p2                q1*p2                p1*q2                q1*q2      |
 		   CD:  |p1*(1 - p2)                q1*(1 - p2)          p1*(1 - q2)          q1*(1 - q2)|
 		   DC:  |(1 - p1)*p2          (1 - q1)*p2          (1 - p1)*q2          (1 - q1)*q2      |
@@ -215,15 +215,15 @@
 		stochastic matrix repeatedly over time. In fact, this property is quite generally true of
 		all stochastic matrices, and so we can say with safety that in the long-term, the matrix M
 		will shift the population to a stable distribution x* satisfying the eigenvalue equation:
-		    x* = M x*
+			x* = M x*
 
 		By substituting our above definition of M into this eigenvalue equation, Martin Nowak has
 		shown that we can always calculate the long-term payoff for any player that uses the
 		strategy Si(pi,qi) against strategy Sj(pj,qj) according to the following equations:
-		    A[i,j] ≡ R*s[i,j].*s[j,i] + S*s[i,j].*(1-s[j,i]) + T*(1-s[i,j]).*s[j,i] + P*(1-s[i,j])(1-s[j,i])
-		    s[i,j] ≡ (r[i]*qj + qi)/(1 - r[i]*r[j])
-		    r[i]   ≡ pi - qi
-		    |r[i]*r[j]| < 1
+			A[i,j] ≡ R*s[i,j].*s[j,i] + S*s[i,j].*(1-s[j,i]) + T*(1-s[i,j]).*s[j,i] + P*(1-s[i,j])(1-s[j,i])
+			s[i,j] ≡ (r[i]*qj + qi)/(1 - r[i]*r[j])
+			r[i]   ≡ pi - qi
+			|r[i]*r[j]| < 1
 
 		Using these equations, we can calculate the long-term payoff matrix for any two strategies
 		for which |(pi - qi)(pj - qj)| ≠ 1. What is the value of s[i,j] if (pi - qi)(pj - qj) = 1?
@@ -259,9 +259,9 @@
 		baboons benefit because wolves frighten away other predators. A wolf can defect and get a
 		free meal by eating a baby gelada, but then it is driven off by other baboons:
 
-		    https://www.newscientist.com/article/dn27675-monkeys-cosy-alliance-with-wolves-looks-like-domestication/?linkId=57684253
+			https://www.newscientist.com/article/dn27675-monkeys-cosy-alliance-with-wolves-looks-like-domestication/?linkId=57684253
 
-		Create an initial template for a Julia module named Domestications. This module will
+		Create an initial template for a julia module named Domestications. This module will
 		simulate the evolution of cooperative domestication in a population of wolves and geladas.
 		In your population frequency model, you will not distinguish geladas from wolves - instead
 		you will work with a population of N type, each characterised by its own PD strategy. You
@@ -277,9 +277,9 @@
 		```
 		d = Domestication( nStrategies)        % Create n-strategy population
 		for mut in 1:nMutations
-		    simulate( d, nGenerations)         % Iterate replicator equation
-		    displayStrategies( d)              % Display best strategies
-		    mutate( d)                         % Replace worst with random
+			simulate( d, nGenerations)         % Iterate replicator equation
+			displayStrategies( d)              % Display best strategies
+			mutate( d)                         % Replace worst with random
 		end;
 
 		simulate( d, nGenerations)
@@ -359,8 +359,8 @@
 
 		IMPORTANT: In many activities of this course, I have written equations out in terms of
 		their matrix components, for example: sum([a[i]*b[i] for i in 1:N]). But of course in
-		Julia you can write this expression much more simply as a dot product: a'*b or dot(a,b).
-		Please make sure you make full use of Julia's high-level matrix notation in your project!
+		julia you can write this expression much more simply as a dot product: a'*b or dot(a,b).
+		Please make sure you make full use of julia's high-level matrix notation in your project!
 		""",
 		"",
 		x -> true

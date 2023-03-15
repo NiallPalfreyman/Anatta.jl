@@ -14,7 +14,6 @@
 
 		A Tuple is an immutable container that can contain several different types. We
 		construct Tuples using round brackets, for example:
-
 			my_tuple = (5, 2.718, "Niall")
 
 		What is my_tuple[2]?
@@ -25,7 +24,6 @@
 	Activity(
 		"""
 		You have already seen that size() returns a Tuple. Enter the following code:
-
 			ret_size = size(zeros(3,4))
 
 		What is the value of ret_size[1]? Try changing the value of ret_size[2].
@@ -38,7 +36,6 @@
 		"""
 		Tuples are especially useful when we want to define anonymous functions with
 		more than one argument:
-
 			map((x,y)->3x+2y,4,5)
 
 		Construct a single line mapping that calculates sin(x*y) for corresponding
@@ -51,7 +48,6 @@
 		"""
 		A Pair is a structure that contains two objects - typically a key and its
 		entry in a dictionary. We construct a Pair like this:
-
 			my_pair = "Yellow Submarine" => "Beatles"
 
 		Construct my_pair and then find the value of last(my_pair):
@@ -64,7 +60,6 @@
 		A Dict(ionary) is a hashed database of Pairs. Dicts are very lightweight, so
 		we can easily use them in everyday code. We construct a Dict by passing a
 		sequence of Pairs to the constructor:
-
 			my_dict = Dict( "pi" => 3.142, "e" => 2.718)
 
 		Construct my_dict, and notice that the Pairs are not necessarily in the same
@@ -76,7 +71,6 @@
 	Activity(
 		"""
 		We can find out whether our Dict contains the key "e" by using the keys() function:
-
 			"e" in keys(my_dict)
 
 		Delete the entry for "e" from my_dict using the delete!() function. What word do
@@ -88,7 +82,6 @@
 	Activity(
 		"""
 		Now add two extra entries to my_dict:
-
 			my_dict["root2"] = 1.414
 			my_dict["epsilon0"] = 8.854e-12
 
@@ -102,7 +95,6 @@
 		We have already met Symbols - they define components of the Julia language, and
 		we use them to extend the language with new components. We construct Symbols
 		using the colon ':'. Enter the following lines:
-
 			a,b = 2,3
 			expr = :(a+b)
 			dump(expr)
@@ -115,7 +107,6 @@
 	Activity(
 		"""
 		You can see that the arguments of expr are Symbols waiting to be evaluated. Try:
-
 			typeof(expr.args[2])
 
 		What do you get if you enter string(expr)?
@@ -138,7 +129,6 @@
 		"""
 		We use the "splat" operator (...) to convert a collection into a set of
 		arguments for a function. Define this function and test it with a few numbers:
-		
 			my_function(x,y,z) = x * (y+z)
 		
 		Now define this vector: v = [2,3,4]. Suppose we want to use the three numbers
@@ -146,7 +136,6 @@
 		see what happens ...
 
 		It didn't work, did it? Now tell me what you get when you enter this:
-
 			my_function(v...)
 		""",
 		"",
@@ -172,7 +161,6 @@
 		pwd() gives us the path of the current folder, and readdir() gives us a vector
 		of filenames in it. We can put these together using joinpath(). Find out the
 		answer returned by the following function call:
-
 			isfile(joinpath(pwd(),"filename.ext"))
 
 		where filename.ext is the file you previously found in the current directory.
@@ -184,16 +172,13 @@
 		"""
 		Now let's create a new file. The following command creates a file named
 		"my_data.txt", and sets up a FILESTREAM named "file" for "w"riting to it:
-
 			file = open("my_data.txt","w")
 
 		Now write some information to the file:
-
 			write( file, "This is my file\nIt belongs to me!\n")
 
 		The value returned by write() is the number of bytes you have written to the
 		file. We can also us the print() and println() functions, for example:
-
 			println( file, "It really does!")
 
 		Finally, close() file and tell me the result of isfile("my_data.txt"):
@@ -205,12 +190,10 @@
 		"""
 		Congratulations! You have created your first file! Now let's trying
 		r(eading) from the file:
-
 			file = open("my_data.txt","r")
 
 		Now enter: readline(file) several times to read the lines of the file.
 		Once you have read all the lines, the file is in an end-of-file state:
-
 			eof(file)
 
 		What value does readline() return if you continue to read lines after
@@ -224,7 +207,6 @@
 		Now close() the file, then reopen it again to start reading at the
 		beginning of the file. We can read all lines of the file at once.
 		What is the type of the structure returned by the following code?
-
 			file = open("my_data.txt","r")
 			readlines( file)
 		""",
@@ -250,7 +232,6 @@
 
 		Rewind the file to the beginning using seekstart().
 		Now enter:
-
 			data = read(file);
 
 		Did you remember to write ';' at the end of the line? If not, you
@@ -272,7 +253,6 @@
 	Activity(
 		"""
 		We can even convert the data entirely to a String like this:
-
 			str = String(data)
 
 		However, this conversion uses up the data values. What value is
@@ -295,11 +275,9 @@
 		"""
 		Now we investigate DateTimes in Julia. Support for date and time
 		handling is provided by the Dates package, which we must first load:
-
 			using Dates
 
 		We can access the current time using the now() function:
-
 			datim = Dates.now()
 
 		What is the type of datim?
@@ -310,7 +288,6 @@
 	Activity(
 		"""
 		To create a new date, we pass year, month and day to the constructor:
-
 			Date( 1996, 7, 16)
 			Date( 2020, 6)
 
@@ -323,7 +300,6 @@
 		"""
 		We can also create times. Use the minute() function to find the number
 		of minutes past the hour in this time:
-
 			DateTime(1992,10,13,6,18)
 		""",
 		"minute(ans)",
@@ -343,12 +319,10 @@
 		However, we don't just want to construct dates and times - we usually
 		want to PARSE (i.e., analyse) them. We can construct a Date from a
 		String by passing a DateTime format argument:
-
 			Date("19760915","yyyymmdd")
 
 		For DateTimes, this format gets a little more complicated, so you may
 		wish to define your own format:
-
 			format = DateFormat("HH:MM, dd.mm.yyyy")
 
 		Use this format to parse the DateTime "06:18, 13.10.1992". What
@@ -380,7 +354,6 @@
 	Activity(
 		"""
 		Form a list of the past 8 days by collecting this Range into a Vector:
-
 			today()-Week(1):Day(1):today()
 		""",
 		"",
@@ -390,7 +363,6 @@
 		"""
 		Next we'll look at a very important tool of data science: Random numbers.
 		First load the functions that we'll be using:
-
 			using Random: rand, randn, seed!
 
 		By itself, the rand() function returns a pseudo-random Float64 number in the
@@ -426,7 +398,6 @@
 		To do this, we use the function seed!() at the beginning of our program to make
 		sure all random numbers follow an identical pattern across separate runs of the
 		program. Run the following code several times, then tell me what result you get:
-
 			seed!(123); rand(5)
 		""",
 		"",
@@ -437,26 +408,23 @@
 		OK, and fi-inally at the end of this very long (phew!) laboratory, we look
 		briefly at how to download resources from the internet. First, we load the
 		download() function from the package Downloads:
-
 			using Downloads: download
 
 		Next we define the url of our resource:
-		
-			url = "https://raw.githubusercontent.com/NiallPalfreyman/Ingolstadt.jl/main/src/Ingolstadt.jl"
+			url = "https://raw.githubusercontent.com/NiallPalfreyman/Anatta.jl/master/src/Anatta.jl"
 
 		Next, we download this page into a local file:
-
 			file = download(url)
 		
-		Use readlines() (don't forget the ';'!) to discover the Date on which Niall
-		Palfreyman started writing the Ingolstadt project:
+		Use readlines() (don't forget the ';'!) to discover the Date on which Niall Palfreyman
+		started writing the Anatta project:
 		""",
 		"data = readlines(file);",
-		x -> x == Main.Date("7/12/2021","d/mm/yyyy")
+		x -> x == Main.Date("1/01/2023","d/mm/yyyy")
 	),
 	Activity(
 		"""
-		OK, that's the end of this laboratory. The resource we have downloaded is my
+		OK, that's the end of this laboratory. The resource we have downloaded is my own
 		source code - feel free to explore it and use it as much as you like. Bye! :-)
 		""",
 		"",

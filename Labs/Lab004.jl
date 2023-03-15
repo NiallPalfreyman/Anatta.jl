@@ -8,18 +8,17 @@
 [
 	Activity(
 		"""
-		Arrays play a very fundamental role in Julia, so we need to learn how to access them
-		efficiently. In this laboratory we learn how to index into arrays in Julia - that is,
+		Arrays play a very fundamental role in julia, so we need to learn how to access them
+		efficiently. In this laboratory we learn how to index into arrays in julia - that is,
 		how to use indices to access and manipulate the entries in an array. We will also look
 		at various ways of applying code to the elements in an array.
 		
 		Julia offers four kinds of indexing: SUBSCRIPTING, LINEAR indexing, MULTIPLE indexing
 		and LOGICAL indexing. All four are extremely useful for scientific programming. To
 		investigate these forms of indexing, first create a (4x4) matrix by reshaping a range:
-
 			m = reshape(1:16,(4,4))
 
-		First notice the order in which Julia has placed the numbers 1:16. Do they run down the
+		First notice the order in which julia has placed the numbers 1:16. Do they run down the
 		columns or along the rows?
 		""",
 		"",
@@ -28,11 +27,11 @@
 	Activity(
 		"""
 		So: SUBSCRIPTING! To access a matrix element with subscripts, we use square brackets
-		enclosing two subscripts i (row) and j (column) like this: m[i,j]. In Julia, the row
+		enclosing two subscripts i (row) and j (column) like this: m[i,j]. In julia, the row
 		index ALWAYS comes before the column index! Display the element m[3,4] now, then tell
 		me its value:
 		""",
-		"Just enter m[3,4] at the Julia prompt",
+		"Just enter m[3,4] at the julia prompt",
 		x -> x==15
 	),
 	Activity(
@@ -71,9 +70,8 @@
 	),
 	Activity(
 		"""
-		Notice that m only LOOKS like an ordinary matrix, but is actually a reshaped range, so Julia
+		Notice that m only LOOKS like an ordinary matrix, but is actually a reshaped range, so julia
 		will not let us change its value by writing to it. To see this, try out the following:
-
 			m[2:3,3:4] .= 1
 
 		Then tell me the name of the function that the error message recommends we use:
@@ -84,7 +82,6 @@
 	Activity(
 		"""
 		Let's take the error message's advice:
-		
 			m = collect(m)
 			m[2:3,3:4] .= 1
 
@@ -103,7 +100,6 @@
 	Activity(
 		"""
 		What kind of error do you get if you try to add an element outside the size of the array m:
-
 			m[5,1] = 1
 		""",
 		"",
@@ -114,7 +110,6 @@
 		Although we can't add elements outside m's bounds, we can extend the size of m by adding
 		new rows or columns: Blank ' ' adds columns (hcat: horizontal concatenation), and
 		semicolon ';' adds rows (vcat: vertical concatenation). Tell me the result of this line:
-
 			p = ones(4)
 			pp = [m p]
 		""",
@@ -124,7 +119,6 @@
 	Activity(
 		"""
 		And what is the result of this line of code?
-
 			q = ones(4)'
 			qq = [m;q]
 		""",
@@ -133,12 +127,11 @@
 	),
 	Activity(
 		"""
-		OK, now let's look at LINEAR indexing! Internally, Julia represents all arrays as vectors =
+		OK, now let's look at LINEAR indexing! Internally, julia represents all arrays as vectors =
 		it simply makes this vector look like a matrix to us. Create the following matrix:
-
 			A = [1 2 3;4 5 6]
 
-		If we just enter A at the Julia prompt, we see a (2x3) matrix, but if you enter A[:], you
+		If we just enter A at the julia prompt, we see a (2x3) matrix, but if you enter A[:], you
 		will see a list of all elements of A in a linear order. Does this order first run down the
 		columns or along the rows?
 		""",
@@ -156,7 +149,6 @@
 		"""
 		We can also use linear indexing to change the elements of A. What is the content of A
 		after entering this line of code?
-
 			A[5] = 99
 		""",
 		"",
@@ -180,8 +172,7 @@
 		matrix A(t). In this case, A[3,5,4] might represent the element [3,5] at time t=4 of the
 		time-series.
 
-		Enter R = rand(1:9,(2,3,4)); at the Julia prompt, and study the following expressions:
-
+		Enter R = rand(1:9,(2,3,4)); at the julia prompt, and study the following expressions:
 			R[1,:,:]
 			R[:,1,:]
 			R[:,:,1]
@@ -195,10 +186,9 @@
 	Activity(
 		"""
 		Here is a (4,4) magic square:
-
 			A = [1 15 14 4;10 11 8 5;7 6 9 12;16 2 3 13]
 
-		Use Julia's sum() function to find the sum of A's elements along any row, column or
+		Use julia's sum() function to find the sum of A's elements along any row, column or
 		diagonal:
 		""",
 		"",
@@ -231,7 +221,6 @@
 		one sweep ...
 
 		First, create the Vector v. Then tell me the result of entering this line:
-
 			d = (v .< 3)
 		""",
 		"",
@@ -248,7 +237,6 @@
 		"""
 		Notice that d is a Vector of Bools with the same length as v. We can use d to index
 		elements of v:
-
 			v[d]
 
 		How many elements of v does d pick out?
@@ -259,12 +247,10 @@
 	Activity(
 		"""
 		Now enter this line:
-
 			v[d] .= 0
 
 		You will see that this zeros out all elements of v that are less than 3. If you recreate
 		v, you can even condense this entire process into one step:
-
 			v = collect(1:5)
 			v[v.<3] .= 0
 
@@ -279,7 +265,6 @@
 		Before continuing, let's look at several different ways to apply some code to all elements
 		in an array. If the code is just one function, this is easy: we just use the broadcast
 		dot (.):
-
 			v = 1:7
 			isodd.(v)
 		""",
@@ -290,7 +275,6 @@
 		"""
 		If the code is a little more complicated, we might map() an anonymous function over
 		the array:
-
 			map( x->(sin(x) >= 0), v)
 		""",
 		"",
@@ -300,7 +284,6 @@
 		"""
 		And finally, if the code is particularly complicated, we can use a do statement that
 		allows us to define a complicated mapping over all elements of the array:
-			
 			map(v) do x
 				if x < 4
 					isodd(x)

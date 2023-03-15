@@ -9,7 +9,7 @@
 	Activity(
 		"""
 		In this laboratory, we implement a program to demonstrate chaos in a gravitational system
-		containing three bodies of equal mass in two dimensions. We will use Julia to analyse the
+		containing three bodies of equal mass in two dimensions. We will use julia to analyse the
 		execution of a complex simulation program, and adapt this program to use Runge-Kutta
 		integration to demonstrate graphically chaotic 3-body motion.
 		""",
@@ -20,7 +20,7 @@
 		"""
 		In this lab, we investigate DETERMINISTIC CHAOS. Chaos is extremely important in biology,
 		because it is the source of the spontaneity that we observe in living organisms. To see how
-		chaos works, start by loading my Julia implementation of the Mathematica function nestlist():
+		chaos works, start by loading my julia implementation of the Mathematica function nestlist():
 
 			include("Tools/Utilities.jl")
 			using .Utilities
@@ -49,7 +49,7 @@
 			x[i+1] = L(r)(x[i]), where L is a function parametrised by r: 
 			L(r) = (pop -> r pop (1-pop))
 
-		Implement the function L as an inline function at the Julia prompt, then experiment with
+		Implement the function L as an inline function at the julia prompt, then experiment with
 		using it. Then use your function L to calculate the wasp population two years after an
 		initial population of x0 = 0.3, assuming that r = 0.5 (remember that pop might be a vector!):
 		""",
@@ -217,7 +217,7 @@
 		before this motion repeats itself? Or in other words: What is the period-length of
 		this limit-cycle?
 		""",
-		"Find out how to write \"Infinity\" in Julia :)",
+		"Find out how to write \"Infinity\" in julia :)",
 		x -> x==Inf
 	),
 	Activity(
@@ -253,8 +253,7 @@
 		similar problem. We cannot predict the story of their future motion without simulation,
 		which as you know is never precise! As an introduction to chaos in the three-body problem,
 		please view the following video-clip now, and then proceed to the next activity:
-
-		https://www.youtube.com/watch?v=LwkvO3t1b30&t=113s
+			https://www.youtube.com/watch?v=LwkvO3t1b30&t=113s
 		""",
 		"",
 		x -> true
@@ -320,8 +319,8 @@
 	Activity(
 		"""
 		In NBodies3.jl, we develop animation code for the simplified motion that we defined in
-		version 2. Try out a few experiments at the Julia prompt to make sure you fully understand
-		how we are using the Julia `map` command in lines l06, 107, 120 and 121.
+		version 2. Try out a few experiments at the julia prompt to make sure you fully understand
+		how we are using the julia `map` command in lines l06, 107, 120 and 121.
 		""",
 		"",
 		x -> true
@@ -336,9 +335,9 @@
 		Help and internet search to look up EVERYTHING you do not yet understand in
 		forceOnMasses(). In the coming few activities we will learn how to do this ...
 
-		First remember: Matrices work very naturally in Julia, so if a=[1 2;3 5] and b=[2 3;4 5],
+		First remember: Matrices work very naturally in julia, so if a=[1 2;3 5] and b=[2 3;4 5],
 		then a*b, b*a and a.*b will all deliver very different results. Test this idea now at the
-		Julia prompt, then tell me the value of a*b-a.*b .
+		julia prompt, then tell me the value of a*b-a.*b .
 		""",
 		"",
 		x -> x == [8 7;14 9]
@@ -365,16 +364,15 @@
 		the N bodies.
 		
 		We start our journey of understanding by defining a simple, toy example of `locations` at
-		the Julia prompt - something like this:
-		
-			`locations = [[1,2],[3,4]]`
-		
-		Next, at the Julia prompt, carry out step by step each of the codelines 103 to 105. After
+		the julia prompt - something like this:
+			locations = [[1,2],[3,4]]
+
+		Next, at the julia prompt, carry out step by step each of the codelines 103 to 105. After
 		each step, look carefully at your result, and discuss it with your partners:
 
-			`locnPerBody = repeat(locations,1,length(locations))`
-			`permdims = permutedims(locnPerBody)`
-			`relpos = locnPerBody - permdims`
+			locnPerBody = repeat(locations,1,length(locations))
+			permdims = permutedims(locnPerBody)
+			relpos = locnPerBody - permdims
 
 		When you have finished, work out in your head the result of `repeat([1,2],2,3)`.
 		""",

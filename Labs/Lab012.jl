@@ -102,9 +102,9 @@
 	),
 	Activity(
 		"""
-		In Julia, create a module Mutators containing a dataype Mutator that is mutated according
+		In julia, create a module Mutators containing a dataype Mutator that is mutated according
 		to a pure mutation matrix of your choice that mutates three types cyclically into each
-		other: 1 → 2 → 3 → 1. Use an appropriate Julia function to calculate the fixed point of
+		other: 1 → 2 → 3 → 1. Use an appropriate julia function to calculate the fixed point of
 		your chosen mutation matrix, and then verify the result of this calculation by visualising
 		the mutation dynamics graphically in a 3-simplex.
 		""",

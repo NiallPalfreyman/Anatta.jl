@@ -8,21 +8,19 @@
 [
 	Activity(
 		"""
-		In this laboratory we use Exploratory Data Analysis (EDA) and the Julia DataFrames
+		In this laboratory we use Exploratory Data Analysis (EDA) and the julia DataFrames
 		package to explore one of the over 750 industry standard statistical RDatasets.
 
-		Since we haven't used the RDatasets package before, we must first add it to our Julia
-		system. To do this, type ']' at the Julia prompt - this starts Julia's Package Manager,
+		Since we haven't used the RDatasets package before, we must first add it to our julia
+		system. To do this, type ']' at the julia prompt - this starts julia's Package Manager,
 		which you can exit at any time by typing <Backspace>. Within the Package Manager, enter:
-		
-		add RDatasets
+			add RDatasets
 
 		This will download and compile around 200 packages that are relevant to the RDatasets
 		package (this may take a couple of minutes). When it has finished, exit Package Manager,
 		then enter:
-
-		using RDatasets						# Takes a few seconds ...
-		RDatasets.datasets()
+			using RDatasets						# Takes a few seconds ...
+			RDatasets.datasets()
 
 		How many Rows are in the "affairs" dataset?
 		""",
@@ -35,8 +33,7 @@
 		compiled by Edgar Anderson and Ronald Fisher in the early days of genetics research in
 		1936. This dataset contains the length and width (in cm) of the sepals and petals of 50
 		samples from each of several iris flower species. Enter this code to load the Iris dataset:
-
-		iris = dataset("datasets","iris")
+			iris = dataset("datasets","iris")
 
 		What is the SepalLength of the first specimen in iris?
 		""",
@@ -64,8 +61,7 @@
 		"""
 		We can view the first five rows of iris using the usual array indexing with square
 		brackets []:
-
-		iris[1:5,:]
+			iris[1:5,:]
 
 		Report back to me the last 5 rows of the Iris dataset:
 		""",
@@ -77,8 +73,7 @@
 		We've seen that the first rows of iris concern the species setosa, and the last rows
 		concern the species virginica. What other species does iris contain. To find out, we
 		want to group the dataset by Species using the command:
-		
-		species_groups = groupby(iris,"Species")
+			species_groups = groupby(iris,"Species")
 
 		How many groups are contained in this grouping of the data?
 		""",
@@ -90,8 +85,7 @@
 		OK, so we've seen that the first of three Species groups contains "iris setosa" specimens,
 		and the last Species group contains "iris virginica" specimens. To inspect all three
 		Species groups, we will combine specimens from each group into a single row:
-
-		combine(species_groups,nrow)
+			combine(species_groups,nrow)
 
 		What is the name of the second iris species?
 		""",
@@ -120,10 +114,9 @@
 	Activity(
 		"""
 		We can also calculate these values ourselves by loading and applying the functions
-		in Julia's Statistics package:
-
-		using Statistics
-		std(iris[:,"PetalLength"])
+		in julia's Statistics package:
+			using Statistics
+			std(iris[:,"PetalLength"])
 
 		What is the median sepal length?
 		""",
@@ -134,12 +127,12 @@
 		"""
 		Let's investigate the covariance attributes in the Iris database. Enter this code:
 
-		attributes = names(iris)[1:end-1]				# Leave out the non-numeric Species
-		for x in attributes, y in attributes
-			if x > y
-				println( "\$x \t \$y \t \$(cov(iris[:,x],iris[:,y]))")
+			attributes = names(iris)[1:end-1]				# Leave out the non-numeric Species
+			for x in attributes, y in attributes
+				if x > y
+					println( "\$x \t \$y \t \$(cov(iris[:,x],iris[:,y]))")
+				end
 			end
-		end
 
 		Look at the results: Unsurprisingly, PetalWidth covaries with PetalLength, but
 		SepalLength covaries with both PetalLength and PetalWidth. With which of these
@@ -185,8 +178,7 @@
 	Activity(
 		"""
 		We can use the columns of iris as ranges for generating random values, for example:
-		
-		rand(iris[:,"SepalLength"])
+			rand(iris[:,"SepalLength"])
 
 		Create a Vector containing a random sample of 21 PetalWidths:
 		""",
@@ -199,13 +191,13 @@
 		clutter our global namespace with lots of trivial names, so we'll create the dataframe
 		inside a function using local names:
 		
-		function group1()
-			symbol = ["Li","Na","K","Rb","Cs","Fr"]
-			protons = [3,11,19,37,55,87]
-			nucleons = [7,23,39,85,133,223]
-			electronegativity = [1.0,0.9,0.8,0.8,0.7,0.7]
-			DataFrame(; symbol, protons, nucleons, electronegativity)
-		end
+			function group1()
+				symbol = ["Li","Na","K","Rb","Cs","Fr"]
+				protons = [3,11,19,37,55,87]
+				nucleons = [7,23,39,85,133,223]
+				electronegativity = [1.0,0.9,0.8,0.8,0.7,0.7]
+				DataFrame(; symbol, protons, nucleons, electronegativity)
+			end
 
 		You may first need to add the DataFrames package and load it with the keyword "using".
 		Now enter the function group1(), use it to create a dataframe named grp1, then extract
@@ -219,8 +211,7 @@
 		Finally, we'll learn to save and load dataframes to and from a file. First we'll do it
 		simply, using comma-separated variable (CSV) files. Add and load the CSV package, then
 		write the group1 dataframe to a CSV file:
-
-		CSV.write( "group1.csv", group1())
+			CSV.write( "group1.csv", group1())
 
 		Now give me the result of reading the csv file:
 
@@ -231,13 +222,12 @@
 	),
 	Activity(
 		"""
-		Sometimes we want to write to other file formats, such as Excel files, and Julia offers
+		Sometimes we want to write to other file formats, such as Excel files, and julia offers
 		us a range of packages such as XLSX for doing this. However, the advantage of csv files
 		for small projects is that we can read them into text strings and with a text editor.
 
 		We can also read our csv file as a DataFrame. Give me the following dataframe:
-
-		CSV.read("group1.csv",DataFrame)
+			CSV.read("group1.csv",DataFrame)
 		""",
 		"",
 		x -> typeof(x)==Main.DataFrame && size(x)==(6,4)
