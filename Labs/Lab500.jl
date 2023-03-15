@@ -10,20 +10,29 @@
 [
 	Activity(
 		"""
-		Hi! Welcome to course component 5 on Dynamical Systems Modelling (DSM)! :)
-
-		We will use DSM to study biological organism systems that consist of many interacting,
-		NON-LIVING components. Organisms generate behaviour that is emergent, complex and autonomous:
+		Hi! Welcome to Anatta course 500: An Introduction to Dynamical Systems Modelling (DSM)!
+		
+		Course 500 is immediately under construction - its grass is growing under your feet as you
+		watch! In this course, we use DSM to study biological organism systems that consist of many
+		interacting, NON-LIVING components. Organisms generate behaviour that is emergent, complex
+		and autonomous:
 			- EMERGENT behaviour is COLLECTIVE (arises from the interactions of many individual
 				components) and UNPREDICTABLE (is not computable from the component behaviours).
 			- COMPLEX behaviour is emergent, and is also easy to describe at the system level.
 			- AUTONOMOUS behaviour is complex behaviour that we can describe at the system level as
 				maintaining the existence of the system that generates that autonomous behaviour.
 
-		The great advantage of autonomous systems is that they DEGRADE GRACEFULLY. That is, if
-		conditions are not ideal, an autonomous systems will typically not crash, but will instead
-		continue to perform its function, although less efficiently than before.
-
+		The tremendous advantage of autonomous systems in both Nature and Industry is that they
+		DEGRADE GRACEFULLY. That is, if the working conditions are not ideal, an autonomous systems
+		will typically not crash, but will instead continue to perform its function, although less
+		efficiently than under ideal conditions. Autonomous system achieve this by having a very
+		special structure that we will investigate in this course.
+		""",
+		"",
+		x -> true
+	),
+	Activity(
+		"""
 		DSM uses two important tools: Agent-Based Modelling (ABM) and System Dynamics (SD). In ABM,
 		we call the components AGENTS; in SD we call them STOCKS. For our experimental work, we
 		will use the two julia packages Agents and DynamicalSystems; to display this work, we will
@@ -31,7 +40,7 @@
 		package, then go and read this introduction to its functionality:
 			juliadynamics.github.io/Agents.jl/stable/tutorial
 		""",
-		"Please make sure you have loaded these 3 packages - you will need them!",
+		"",
 		x -> x == "using"
 	),
 	Activity(

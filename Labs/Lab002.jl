@@ -8,7 +8,7 @@
 [
 	Activity(
 		"""
-		In this laboratory we look at the very heart of Julia: How it uses types to dispatch
+		In this laboratory we look at the very heart of julia: How it uses types to dispatch
 		functions - that is, how Julia decides which particular implementation method
 		it will use to calculate the value of a function call.
 

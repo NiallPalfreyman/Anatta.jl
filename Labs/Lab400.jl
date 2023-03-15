@@ -8,12 +8,15 @@
 [
 	Activity(
 		"""
-		Welcome to course 400: Introduction to Quantum Computation!
+		Hi! Welcome to Anatta course 400: An Introduction to Quantum Computation!
+		
+		Course 400 is unfortunately still under construction. However, you can read this
+		laboratory to gain an idea of what is going to come in the future ...
 
-		In this course we will explore the wonderful world of quantum physics, quantum
-		computing and quantum information. In this introductory lab, we will first gather the
-		various mathematical tools we need for dealing with quantum systems - in particular,
-		we will need to extend our knowledge of Julia to include complex numbers :)
+		In this course we explore the wonderful world of quantum physics, quantum computing and
+		quantum information. In this introductory lab, we first gather the various mathematical
+		tools we need for dealing with quantum systems - in particular, we will need to extend
+		our knowledge of Julia to include complex numbers!
 
 		You might be asking yourself: Why do we need complex numbers? The answer is that quantum
 		theory teaches us that particles possess certain probabilities that can interfere with
@@ -23,7 +26,6 @@
 		Recall that a complex number z has the general form x+iy, where x and y are real numbers,
 		and i^2==-1. Check this now: In Julia, the number i is written "im", so tell me the
 		value of
-
 			im^2
 		""",
 		"Notice the way in which Julia writes this number - does it make sense to you?",
@@ -33,7 +35,6 @@
 		"""
 		Any complex number has a REAL part x and an IMAGINARY part y. Form the following two
 		complex numbers and tell me their sum:
-
 			z1 = 4+5im
 			z2 = 3-5im
 			z1 + z2
@@ -52,7 +53,6 @@
 		"""
 		We calculate the CONJUGATE of a complex number by simply reversing the sign of its
 		imaginary part. Calculate the complex conjugate of 5+2im:
-
 			conj(5+2im)
 		""",
 		"",
@@ -62,7 +62,6 @@
 		"""
 		We can also use the operator ' to take the conjugate of a complex number. Calculate
 		the value of the complex conjugate of z1:
-
 			z1'
 
 		""",
@@ -73,7 +72,6 @@
 		"""
 		The conjugate of a product of complex numbers is equal to the product of their
 		individual conjugates. Check that this is true:
-
 			(z1*z2)' == a1' * z2'
 		""",
 		"",
@@ -87,7 +85,6 @@
 		number by using Pythagoras: We square its real and imaginary parts, add them together,
 		then take the square-root of the result. Check that this is true by using the Julia
 		function abs():
-
 			abs(z1)^2 == real(z1)^2 + imag(z1)^2
 		""",
 		"",
@@ -97,7 +94,6 @@
 		"""
 		We can also compute the norm of a complex number by multiplying the number by its
 		conjugate and taking its square-root. Check that this is correct:
-
 			a = abs(z2)
 			b = sqrt(z2 * conj(z2))
 			a == b
@@ -108,7 +104,6 @@
 	Activity(
 		"""
 		We calculate complex exponents using Euler's famous formula:
-
 			θ = 3
 			a = exp(θ*im)
 			b = cos(θ) + sin(θ)*im
@@ -121,7 +116,6 @@
 		"""
 		In general, we can express any complex number as the product of its norm and a complex
 		exponentiation:
-
 			abs(z1) * exp(angle(z1)*im)
 
 		If you calculate this value, you will see that rounding errors make it not quite equal to
@@ -142,7 +136,6 @@
 		We think of a qubit as an N-dimensional column vector of complex numbers, where N is
 		usually a power of 2. We call such a column vector a KET, written mathematically as "|x>".
 		In Julia, we will use small letters to identify kets, for example:
-
 			x = [-1, 2im,  1]
 
 		Use Julia to calculate the norm of the ket x by squaring the absolute value of each
@@ -165,7 +158,6 @@
 		x' is the ADJOINT of x; we calculate it by transposing x (i.e., swapping rows and columns),
 		then taking the complex conjugate of each element of x. We can calculate the adjoint of
 		any matrix. What is the adjoint of the following matrix?
-
 			M = [
 				1+4im 2-3im -2+im
 				2-5im 2+3im    5
@@ -179,7 +171,6 @@
 		"""
 		We call a row vector of complex numbers a BRA, written mathematically as "<x|". In Julia,
 		we will use small letters followed by a bang (!) to identify bras, for example:
-
 			y! = [ 1,   0, im]'
 
 		Use Julia to calculate the norm of the bra y! by squaring the absolute value of each
@@ -192,7 +183,6 @@
 		"""
 		We can use the adjoint operation to turn a ket into a bra or to turn a bra into a ket.
 		Look at the values of x and x', and check that they are respectively a ket and a bra:
-
 			x
 			x'
 		""",
@@ -202,7 +192,6 @@
 	Activity(
 		"""
 		Verify that taking the adjoint twice returns us to the original ket:
-
 			x'' == x
 		""",
 		"",
@@ -211,7 +200,6 @@
 	Activity(
 		"""
 		Verify that taking the adjoint twice returns us to the original bra:
-
 			y!'' == y!
 		""",
 		"",
@@ -223,7 +211,6 @@
 		bra and a ket: <y|.|x> = <y||x> = <y|x> . Paul Dirac suggested the names bra and ket
 		because together they form the BRAcKETs <y|x> that we use to calculate probabilities
 		in quantum theory. Calculate the following inner product:
-
 			y! * x
 		""",
 		"",
@@ -232,7 +219,6 @@
 	Activity(
 		"""
 		Verify that <y|x> is not the same as <x|y>:
-
 			y!*x != x' * y!'
 		""",
 		"",
@@ -249,11 +235,9 @@
 		"""
 		Two non-zero vectors are ORTHOGONAL if their inner product is zero. For example,
 		define the following vector:
-
 			z = [1,im,-1]
 
 		Now verify that z is orthogonal to x:
-
 			<z|x> == <x|z> == 0
 		""",
 		"z'*x == x'*z == 0",
@@ -267,7 +251,6 @@
 		normalised vectors to represent qubits.
 
 		Verify that this ket is normalised:
-
 			n = [0.6,0.8im]
 		""",
 		"<n|n> == n'*n == 1.0",
@@ -276,7 +259,6 @@
 	Activity(
 		"""
 		We form the OUTER product of two vectors by matrix-multiplying a ket and a bra:
-
 			|x><y| = x*y!
 
 		NOTICE: We calculate an INNER product as (bra*ket), but we calculate the OUTER product
@@ -296,11 +278,9 @@
 	Activity(
 		"""
 		A square matrix A is HERMITIAN if A is equal to its own adjoint:
-
 			A == A'
 
 		Verify that the following matrix is Hermitian:
-
 			A = [
 				1		3+2im
 				3-2im	0
@@ -317,7 +297,6 @@
 		Hermitian matrices represent physical measurements like: "Is this qubit equal to 1?"
 
 		Is this matrix Hermitian?
-
 			B = [
 				-5			99-5im
 				99+5im		2
@@ -329,11 +308,9 @@
 	Activity(
 		"""
 		A matrix U is UNITARY if the adjoint of U is equal to its own inverse:
-
 			U * U' == U' * U == I
 
 		(where I is the identity matrix). Is the following matrix U unitary?
-
 			U = [0 im;-im 0]
 		""",
 		"Test whether U'*U==I, and whether U*U'==I",
@@ -352,7 +329,6 @@
 		They are like rotations in a complex vector space that change the orientation of the
 		vector, but not its norm. We will see that this is important for describing how a qubit
 		changes over time. Is the following matrix S unitary?
-
 			S = [1 0;0 exp(im)]
 		""",
 		"",
@@ -369,7 +345,6 @@
 		"""
 		To summarise our findings so far, adjoining turns kets into bras, turns bras into kets,
 		and reverses the order of multiplications:
-
 			x! = x'
 			y  = y!'
 			<y|x>' == <x|y>
@@ -387,16 +362,13 @@
 		In general, multiplying a matrix M with a ket x will change the direction of x; however,
 		there is often a special set of kets |ψ> (the EIGENVECTORS of M) and complex numbers λ (the
 		EIGENVALUES), for which the following equation applies:
-
 			M |ψ> == λ |ψ>
 
 		That is, M only changes the magnitude of |ψ> (multiplies it by λ), but doesn't change the
 		direction of |ψ>. For example, here is one of the famous Pauli spin matrices:
-
 			S_y = [0 -im;im 0]
 
 		Verify that the vector
-		
 			ψ_yp = [1,im]
 		
 		is an eigenvector of S_y, and tell me the corresponding eigenvalue:
@@ -416,7 +388,6 @@
 		"""
 		To end this mathematical introduction, let me remind you that the TRACE of a matrix A is
 		sum of the elements along its leading diagonal. What is the trace of the following matrix?
-
 			M = [1 2;3 4]
 		""",
 		"",
@@ -429,7 +400,6 @@
 		eigenkets ψ_yp and ψ_ym. Suppose x is one of these two kets, and y is again either of
 		the two (y might even be the same as x), then we can combine these two kets either as an
 		inner or an outer product:
-
 			<x|y> == (x' * y) , or
 			|x><y| == (x * y')
 
