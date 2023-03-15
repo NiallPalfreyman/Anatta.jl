@@ -74,23 +74,24 @@
 		Euler's method with two dynamical equations for the phase variables E and B (electric
 		and magnetic field). In fact, model_step!() develops a numerical solution of the wave
 		equation:
-			d^2E/dt^2 = c^2 * ∂^2(E)/∂^2
+			∂^2E/∂t^2 = c^2 * ∂^2(E)/∂x^2
 
 		As you can see, the spatial curvature on the right-hand side of wave equation specifies not
 		the rate of change of E, but instead the acceleration of E (the SECOND time derivative of E).
 		This means that the wave always overshoots and 'swings back' to its neutral position,
-		creating the oscillatory motion of a wave.
+		generating the oscillatory motion of a wave.
 		
-		The wave equation is very similar to the heat equation, which describes the flow of
+		The wave equation is very similar to the heat equation, which describes the spread of
 		temperature through a medium:
-			dE/dt = c^2 * ∂^2(E)/∂^2
+			∂E/∂t = c^2 * ∂^2(E)/∂x^2
 
 		However, in the heat equation, the spatial curvature of temperature specifies directly the
 		rate of change of E, so there is no more overshoot, but just heat flow. Change my model to
-		a model of heat flow by modifying line 108 of WaveDynamics.jl.
-
+		a model of heat flow by modifying line 108 of WaveDynamics.jl. I suggest that you make a
+		copy of my line 108, so you can reverse your change afterwards, and you may want to adjust
+		the values of frequency and attenuation to make the heat-flow more visible.
 		""",
-		"I suggest that you make a copy of line 108, so you can reverse your change afterwards!",
+		"",
 		x -> true
 	),
 	Activity(
