@@ -6,7 +6,6 @@ export Turtle1, demo1
 using Agents, LinearAlgebra
 using Random # hides
 using Pkg
-Pkg.add("CairoMakie")
 Pkg.add("GLMakie")
 Pkg.status("InteractiveDynamics")
 using InteractiveDynamics
