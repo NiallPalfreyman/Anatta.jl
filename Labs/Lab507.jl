@@ -1,42 +1,51 @@
 #========================================================================================#
 #	Laboratory 507
 #
-# Welcome to course 507: 
+# Differential adhesion.
 #
-# Author: Niall Palfreyman (...), Nick Diercksen (July 2022)
+# Author: Niall Palfreyman (March 2023).
 #========================================================================================#
 [
 	Activity(
 		"""
-		Welcome to Lab 507: Neutral Drift.
+		Welcome to Lab 507: Differential Adhesion.
 
+		In this laboratory, we implement Stuart Newman and Gerd Müller's Differential Adhesion
+		Hypothesis (DAH), according to which the entire process of morphogenesis (that is, organism
+		development) is guided by proteins of varying 'stickiness' on the surface of the cells of
+		the developing organism. These proteins are called "cadherins". As the cells rattle around
+		due to thermal motion, adhesion between the cadherins causes the cells to organise
+		themselves into the spatial forms that make up the organism's body.
 
-        Let's get started with some new functionality first: ...
+		Run DifferentialAdhesion now and observe carefully what happens.
 		""",
 		"",
 		x -> true
 	),
     Activity(
 		"""
-        This chapter is not going to be a long: We actually only need one single
-        stepping function, namely `model_steo!`. The Developers of Agents.jl provide
-        a neat alternative to just declare and use an empty step-function: We can
-        just use a `dummystep`.
-            abmexploration(model; (agent_step!)=dummystep, ...)
-        
-        How many methods does dummystep have?
+		As you see, these cells organise themselves according to their 'stickiness' to each other.
+		Experiment now with the various parameters. What effect do thermal motion, adhesion_range
+		and gravity have on the cell patterns you observe?
 		""",
-		"""
-        \tdid you load Agents.jl?
-        \tJust enter dummystep in the console or have a look at the API.""",
-		x -> x == 2
+		"",
+		x -> true
 	),
-
     Activity(
 		"""
-
+		Now try increasing the number of adherin classes. Do the cells organise themselves into
+		neat layers around the centre of a cluster?
 		""",
-		"???",
+		"",
+		x -> occursin("no",lowercase(x))
+	),
+    Activity(
+		"""
+		To be honest, I think my implementation of the stickiness() method is pretty rubbish. can
+		you do better? Find a way of combining the adherin classes (1:8) that organises the cells
+		more cleanly into layers.
+		""",
+		"",
 		x -> true
 	),
 ]
