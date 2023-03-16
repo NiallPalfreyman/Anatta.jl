@@ -15,7 +15,7 @@ using Agents, GLMakie, InteractiveDynamics, LinearAlgebra, Observables
 import InteractiveUtils: @which
 
 export abmplayground, multicoloured, dejong2, diffuse4, diffuse4!, diffuse8, diffuse8!,
-		size, turn!, valleys, wedge
+		size, spectrum, turn!, valleys, wedge
 
 #-----------------------------------------------------------------------------------------
 # Module methods:
