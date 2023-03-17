@@ -176,15 +176,14 @@ function reply( response=nothing)
 	if !evaluate(session.activities[session.current_act],response)
 		# Response is unsuccessful:
 		print("Do you want to try again? ")
-		if ~occursin('n',lowercase(readline()))
-			# User did not answer no: default behaviour is to stay with this activity:
-			return
+		userresponse = lowercase(readline())
+		if occursin('y',userresponse) || occursin("hint",userresponse)
+			return												# User wishes to proceed
 		end
 	end
 
 	# Whether response was correct, incorrect or missing, we're moving to the next activity:
-	println( "Let's move on ...")
-	println()
+	println( "Let's move on ...\n")
 	nextact()
 end
 
