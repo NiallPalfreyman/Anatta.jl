@@ -79,7 +79,7 @@
 		Check the resulting effect on your beetles Vector, then give me the expression beetles[3]:
 		""",
 		"This code should have changed the speed of Beetle number 3 to 0.5",
-		x -> x isa Main.AbstractAgent && x.id == 4 && x.speed == 0.5
+		x -> x isa Main.AbstractAgent && x.id == 2 && x.speed == 0.5
 	),
 	Activity(
 		"""
