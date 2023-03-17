@@ -36,16 +36,20 @@
 	Activity(
 		"""
 		What you have observed is called a Moran Process: many agents exchange individual decisions
-		until they collectively make an irreversible choice. We can view this Moran process in
+		until they collectively make an irreversible choice. We can interpret this Moran process in
 		three different ways - evolutionarily, developmentally or socially:
 			-	EVOLUTIONARILY, altruism is genetically determined. Agents have a random genetic
 				tendency to act altruistically. In each generation, agents die and are replaced by
 				a random nearby individual. They therefore tend to be replaced by the most frequent
-				phenotype in their neighbourhood.
-			-	SOCIALLY, altruism is developmentally determined. Agents have a random cultural
-				tendency to act altruistically. At each moment, agents adopt opinions and
-				behaviours from nearby individuals. Over time, they therefore tend to adopt the
-				most frequent behaviour in their neighbourhood.
+				phenotype in their reproductive neighbourhood.
+			-	DEVELOPMENTALLY, altruism is physiologically determined. Cells within an organism
+				have a random tendency to support altruistic behaviours of the organism. During
+				development, cells communicate and modify each others' developmental state. They
+				therefore tend to adopt the most common developmental fate in their neighbourhood.
+			-	SOCIALLY, altruism is culturally determined. Agents have a random cultural tendency
+				to act altruistically. At each moment, agents adopt opinions and behaviours from
+				nearby individuals. Over time, they therefore tend to adopt the most common
+				behaviour in their social neighbourhood.
 
 		Run NeutralDrift again and estimate how frequently the population makes the decision for
 		altruism.
