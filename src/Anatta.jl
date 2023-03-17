@@ -131,7 +131,7 @@ end
 
 Display the current activity to the learner.
 
-If this activity is available, display it; otherwise move to next laboratory.
+If this activity exists, display it; otherwise move to next laboratory.
 """
 function askme()
 	if session.current_act ≤ length(session.activities)
@@ -207,7 +207,7 @@ function nextact( act::Int = 0)
 		# act is a valied activity - go to it:
 		session.current_act = act
 		save()
-		gimme()
+		askme()
 	else
 		# We've completed last activity - go to next lab:
 		println( "That's the end of lab ", session.lab_num, ". Just preparing the next lab ...")
