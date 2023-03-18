@@ -33,7 +33,7 @@ Base.size(cs::Agents.ContinuousSpace) = cs.dims
 
 Return different colours depending on the id of the agent.
 """
-const spectrum = [:red,:orange,:yellow,:green,:blue,:violet,:magenta,:white]
+const spectrum = [:black,:darkblue,:blue,:green,:violet,:crimson,:red,:orange,:yellow]
 function multicoloured( agent::AbstractAgent)
 	spectrum[1+agent.id%length(spectrum)]
 end
