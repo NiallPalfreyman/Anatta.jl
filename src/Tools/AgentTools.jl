@@ -72,7 +72,7 @@ end
 Return a 2D map of a multimodal valleys landscape with dimensions (width, width).
 """
 function valleys( width::Int)
-	xs = repeat( range(-4,4,width), 1, width)
+	xs = repeat( range(-3,3,width), 1, width)
 
 	map(
 		(x,y) -> (1/3)*exp(-((x + 1)^2) - (y^2)) +
@@ -84,11 +84,11 @@ end
 
 #-----------------------------------------------------------------------------------------
 """
-	dejong2( arraywidth)
+	dejong2( width)
 
 Return a 2D map of a De Jong 2 landscape with dimensions (arraywidth, arraywidth).
 """
-function dejong2( arraywidth::Int)
+function dejong2( width::Int)
 	xs = repeat( range(-10,10,width), 1, width)
 
 	map(
