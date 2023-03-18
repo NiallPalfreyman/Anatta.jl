@@ -76,28 +76,30 @@
 		components), it is not deterministic, but it is also not pure chance. The choice emerges
 		from the actions of the entire system.
 
-		The NeutralDrift model is also known in social science as a SCHELLING model, demonstrating
-		how populations choose to adopt new technologies and ideas. In this interpretation,
-		altruism is an opinion that either spreads through a society or else dies out.
-
-		Now position the agents into two blocks: agents on the left-hand side of the world are all
-		altruistic and all agents on the right-hand side are not. Use this configuration to test
-		the extent to which spatial configurations influence the choosing process.
+		In the social sciences, this model is known as the SCHELLING model, demonstrating how
+		populations choose to adopt new technologies and ideas. In this interpretation, altruism is
+		an opinion that either spreads through a society or else dies out.
 		""",
 		"",
 		x -> true
 	),
 	Activity(
 		"""
-		Here is another experiment for you to perform. We currently have 2 classes of altruism:
-		altruist or not altruist. What happens if we permit different levels of altruism - for
-		example [0,0.5,1]? Does the model still make decisions? What if you allow even more levels
-		of altruism - 4,5,...?
+		Now perform this experiment: Can you turn the NeutralDrift model into an Ising Glass model?
+		The Ising Glass model replaces our direct interaction between agents by interactions with a
+		diffusing and evaporating field B. Altruists secrete the signalling factor B, but non-
+		altruists do not. At each step, an agent switches its altruist state between true and false
+		by drawing a random value within the range [0,1); if this value is LESS than the ambient
+		concentration of B, the agent sets its altruist state to TRUE. If the value is NOT less
+		than the B concentration, the agent switches its altruist state to FALSE.
 
-		Note: You may find it useful to use the following agent colour function:
-			acolour( mn::Moran) = spectrum[Int(ceil(mn.altruist*length(spectrum)))]
+		You will find that the behaviour of your model depends crucially upon how fast and far the
+		signalling factor B diffuses outwards from its source, so make sure you create sliders for
+		the secretion, diffusion and evaporation rates of B.
+
+		Question: When agents switch their state, they are treating the B-concentration as what?
 		""",
 		"",
-		x -> true
+		x -> occursin("probability",lowercase(x))
 	),
 ]
