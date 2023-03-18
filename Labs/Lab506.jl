@@ -80,10 +80,22 @@
 		how populations choose to adopt new technologies and ideas. In this interpretation,
 		altruism is an opinion that either spreads through a society or else dies out.
 
-		As a final activity for this laboratory, position the agents into two blocks: agents on the
-		left-hand side of the world are all altruistic and all agents on the right-hand side are
-		not. Use this configuration to test the extent to which spatial configurations influence
-		the choosing process.
+		Now position the agents into two blocks: agents on the left-hand side of the world are all
+		altruistic and all agents on the right-hand side are not. Use this configuration to test
+		the extent to which spatial configurations influence the choosing process.
+		""",
+		"",
+		x -> true
+	),
+	Activity(
+		"""
+		Here is another experiment for you to perform. We currently have 2 classes of altruism:
+		altruist or not altruist. What happens if we permit different levels of altruism - for
+		example [0,0.5,1]? Does the model still make decisions? What if you allow even more levels
+		of altruism - 4,5,...?
+
+		Note: You may find it useful to use the following agent colour function:
+			acolour( mn::Moran) = spectrum[Int(ceil(mn.altruist*length(spectrum)))]
 		""",
 		"",
 		x -> true
