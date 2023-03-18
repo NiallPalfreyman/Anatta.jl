@@ -70,7 +70,6 @@ function agent_step!( turtle, model)
 	idxBwrd = get_spatial_index( normalize_position(turtle.pos.-turtle.vel,model),
 		model.poo, model
 	)
-#	println("Current pos = $(idxHere); Fwd pos = $(idxFwrd)")
 
 	poo = 5.0									# Amount of poo I will pump backwards
 	poo += model.poo[idxHere];	model.poo[idxHere] = 0.0
