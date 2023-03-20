@@ -12,10 +12,10 @@ module AgentTools
 
 using Agents, GLMakie, InteractiveDynamics, LinearAlgebra, Observables
 
-import InteractiveUtils: @which
+import InteractiveUtils:@which
 
 export abmplayground, multicoloured, dejong2, diffuse4, diffuse4!, diffuse8, diffuse8!,
-		size, spectrum, turn!, valleys, wedge
+		gradient, size, spectrum, turn!, valleys, wedge
 
 #-----------------------------------------------------------------------------------------
 # Module methods:
@@ -63,6 +63,20 @@ Rotates agent's facing direction (vel).
 function turn!(agent::AbstractAgent, θ=pi/2)
 	cosθ = cos(θ); sinθ = sin(θ)
 	agent.vel = Tuple([cosθ -sinθ;sinθ cosθ]*collect(agent.vel))
+end
+
+#-----------------------------------------------------------------------------------------
+"""
+	gradient( pos, flow::AbstractArray, model::ABM)
+	
+Return the gradient vector for the given flow at this position in the model.
+"""
+function gradient( pos, flow::AbstractArray, model::ABM; h::Float64=1.0)
+	nbhdflow = map([(h,0),(0,h),(-h,0),(0,-h)]) do step
+		flow[ get_spatial_index( normalize_position(pos.+step,model), flow, model) ]
+	end
+
+	((nbhdflow[1]-nbhdflow[3]), (nbhdflow[2]-nbhdflow[4])) ./ 2h
 end
 
 #-----------------------------------------------------------------------------------------
