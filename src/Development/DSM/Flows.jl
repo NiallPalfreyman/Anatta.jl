@@ -49,9 +49,6 @@ function flows(;
 	# Insert one Turtle in the middle of the world, facing northwards:
 	add_agent!( (25, 25), model, (0,1))
 
-#=	turtle = Turtle(nextid(model), (25, 25), (0, 1))
-	add_agent!(turtle, turtle.pos, model)=#
-
 	return model
 end
 
