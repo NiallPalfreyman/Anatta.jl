@@ -72,11 +72,11 @@ end
 Return the gradient vector for the given flow at this position in the model.
 """
 function gradient( pos, flow::AbstractArray, model::ABM; h::Float64=1.0)
-	nbhdflow = map([(h,0),(0,h),(-h,0),(0,-h)]) do step
+	nbhdflow = map([(-h,0),(h,0),(0,-h),(0,h)]) do step
 		flow[ get_spatial_index( normalize_position(pos.+step,model), flow, model) ]
 	end
 
-	((nbhdflow[1]-nbhdflow[3]), (nbhdflow[2]-nbhdflow[4])) ./ 2h
+	((nbhdflow[2]-nbhdflow[1]), (nbhdflow[4]-nbhdflow[3])) ./ 2h
 end
 
 #-----------------------------------------------------------------------------------------
