@@ -100,13 +100,13 @@ end
 """
 	dejong2( width)
 
-Return a 2D map of a De Jong 2 landscape with dimensions (arraywidth, arraywidth).
+Return a 2D map of a De Jong 2 landscape with dimensions (width, width).
 """
 function dejong2( width::Int)
 	xs = repeat( range(-10,10,width), 1, width)
 
 	map(
-		(x,y) -> sin(180*2*x/pi) / (1 + abs(x)) + sin(180*2*y/pi) / (1 + abs(y)),
+		(x,y) -> sin(2x) / (abs(x)+1) + sin(2y) / (abs(y)+1),
 		xs, xs'
 	)
 end
