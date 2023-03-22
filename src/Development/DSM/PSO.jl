@@ -147,8 +147,7 @@ end
 """
 	demo()
 
-creates an interactive abmplot of the PSO module to visualize
-Particle Swarm Optimizations.
+Demonstrate the PSO model.
 """
 function demo()
 	world = pso()
