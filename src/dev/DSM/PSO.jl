@@ -37,7 +37,7 @@ Initialise a PSO model.
 """
 function pso(;
 	difficult=false,
-	temperature=0.001,
+	temperature=0.002,
 	tolerance=0.4,
 )
 	width = 90
@@ -116,7 +116,7 @@ function agent_step!( ant, world)
 		turn!(ant,2π*rand())
 	end
 
-	# Slow down for neighbours and give them hope - otherwise speed up:
+	# Slow down for neighbours - otherwise speed up:
 	if length(nbrs) != 0
 		accelerate!(ant,false)
 		for aunty in nbrs
@@ -138,7 +138,7 @@ end
 """
 	accelerate!( ant::Ant, really::Bool=true)
 
-If ant is really accelerating, increase speed; otherwise slow down.
+If ant is Really accelerating, increase speed; otherwise slow down.
 """
 function accelerate!( ant::Ant, really::Bool=true)
 	if really
@@ -159,7 +159,7 @@ function demo()
 	world = pso()
 	params = Dict(
 		:difficult => false:true,
-		:temperature => 1e-4:1e-4:5e-3
+		:temperature => 0.0:0.002:1.0
 	)
 
 	plotkwargs = (

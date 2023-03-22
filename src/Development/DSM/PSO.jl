@@ -133,7 +133,7 @@ end
 """
 	accelerate!( ant::Ant, really::Bool=true)
 
-If ant is really accelerating, increase speed; otherwise slow down.
+If ant is Really accelerating, increase speed; otherwise slow down.
 """
 function accelerate!( ant::Ant, really::Bool=true)
 	if really
