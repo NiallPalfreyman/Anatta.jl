@@ -8,7 +8,7 @@
 [
 	Activity(
 		"""
-		Lab 502: (Non-)Computable patterns.
+		Welcome to Lab 502: (Non-)Computable patterns.
 
 		"Reductionism" is the belief that we can always understand system-level behaviours by
 		reducing them to individual component behaviours, but this is certainly not always possible,

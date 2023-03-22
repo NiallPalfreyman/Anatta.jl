@@ -8,14 +8,15 @@
 [
 	Activity(
 		"""
-		Lab 505: Flow dynamics and pedagogical simulation.
+		Welcome to Lab 505: Flow dynamics and pedagogical simulation.
 
-		Flows are not only produced and utilised by agents; they also possess their own dynamics.
-		In fact, ALL biological systems contain two essential features: An agent structure that
-		generates and consumes flows LOCALLY, and a set of dynamical flows that interact NONLOCALLY
-		and influence the changes of state of the agent structure. The structures may be organisms,
-		cells, neurons or genomes, and the flows may be food resources, cell-signalling proteins,
-		neurotransmitters or genetic transcription factors.
+		Flows are not only produced and utilised by agents; they also possess their own dynamics,
+		which can be quite complex - as in this lab. In fact, ALL biological systems contain two
+		essential features: An agent structure that generates and consumes flows LOCALLY, and a set
+		of dynamical flows that interact NONLOCALLY and influence the changes of state of the agent
+		structures. These structures may be organisms, cells, neurons or genomes, and the flows may
+		be food resources, cell-signalling proteins, neurotransmitters or genetic transcription
+		factors.
 
 		In this lab, we first model the nonlocal flow dynamics of wave phenomena, then we look at
 		how we can use this model to demonstrate a process that beginning students often find

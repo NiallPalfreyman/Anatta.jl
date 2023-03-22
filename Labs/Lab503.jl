@@ -1,14 +1,14 @@
 #========================================================================================#
 #	Laboratory 503
 #
-# Complexity.
+# Emergent patterns.
 #
 # Author: Niall Palfreyman (February 2023), Emilio Borrelli (July 2022)
 #========================================================================================#
 [
 	Activity(
 		"""
-		Lab 503: Emergent patterns.
+		Welcome to Lab 503: Emergent patterns.
 
 		To summarise our discoveries so far in this course: We have reason to believe that
 		biological systems are both collective and non-computable. That is, their behaviour arises

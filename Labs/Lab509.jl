@@ -8,7 +8,9 @@
 [	
 	Activity(
 		"""
-		Most major problems that we wish to solve with a computer can be reformulated as
+		Welcome to Lab 509: Suboptimisation.
+
+		Most major problems that we wish to solve using computers can be reformulated as
 		MINIMISATION problems - that is, the problem of searching for the minimum value of
 		some OBJECTIVE function like the length of a route between two cities or the amount of fuel
 		needed to travel to Mars. The Suboptimisation model demonstrates how we might use a swarm

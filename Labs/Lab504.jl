@@ -8,12 +8,14 @@
 [
 	Activity(
 		"""
-		Lab 504: Flows.
+		Welcome to Lab 504: Flows.
 
-		This lab focuses on the diffusion and evaporation of a resource "poo" in the environment.
-		This poo is produced and consumed by a single turtle that moves around the world, and
-		it also diffuses and evaporates. In biology, such flows provide the topological structure
-		that guides the development of organism and their behaviours.
+		Agents do not live in isolation - they live in a world that influences them and which they
+		themselves influence. In this lab, we focus on the diffusion and evaporation of a resource
+		"poo" in the environment that is produced and consumed by a single turtle that moves
+		around the world. This poo also possesses its own dynamic of diffusion and evaporation. In
+		biology, such flows provide the topological structure that guides the development of
+		organisms and their behaviours.
 
 		Run the module Flows now and explore the effect of varying the rates of diffusion (dPoo)
 		and evaporation (αPoo). What diffusion rate enables you to draw stable lines in the

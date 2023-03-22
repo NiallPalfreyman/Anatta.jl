@@ -8,7 +8,7 @@
 [
 	Activity(
 		"""
-		Lab 501: Collective behaviour.
+		Welcome to Lab 501: Collective behaviour.
 
 		Now we understand the general structure of ABMs, we will turn from physics to a more
 		biological example: Organisms interacting with each other in an ecosystem.
