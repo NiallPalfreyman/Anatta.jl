@@ -67,7 +67,7 @@
 		question: Which aspect of the particle's movement does r influence?
 		""",
 		"", 
-		x -> occursin("fract",lowercase(x))
+		x -> occursin("distance",lowercase(x)) || 
 	),
 	Activity(
 		"""
