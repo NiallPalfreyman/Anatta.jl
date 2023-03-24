@@ -67,7 +67,7 @@
 		question: Which aspect of the particle's movement does r influence?
 		""",
 		"", 
-		x -> occursin("distance",lowercase(x)) || 
+		x -> occursin("distance",lowercase(x))
 	),
 	Activity(
 		"""
@@ -86,7 +86,7 @@
 		How long do you think it would take to prove your answer to the previous activity?
 		""",
 		"", 
-		x -> true
+		x -> occursin("forever",lowercase(x)) || occursin("infinit",lowercase(x))
 	),
 	Activity(
 		"""
