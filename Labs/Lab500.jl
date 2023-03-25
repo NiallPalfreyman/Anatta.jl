@@ -220,13 +220,18 @@
 		"""
 		Next, look for the TODO tag in the file SimpleParticles.jl. I have written the skeleton
 		code for making the particles bounce off each other in the method agent_step!(). However,
-		I have left out the code that calculates the bearing direction from one particle to
-		another. It is your task to add this code (it's only a couple of lines) starting from the
-		TODO line. When you have done this, run SimpleParticles.demo() again to make sure the
-		particles are behaving properly (that is, that they are bouncing away from each other in
-		the correct directions).
+		I have left out the code that calculates the displacement direction from one particle
+		position (.pos) to another. It is your task to add this code (it's only a couple of lines)
+		starting from the TODO line. When you have done this, run SimpleParticles.demo() again
+		to make sure the particles are behaving properly (that is, that they are bouncing away
+		from each other in the correct directions).
+
+		Only move on from this activity when your particles successfully bounce off each other.
 		""",
-		"Only move on when your particles are successfully bouncing off each other.",
+		"""
+		I suggest that you open a separate julia console and use it to create two Tuples of your
+		own, and investigate how to calculate the vector difference between them.
+		""",
 		x -> true
 	),
 	Activity(
