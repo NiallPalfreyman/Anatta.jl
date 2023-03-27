@@ -12,7 +12,7 @@ Author: Niall Palfreyman, 01/01/2023
 module Anatta
 
 # Externally callable methods of Anatta
-export act, anatta, ani, askme, fetchcode, hint, lab, nextlab, nextact, reply
+export act, anatta, ani, askme, setup, hint, lab, nextlab, nextact, reply
 
 using Pluto								# We want to be able to use Pluto notebooks
 
@@ -101,12 +101,12 @@ function ani()
 	println( "   act()                : Display the current activity number")
 	println( "   ani()                : Display a hint for the current activity")
 	println( "   askme()              : Ask me the current activity")
-	println( "   fetchcode(library)   : Copy Anatta library to local Development folder")
 	println( "   hint()               : Display a hint for the current activity")
 	println( "   lab()                : Display the current laboratory number")
 	println( "   nextact(act=next)    : Move to the learning activity act")
 	println( "   nextlab(lab=next)    : Move to the laboratory lab")
 	println( "   reply(response=skip) : Submit a response to the current activity")
+	println( "   setup(library)       : Copy Anatta library to local Development folder")
 end
 
 #-----------------------------------------------------------------------------------------
@@ -287,14 +287,15 @@ end
 
 #-----------------------------------------------------------------------------------------
 """
-	fetchcode( library::String)
+	setup( library::String)
 
-Fetch the named library to the Development subdirectory of present working directory.
+Set up the named library to the Development subdirectory of present working directory.
 """
-function fetchcode( library::String; force=false)
+function setup( library::String; force=false)
 	# Check existence of the library code:
 	frompath = joinpath( session.anatta_home, "Development", library)
 	if !isdir(frompath)
+		println(frompath)
 		println("Sorry: The library $(library) is unavailable.")
 		return
 	end
@@ -313,6 +314,12 @@ function fetchcode( library::String; force=false)
 	tool_path = joinpath(pwd(),"Tools")
 	if !isdir(tool_path)
 		cp( joinpath( session.anatta_home, "Tools"), tool_path, force=true)
+	end
+
+	# Ensure docs are set up:
+	docs_path = joinpath(pwd(),"Docs")
+	if !isdir(docs_path)
+		cp( joinpath( session.anatta_home, "../docs"), docs_path, force=true)
 	end
 
 	# Ensure Development directory exists:
