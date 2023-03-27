@@ -118,7 +118,7 @@ end
 
 #-----------------------------------------------------------------------------------------
 """
-	feed( turtle, kull)
+	feed!( turtle, kull)
 
 If turtle is within its own develop_radius of the world's centre, stay here sniffing, but only
 gain food energy benefit if it is withing model feeding_radius.
