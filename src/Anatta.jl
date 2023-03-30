@@ -14,7 +14,7 @@ module Anatta
 # Externally callable methods of Anatta
 export act, anatta, ani, askme, setup, hint, lab, nextlab, nextact, reply
 
-using Pluto								# We want to be able to use Pluto notebooks
+#using Pluto								# We want to be able to use Pluto notebooks
 
 #-----------------------------------------------------------------------------------------
 # Module fields:
@@ -237,11 +237,6 @@ function nextlab( lab_num::Int = 0, current_act::Int = 1)
 		return
 	end
 
-	# Update session information for the new laboratory:
-	session.lab_num = lab_num
-	session.current_act = current_act
-	save()
-
 	# Open lab_file and offer help:
 	stream = open(lab_file)
 	session.is_pluto = occursin("Pluto.jl notebook",readline(stream))
@@ -249,14 +244,21 @@ function nextlab( lab_num::Int = 0, current_act::Int = 1)
 
 	if session.is_pluto
 		# Open a Pluto lab:
-		println( "I'm about to set up a Pluto lab. After it has loaded, if you wish to experiment")
-		println( "in Julia while the lab is running, you can press Ctrl-C in the Julia console.")
-		println( "...")
-		@async Pluto.run(notebook=lab_file)
+		println( "You are trying to set up a Pluto lab - I'm afraid this option is still unavailable.")
+		return
+#		println( "I'm about to set up a Pluto lab. After it has loaded, if you wish to experiment")
+#		println( "in Julia while the lab is running, you can press Ctrl-C in the Julia console.")
+#		println( "...")
+#		@async Pluto.run(notebook=lab_file)
 	else
 		# Open a Julia lab:
 		session.activities = include(lab_file)
 	end
+
+	# Update session information for the new laboratory:
+	session.lab_num = lab_num
+	session.current_act = current_act
+	save()
 
 	# Display welcome message to the new laboratory.
 	println( "Great - I've set up the laboratory. Please note that if you have just completed")
