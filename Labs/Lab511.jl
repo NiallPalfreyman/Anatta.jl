@@ -296,12 +296,12 @@
 					they have no control: whether they happen to land on a food disc.
 
 		These thoughts give us a way forward. If we want to reproduce the accelerated search of
-		Hinton and Nowlan, we should give our turtles three additional features:
+		Hinton and Nowlan, we might need to give our turtles three additional features:
 			-	Recombinable genetic structure;
 			-	Exploratory developmental processes;
-			-	Niche-construction: a way to shape their behaviour relative to their objective.
+			-	Niche-construction: a way to focus their behaviour on solving a specific objective.
 
-		That's a lot to do - I think we'd better get started! :)
+		That's a lot to do - maybe we'd better get started! :)
 		""",
 		"",
 		x -> true
