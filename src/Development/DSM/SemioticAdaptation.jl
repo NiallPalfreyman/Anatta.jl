@@ -42,13 +42,7 @@ end
 Initialise the Semiotic Adaptation simulation.
 """
 function semiotic_adaptation(;
-	life_energy		= 10.0,
-	birth_cost		= 0.7,					# 0.5
-	living_cost		= 0.1,
 	food_benefit	= 3.0,					# 0.09
-	search_speed	= 1.0,
-	mu_rate			= 0.05,
-	mu_extent		= 0.1,
 	feeding_radius	= 1e-5,
 	reaction_norm	= 0.2,					# 0.5
 )
@@ -56,15 +50,15 @@ function semiotic_adaptation(;
 	width = 40								# Width of the world
 
 	properties = Dict(
-		:life_energy => life_energy,
-		:birth_cost => birth_cost,
-		:living_cost => living_cost,
-		:food_benefit => food_benefit,
-		:search_speed => search_speed,
-		:mu_rate => mu_rate,
-		:mu_extent => mu_extent,
 		:feeding_radius => feeding_radius,
 		:reaction_norm => reaction_norm,
+		:food_benefit => food_benefit,
+		:life_energy => 10.0,
+		:birth_cost => 0.7,
+		:living_cost => 0.1,
+		:search_speed => 1.0,
+		:mu_rate => 0.05,
+		:mu_extent => 0.1,
 		:max_pop => pPop*width*width,
 	)
 
@@ -74,7 +68,7 @@ function semiotic_adaptation(;
 		θ = 2π * rand()
 		search_radius = rand()
 		lilith = add_agent!( kull, (cos(θ),sin(θ)),		# Ur-Turtle has ...
-			rand()*life_energy,							# Random initial energy up to maximum
+			rand()*kull.life_energy,					# Random initial energy up to maximum
 			false, false,								# Not (yet) sniffing or feeding
 			search_radius, search_radius,				# equal genetic and developmental radius
 			:white,										# temporary exploitation
@@ -223,9 +217,9 @@ Demonstrate Kull's SemioticAdaptation process.
 function demo()
 	kull = semiotic_adaptation()
 	params = Dict(
+		:food_benefit => 0:0.1:5.0,
 		:feeding_radius => 1e-5:1e-5:1e-3,
 		:reaction_norm => 0:0.01:1,
-		:food_benefit => 0:0.1:5.0,
 	)
 	plotkwargs = (
 		ac=(turtle->turtle.exploitation),

@@ -299,7 +299,8 @@
 		Hinton and Nowlan, we might need to give our turtles three additional features:
 			-	Recombinable genetic structure;
 			-	Exploratory developmental processes;
-			-	Niche-construction: a way to focus their behaviour on solving a specific objective.
+			-	Niche-construction: a way to focus their problem-solving behaviour on ONE
+					SPECIFIC objective.
 
 		That's a lot to do - maybe we'd better get started! :)
 		""",
