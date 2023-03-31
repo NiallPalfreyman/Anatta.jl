@@ -47,7 +47,7 @@ function computability(;
 		:vertices => [],
 		:n_vertices => n_vertices,
 		:spu => 30,
-		:footprints => Vector{Vector{Float64}}(undef,0)
+		:footprints => Vector{Point2f}(undef,0)
 	)
 
 	compy = ABM(Particle, ContinuousSpace((worldsize, worldsize)); properties)
@@ -86,7 +86,7 @@ end
 After all agents have moved one step, record their current position as a footprint.
 """
 function model_step!(compy)
-	append!( compy.footprints, [collect(p.pos) for p in allagents(compy)])
+	append!( compy.footprints, [Point2f(p.pos) for p in allagents(compy)])
 end
 
 #-----------------------------------------------------------------------------------------
@@ -96,7 +96,7 @@ end
 Return all vertex locations of the Computability model.
 """
 function vertices(compy)
-	collect.(compy.vertices)
+	Point2f.(compy.vertices)
 end
 
 #-----------------------------------------------------------------------------------------
@@ -116,6 +116,7 @@ end
 Create an interactive playground for the Computability model.
 """
 function demo()
+	compy = computability()
 	params = Dict(	# Playground slider values:
 		:n_particles => 1:10,
 		:r => 0:0.1:1,
@@ -123,24 +124,13 @@ function demo()
 	)
 
 	# Create playground displaying particles:
-	playground, abmplt = abmplayground( computability(), computability;
-		agent_step!, model_step!,
-		params,
+	playground, abmplt = abmplayground( compy, computability;
+		agent_step!, model_step!, params,
 		ac=:blue, as=30, am=:circle
 	)
-
-	# Add to abmplot both footprints and vertices:
-	footpath = Observable(Vector{Point{2,Float32}}(undef, 2))
-	corners = Observable(Vector{Point{2,Float32}}(undef, 2))
-
-	# Whenever abmplt is updated, also update arrays for the plots:
-	on(abmplt.model) do m
-		footpath[] = Point2f.(footprints(m))
-		corners[] = Point2f.(vertices(m))
-	end
-
-	scatter!( footpath, color=:black, markersize=1)
-	scatter!( corners,  color=:red,  markersize=20)
+	# Add vertices and footprints
+	scatter!( vertices(compy),  color=:red,  markersize=20)
+	scatter!( lift( footprints, abmplt.model), color=:black, markersize=1)
 
 	playground
 end

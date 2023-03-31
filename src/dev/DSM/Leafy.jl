@@ -40,7 +40,7 @@ function leafy(;
 		:n_particles => n_particles,
 		:base_point => base_point,
 		:spu => 30,
-		:footprints => Vector{Vector{Float64}}(undef,0)
+		:footprints => Vector{Point2f}(undef,0)
 	)
 
 	leaf = ABM(Particle, ContinuousSpace((worldsize, worldsize)); properties)
@@ -88,7 +88,7 @@ end
 After all agents have moved one step, record their current position as a footprint.
 """
 function model_step!(leaf)
-	append!( leaf.footprints, [collect(p.pos) for p in allagents(leaf)])
+	append!( leaf.footprints, [Point2f(p.pos) for p in allagents(leaf)])
 end
 
 #-----------------------------------------------------------------------------------------
@@ -108,13 +108,8 @@ function demo()
 		params,
 		ac=:blue, as=30, am=:circle
 	)
-
 	# Add footprints to abmplot:
-	footpath = Observable(Vector{Point{2,Float32}}(undef, 2))
-	on(abmplt.model) do leaf
-		footpath[] = Point2f.(leaf.footprints)
-	end
-	scatter!( footpath, color=:black, markersize=1)
+	scatter!( lift( (m->m.footprints), abmplt.model), color=:black, markersize=1)
 
 	playground
 end

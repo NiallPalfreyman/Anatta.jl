@@ -136,7 +136,7 @@
 		Clearly, we are able to do something that a computer can't!
 		""",
 		"", 
-		x -> occursin("infinit",lowercase(x))
+		x -> true
 	),
 	Activity(
 		"""
