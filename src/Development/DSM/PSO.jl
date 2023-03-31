@@ -24,7 +24,7 @@ Scouts of the Suboptimisation model, they have a memory of their best-yet object
 """
 @agent Ant ContinuousAgent{2} begin
 	speed::Float64
-	memory::Float64						# Lowest value of u that I have yet found in my travels
+	memory::Float64					# Lowest value of u that I have yet found in my travels
 end
 
 #-----------------------------------------------------------------------------------------
@@ -38,7 +38,6 @@ Initialise a PSO model.
 function pso(;
 	difficult=false,
 	temperature=0.002,
-	tolerance=0.4,
 )
 	width = 90
 	extent = (width,width)
@@ -50,7 +49,7 @@ function pso(;
 		:pPop => pPop,
 		:difficult => difficult,
 		:temperature => temperature,
-		:tolerance => tolerance,
+		:tolerance => 0.4,
 		:mass_centre => extent ./ 2
 	)
 
