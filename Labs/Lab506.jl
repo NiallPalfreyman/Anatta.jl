@@ -85,19 +85,21 @@
 	),
 	Activity(
 		"""
-		Now perform this experiment: Can you turn the NeutralDrift model into an Ising Glass model?
-		The Ising Glass model replaces our direct interaction between agents by interactions with a
-		diffusing and evaporating field B. Altruists secrete the signalling factor B, but non-
-		altruists do not. At each step, an agent switches its altruist state between true and false
-		by drawing a random value within the range [0,1); if this value is LESS than the ambient
-		concentration of B, the agent sets its altruist state to TRUE. If the value is NOT less
-		than the B concentration, the agent switches its altruist state to FALSE.
+		Now perform this experiment: Can you turn the NeutralDrift model into an Ising model? The
+		Ising Model is a simulation of ferromagnetic materials used in statistical mechanics, which
+		was also used as the basis for Hopfield neural networks. The model replaces our direct
+		interaction between agents by interactions with a diffusing and evaporating field B.
+		Altruists secrete the signalling factor B, but non-altruists do not. At each step, an agent
+		switches its altruist state between true and false by drawing a random value within the
+		range [0,1); if this value is LESS than the ambient concentration of B, the agent sets its
+		altruist state to TRUE. If the value is NOT less than the B concentration, the agent
+		switches its altruist state to FALSE.
 
 		You will find that the behaviour of your model depends crucially upon how fast and far the
 		signalling factor B diffuses outwards from its source, so make sure you create sliders for
 		the secretion, diffusion and evaporation rates of B.
 
-		Question: When agents switch their state, they are treating the B-concentration as what?
+		What is the role of the field B in the switching behaviour of agents in the Ising Model?
 		""",
 		"",
 		x -> occursin("probability",lowercase(x))

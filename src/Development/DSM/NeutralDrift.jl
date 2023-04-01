@@ -23,7 +23,7 @@ A Moran agent has an attribute (in this case `altruist`) that is determined at e
 distribution of attributes of its neighbours.
 """
 @agent Moran ContinuousAgent{2} begin
-	altruist::Bool				# Type of the agent
+	altruist::Bool							# Type of the agent
 end
 
 #-----------------------------------------------------------------------------------------
@@ -35,7 +35,7 @@ end
 Create and initialise the NeutralDrift model.
 """
 function neutraldrift(;
-	altruism_cost = 0.0,				# Individual benefit of acting altruistically
+	altruism_cost = 0.0,					# Individual cost of acting altruistically
 )
 	width = 30
 	space = ContinuousSpace((width,width); spacing = 1.0)
@@ -95,4 +95,4 @@ function demo()
 	playground
 end
 
-end	# of module IdealGas
+end
