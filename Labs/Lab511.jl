@@ -288,7 +288,7 @@
 	),
     Activity(
 		"""
-		Here are my thoughts comparing our Turtle simulation with Hinton and Nowlan's model:
+		Here are my thoughts contrasting our Turtle simulation with Hinton and Nowlan's model:
 			-	Their individuals have a genotypic structure that is mutated and recombined;
 			-	Their genotype encodes an exploratory process that generates the phenotype;
 			-	Their phenotypes are selected ONLY on their ability to guess the secret
@@ -297,9 +297,9 @@
 
 		These thoughts give us a way forward. If we want to reproduce the accelerated search of
 		Hinton and Nowlan, we might need to give our turtles three additional features:
-			-	Recombinable genetic structure;
-			-	Exploratory developmental processes;
-			-	Niche-construction: a way to focus their problem-solving behaviour on ONE
+			-	Selection OF recombinable genetic structure;
+			-	Selection ON exploratory developmental processes;
+			-	Selection OF structure-flow niches that focus problem-solving behaviour on ONE
 					SPECIFIC objective.
 
 		That's a lot to do - maybe we'd better get started! :)
