@@ -39,23 +39,31 @@ end
 
 Initialise the Genetic Structure simulation.
 """
-function genetic_structure()
-	pPop = 0.2								# Probability of a cell becoming populated
-	width = 40								# Width of the world
+function genetic_structure(;
+	crossover = true,
+	mu_rate = 1e-3,
+	elitism = -1,
+)
+	pPop = 0.2										# Probability of a cell becoming populated
+	width = 40										# Width of the world
 	properties = Dict(
-		:life_energy	=> 10.0,
-		:living_cost	=> 0.1,
-		:search_speed	=> 1.0,
-		:mu_rate		=> 1e-3,
-		:elitism		=> -1,
-		:target			=> collect(
-								"'Twas brillig and the slithy toves did gyre and " *
-								"gimble in the wabe!"
-							),
-		:alphabet		=> Char.(32:122),
-		:max_pop 		=> pPop*width*width,
+		:crossover		=> crossover,				# Are we using crossover?
+		:mu_rate		=> mu_rate,					# Probability of mutating a locus
+		:elitism		=> elitism,					# How much dissonance are we eliminating?
+		:life_energy	=> 10.0,					# Average initial energy of turtles
+		:living_cost	=> 0.1,						# How much of life energy does living cost?
+		:search_speed	=> 1.0,						# How fast should turtles move?
+		:target			=> Char.([
+			39, 84, 119, 97, 115, 32, 98, 114, 105, 108, 108, 105, 103, 32, 97, 110, 100, 32, 116,
+			104, 101, 32, 115, 108, 105, 116, 104, 121, 32, 116, 111, 118, 101, 115, 32, 100, 105,
+			100, 32, 103, 121, 114, 101, 32, 97, 110, 100, 32, 103, 105, 109, 98, 108, 101, 32,
+			105, 110, 32, 116, 104, 101, 32, 119, 97, 98, 101, 33,
+		]),
+		:alphabet		=> Char.(32:122),			# Collection of available alleles
+		:max_pop 		=> pPop*width*width,		# Maximum (approx) allowed population
 		:mean			=> 1.0,						# Mean dissonance of population
 		:sigma			=> 0.0,						# Standard deviation of dissonance
+		:minID			=> 1,						# ID of turtle with minimum dissonance
 	)
 
 	gs = ABM( Turtle, ContinuousSpace((width,width)); properties)
@@ -80,12 +88,11 @@ end
 Calculate current mean and standard deviation dissonance to enable fitness calculations.
 """
 function model_step!( gs::ABM)
-	dissonances = (ag->ag.dissonance).(allagents(gs))
+	allturtles = collect(allagents(gs))
+	dissonances = (ag->ag.dissonance).(allturtles)
 	gs.sigma = std(dissonances)
 	gs.mean = mean(dissonances)
-
-#	energies = (ag->ag.energy).(allagents(gs))
-#	println( "$(length(energies)) agents with mean energy: $(mean(energies))")
+	gs.minID = allturtles[findmin(dissonances)[2]].id
 end
 
 #-----------------------------------------------------------------------------------------
@@ -96,11 +103,11 @@ One step in the life of a Turtle with genetic structure.
 """
 function agent_step!( turtle::Turtle, gs)
 	walk!( turtle, gs)
-	give_birth( turtle, gs)
-	
 	if turtle.energy < 0
 		kill_agent!(turtle, gs)
+		return
 	end
+	give_birth( turtle, gs)
 end
 
 #-----------------------------------------------------------------------------------------
@@ -120,7 +127,7 @@ end
 	give_birth( turtle, kull)
 
 Have a baby with similar attributes to self, but possibly genetically mutated with probability
-kull.mu_rate.
+kull.mu_rate. NOTE: This is the core of the genetic algorithm!
 """
 function give_birth( mummy::Turtle, gs)
 	birth_cost = gs.living_cost * gs.life_energy
@@ -130,7 +137,7 @@ function give_birth( mummy::Turtle, gs)
 		if daddy !== nothing && daddy.energy > birth_cost
 			# Let's mate! Start with crossover ...
 			len = length(mummy.genome)
-			xpt = rand(1:len-1)											# Crossover point
+			xpt = gs.crossover ? rand(1:len-1) : len					# Crossover point
 			billy = vcat(daddy.genome[1:xpt],mummy.genome[xpt+1:end])	# Baby Billy's genome
 			sally = vcat(mummy.genome[1:xpt],daddy.genome[xpt+1:end])	# Baby Sally's genome
 
@@ -156,18 +163,26 @@ end
 """
 	set_fitness!( turtle, gs)
 
-Set turtle's initial energy and its colour to reflect its Manhattan distance from gs model's
-target string.
+Set turtle's initial energy and its colour to reflect its dissonance with respect to the gs model's
+target string. A turtle's dissonance is the mean Hamming distance per character of its genome from
+the target.
+
+Note that an individual's fitness is context-dependent: it is calculated from the individual's
+standing with respect to the entire current population (summarised by gs.mean and gs.sigma).
 """
 function set_fitness!( turtle::Turtle, gs)
-	turtle.dissonance = sum(abs.(turtle.genome - gs.target))/length(gs.target)				# Scaled Manhattan
-	fitness =
-		(gs.sigma==0) ? 1.0 : (gs.mean - turtle.dissonance)/(gs.sigma) - gs.elitism		# Sigma-scaling
-	fitness = max(0,fitness)												# Drop lowest percentile
+	turtle.dissonance = dissonance( turtle.genome, gs.target)	# Mean Manhattan difference per locus
+	if gs.sigma==0
+		# Really bizarre case at beginning of run - all turtles are equally dissonant:
+		fitness = 1.0
+	else
+		# Otherwise perform sigma-scaling and exclude lowest percentile of the population:
+		fitness = (gs.mean - turtle.dissonance)/(gs.sigma) - gs.elitism
+	end
+	turtle.energy = fitness>0 ? (fitness*gs.life_energy) : -1
 
-	turtle.energy = fitness * gs.life_energy
-
-	if turtle.dissonance > 2.0
+	# Colour turtle to indicate dissonance level
+	if turtle.dissonance > 5.0
 		turtle.colour = :black
 	elseif turtle.dissonance > 1.0
 		turtle.colour = :blue
@@ -182,6 +197,30 @@ end
 
 #-----------------------------------------------------------------------------------------
 """
+	dissonance( candidate::Vector{Char}, target::Vector{Char})
+
+The dissonance of a candidate string with respect to a target string (of the same length as the
+candidate) is its Hamming distance from the target, divided by the length of the target - so, the
+mean Hamming distance per string character.
+"""
+function dissonance( candidate::Vector{Char}, target::Vector{Char})
+	sum(abs.(candidate - target))/length(target)
+end
+
+#-----------------------------------------------------------------------------------------
+"""
+	local_dissonance( candidate::Vector{Char}, target::Vector{Char})
+
+This dissonance function still has the same global minimum at 0 as dissonance() when the
+candidate and target strings are equal to each other.
+"""
+function local_dissonance( candidate::Vector{Char}, target::Vector{Char})
+	diss = dissonance(candidate,target)
+	0.2diss^3 - 3.9diss^2 + 20diss
+end
+
+#-----------------------------------------------------------------------------------------
+"""
 	demo()
 
 Demonstrate a simple genetic algorithm.
@@ -189,22 +228,23 @@ Demonstrate a simple genetic algorithm.
 function demo()
 	gs = genetic_structure()
 	params = Dict(
-		:mu_rate => 0:0.001:0.9,
+		:crossover => false:true,
+		:mu_rate => 0:0.001:0.1,
 		:elitism => -3:3,
 	)
 	plotkwargs = (
 		ac=(turtle->turtle.colour),
 		as=30,
-		mdata = [
-			(m->mean(turtle->(turtle.dissonance),allagents(m))),
-			(m->minimum(turtle->(turtle.dissonance),allagents(m))),
-		],
-		mlabels = ["Mean dissonance","Minimum dissonance"],
+		mdata = [(m->m.mean), (m->m[m.minID].dissonance)],
+		mlabels = ["Mean dissonance", "Minimum dissonance"],
 	)
 
-	playground, = abmplayground( gs, genetic_structure;
+	playground,abmplt = abmplayground( gs, genetic_structure;
 		agent_step!, model_step!, params, plotkwargs...
 	)
+
+	best_string = lift( (wld->String(wld[wld.minID].genome)), abmplt.model)
+	text!( 40,30, text=best_string, color=:red, textsize=30, align=(:left,:top))
 
 	playground
 end
