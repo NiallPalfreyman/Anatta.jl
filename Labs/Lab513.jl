@@ -8,7 +8,7 @@
 [
 	Activity(
 		"""
-		Welcome to Lab 513: Selection of flows that focus problem-solving behaviour.
+		Welcome to Lab 513: Construction of flows to focus problem-solving behaviour.
 
 		In this simulation, a colony of ants forages for food. Although each ant follows a set of
 		simple rules, the colony as a whole acts in an emergent, goal-oriented way. This
