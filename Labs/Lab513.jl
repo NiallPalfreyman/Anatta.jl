@@ -10,9 +10,9 @@
 		"""
 		Welcome to Lab 513: Construction of flows to focus problem-solving behaviour.
 
-		In this simulation, a colony of ants forages for food. Although each ant follows a set of
-		simple rules, the colony as a whole acts in an emergent, goal-oriented way. This
-		implementation is derived from:
+		In the simulation AntSearch, a colony of ants forages for food. Although each ant follows
+		a set of simple rules, the colony as a whole acts in an emergent, goal-oriented way. My
+		implementation is derived from this source:
 			Uri Wilensky (1997). http://ccl.northwestern.edu/netlogo/models/Ants
 
 		When an ant finds a food source, it carries food, following a nest_pheromone back to the
@@ -20,9 +20,9 @@
 		they follow it towards the food. As more ants carry food to the nest, they reinforce the
 		pheromone trail.
 
-		Run the simulation now - you will see a black nest in the middle and three green food
-		sources of varying capacity and distance from the nest. Pheromone is displayed in a
-		black-blue-white gradient.
+		Run the AntSearch simulation now - you will see a black nest in the middle and three green
+		food sources of varying capacity and distance from the nest. I display pheromone
+		concentration using a black-blue-white gradient.
 		""",
 		"",
 		x -> true
