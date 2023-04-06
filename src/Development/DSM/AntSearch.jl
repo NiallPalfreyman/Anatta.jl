@@ -102,7 +102,6 @@ function ant_search(;
 
 	# Scatter the Ants in search mode (i.e., carrying nothing):
 	map(2π*rand(population)) do θ
-#		add_agent!( asearch.nest_pos, Ant, asearch, (cos(θ),sin(θ)), 0.0)
 		add_agent!( Ant, asearch, (cos(θ),sin(θ)), 0.0)
 	end
 
@@ -162,10 +161,10 @@ function go_to_nest!( ant::Ant, asearch)
 	else
 		# Still looking for nest ...
 		idx_here = get_spatial_index( ant.pos, asearch.nest_phero, asearch)
-		idx_frwd = get_spatial_index( normalize_position(ant.pos.+ant.vel,asearch),
+		idx_fwd  = get_spatial_index( normalize_position(ant.pos.+ant.vel,asearch),
 			asearch.nest_phero, asearch
 		)
-		if asearch.nest_phero[idx_frwd] < asearch.nest_phero[idx_here]
+		if asearch.nest_phero[idx_fwd] < asearch.nest_phero[idx_here]
 			turn!(ant,pi)
 		end
 		asearch.carry_phero[idx_here] += asearch.secrete_rate * ant.carrying
@@ -179,17 +178,17 @@ end
 Wander around looking for food. If you find some, pick it up.
 """
 function look_for_food!( ant::Ant, asearch)
-	fsrc = nothing
+	foodsrc = nothing
 	for fs in asearch.food_source
 		if euclidean_distance(ant.pos,fs.pos,asearch) < asearch.sniff_radius
-			fsrc = fs
+			foodsrc = fs
 			break
 		end
 	end
 
-	if fsrc !== nothing
+	if foodsrc !== nothing
 		# We've found food:
-		ant.carrying = fsrc.capacity
+		ant.carrying = foodsrc.capacity
 		turn!(ant,pi)
 	else
 		# Still looking for food ...
@@ -197,10 +196,10 @@ function look_for_food!( ant::Ant, asearch)
 
 		if asearch.lwb_tolerance < asearch.carry_phero[idx_here] < asearch.upb_tolerance
 			# Carrying pheromone is distinctive, but not overwhelming:
-			idx_frwd = get_spatial_index( normalize_position(ant.pos.+ant.vel,asearch),
+			idx_fwd = get_spatial_index( normalize_position(ant.pos.+ant.vel,asearch),
 				asearch.carry_phero, asearch
 			)
-			if asearch.carry_phero[idx_frwd] < asearch.carry_phero[idx_here]
+			if asearch.carry_phero[idx_fwd] < asearch.carry_phero[idx_here]
 				turn!(ant,pi)
 			end
 		end
