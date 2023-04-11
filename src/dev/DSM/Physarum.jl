@@ -1,37 +1,35 @@
-module Plasmodium
-export plasmnutri10, demo4, model
-
-
+#========================================================================================#
 """
-This is based on Jones's Physarum model, 
-which simulates very well the behaviour of a particular living system: 
-the plasmodium phase of the life-cycle of the protist Physarum polycephalum.
+	Physarum
 
+This simulation is based on Jones's Physarum model, which demonstrates very well the problem-
+solving behaviour of a particular living system: the plasmodium phase of the life-cycle of the
+protist Physarum polycephalum.
 
-Author: Nial Pallfreyman, Emilio Borrelli
-
+Author: Niall Palfreyman (April 2023), Emilio Borrelli (June 2022)
 """
+module Physarum
 
-using Agents, LinearAlgebra
-using Random # hides
-using InteractiveDynamics
-using GLMakie
-include("./AgentToolBox.jl")
-import .AgentToolBox: rotate_2dvector, turn_left, turn_right, diffuse4, remap_resetButton!, wrapMat, eigvec, is_empty_patch
+include( "../../Tools/AgentTools.jl")
 
-# means plasmodium or nutrition source. unfortunately we can only create one agent per model
-mutable struct plasmnutri10 <: AbstractAgent
-	id::Int
-	pos::NTuple{2,Float64}
-	vel::NTuple{2,Float64}
+using Agents, GLMakie, InteractiveDynamics, Random, .AgentTools
+
+#-----------------------------------------------------------------------------------------
+# Module types:
+#-----------------------------------------------------------------------------------------
+"""
+	Nucleus
+
+Physarum is a syncitium containing thousands of cell nuclei within one cell membrane
+"""
+@agent Nucleus ContinuousAgent{2} begin
 	speed::Float64
-	plasmodium::Bool
-	size::Int64
-	color::Symbol
 end
 
-
-function initialize_model(;
+#-----------------------------------------------------------------------------------------
+# Module methods:
+#-----------------------------------------------------------------------------------------
+function physarum(;
 	pPop=0.1,
 	rDollop=0.001,
 	rEvapU=0.9,
