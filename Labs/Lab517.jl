@@ -10,7 +10,7 @@
 		"""
 		Welcome to Lab 517: Physarum polycephalum and organic problem-solving
 
-        ??? Based on Jones
+        This lab will be completed at a later date. :)
 		""",
 		"",
 		x -> true
