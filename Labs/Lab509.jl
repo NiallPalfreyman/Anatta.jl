@@ -22,7 +22,7 @@
 		For now, run the Suboptimisation model with the parameter "difficult" set to FALSE; this
 		works with the valleys function. In which direction do Scouts move in order to find the
 		minima of this objective function?
-		"""
+		""",
 		"In which direction would you walk to find a valley in the mountains?",
 		x -> occursin("down",lowercase(x))
 	),
@@ -31,7 +31,7 @@
 		This kind of search is called "gradient descent", because the Scouts follow the negative
 		gradient of the objective function. Find the function that calculates this gradient and
 		tell me what value of stepsize I am using to calculate the gradient:
-		"""
+		""",
 		"The symbol for stepsize is h",
 		x -> x==1.0
 	),
@@ -39,7 +39,7 @@
 		"""
 		You can see that the search is quite slow at points where the gradient of the objective
 		function is almost zero. Why? What field of the Scouts is determined by this gradient?
-		"""
+		""",
 		"",
 		x -> x=="vel"
 	),
@@ -47,7 +47,7 @@
 		"""
 		You can accelerate this search by taking the sign() of the gradient. Modify the code of
 		the appropriate Scout method to do this, then test your code.
-		"""
+		""",
 		"",
 		x -> true
 	),
@@ -60,18 +60,18 @@
 
 		What mechanism does evolution use to get out of suboptimal solutions to the problem of
 		species survival?
-		"""
+		""",
 		"",
 		x -> occursin("mutat",lowercase(x))
 	),
 	Activity(
 		"""
-		Now, this might not seem like a great problem yo you: Surely the Scouts have already
+		Now, this might not seem like a great problem to you: Surely the Scouts have already
 		narrowed down the search sufficiently for us to simply check through the three valleys and
 		find the lowest. But now switch the parameter "difficult" to TRUE and let the Scouts
 		search for a minimum value. The problem now is that the De Jong 2 function contains so
 		many local ?____________? that the Scouts find too many suboptimal solutions.
-		"""
+		""",
 		"",
 		x -> occursin("minim", lowercase(x))
 	),
@@ -94,7 +94,7 @@
 		coordinates in order to match the find the correct spatial indices in order to implement
 		the wave equation. You would be doing me a great favour if you could find a simple, elegant
 		way of solving this problem generally. :)
-		"""
+		""",
 		"",
 		x -> true
 	),

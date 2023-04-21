@@ -41,7 +41,7 @@
 	),
     Activity(
 		"""
-		To be honest, I think my implementation of the stickiness() method is pretty rubbish. can
+		To be honest, I think my implementation of the stickiness() method is pretty rubbish. Can
 		you do better? Find a way of combining the adherin classes (1:8) that organises the cells
 		more cleanly into layers.
 		""",

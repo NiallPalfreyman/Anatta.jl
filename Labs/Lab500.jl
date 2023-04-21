@@ -207,7 +207,7 @@
 		flying around and bounce off each other within an ideal gas. The above code that
 		you have entered in the Julia console is also contained in the file SimpleParticles.jl.
 		Fetch the Dynamical Systems Modelling code now:
-			fetchcode("DSM")
+			setup("DSM")
 
 		Now study and run the file Development\\DSM\\SimpleParticles.jl to be sure you understand
 		the extra code I have added there. Don't expect the particles to bounce off each other yet -
