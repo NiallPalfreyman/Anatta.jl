@@ -76,7 +76,7 @@ acolour( mn::Moran) = mn.altruist ? :lime : :blue
 """
 	demo()
 
-Run a simulation of the IdealGas model.
+Run a simulation of the NeutralDrift model.
 """
 function demo()
 	nd = neutraldrift()

@@ -45,11 +45,12 @@ A Session maintains the current state of a learning laboratory experience. It co
 
 # Fields
 * `anatta_home :: String`			: Path of the Anatta package
-* `working_dir :: String`			: Registration file of the current learner
+* `anatta_config :: String`			: Contains registration file of the session learner
+* `home_dir :: String`				: Home folder of the session learner
 * `learner :: String`				: Name of session learner
-* `lab_num :: Int`					: Number of the current laboratory
-* `is_pluto :: Bool`				: Is the current laboratory a Pluto workshop?
-* `current_act :: Int`				: Number of the current activity in the laboratory
+* `lab_num :: Int`					: Number of the session laboratory
+* `is_pluto :: Bool`				: Is the session laboratory a Pluto workshop?
+* `current_act :: Int`				: Number of the session activity in the laboratory
 * `activities :: Vector{Activity}`	: Complete list of activities in this laboratory
 
 # Notes
@@ -62,15 +63,16 @@ julia> sesh = Session()
 """
 mutable struct Session
 	anatta_home :: String				# Anatta home path
-	working_dir :: String				# Present working directory
-	learner :: String						# Name of session learner
+	anatta_config :: String				# Anatta configuration directory
+	home_dir :: String					# Learner's home directory
+	learner :: String					# Name of session learner
 	lab_num :: Int						# Number of current lab
 	is_pluto :: Bool					# Is this a Pluto session?
 	current_act :: Int					# Number of current activity
 	activities :: Vector{Activity}		# Set of activities in this session
 
 	# One and only constructor of Sessions:
-	Session() = new( "", "", "", 1, false, 1, Vector{Activity}())
+	Session() = new( "", "", "", "", 1, false, 1, Vector{Activity}())
 end
 
 #-----------------------------------------------------------------------------------------
@@ -156,12 +158,12 @@ end
 
 #-----------------------------------------------------------------------------------------
 """
-labfile( path::String, labnum::Int)
+labfile( session_path::String, labnum::Int)
 
 Construct a valid labfile name from the given path and laboratory number.
 """
-function labfile( path, labnum)
+function labfile( session_path::String, n_lab::Int)
 	normpath(
-		joinpath(path,"..","Labs", "Lab" * lpad("$labnum",3,'0')[1:3] * ".jl")
+		joinpath(session_path,"..","Labs", "Lab" * lpad("$n_lab",3,'0')[1:3] * ".jl")
 	)
 end

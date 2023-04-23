@@ -12,7 +12,7 @@ Author: Niall Palfreyman, 01/01/2023
 module Anatta
 
 # Externally callable methods of Anatta
-export act, anatta, ani, askme, setup, hint, lab, nextlab, nextact, reply
+export act, ani, askme, hint, home, home!, lab, nextact, nextlab, reply, setup
 
 #using Pluto								# We want to be able to use Pluto notebooks
 
@@ -28,7 +28,7 @@ session = Session()						# Create the single Anatta session
 
 #-----------------------------------------------------------------------------------------
 """
-	anatta()
+	go()
 
 Initiate an Anatta session.
 
@@ -37,51 +37,38 @@ information on that learner. If not, create a new registry entry for the learner
 case, decide which laboratory and current Activity this learner requires, and initialise
 the session accordingly.
 
-# Notes
-* This module is a work in progress 😃 ...
-
 # Examples
 ```julia
-julia> anatta()
+julia> go()
 Welcome to the pedagogical playground of Anatta!! ...
 ```
 """
-function anatta()
+function go()
 	global session					# We're setting up the global session
+	install!(session)				# Ensure file structure fulfills all requirements
 
-	# Create path to Anatta labs registry:
-	session.anatta_home = dirname(@__FILE__)
-	session.working_dir = pwd()
-
+	# Personalise the session for this learner:
 	println()
-	println( "Welcome to the pedagogical playground of Anatta!! :)")
-	println()
-	println( "Anatta is the idea that Nature is based not on things, but on processes. In this")
-	println( "course, we use the programming language julia to investigate how this change of")
-	println( "focus completely alters the way we think about our experience of Nature.")
-	println()
+	println( "Welcome to Anatta: A julian guide to understanding the world in terms of processes :)\n")
 	print( "My name is Ani! What's yours?  ")
 	session.learner = readline()
 	println( "\nHi ", session.learner, "! Just setting things up for you ...\n")
 
-	# Establish session learner file:
-	lnr_file = joinpath(session.working_dir,session.learner*".lnr")
+	# Ensure session learner file exists:
+	lnr_file = joinpath(session.anatta_config,session.learner*".lnr")
 	if !(isfile(lnr_file))
-		# Register info for new learner:
-		stream = open(lnr_file,"w")
-		println(stream, "1")		# Initial laboratory
-		println(stream, "1")		# Initial activity
-		close(stream)
+		cp( joinpath(session.anatta_config,"Ani.lnr"), lnr_file)
 	end
 
 	# Grab information on learner's current progress:
-	stream = open(lnr_file)
-	laboratory = lpad(readline(stream),3,'0')[1:3]
-	session.lab_num = parse(Int,laboratory)
-	session.current_act = parse(Int,readline(stream))
-	close(stream)
+	istream = open(lnr_file)
+	session.lab_num = parse(Int,readline(istream))
+	session.current_act = parse(Int,readline(istream))
+	session.home_dir = readline(istream)
+	close(istream)
 
 	# Open the requested labfile:
+	home()
 	nextlab(session.lab_num,session.current_act)
 end
 
@@ -99,15 +86,30 @@ function ani()
 
 	println( rand(greeting)*" :) Here's a list of Anatta commands:")
 	println( "   act()                : Display the current activity number")
-	println( "   ani()                : Display a hint for the current activity")
+	println( "   ani()                : Display this list of Anatta functions")
 	println( "   askme()              : Ask me the current activity")
 	println( "   hint()               : Display a hint for the current activity")
+	println( "   home!(dir=pwd())     : Set the learner's home (working) directory")
+	println( "   home()               : Move to learner's home (working) directory")
 	println( "   lab()                : Display the current laboratory number")
 	println( "   nextact(act=next)    : Move to the learning activity act")
 	println( "   nextlab(lab=next)    : Move to the laboratory lab")
 	println( "   reply(response=skip) : Submit a response to the current activity")
 	println( "   setup(library)       : Copy Anatta library to local Development folder")
 end
+
+#-----------------------------------------------------------------------------------------
+"""
+home!( dir::String=pwd())
+
+Move to the learner's home directory.
+"""
+function home!( dir::String=pwd())
+	cd( dir)							# Check that the directory actually exists
+	session.home_dir = dir				# Then set new home directory
+	save()
+end
+home() = cd(session.home_dir)
 
 #-----------------------------------------------------------------------------------------
 """
@@ -220,17 +222,17 @@ end
 
 Move to the beginning of the next lab.
 
-If lab is given, move to that number lab, otherwise move to the next lab. If that takes
+If lab is specified, move to that number lab, otherwise move to the next lab. If that takes
 you beyond the end of the available labs, stay where you are and inform the learner.
 """
-function nextlab( lab_num::Int = 0, current_act::Int = 1)
-	if lab_num ≤ 0
+function nextlab( lab_num::Int = -1, current_act::Int = 1)
+	if lab_num < 0
 		# No lab given - default to next lab after the current one:
 		lab_num = session.lab_num + 1
 	end
 
 	# Check validity of lab_file:
-	lab_file = labfile(normpath(joinpath(session.anatta_home,"..","Labs")),lab_num)
+	lab_file = labfile(session.anatta_home,lab_num)
 	if !isfile(lab_file)
 		# The new lab_file is not available in the lab directory:
 		println("Sorry: Lab number $(lab_num) is unavailable.")
@@ -247,7 +249,7 @@ function nextlab( lab_num::Int = 0, current_act::Int = 1)
 		println( "You are trying to set up a Pluto lab - I'm afraid this option is still unavailable.")
 		return
 #		println( "I'm about to set up a Pluto lab. After it has loaded, if you wish to experiment")
-#		println( "in Julia while the lab is running, you can press Ctrl-C in the Julia console.")
+#		println( "in julia while the lab is running, you can press Ctrl-C in the julia console.")
 #		println( "...")
 #		@async Pluto.run(notebook=lab_file)
 	else
@@ -263,9 +265,11 @@ function nextlab( lab_num::Int = 0, current_act::Int = 1)
 	# Display welcome message to the new laboratory.
 	println( "Great - I've set up the laboratory. Please note that if you have just completed")
 	println( "another lab in this Julia console, name conflicts may arise. You can clear these")
-	println( "by simply restarting the console and restarting Anatta.")
-	println( "Enter ani() at any time to ask me about your available options. Have fun! :)")
-	println()
+	println( "by simply restarting the console and restarting Anatta.\n")
+	println( "Remember: your two most important commands are ...")
+	println( "    Enter askme() whenever you want to see the next learning activity")
+	println( "    Enter ani() at any time to ask me about your available options.")
+	println( "Have fun! :)\n")
 
 	# Display the new laboratory number:
 	lab()
@@ -281,17 +285,18 @@ Write lab_file and current_act to the usr file.
 """
 function save()
 	# Open learner registry file.
-	stream = open(joinpath(session.working_dir,session.learner*".lnr"),"w")
-	println(stream, session.lab_num)		# Save current laboratory
-	println(stream, session.current_act)	# Save current activity
-	close(stream)
+	os = open(joinpath(session.anatta_config,session.learner*".lnr"),"w")
+	println(os, session.lab_num)		# Save current laboratory
+	println(os, session.current_act)	# Save current activity
+	println(os, session.home_dir)		# Save learner's home folder
+	close(os)
 end
 
 #-----------------------------------------------------------------------------------------
 """
 	setup( library::String)
 
-Set up the named library to the Development subdirectory of present working directory.
+Set up the named library to the Development subdirectory of learner's home directory.
 """
 function setup( library::String; force=false)
 	# Check existence of the library code:
@@ -303,7 +308,7 @@ function setup( library::String; force=false)
 	end
 
 	# Check we're not accidentally overwriting an existing library:
-	development_path = joinpath(pwd(),"Development")
+	development_path = joinpath(session.home_dir,"Development")
 	topath = joinpath(development_path,library)
 
 	# Only overwrite existing topath if learner insists:
@@ -313,13 +318,13 @@ function setup( library::String; force=false)
 	end
 
 	# Ensure tools are set up:
-	tool_path = joinpath(pwd(),"Tools")
+	tool_path = joinpath(session.home_dir,"Tools")
 	if !isdir(tool_path)
 		cp( joinpath( session.anatta_home, "Tools"), tool_path, force=true)
 	end
 
 	# Ensure docs are set up:
-	docs_path = joinpath(pwd(),"Docs")
+	docs_path = joinpath(session.home_dir,"Docs")
 	if !isdir(docs_path)
 		cp( joinpath( session.anatta_home, "../docs"), docs_path, force=true)
 	end
@@ -335,10 +340,39 @@ function setup( library::String; force=false)
 end
 
 #-----------------------------------------------------------------------------------------
-# Initial user-entry welcome:
-#-----------------------------------------------------------------------------------------
-#println( "Welcome to Anatta! :)")
-#println( "To get started, enter `using Anatta` at the Julia prompt, then")
-#println( "enter `anatta()` from within your working directory ...\n")
+"""
+	install!(session)
 
-end # End of Module Anatta
+First-time installation and check of the Anatta environment, installing any missing files.
+"""
+function install!(session::Session)
+	# Create path to Anatta labs registry:
+	session.anatta_home = dirname(@__FILE__)
+	session.anatta_config = joinpath(DEPOT_PATH[1],"Anatta")
+	session.learner = "Ani"
+
+	# Ensure Anatta config directory exists:
+	if !isdir(session.anatta_config)
+		mkdir(session.anatta_config)
+	end
+
+	# Initialise session learner data:
+	lnr_file = joinpath(session.anatta_config,session.learner*".lnr")
+	if !(isfile(lnr_file))
+		# Register info for new learner:
+		ostream = open(lnr_file,"w")
+		println(ostream, "0")		# Initial laboratory
+		println(ostream, "1")		# Initial activity
+		println(ostream, tempdir())
+		close(ostream)
+	end
+
+	# Grab information on learner's current progress:
+	istream = open(lnr_file)
+	session.lab_num = parse(Int,readline(istream))
+	session.current_act = parse(Int,readline(istream))
+	session.home_dir = readline(istream)
+	close(istream)
+end
+
+end # End of module Anatta
