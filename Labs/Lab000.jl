@@ -38,10 +38,10 @@
         undergraduate-level lecture course:
             -   Subject 0: Programming: How to pose, analyse and solve problems
             -   Subject 1: Mathematics: How to describe the structure of the world
-            -   Subject 2: Dynamical systems: How our attempts to fix the world often go wrong
+            -   Subject 2: Dynamical systems: How to explain the dynamics of the world
             -   Subject 3: Quantum computing: How micro-dynamics generates macro-structure
             -   Subject 4: Thermodynamics: How micro-structure generates macro-dynamics
-            -   Subject 5: Agent-based systems: How autonomous systems construct knowledge
+            -   Subject 5: Agent-based systems: How autonomous organisms construct knowledge
             -   Subject 6: Relativity theory: How organisms abstract knowledge from experience
             -   Subject 7: Quantum-field theory: How to balance the big and the small pictures
         """,
