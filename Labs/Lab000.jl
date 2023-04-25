@@ -15,8 +15,8 @@
         Wholeness. On the one hand, the world is not as stable as we thought: the world is not a
         bottomless rubbish-tip for carbon-dioxide, plastic and nuclear waste, but changes in
         response to our actions. And on the other hand, this relates to the fact that the world is
-        also a deeply connected Whole. Indeed, it is the very changing processes of our world that
-        bind it into an entire, transforming Unity.
+        also a deeply connected Whole. Indeed, it is precisely these changing processes of our
+        world that bind it into a complete, evolving Unity.
 
         Hi! My name is Ani! I will be your guide on this fascinating process-oriented journey. This
         is also the story of my own personal journey of discovery that the world is so much
@@ -30,12 +30,12 @@
     ),
     Activity(
         """
-        At the heart of modern science is the idea that scientific knowledge is something that
-        living organisms, and that we organisms are not objects, but biological processes of longer
-        or shorter duration. To understand how deeply this idea changes the way we view the world,
-        we will dive into a whole series of fascinating subjects that build upon each other. I have
-        therefore divided Anatta into Subjects that each correspond roughly to a 5-credit
-        undergraduate-level lecture course:
+        At the heart of post-modern science is the idea that scientific knowledge is not Truth, but
+        rather something that is known (or at least believed) by living organisms. And in turn, we
+        organisms are not objects, but biological processes of longer or shorter duration. To
+        understand how deeply these ideas changes the way we view the world, we will dive into a
+        whole series of fascinating subjects that build upon each other. I have divided Anatta into
+        Subjects that each correspond roughly to a 5-credit undergraduate-level lecture course:
             -   Subject 0: Programming: How to pose, analyse and solve problems
             -   Subject 1: Mathematics: How to describe the structure of the world
             -   Subject 2: Dynamical systems: How to explain the dynamics of the world
@@ -144,7 +144,7 @@
         """
         Well, that was probably a lot of hard work, wasn't it? The good news is that you won't need
         to do it again, because we will save this location. At present, you are located here:
-            $(pwd())
+            $(Main.pwd())
 
         Do you want to create your Anatta home folder inside this one?
         """,
@@ -157,7 +157,7 @@
     Activity(
         """
         OK, so we'll create the home folder here:
-            $(pwd())
+            $(Main.pwd())
         
         Do this by entering:
             mkdir("Anatta")
@@ -284,7 +284,7 @@
         julia stores the name of the folder containing this file in the system variable
         `Sys.BINDIR`. reply() me now the value, or contents, of that variable:
         """,
-        "",
+        "Just enter at the julia prompt: Sys.BINDIR",
         x -> x==Sys.BINDIR
     ),
     Activity(
@@ -348,7 +348,7 @@
         means you can compile and run julia programs from within VSC. Let's do that right now ...
 
         Type the following two lines in the open file Ani.jl:
-            greeting = "Hi - I'm Ani. t's a pleasure to meet you! :)"
+            greeting = "Hi - I'm Ani. It's a pleasure to meet you! :)"
             print(greeting)
 
         Next, save these changes by pressing Ctrl-S (the circle next to the file name will change
@@ -379,11 +379,11 @@
         stored them in your configuration file), and we can continue where we left off. Whenever
         you want to start a new Anatta session, simply follow these steps:
             -   Start julia
-            -   julia> home()
             -   julia> using Anatta
             -   julia> Anatta.go()
             -   Enter your name (case sensitive!)
-            -   Follow my printed instructions ... Good luck! :)
+            -   julia> home()
+            -   Follow my suggested activities ... and have fun! :)
         """,
         "",
         x -> true
