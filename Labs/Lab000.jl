@@ -69,10 +69,10 @@
     ),
     Activity(
         """
-        This very first lab 000 aims to introduce you to working with Anatta before we start
-        working through the programming Subject. First, be aware that the data on your computer is
+        This very first lab 000 introduces you to working with Anatta by helping you to set up some
+        convenient tools on your computer. First, be aware that the data on your computer is
         broadly divided into two areas: system data and user data. This division is a good idea,
-        because you work with your user data every day, but the system data needs to stay quite
+        because you work with your user data every day, but the system data needs to stay very
         stable. Therefore, we will set up two different areas on your computer: a system area for
         you to configure the Anatta system, and a user area for you to do the Activities ...
 
@@ -103,18 +103,19 @@
         julia offers us many ways to guide its console around the computer. For example, type
             pwd()
         
-        at the julia prompt now. The pwd() function tells you where exactly you are at the moment
-        within the computer's folder structure. When I enter pwd() on my computer, I get:
+        at the julia prompt now. PWD stands for "Present Working Directory", and the pwd() function
+        tells you exactly where you are right now within your computer's folder structure. For
+        example, when I enter pwd() on my computer right now, I get:
             "C:\\\\Users\\\\Ani\\\\AppData\\\\Local\\\\Programs\\\\julia-1.8.4\\\\bin"
 
         This is julia's system binary area, and I DEFINITELY don't want to mess around with the
         data there! So now try entering the following Anatta command:
             home()
 
-        Now enter pwd() and then give me the last 5-6 characters of your new location as a
-        character string...
+        Now enter pwd() again to find out where you are now, and then reply() me the last few
+        characters of your new location (after the last backslash) as a character string...
         """,
-        "For you, it will probably be something like this: reply(\"\\Temp\")",
+        "For you, it will probably be something like this: reply(\"Temp\")",
         x -> true
     ),
     Activity(
@@ -126,40 +127,35 @@
         dedicated Anatta home folder in a place of our own choosing.
         
         The important functions for doing this are cd() (or: "change directory") and readdir():
-            cd()            = Go to my user area (e.g.: "C:\\Users\\Ani")
-            cd("..")        = Go up to the parent folder of my current folder
+            cd()            = Change to my user area (e.g.: "C:\\Users\\Ani")
+            cd("..")        = Change up to the parent folder of my current folder
             cd("C:/Users/Ani/AppData/Local/Temp")
-                            = Go across to this absolute folder location
-            cd("docs")      = Go down to the subfolder "docs" of my current folder
-            readdir()       = Give me a list of files and subfolders of my current folder
+                            = Change across to this absolute folder location
+            cd("docs")      = Change down to the subfolder "docs" of my current folder
+            readdir()       = Give me a list of files and subfolders within my current folder
 
         Use these functions now to step slowly through the folder structure until you arrive in
         the parent folder of where you want to create your Anatta home folder. When you get there,
         reply() me to let me know. If you need to see the above commands again, enter `askme()`.
         """,
-        "Remember: entering `askme()` shows you the Activity again",
+        "Remember: entering `askme()` shows you this Activity again",
         x -> true
     ),
     Activity(
         """
         Well, that was probably a lot of hard work, wasn't it? The good news is that you won't need
-        to do it again, because we will save this location. At present, you are located here:
-            $(Main.pwd())
+        to do it again, because we will save this location. Enter pwd() once more, to check which
+        folder you are in right now, and then answer the question:
 
-        Do you want to create your Anatta home folder inside this one?
+        Do you want to create your Anatta home folder inside this present working directory?
         """,
-        """
-        Ignore my rather puzzling answer (I'm only a machine, after all! ;-), and navigate on to
-        the folder within which you'd like to create your Anatta home folder. Then reply("yes")
-        """,
+        "Enter reply(\"yes\"), or navigate first to a different folder",
         x -> occursin("yes",lowercase(x))
     ),
     Activity(
         """
-        OK, so we'll create the home folder here:
-            $(Main.pwd())
-        
-        Do this by entering:
+        OK, so we'll create the home folder your present working directory (PWD). Do this by
+        entering:
             mkdir("Anatta")
 
         Then use `readdir()` to check that julia has created the new folder.
@@ -172,10 +168,10 @@
         Now step into the new home folder:
             cd("Anatta")
 
-        and finally, enter
+        and finally (remembering the exclamation mark!), enter:
             home!()
 
-        to tell Anatta that this is to be your home folder from now on.
+        to tell Anatta that this will be your home folder from now on.
         """,
         "",
         x -> true
@@ -190,13 +186,24 @@
         the two with an exclamation mark is a common courtesy in julia to help others understand
         your code.
 
-        As practice in what we have been doing, I suggest that you now use julia to navigate to
-        your learner configuration file:
+        As practice in what we have been doing, I suggest that you now use julia to navigate in as
+        few steps as possible to your learner configuration file:
             $(joinpath(session.anatta_config,session.learner*".lnr"))
 
-        Then use `edit("$(session.learner*".lnr")")` to check that the third line of the configuration file
-        really has recorded your correct home location. Finally, use `home()` to return to your new
-        Anatta home and then reply() me that we can continue.
+        reply() me when you get there...
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        Now use the following command to display the text in your learner configuration file, and
+        check that the third line of the configuration file really has recorded your correct home
+        location:
+            readlines(open("$(session.learner*".lnr")"))
+
+        Finally, use `home()` to return to your new Anatta home, an then reply() me that we can
+        continue.
         """,
         "",
         x -> true
