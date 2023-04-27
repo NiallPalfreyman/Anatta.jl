@@ -41,7 +41,7 @@
             -   Subject 2: Dynamical systems: How to explain the dynamics of the world
             -   Subject 3: Quantum computing: How micro-dynamics generates macro-structure
             -   Subject 4: Thermodynamics: How micro-structure generates macro-dynamics
-            -   Subject 5: Agent-based systems: How autonomous organisms construct knowledge
+            -   Subject 5: Agent-based systems: How populations construct knowledge
             -   Subject 6: Relativity theory: How organisms abstract knowledge from experience
             -   Subject 7: Quantum-field theory: How to balance the big and the small pictures
         """,
