@@ -9,7 +9,7 @@
 [
     Activity(
         """
-        Welcome to Anatta: Everyperson's guide to understanding our world in terms of processes.
+        Welcome to Anatta: An Exploration of how our World is based on Process - not Substance.
 
         Two key concepts lie at the heart of post-modern scientific philosopy: Change and
         Wholeness. On the one hand, the world is not as stable as we thought: the world is not a
@@ -30,7 +30,9 @@
     ),
     Activity(
         """
-        "Anatta" is a philosophy that is based on two interwoven ideas:
+        "Anatta" means "lacking substantial structure".
+        
+        Anatta is a philosophical position based on two interwoven ideas:
             i)  scientific knowledge is not Truth, but is rather something that living organisms
                 construct in order to survive; and
             ii) organisms are not substantial Structures, but biological processes of longer or
@@ -38,27 +40,27 @@
             
         These two ideas completely change the way we understand the world. We can already notice
         that together they mean we must find a new way of evaluating Knowledge, not as being more
-        or less true, but rather as being more or less useful in stabilising biological processes.
+        or less True, but rather as being more or less useful in stabilising biological processes.
+        The Big Question of Anatta is this:
 
-        "Anatta" means "lacking substantial structure", and its central question is this:
-            "How can an ever-changing world of processes come to enact so much stability that it
-                seems to consist entirely of substantial structures?"
+            "How can an ever-changing world of processes come to enact so much stability that that
+                world seems to consist entirely of substantial structures?"
         """,
         "Again, enter reply() at the julia prompt to move on ...",
         x -> true
     ),
     Activity(
         """
-        In this Anatta exploration, we will investigate this question very deeply. To help us to
-        this, I have divided our exploration into Subjects that build successively upon each other,
-        each Subject corresponding roughly to a 5-credit undergraduate-level lecture course:
+        While exploring Anatta, we will investigate this question very deeply. In order to help us
+        do this, I have divided our exploration into Subjects that build successively upon each
+        other, each Subject corresponding roughly to a 5-credit undergraduate-level lecture course:
             Subject 0: Programming          - Using structures to explore and predict
             Subject 1: Syntax and Logic     - Analysing and deriving the structures of belief
             Subject 2: System dynamics      - Structures aren't enough: We need stories!
             Subject 3: Quantum computing    - Generating macro-structure from micro-dynamics
             Subject 4: Thermodynamics       - Generating macro-dynamics from micro-structure
             Subject 5: Agent-based systems  - How populations construct knowledge
-            Subject 6: Relativity theory    - Abstracting knowledge from experience
+            Subject 6: Relativity theory    - Abstracting knowledge through acting in the world
             Subject 7: Quantum-field theory - Balancing the big and the small pictures
         """,
         "reply() to move on :)",
@@ -74,20 +76,38 @@
 
         In each Activity, if you enter the function reply(???), I will always interpret its
         argument (that is, the value ??? between the brackets) as your response to the current
-        Activity. Try this now - at the julia prompt, enter the following code:
+        Activity. Try this now. Guess my lucky number by entering, for example, `reply(3)` at the
+        julia prompt:
+        """,
+        "Enter reply(n) at the julia prompt, where n is a number between 1 and 9",
+        x -> (x==5)
+    ),
+    Activity(
+        """
+        Anatta is not a simple statement that I can hand over to you: it is an Exploration. It will
+        involve you in trying things out and learning through acting and making mistakes. This is
+        how we learn naturally as children: we take our first step, fall down, dust ourselves off
+        and take another step - but this time a little more skilfully.
+
+        There is literally no better way to learn than through making mistakes and receiving
+        friendly, supportive feedback that helps you do it better next time. And believe me,
+        computers are GREAT at respectful feedback: they never want to make anyone feel bad - they
+        just say "No, sorry - that didn't work!" or "Yup, that worked great!"
+        
+        So let's get started! At the julia prompt, enter the following code:
             concept = "Anatta"
 
         Then enter your reply as:
             reply(concept)
         """,
-        "Again, enter reply() ...",
+        "Another way of doing this is to enter: reply(\"Anatta\")",
         x -> (x=="Anatta")
     ),
     Activity(
         """
-        This very first lab 000 introduces you to working with Anatta by helping you to set up some
+        This very first Lab 000 introduces you to working with Anatta by helping you to set up some
         convenient tools on your computer. First, be aware that the data on your computer is
-        broadly divided into two areas: system data and user data. This division is a good idea,
+        broadly divided into two areas: system data and user data. This division is a great idea,
         because you work with your user data every day, but the system data needs to stay very
         stable. Therefore, we will set up two different areas on your computer: a system area for
         you to configure the Anatta system, and a user area for you to do the Activities ...
@@ -95,9 +115,9 @@
         I have already set up a learner configuration file for you at this location:
             $(joinpath(session.anatta_config,session.learner*".lnr"))
 
-        I suggest you find and view this file now. Which number is contained in the top line?
+        Use File Explorer to find and view this file now. What number is contained in the top line?
         """,
-        "Now it's time for you to start answering questions. Enter `reply(number)`",
+        "Enter `reply(n)`, where n is the number in the top line of your .lnr file",
         x -> x==0
     ),
     Activity(
@@ -136,18 +156,16 @@
     ),
     Activity(
         """
-        Well, at least we're no longer mucking around in the system area. In fact, since you
-        haven't yet set up an Anatta home area, the home() function has probably landed you like me
-        in the scratch-space, or Temp area. But we also don't want to store all our wonderful
-        discoveries there, so we need to navigate through our folder structure and create a new
-        dedicated Anatta home folder in a place of our own choosing.
+        Well, at least we're no longer in the system area! In fact, since you haven't yet set up an
+        Anatta home folder, the home() function has probably landed you in the system's Temp area.
+        But we also don't want to store our wonderful discoveries there, so we'll want to navigate
+        through our folder structure and create a new Anatta home folder in a place of OUR choosing.
         
-        The important functions for doing this are cd() (or: "change directory") and readdir():
-            cd()            = Change to my user area (e.g.: "C:\\Users\\Ani")
-            cd("..")        = Change up to the parent folder of my current folder
-            cd("C:/Users/Ani/AppData/Local/Temp")
-                            = Change across to this absolute folder location
-            cd("docs")      = Change down to the subfolder "docs" of my current folder
+        The functions for moving through the folders are cd() ("Change Directory") and readdir():
+            cd()            = Change to my own user area (e.g.: "C:\\Users\\Ani")
+            cd("..")        = Change UP to the parent folder of my current folder
+            cd("docs")      = Change DOWN to the subfolder "docs" of my current folder
+            cd("D:/Proj")   = Change ACROSS to this absolute folder location
             readdir()       = Give me a list of files and subfolders within my current folder
 
         Use these functions now to step slowly through the folder structure until you arrive in

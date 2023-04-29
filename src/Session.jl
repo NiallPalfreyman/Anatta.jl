@@ -153,7 +153,7 @@ function commiserate( act::Activity)
 	]
 
 	println()
-	print( rand(commiseration), " - you could ask for a hint(). ")
+	print( rand(commiseration), " - you could try entering hint() at the julia prompt. ")
 end
 
 #-----------------------------------------------------------------------------------------
