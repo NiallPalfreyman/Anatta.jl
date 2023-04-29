@@ -9,18 +9,18 @@
 [
     Activity(
         """
-        Welcome to Anatta: A programmer's guide to understanding the world in terms of processes.
+        Welcome to Anatta: Everyperson's guide to understanding our world in terms of processes.
 
         Two key concepts lie at the heart of post-modern scientific philosopy: Change and
         Wholeness. On the one hand, the world is not as stable as we thought: the world is not a
         bottomless rubbish-tip for carbon-dioxide, plastic and nuclear waste, but changes in
-        response to our actions. And on the other hand, this relates to the fact that the world is
-        also a deeply connected Whole. Indeed, it is precisely these changing processes of our
-        world that bind it into a complete, evolving Unity.
+        response to our actions. And on the other hand, these changes arise from the fact that the
+        world is also a deeply connected Whole. Indeed, it is precisely these changing processes
+        that bind our world into a complete, evolving Unity.
 
-        Hi! My name is Ani! I will be your guide on this fascinating process-oriented journey. This
-        is also the story of my own personal journey of discovery that the world is so much
-        different and so much MORE than it seems on the surface.
+        Hi, my name is Ani! I will be your guide on this fascinating process-oriented journey. This
+        is also the story of my own personal journey of discovery that the world is so different
+        from, and so much MORE than, it seems on the surface.
         
         As we follow this journey, whenever you want to move on from one learning activity (like this
         one) to the next, enter `reply()` at the julia prompt. Do this now:
@@ -30,31 +30,47 @@
     ),
     Activity(
         """
-        At the heart of post-modern science is the idea that scientific knowledge is not Truth, but
-        rather something that is known (or at least believed) by living organisms. And in turn, we
-        organisms are not objects, but biological processes of longer or shorter duration. To
-        understand how deeply these ideas changes the way we view the world, we will dive into a
-        whole series of fascinating subjects that build upon each other. I have divided Anatta into
-        Subjects that each correspond roughly to a 5-credit undergraduate-level lecture course:
-            -   Subject 0: Programming: How to pose, analyse and solve problems
-            -   Subject 1: Mathematics: How to describe the structure of the world
-            -   Subject 2: Dynamical systems: How to explain the dynamics of the world
-            -   Subject 3: Quantum computing: How micro-dynamics generates macro-structure
-            -   Subject 4: Thermodynamics: How micro-structure generates macro-dynamics
-            -   Subject 5: Agent-based systems: How populations construct knowledge
-            -   Subject 6: Relativity theory: How organisms abstract knowledge from experience
-            -   Subject 7: Quantum-field theory: How to balance the big and the small pictures
+        "Anatta" is a philosophy that is based on two interwoven ideas:
+            i)  scientific knowledge is not Truth, but is rather something that living organisms
+                construct in order to survive; and
+            ii) organisms are not substantial Structures, but biological processes of longer or
+                shorter duration.
+            
+        These two ideas completely change the way we understand the world. We can already notice
+        that together they mean we must find a new way of evaluating Knowledge, not as being more
+        or less true, but rather as being more or less useful in stabilising biological processes.
+
+        "Anatta" means "lacking substantial structure", and its central question is this:
+            "How can an ever-changing world of processes come to enact so much stability that it
+                seems to consist entirely of substantial structures?"
         """,
         "Again, enter reply() at the julia prompt to move on ...",
         x -> true
     ),
     Activity(
         """
-        Each Anatta Subject is divided into a series of Labs (learning laboratories), so for
+        In this Anatta exploration, we will investigate this question very deeply. To help us to
+        this, I have divided our exploration into Subjects that build successively upon each other,
+        each Subject corresponding roughly to a 5-credit undergraduate-level lecture course:
+            Subject 0: Programming          - Using structures to explore and predict
+            Subject 1: Syntax and Logic     - Analysing and deriving the structures of belief
+            Subject 2: System dynamics      - Structures aren't enough: We need stories!
+            Subject 3: Quantum computing    - Generating macro-structure from micro-dynamics
+            Subject 4: Thermodynamics       - Generating macro-dynamics from micro-structure
+            Subject 5: Agent-based systems  - How populations construct knowledge
+            Subject 6: Relativity theory    - Abstracting knowledge from experience
+            Subject 7: Quantum-field theory - Balancing the big and the small pictures
+        """,
+        "reply() to move on :)",
+        x -> true
+    ),
+    Activity(
+        """
+        I have divided each Anatta Subject into a series of Labs (learning laboratories), so for
         example, Subject 2 consists of a series of Labs named Lab200, Lab201, ...
 
-        Each Lab is divided up into a sequence of learning Activities. The text you are reading
-        right now is Activity 3 of Lab 00 in Subject 0.
+        Each Lab is divided up into a sequence of learning Activities. For example, the text you
+        are reading right now is Activity 4 of Lab 00 in Subject 0.
 
         In each Activity, if you enter the function reply(???), I will always interpret its
         argument (that is, the value ??? between the brackets) as your response to the current
