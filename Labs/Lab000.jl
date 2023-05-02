@@ -55,7 +55,7 @@
         I have divided our exploration into Subjects that build successively upon each other, each
         Subject corresponding roughly to a 5-credit undergraduate-level lecture course:
             Subject 0: Programming          - Using structures to explore and predict the world
-            Subject 1: Formal Logic         - Belief structures describe a world coontaining gaps
+            Subject 1: Formal Logic         - Beliefs have structure, but structures ALWAYS have gaps!
             Subject 2: System dynamics      - Dynamical stories can fill logical gaps
             Subject 3: Quantum computing    - Small stories generate large structures
             Subject 4: Thermodynamics       - Small structures generate large stories
