@@ -8,6 +8,8 @@
 [
     Activity(
         """
+        Hi! Welcome to Anatta Lab 004: Accessing the data in arrays
+
         Arrays play a very fundamental role in julia, so we need to learn how to access them
         efficiently. In this laboratory we learn how to index into arrays in julia - that is,
         how to use indices to access and manipulate the entries in an array. We will also look

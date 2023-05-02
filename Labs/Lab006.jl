@@ -9,6 +9,8 @@
 [
     Activity(
         """
+        Hi! Welcome to Anatta Lab 006: Tuples, Dictionaries and suchlike ...
+
         In this laboratory we introduce several helpful Julia tools that make life a
         little easier: Tuples, Pairs, Dicts, Symbols, Files, DateTimes, Random and downloading.
 

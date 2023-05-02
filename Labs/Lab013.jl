@@ -8,6 +8,8 @@
 [
     Activity(
         """
+        Hi! Welcome to Anatta Lab 013: Implementing non-linear fitness
+
         Until now, we have made a very simple, but also an over-simple assumption: We have
         assumed that the fitness r[i] of a type i is a constant number independent of the
         frequencies x[i] of the various types. However, we know that there are many situations

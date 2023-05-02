@@ -8,17 +8,14 @@
 [
     Activity(
         """
-        Hi! Welcome to Anatta Lab 001: An introduction to the julia language.
+        Hi! Welcome to Anatta Subject 001:
+            Programming - Using structures to explore and predict the world
 
-        Anatta is a course in thinking about the complex issues around Wholeness, Self and
-        biological Autonomy. Anatta is divided into five courses which build upon each other, and
-        which will develop and improve as I gain experience with learners like YOU. :)
-
-        Each course is divided into a sequence of laboratories in which we will explore the issues
-        in that course. This first 0-level course introduces you to the computer language Julia,
-        which we shall use to investigate the concept of Anatta. We will use activities and
-        questions to explore the basics of julia. Feel free to experiment at any time by entering
-        your own commands at the julia prompt.
+        Anatta is a course in thinking about the complex issues around Wholeness, Self, biological
+        Autonomy and Learning. This first 0-level Anatta subject introduces you to the computer
+        language Julia, which we shall use to investigate the concept of Anatta. We will use
+        activities and questions to explore the basics of programming in any computer language.
+        Feel free to experiment at any time by entering your own commands at the julia prompt! :)
         
         I will interpret anything you enter as an argument of the function reply() as an answer to
         the current question. Try this now - at the julia prompt, enter the following code:
@@ -32,10 +29,10 @@
     ),
     Activity(
         """
-        The environment that you are interacting with at the moment is called the julia REPL
-        (Read-Execute-Proces-Loop) - it is signalled by the julia prompt "julia>". You can use the
-        julia REPL like a calculator. Arithmetic operations have their usual priority, so tell me
-        the result you get if you enter "(3+4)*5":
+        The environment that you are interacting with right now is called the julia REPL (Read-
+        Execute-Proces-Loop) - it is signalled by the julia prompt "julia>". You can use the julia
+        REPL like a calculator. Arithmetic operations in julia have their usual priority, so tell
+        me the result you get if you enter "(3+4)*5":
         """,
         "35",
         x -> x==35

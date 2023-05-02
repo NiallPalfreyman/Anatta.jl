@@ -8,34 +8,47 @@
 [
     Activity(
         """
-        Welcome to Lab 002: Programming Basics
+        Hi! Welcome to Anatta Lab 002: Programming Basics
 
         In this laboratory we look at the very heart of julia: How it uses types to dispatch
         functions. That is, how does julia decide which particular method it will use to implement
         whatever it is we ask it to do? Remember: I call a Function, but julia executes a Method.
 
-        First let's start with the structure of a Julia program. Every julia program starts life
+        First, let's start with the structure of a Julia program. Every julia program starts life
         as a text string, for example:
             prog = "8 / (2 + 3.0)"
 
-        Enter this mini-program, then enter `prog` at the julia prompt to make sure that you have
-        typed it in correctly:
+        Enter this tiny program, then reply() me the string prog to make sure you have typed it
+        correctly:
         """,
-        "Just enter: prog",
-        x -> (strip(x) == "8/(2+3.0)")
+        "Just enter: reply(prog)",
+        x -> (replace(strip(x)," "=>"") == "8/(2+3.0)")
+    ),
+    Activity(
+        """
+        A quick tip to help us understand each other: Sometimes, in the text, I want to tell you
+        the specific characters that you should enter at the console. That is, I'll want to
+        distinguish between normal text and julia `text`. I will do this by using backticks (``).
+        So, Ani is my name, but `Ani` is a set of three characters that you should enter.
+
+        Now, check that you have understood this by entering `prog`, then reply() me the `ans`
+        that you receive back from julia:
+       """,
+        "Again, simply enter: reply(prog)",
+        x -> (replace(strip(x)," "=>"") == "8/(2+3.0)")
     ),
     Activity(
         """
         Notice that brackets are important in this little program: `8/(2+3.0)` will return a very
-        different value from `8/2+3.0`. Now use Meta.parse() to analyse the program into an
-        expression `expr` and tell me the typeof() expr:
+        different value from `8/2+3.0`. Now use Meta.parse() to analyse your little program prog
+        into an expression `expr` and reply() me the typeof() expr:
         """,
-        "expr = Meta.parse(prog)",
+        "Enter: expr = Meta.parse(prog)",
         x -> (x==Expr)
     ),
     Activity(
         """
-        By the way, notice that in julia there is a world of difference between the two names
+        By the way, notice that in julia there is a very big difference between the two names
         `Expr` and `expr`: upper- an lowercase letters are different from each other. Here, `expr`
         is your own name for a new variable containing your parsed (i.e. translated) program, and
         `Expr` is the type of the thing that julia has stored under that name.
@@ -62,12 +75,12 @@
         vector elements to find out the typeof the second argument of the third argument of expr:
         """,
         "dump(expr) or expr.args[3].args[2] - Try both! :-)",
-        x -> x==Int64
+        x -> x==typeof(Main.expr.args[3].args[2])
     ),
     Activity(
         """
-        julia has interpreted your "2" as an integer (Int64), but as you can see, your "3.0" has
-        been interpreted as a floating-point number (Float64).
+        julia has interpreted your "2" as an integer (e.g. Int64), but as you can see, your "3.0"
+        has been interpreted as a floating-point number (e.g. Float64).
         
         We can execute (that is, evaluate) your expression expr using the function `eval()`.
         What is the value of expr?
@@ -107,12 +120,12 @@
         Bingo! Your program works! :) julia has created a variable called `susan`, containing the
         value 3.0! Now let's move on to more complicated things. We'll stop parsing the expressions
         ourselves from now on, and instead, we'll just enter them at the julia prompt and let julia
-        do the work for us ...
+        do all the parsing work for us ...
 
-        Now create your own function, and enter at the julia prompt:
-            ahmed(x) = 3sin(pi*x)
+        Now create your own function by entering at the julia prompt:
+            ahmed(x) = 3sin(pi/x)
 
-        We know from the previous activities that ahmed(2) should evaluate to 3sin(2π)==3.0. So
+        We know from the previous activities that ahmed(2) should evaluate to 3sin(π/2)==3.0. So
         test your ahmed method now by entering ahmed(2), and tell me what you get:
         """,
         "",
@@ -179,7 +192,7 @@
         Now experiment with the gamma function to find out its relationship to the factorial
         function. For example, what value of N yields the result gamma(N) == fact(5)?
         """,
-        "I want you to call gamma(N) with varying values of N, and compare results with fact()",
+        "Call gamma(n) with varying values of n, and compare results with fact()",
         x -> x==6
     ),
     Activity(
@@ -187,7 +200,7 @@
         Of course, the difficulty with the gamma() function is that it is a little expensive to
         evaluate - our method fact() is faster for integer arguments. So let's define two
         different methods - one for Ints and one for Reals:
-            fact(N::Int) = (N <= 0) ? 1 : (N * fact(N-1))
+            fact(n::Int) = (n <= 0) ? 1 : (n * fact(n-1))
             fact(x::Real) = gamma(x+1)
 
         Check these methods by entering the two calls `fact(3)` and `fact(3.0)`. What is the

@@ -1,19 +1,19 @@
 #========================================================================================#
-#	Laboratory 200
+#	Laboratory 600
 #
-# Welcome to course 200: An Introduction to Physics!
+# Welcome to course 600: Relativity theory
 #
 # Author: Niall Palfreyman, 24/04/2022
 #========================================================================================#
 [
     Activity(
         """
-        Hi! Welcome to Anatta Subject 200:
-            System dynamics - Dynamical stories can fill logical gaps
+        Hi! Welcome to Anatta Subject 600:
+            Relativity theory - Organisms ENACT: they abstract knowledge through action
         
-        Course 200 is unfortunately still under construction. Watch this space! :)
+        Course 600 is unfortunately still under construction.
         """,
-        "???",
+        "",
         x -> true
     ),
 ]

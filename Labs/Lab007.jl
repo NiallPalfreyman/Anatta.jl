@@ -8,7 +8,7 @@
 [
     Activity(
         """
-        Welcome to Lab 007: Visualising data graphically
+        Hi! Welcome to Anatta Lab 007: Visualising data graphically
 
         In this laboratory we learn how to use Julia's Makie plotting package to create graphical
         displays for data visualisation. Makie is the front-end for several different backend

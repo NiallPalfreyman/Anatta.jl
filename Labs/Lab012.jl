@@ -8,6 +8,8 @@
 [
     Activity(
         """
+        Hi! Welcome to Anatta Lab 012: Implementing Mutation
+
         We have seen that different types in a population grow and decline in relation to their
         replication rates r[i], but there is an additional factor in evolution: mutation. Many
         mutations occur when the genomic material of a cell is being copied during replication,

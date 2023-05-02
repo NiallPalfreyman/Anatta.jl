@@ -81,21 +81,22 @@ Display a friendly menu of Anatta commands.
 function ani()
 	greeting = [
 		"Hi, here I am!", "Interesting stuff this, isn't it?", "G'day cobber!",
-		"You're doing a grand job!", "You have a lovely smile!"
+		"You're doing a grand job!", "You have such lovely eyes!",
+		"Salam aleikum!", "Namasté!"
 	]
 
-	println( rand(greeting)*" :) Here's a list of Anatta commands:")
+	println( rand(greeting)*" :) Here's a complete list of Anatta commands:")
 	println( "   act()                : Display the current activity number")
 	println( "   ani()                : Display this list of Anatta functions")
-	println( "   askme()              : Ask me the current activity")
+	println( "   askme()              : Tell you the current activity")
 	println( "   hint()               : Display a hint for the current activity")
-	println( "   home!(dir=pwd())     : Set the learner's home (working) directory")
-	println( "   home()               : Move to learner's home (working) directory")
+	println( "   home!(dir=pwd())     : Set your Anatta home folder")
+	println( "   home()               : Move to your Anatta home folder")
 	println( "   lab()                : Display the current laboratory number")
-	println( "   nextact(act=next)    : Move to the learning activity act")
-	println( "   nextlab(lab=next)    : Move to the laboratory lab")
-	println( "   reply(response=skip) : Submit a response to the current activity")
-	println( "   setup(library)       : Copy Anatta library to local Development folder")
+	println( "   nextact(act=next)    : Move to the learning activity 'act'")
+	println( "   nextlab(lab=next)    : Move to the laboratory 'lab'")
+	println( "   reply(response=skip) : Submit your response to the current activity")
+	println( "   setup(library)       : Copy Anatta library to home Development folder")
 end
 
 #-----------------------------------------------------------------------------------------

@@ -8,6 +8,8 @@
 [
     Activity(
         """
+        Hi! Welcome to Anatta Lab 011: Implementing Replication and Selection
+
         In this laboratory we really get started with the biological content of this course.
         We know from lab 5 that replication is represented by the Exponential model:
             dx/dt = r*x

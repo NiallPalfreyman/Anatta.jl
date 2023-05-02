@@ -11,21 +11,35 @@
 [
     Activity(
         """
+        Hi! Welcome to Anatta Lab 008: Writing simple, understandable code
+
         OK, now it's time to start writing good code for real scientific computing. Remember what
-        I said at the beginning of this course: Good scientific code is clear text whose purpose
-        is to communicate to others your understanding of how to solve a particular problem. Well,
-        now is the time to make sure we understand how to write code that is clear enough for
-        others to understand! Look now at the method eratosthenes_bad() in the following file:
-            src/Tools/Utilities.jl
+        I said earlier in this course: Good scientific code is clear text whose purpose is to
+        communicate to others your understanding of how to solve a particular problem. Well, now is
+        the time to make sure we understand how to write code that is clear enough for others to
+        understand! In VSC, open the following file from your home folder:
+            Tools/Utilities.jl
 
-        The function eratosthenes_bad() generates prime numbers up to a user specified maximum N.
-        It uses the algorithm known as the Sieve of Eratosthenes, which is quite simple: Given an
-        array of integers from 1 to N, cross out all multiples of 2. Find the next uncrossed
-        integer, and cross out all of its multiples. Repeat this until you have passed the square
-        root of N. The remaining uncrossed numbers are then all the primes less than N.
+        With your text cursor inside the file Utilities.jl in VSC, press the Play button at the
+        top-right of VSC - this will include the file and open a julia console in VSC.
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        Utilities.jl contains a module named Utilities, and in this module is a method named
+        eratosthenes_bad(). This method generates prime numbers up to a user specified maximum N.
+        It uses the algorithm known as the Sieve of Eratosthenes, which is quite simple:
+            Given an array of integers from 1 to N, cross out all multiples of 2. Find the next
+            uncrossed integer, and cross out all of its multiples. Repeat this until you have
+            passed the square root of N. The remaining uncrossed numbers are then all of the
+            prime numbers less than N.
 
-        Test the eratosthenes_bad() method by loading it and entering eratosthenis_bad(100) at the
-        Julia prompt. What answer do you get?
+        Test the eratosthenes_bad() method now. Enter the following at the julia prompt:
+            Utilities.eratosthenis_bad(100)
+
+        What answer do you get?
         """,
         "",
         x -> x == [2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97]
@@ -52,7 +66,7 @@
     ),
     Activity(
         """
-        Julia is based on FUNCTIONAL PROGRAMMING. That is, you break your code down into reusable
+        Julia is a FUNCTIONAL programming language. That is, you break your code down into reusable
         functions that each performs a single, specific task. It is very important that a function
         has JUST ONE responsbility, and its name clearly indicates the specific task that the
         function performs. Higher level functions are composed out of lower-level functions. Also,

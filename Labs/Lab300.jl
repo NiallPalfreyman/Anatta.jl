@@ -8,7 +8,8 @@
 [
     Activity(
         """
-        Hi! Welcome to Anatta course 300: Quantum Computation!
+        Hi! Welcome to Anatta Subject 300:
+            Quantum computing - Small stories generate large structures
         
         Course 300 is unfortunately still under construction. However, you can read this
         laboratory to gain an idea of what is going to come in the future ...

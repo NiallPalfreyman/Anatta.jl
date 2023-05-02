@@ -8,6 +8,8 @@
 [
     Activity(
         """
+        Hi! Welcome to Anatta Lab 010: Exploratory data analysis
+
         In this laboratory we use Exploratory Data Analysis (EDA) and the julia DataFrames
         package to explore one of the over 750 industry standard statistical RDatasets.
 

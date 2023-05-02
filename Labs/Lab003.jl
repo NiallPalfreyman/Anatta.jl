@@ -8,7 +8,9 @@
 [
     Activity(
         """
-        In this laboratory we look at a very important structure in Julia: arrays. Once you
+        Hi! Welcome to Anatta Lab 003: Ranges, Arrays and Vectors
+
+        In this laboratory we look at a very important structure in julia: arrays. Once you
         understand how arrays work, and how amazingly useful they are, you will (almost)
         never need to write a for-loop again!
 

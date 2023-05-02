@@ -8,13 +8,22 @@
 [
     Activity(
         """
+        Hi! Welcome to Anatta Lab 005: Encapsulation and software design
+
         In this laboratory we look at the issue of encapsulation - a super-important topic in
         modern software engineering. If everyone is able to change the value of important variables
         in our program, this will make it EXTREMELY hard for people to understand exactly how our
         program works, so encapsulation HIDES data from unwanted changes. In particular, we want
         others to be able to understand, adapt and maintain our code. I have seen one firm come to
-        bankruptcy because they forgot to use encapsulation properly. So how does it work?
-
+        bankruptcy because they never learned to use encapsulation properly.
+        
+        So let's find out how encapsulation works ...
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
         In a moment, you will discover that the variables inside a module or function have LOCAL
         SCOPE - that is, they are only visible and available inside that function, and not in
         the GLOBAL SCOPE outside the function.
@@ -138,7 +147,7 @@
         command at the julia prompt:
             setup("Altruism")
 
-        This will create a new directory `Development\\Altruism` within your working directory,
+        This will create a new directory `Development\\Altruism` within your Anatta home folder,
         and also copies into that directory several files, of which one is named Replicators.jl.
         Open this file now in VSC and study its contents. What is the name of the data type
         defined in the file Replicators.jl?

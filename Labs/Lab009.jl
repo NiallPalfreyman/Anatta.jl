@@ -8,6 +8,8 @@
 [
     Activity(
         """
+        Hi! Welcome to Anatta Lab 009: Chaos and software development
+
         In this laboratory, we implement a program to demonstrate chaos in a gravitational system
         containing three bodies of equal mass in two dimensions. We will use julia to analyse the
         execution of a complex simulation program, and adapt this program to use Runge-Kutta

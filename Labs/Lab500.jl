@@ -8,7 +8,8 @@
 [
     Activity(
         """
-        Hi! Welcome to Anatta course 500: An Introduction to Agent-Based Modelling (ABM)!
+        Hi! Welcome to Anatta Subject 500:
+            Agent-based systems - Knowledge is a property of populations, not of individuals
         
         Course 500 is immediately under construction - its grass is growing under your feet as you
         watch! In this course, we use DSM to study biological organism systems that consist of many

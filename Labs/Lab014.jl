@@ -8,6 +8,8 @@
 [
     Activity(
         """
+        Hi! Welcome to Anatta Lab 014: How does cooperation evolve?
+
         Now we will start our final, assessed, project for this course. You will investigate how
         frequency-dependent selection can enable the evolution of ALTRUISM: survival of cooperating
         groups. For example, African crows adopt and look after the babies of other crows, with whom
@@ -18,7 +20,12 @@
         all the work. By adopting young crows to share the work of survival, a gang of crows
         increases the replicative fitness of the gang and its entire DS, and it is this DS, rather
         than individual birds, that stably survives or fails.
-
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
         So: how did organisms evolve to start working together to form a stable DS? Earlier, in the
         HD (hawks/doves) game, we saw that an entire population of doves would survive better than
         than an entire population of hawks. Yet we cannot turn a population of hawks into a
@@ -47,7 +54,12 @@
         cases, it would be possible for one participant to benefit by defecting against this
         cooperation: cells can grow into tumours, and ants could let predators eat the aphids. How
         do such mutualisms arise, and why do participants usually not defect against them?
-
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
         At each instant, two interacting organisms have two choices: Cooperate or Defect with the
         other organism. If they both try to Defect on each other, they might both reduce their
         payoff and so only benefit minimally from the interaction, each achieving an average payoff
@@ -91,7 +103,12 @@
         second row of the payoff matrix shows that playing D always does better than playing C.
         If both players choose their move rationally, both will defect, so all they will ever gain
         is 1 point per encounter.
-
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
         We can think of this dilemma in terms of a population of two strategy types: C's have a
         frequency of x[1] in the population and D's have a frequency of x[2]. In this case, C's
         will get an average payoff of r[1] = 4x[1], while D's will get an average payoff of

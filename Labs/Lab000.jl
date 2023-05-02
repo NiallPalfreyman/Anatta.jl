@@ -9,7 +9,7 @@
 [
     Activity(
         """
-        Welcome to Anatta: An Exploration of how our World is based on Process - not Substance.
+        Welcome to Anatta: Exploring a World based on Process, rather than Substance.
 
         Two key concepts lie at the heart of post-modern scientific philosopy: Change and
         Wholeness. On the one hand, the world is not as stable as we thought: the world is not a
@@ -30,12 +30,12 @@
     ),
     Activity(
         """
-        "Anatta" means "lacking substantial structure".
+        "Anatta" means: "Lacking substantial structure".
         
         Anatta is a philosophical position based on two interwoven ideas:
             i)  scientific knowledge is not Truth, but is rather something that living organisms
                 construct in order to survive; and
-            ii) organisms are not substantial Structures, but biological processes of longer or
+            ii) organisms are not substantial Structures, but biological Processes of longer or
                 shorter duration.
             
         These two ideas completely change the way we understand the world. We can already notice
@@ -43,25 +43,25 @@
         or less True, but rather as being more or less useful in stabilising biological processes.
         The Big Question of Anatta is this:
 
-            "How can an ever-changing world of processes come to enact so much stability that that
-                world seems to consist entirely of substantial structures?"
+            "How can an ever-changing world of processes enact so much stability that we might
+                come to believe that it consists entirely of substantial structures?"
         """,
         "Again, enter reply() at the julia prompt to move on ...",
         x -> true
     ),
     Activity(
         """
-        While exploring Anatta, we will investigate this question very deeply. In order to help us
-        do this, I have divided our exploration into Subjects that build successively upon each
-        other, each Subject corresponding roughly to a 5-credit undergraduate-level lecture course:
-            Subject 0: Programming          - Using structures to explore and predict
-            Subject 1: Syntax and Logic     - Analysing and deriving the structures of belief
-            Subject 2: System dynamics      - Structures aren't enough: We need stories!
-            Subject 3: Quantum computing    - Generating macro-structure from micro-dynamics
-            Subject 4: Thermodynamics       - Generating macro-dynamics from micro-structure
-            Subject 5: Agent-based systems  - How populations construct knowledge
-            Subject 6: Relativity theory    - Abstracting knowledge through acting in the world
-            Subject 7: Quantum-field theory - Balancing the big and the small pictures
+        While exploring Anatta, we will investigate this question very deeply. To help us do so,
+        I have divided our exploration into Subjects that build successively upon each other, each
+        Subject corresponding roughly to a 5-credit undergraduate-level lecture course:
+            Subject 0: Programming          - Using structures to explore and predict the world
+            Subject 1: Formal Logic         - Belief structures describe a world coontaining gaps
+            Subject 2: System dynamics      - Dynamical stories can fill logical gaps
+            Subject 3: Quantum computing    - Small stories generate large structures
+            Subject 4: Thermodynamics       - Small structures generate large stories
+            Subject 5: Agent-based systems  - Knowledge is a property of populations, not individuals
+            Subject 6: Relativity theory    - Organisms ENACT: they abstract knowledge through action
+            Subject 7: Quantum-field theory - Knowledge combines both large and small stories
         """,
         "reply() to move on :)",
         x -> true
