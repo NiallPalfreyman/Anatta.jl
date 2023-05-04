@@ -8,16 +8,20 @@
 [
     Activity(
         """
-        Hi! Welcome to Anatta Lab 005: Encapsulation and software design
+        Hi! Welcome to Anatta Lab 005: Encapsulation, simulation and software design
 
-        In this laboratory we look at the issue of encapsulation - a super-important topic in
-        modern software engineering. If everyone is able to change the value of important variables
-        in our program, this will make it EXTREMELY hard for people to understand exactly how our
-        program works, so encapsulation HIDES data from unwanted changes. In particular, we want
-        others to be able to understand, adapt and maintain our code. I have seen one firm come to
-        bankruptcy because they never learned to use encapsulation properly.
+        In this laboratory we look at the issue of Encapsulation - a super-important topic in
+        modern software engineering. There are two important reasons for using encapsulation:
+            -   If everyone is able to change the value of important variables in our program, this
+                will make it REALLY difficult for our program to behave reliably, so encapsulation
+                hides data from unwanted changes.
+            -   In addition, we want to cooperate with other people. They will only be able to
+                adapt, develop and maintain our code, if they can understand what it is doing, so
+                encapsulation hides details of our program that others don't need to understand.
+                
+        I have seen one firm come to bankruptcy because they never learned to use encapsulation properly!
         
-        So let's find out how encapsulation works ...
+        So encapsulation is all about hiding data - let's find out how it works ...
         """,
         "",
         x -> true
@@ -78,7 +82,8 @@
                 paula
             end
 
-        NOTE: Doing this is a Very Bad Idea! Tell me the value of paula now:
+        NOTE: Doing this is a Very Bad Idea! Nevertheless, tell me the value of paula after you
+        have called your new version of change_paula().
         """,
         "",
         x -> x==7
@@ -94,18 +99,19 @@
                 linus
             end
 
-        Again, the return value tells us that we are able to change the value of a local variable
-        named linus. But now tell me the value of the GLOBAL variable named linus:
+        Again, when we call change_linus(), the return value shows us that we are able to change
+        the value of a local variable named linus. But now tell me the value of the GLOBAL variable
+        named linus:
         """,
         "",
         x -> x==[5,4,7,2,1]
     ),
     Activity(
         """
-        The point here is that linus is a Vector that refers to its contents (5,4,3,2,1). julia
-        does not allow us to change the value of linus, however it DOES allow us to change the
-        CONTENTS that linus refers to. So global variables are still unsafe! What are we to do?
-        The solution is this:
+        The point here is that linus is a (global) Vector that refers to its contents (5,4,3,2,1).
+        If we do not use the keyword `global`, julia does not allow us to change linus itself,
+        however julia DOES allow us to change the CONTENTS that linus refers to. So global
+        variables are still very unsafe! What are we to do? Here is the solution:
 
             ALWAYS encapsulate (i.e.: wrap/hide) EVERYTHING you do inside a MODULE!
 
@@ -118,7 +124,7 @@
                 end
             end
 
-        Now call MyModule.change_paula1(), then tell me the value of paula afterwards:
+        Now call MyModule.change_paula1(), then tell me the global value of paula afterwards:
         """,
         "",
         x -> x==7
@@ -131,9 +137,9 @@
         for users change paula's value by accident? Load the module MyModule now:
             using .MyModule
 
-        Repeat the previous experiment - what is the value of paula afterwards?
+        Repeat the previous experiment - what is the global value of paula afterwards?
         """,
-        "You should find that change_paula() is still safe, even when you have loaded MyModule",
+        "You should find that change_paula1() is still safe, even when you have loaded MyModule",
         x -> x==7
     ),
     Activity(
@@ -157,24 +163,44 @@
     ),
     Activity(
         """
-        I recommend that you use Replicators.jl as a general template for designing any new module
-        of your own. Whenever you want to create a new module, simply copy the file Replicators.jl
-        to a new file, then change its contents to suit your own needs.
+        Replicators.jl is the starting point of a project to simulate a growing population of bio-
+        logical replicators (e.g. genes, bacteria, yeast, ...). I recommend STRONGLY that you use
+        Replicators.jl as a general template for starting new projects of your own. When you start
+        a new project, copy Replicators.jl to a new file, then adapt its contents to fit your needs.
 
-        Notice several things about Replicators.jl. First, it contains just one module called
-        Replicators, and in this module the data type Replicator is defined. It provides no further
-        code other than the use-case unittest() for the code that we will now implement. A use-case
-        is a user program that tests the code that we intend to write. So, for example, we intend
-        to write a function run!() that will run a Replicator simulation, so unittest() calls this
-        function, but for now I have commented out the call because we haven't yet implemented it.
-
-        Now read and parse the file Replicator.jl. You can do this either by opening the file in
-        VSC and pressing the Play button, or else by entering the following julia code from within
-        your working folder:
+        Take a good look at the following important aspects of the file Replicators.jl:
+            1.  It uses comment lines and boxes to divide the code into simple explanatory chunks.
+                Please never neglect these comments - ALWAYS keep their information up to date!
+            2.  It contains just one module called Replicators, which will hold together all the
+                data and methods that we need for our coming project.
+            3.  The Replicators module contains the definition of a new data type Replicator which
+                will form the central storage point for the information in our simulation.
+            4.  The Replicators module also contains just ONE method: the Use-Case unittest() which
+                specifies and tests all the high-level actions that we will want our program to do.
+                For example, we intend to design a method run!() that will simulate a Replicator
+                population, so unittest() calls this method, even though I haven't implemented it yet.
+            5.  Before EVERY module, type and method is a string that serves as help documentation.
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        Now parse the file Replicator.jl. You can do this either by opening the file in VSC and
+        pressing the Play button, or else by calling the include() function from a julia console
+        located within your Anatta home folder:
             include("Development/Altruism/Replicators.jl")
 
-        It is important that our use-case runs correctly, because it is the starting-point for
-        developing and testing all our software. Run the use-case now by calling the function
+        This should go smoothly, and include() reports back the presence of the new module
+        Replicators in your console's Main scope. Tell me the return value of include():
+        """,
+        "",
+        x -> x==Main.Replicators || strip(x)=="Main.Replicators"
+    ),
+    Activity(
+        """
+        It is important that our use-case runs correctly, because it is the springboard for
+        developing and testing the entire project. Run the use-case now by calling the function
         Replicators.unittest() and tell me in which line of code you get your first error:
         """,
         "",
@@ -182,67 +208,93 @@
     ),
     Activity(
         """
-        As you can see, julia tells us that we have not yet defined a method for the function
-        run!(). We will have to do that later, but for now, just comment out the three lines in
-        which run!() is called, and check that Replicators.unittest() now runs correctly without
-        errors.
+        Ani's Law of Programming: You will ALWAYS get error messages, and this is a Good Thing! :)
 
-        Now we will develop our Replicators module by making successive changes to the file
-        Replicators.jl. We will start by thinking about how to construct a Replicator. At present,
-        we need to specify the timescale, timestep and timeseries in line 41, but of course we
-        don't know the value of the timeseries until the Replicator simulation has run. Also, it
-        is more convenient for users if they only have to enter the duration and timestep of the
-        simulation in line 41. For example, change line 41 to look like this:
-            repl = Replicator(5,1)
+        The point is this: NO-ONE else in your life is able to give you such consistently patient,
+        supportive, nonjudgemental feedback as a compiler! Compilers never get cross - they simply
+        tell you how it is.
+
+        You have already started making friends with the julia compiler by noting the line number
+        in which the error occurred: 46. Now take it one step further - in the ERROR line, it says
+        there is an UndefVarError. That is, we forgot to define something. What is the name of the
+        thing we forgot to define?
+        """,
+        "",
+        x -> occursin("run!",x)
+    ),
+    Activity(
+        """
+        As you see, julia reminds us that we are calling the function run!(), but we haven't yet
+        defined a method for it. We will need to do that later, but for now, just comment out the
+        three lines in unittest() which call run!(). That is:
+            -   Set a line-comment marker (#) before each of the three lines where run!() is called.
+            -   Save the file Replicator.jl
+            -   In the julia console, include() again the file Replicator.jl
+            -   At the julia prompt, call the method Replicators.unittest(), and
+                check that it now runs correctly without errors.
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        OK, now we will develop our Replicators module by introducing successive small (!) changes
+        into the file Replicators.jl. We start by thinking about how to construct a Replicator:
+            -   First, we need to give users (in this case, unittest()) the tools to specify values
+                of time-scale, time-step and time-series in line 41, although we of course can't
+                know the value of the time-series until the Replicator simulation has run.
+            -   Second, although the simulation needs to know all three of these values, for users
+                it is more convenient to only have to enter the duration and time-step of the
+                simulation in line 41. For example, change line 41 to look like this:
+                    repl = Replicator(5,1)
 
         Now recompile and run unittest() and tell me in which line you get an error:
         """,
-        "Where does unittest() start looking for a constructor that looks like Replicator(5,1)?",
+        "Look at the StackTrace information lower down in the error message.",
         x -> x == 41
     ),
     Activity(
         """
-        To fix this error, we must implement an appropriate constructor. In fact, we don't really
-        want users to use the default constructor Replicator(t,dt,x) at all! We can block this by
-        defining an Inner Constructor. Go to line 22 of Replicators.jl and change the definition
-        of the data type Replicator to like this:
+        To fix this error, we must implement an appropriate constructor that can build a Replicator
+        from the two values `duration` and `dt`. In fact, we don't really want users to use the
+        default constructor Replicator(t,dt,x) at all! After all, what would happen if users
+        specified a time-step that was inconsistent with the steps contained in the time-scale?
 
+        We can block this possibility by defining an Inner Constructor. Go to line 22 of
+        Replicators.jl and change the definition of the data type Replicator to look like this:
             struct Replicator
-                t::Vector{Real}			# The simulation timescale
-                dt::Real				# The simulation timestep
-                x::Vector{Real}			# The population timeseries
+                t::Vector{Real}			# The simulation time-scale
+                dt::Real				# The simulation time-step
+                x::Vector{Real}			# The population time-series
             
-                function Replicator( tfinal::Real, dt=1)
-                    t = 0.0:dt:tfinal
-                    new( t, dt, zeros(Float64,length(t)))
+                function Replicator( duration::Real, dt=1)
+                    timescale = 0.0:dt:duration
+                    new( timescale, dt, zeros(Float64,length(timescale)))
                 end
             end
         
-        Now rerun unittest() and tell me value of your Replicator's timescale:
+        Now rerun unittest() and tell me value of your Replicator's time-scale:
         """,
         "You can read this from the first element in the displayed Replicator",
         x -> x == 0.0:1:5
     ),
     Activity(
         """
-        OK! Now we have a real Replicator model, let's make it run!!! Between lines 30 and 31,
-        insert the following lines of code:
-            #-----------------------------------------------------------------------------------------
+        OK! Now we have a real Replicator model, let's make it run!!! Insert the following lines of
+        code directly underneath the comment box "Module methods:":
             \"""
                 run!( replicator, x0, mu=1.0)
             
-            Simulate the exponential growth of a population starting from the value x0 with growth
-            constant mu.
+            Simulate the exponential growth of a Replicator population, starting from the initial
+            value x0, and with specific growth constant mu.
             \"""
-            function run!( repl::Replicator, x0::Real, mu::Real=1)
-                repl.x[1] = x0						# Set initial value
+            function run!( repl::Replicator, x0::Real, mu::Real=1.0)
+                repl.x[1] = x0                  # Set initial value of the population
             
                 for i in 2:length(repl.t)
                     # Perform Euler step:
                     repl.x[i] = repl.x[i-1] + repl.dt * mu * repl.x[i-1]
                 end
-            
-                repl								# Return the Replicator
             end
         
         Now remove the comment marker in front of the first call of run!(), then run unittest()
@@ -253,7 +305,7 @@
     ),
     Activity(
         """
-        Congratulations! You have written your first simulation in julia! Now remove the comment
+        Congratulations! You have implemented your first simulation in julia! Now remove the comment
         markers in front of the remaining calls to run!() and make sure everything runs correctly.
         """,
         "",
@@ -272,8 +324,8 @@
     ),
     Activity(
         """
-        Of course we can't call Replicator() - we haven't yet loaded the module into our global
-        Ingolstadt environment! So let's do that now:
+        Of course we can't call Replicator() - we haven't yet loaded the module into our Main
+        environment! So let's do that now:
             using .Replicators
 
         Can you now successfully create your Replicator?
@@ -291,7 +343,7 @@
             export Replicator, run!
 
         This makes the data type Replicator and the method run!() available to external users.
-        Now save the file, re-include it, then enter the following at the julia prompt:
+        Now save the file, include() it, then enter the following at the julia prompt:
             using .Replicators
             yeast = Replicator(5,1)
             run!(yeast,1)
@@ -347,17 +399,17 @@
     Activity(
         """
         You have discovered the reason why nature (and our cognition) cannot be a computer: NO
-        computer can EVER simulate continuous time, where dt tends toward 0!
+        computer can EVER simulate continuous time, because dt would then be infinitely close to 0!
 
         However, we can do better than the Euler method above. If we set dt=0.01, we can improve our
         simulation results by using the more accurate Runge-Kutta-2 integration method. Replace the
         loop in your run!() method by the following code. Is your result closer to e than before?
 
-            dt2 = repl.dt/2									# dt2 is one half-timestep
+            dt_2 = repl.dt/2                                # dt2 is one half-timestep
             for i in 2:length(repl.t)
                 # Perform Runge-Kutta-2 step:
-                x2 = repl.x[i-1] + mu*dt2*repl.x[i-1]		# Calculate new x halfway thru step
-                repl.x[i] = repl.x[i-1] + mu*repl.dt*x2		# Use x2 as better approximation
+                x_2 = repl.x[i-1] + mu*dt_2*repl.x[i-1]     # Calculate new x halfway thru step
+                repl.x[i] = repl.x[i-1] + mu*repl.dt*x_2    # Use x2 as better approximation
             end
         """,
         "",

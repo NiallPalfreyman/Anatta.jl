@@ -16,11 +16,11 @@ module Replicators
 """
 	Replicator
 
-A Replicator represents a timescale t in timesteps dt, and a corresponding time-series x
-over this timescale. The initial time-series consists solely of zeros.
+A Replicator represents a time-scale t in time-steps dt, and a corresponding time-series x
+over this time-scale. The initial time-series consists solely of zeros.
 """
 struct Replicator
-	t::Vector{Real}			# The simulation timescale
+	t::Vector{Real}			# The simulation time-scale
 	dt::Real				# The simulation time-step
 	x::Vector{Real}			# The population time-series
 end
@@ -38,7 +38,7 @@ Unit-test the Replicators module.
 function unittest()
 	println("\n============ Unit test Replicators: ===============")
 	println("An exponential population of replicators from t=0-5 generations:")
-	repl = Replicator( [0,1], 1, [0,1])
+	repl = Replicator( [0,1,2,3,4,5], 1, [0,0,0,0,0,0])
 	display( repl)
 	println()
 
