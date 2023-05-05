@@ -247,8 +247,8 @@
     Activity(
         """
         As scientists, we constantly come up against this problem: Our own beautiful theory gets
-        torn apart by a few irritating facts that we can't get deny. What makes us true scientists
-        is that we accept this disappointment as reality, and USE it as a way to move forward ...
+        torn apart by a few irritating facts that we cannot deny. What makes us true scientists is
+        that we accept this disappointment as reality, and USE it as a way to move forward ...
 
         First, notice how much you learned by testing the effect of sliders on the simulation.
         This learning is not a waste of time: it is a very important part of this course!
