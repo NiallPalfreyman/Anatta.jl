@@ -54,7 +54,7 @@
         While exploring Anatta, we will investigate this question very deeply. To help us do so,
         I have divided our exploration into Subjects that build successively upon each other, each
         Subject corresponding roughly to a 5-credit undergraduate-level lecture course:
-            Subject 0: Programming          - Using structures to explore and predict the world
+            Subject 0: Computation          - Using structures to explore and predict the world
             Subject 1: Formal Logic         - Beliefs have structure, but structures ALWAYS have gaps!
             Subject 2: System dynamics      - Dynamical stories can fill logical gaps
             Subject 3: Quantum computing    - Small stories generate large structures
