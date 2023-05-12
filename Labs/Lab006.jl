@@ -338,7 +338,7 @@
         character separates the date from the time in the result?
         """,
         "",
-        x -> x=='T'
+        x -> x=='T' || x=="T"
     ),
     Activity(
         """

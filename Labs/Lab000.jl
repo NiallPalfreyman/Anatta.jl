@@ -371,9 +371,9 @@
     Activity(
         """
         You should now notice several things that have changed:
-            -   The three dots should appear to the left of Ani.jl in Explorer
+            -   The julia icon of three dots should appear to the left of Ani.jl in Explorer
             -   A message at the left-bottom of the VSC editor says the julia server is running
-            -   At the right of the tab line above the VSC editor pane is a Play button (i.e.,
+            -   At the right of the ribbon above the VSC editor pane is a Play button (i.e.,
                 a right-pointing triangle). We shall be using that soon.
 
         If you do not see these things, then something is stuck, and I can't help you further right
