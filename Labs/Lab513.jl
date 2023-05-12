@@ -41,8 +41,8 @@
         Which aspect of the food source in the upper-right corner of the world causes the ants to
         (usually) decide against it, even though its capacity equals that of the lower source?
         """,
-        "Think about what happens to the carry_pheromone trail after the ant has moved on",
-        x -> occursin("capacity",lowercase(x))
+        "What happens to a carry_pheromone trail if ants take a long time to walk along it?",
+        x -> occursin("distance",lowercase(x))
     ),
     Activity(
         """
@@ -72,7 +72,7 @@
     Activity(
         """
         The ant colony generally chooses the food source that can most easily be exploited, either
-        because it is closer, or because its capapcity is high. It is more difficult for the ants
+        because it is closer, or because its capacity is high. It is more difficult for the ants
         to form a stable trail to more distant or low-capacity food, since the chemical trail has
         more time to evaporate and diffuse before being reinforced.
         
