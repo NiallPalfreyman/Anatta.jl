@@ -37,7 +37,7 @@
             prime numbers less than N.
 
         Test the eratosthenes_bad() method now. Enter the following at the julia prompt:
-            Utilities.eratosthenis_bad(100)
+            Utilities.eratosthenes_bad(100)
 
         What answer do you get?
         """,
