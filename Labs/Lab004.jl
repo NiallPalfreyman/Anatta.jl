@@ -60,7 +60,7 @@
         We can select a whole row or column by writing ":". Display and tell me the third row of m:
         """,
         "",
-        x -> x == [3 7 11 15]
+        x -> x == [3,7,11,15]
     ),
     Activity(
         """
