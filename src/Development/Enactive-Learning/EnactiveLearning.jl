@@ -8,7 +8,7 @@ include("./components/world.jl")
 using Agents, GLMakie, InteractiveDynamics, Random
 
 
-
+    # Testing it
 
 
 end # module EnactiveLearning
