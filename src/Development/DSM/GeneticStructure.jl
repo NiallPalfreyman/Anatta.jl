@@ -244,7 +244,7 @@ function demo()
 	)
 
 	best_string = lift( (wld->String(wld[wld.minID].genome)), abmplt.model)
-	text!( 40,30, text=best_string, color=:red, textsize=30, align=(:left,:top))
+	text!( 40,30, text=best_string, color=:red, fontsize=30, align=(:left,:top))
 
 	playground
 end
