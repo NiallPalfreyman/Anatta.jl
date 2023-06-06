@@ -313,10 +313,10 @@
 
         Here is the point: My model is not reality, but an approximation. If lives depend on that
         approximation, I need to ensure that fufils all essential laws of physics, chemistry and
-        biology! Think back to your Altruism project: Suppose a child died as a result of relying on
-        your conclusions from that project. Could you SWEAR before a court of law that your
-        implmentation was an absolutely accurate model of context-dependent selection in social
-        systems?!
+        biology! Think back to your Altruism project in Subject 1 (Computation): Suppose a child
+        died as a result of relying on your conclusions from that project. Could you SWEAR before a
+        court of law that your implmentation was an absolutely accurate model of context-dependent
+        selection in social systems?!
 
         So now: Analyse my implementation of agent_step!() carefully, discussing with others the
         following issues that might make this implementation unreliable:

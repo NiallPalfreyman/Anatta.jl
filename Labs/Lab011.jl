@@ -1,280 +1,481 @@
 #========================================================================================#
 #	Laboratory 11
 #
-# Selection: How do populations stop growing?
+# Deterministic CHAOS and software development.
 #
-# Author: Niall Palfreyman, 10/09/2022
+# Author: Niall Palfreyman, 06/09/2022
 #========================================================================================#
 [
     Activity(
         """
-        Hi! Welcome to Anatta Lab 011: Implementing Replication and Selection
+        Hi! Welcome to Anatta Lab 011: Chaos and software development
 
-        In this laboratory we really get started with the biological content of this course.
-        We know from lab 5 that replication is represented by the Exponential model:
-            dx/dt = r*x
-
-        where x is the size of a population and r is the specific growth rate of that population.
-        This model generates the exponential growth story, for which we can formulate an exact model:
-            x(t) = x0 exp(r*t), with doubling time T2 = ln(2)/r
-        
-        Suppose a particular bacteria population has a specific growth rate of r = 0.035 /min . Use
-        the julia REPL to calculate the population's doubling time.
-        """,
-        "You will need to look up the julia function for ln()",
-        x -> true
-    ),
-    Activity(
-        """
-        Use julia as a calculator to calculate the number of minutes in a day. How many cells will
-        one bacterium generate over 3 days?
-        """,
-        "The population doubles in each doubling time over the three days",
-        x -> 151 < log(x) < 152
-    ),
-    Activity(
-        """
-        This number is enooormous! In fact, it is so enormous that it cannot be true! In the
-        biological world, there is no such thing as exponential growth. Instead, as Darwin
-        realised, limited resources always cause the population growth rate to drop as the
-        population x gets bigger. This is modelled by the logistic equation:
-            dx/dt = r*x*(1 - x/K)
-
-        Here, r is the specific replication rate of the population only when x is much smaller
-        than the resource limitation (carrying capacity) K. If x → 0, or if x → K, then the growth
-        rate dx/dt → 0. In this case, the population has an unstable fixed point at x* = 0, but
-        grows from any initial value x0 > 0 towards the stable fixed point at x* = K. (An asterisk
-        denotes a fixed-point value.)
-
-        Again using the value r = 0.035 /min from the previous activity, use a value of K = 100 to
-        calculate the growth rate dx/dt of the bacteria population when x = 99.
-        """,
-        "Apply the logistic equation",
-        x -> (0.0346 < x < 0.0347)
-    ),
-    Activity(
-        """
-        Suppose we have two exponential populations x and y that reproduce at different rates r and
-        s. Suppose they have initial conditions x(0)=x0 and y(0)=y0, then:
-            dx/dt = r*x and dy/dt = s*y, so that
-            x(t) = x0*exp(r*t) and y(t) = y0*exp(s*t)
-
-        Both x and y grow exponentially, and if r > s, x will grow faster than y. Eventually, there
-        will be more x's than y's. Let's define ρ(t) ≡ x(t)/y(t). Use the quotient rule to prove
-        that ρ(t) also follows an exponential model: dρ/dt = (r - s)*ρ .
-        """,
-        "On paper, divide the exponential expression for x by the exponential for y, then differentiate",
-        x -> true
-    ),
-    Activity(
-        """
-        The solution of this equation is ρ(t) = ρ0*exp((r - s)*t), so if r > s, ρ will grow toward
-        infinity, and x outcompetes y. In addition, if we also suppose that resources are limited,
-        the populations x and y will grow toward a point where the total population (x + y) stays
-        constant, so that if x gets infinitely bigger than y, this must mean that y → 0.
-
-        This is selection: where the growth of x drives y to extinction. For selection to happen,
-        we need different rates of growth of the populations x and y, plus resource limitation.
-        
-        To study selection situations, we often use two simple modelling tricks:
-        - We think of x and y not as populations, but as FREQUENCIES. That is, we assume that the
-            sum of both population types is 1 (x + y = 1), so that x describes the proportion of
-            the combined population that are x-individuals, while y describes the proportion that
-            are y-individuals.
-        - In addition, we think of the growth rates r and s as FITNESS values: r describes how
-            fit the type x is, in terms of how effectively it grows by comparison with y.
-
-        We want to make sure that the sum x + y = 1 of the two frequencies stays constant. To
-        achieve this, we will reduce the growth rates of x and y by equal amounts R in the
-        selection equations:
-            dx/dt = (r - R)*x and dy/dt = (s - R)*y .
-            
-        Prove that this will only work if R is the average fitness of the two population types:
-            R ≡ r*x + s*y .
-        """,
-        "The condition for (x + y) to stay constant is: d(x + y)/dt = 0",
-        x -> true
-    ),
-    Activity(
-        """
-        One advantage of using these selection model tricks is that y now depends upon x:
-            y = 1 - x.
-            
-        Show that in this case, we can eliminate y from the two selection equations, so that we
-        now only need to solve the single equation:
-            dx/dt = (r - s)*x*(1 - x)
-        """,
-        "Substitute the constraint y = 1 - x into the logistic equations for x and y",
-        x -> true
-    ),
-    Activity(
-        """
-        We recognise this equation: it is the logistic equation with specific growth rate (r - s)
-        and carrying capacity 1. We also know how the logistic story evolves over time - it has two
-        equilibria at 0 and 1:
-            If r > s, x → 1, so y → 0, and type x is selected over type y;
-            If s > r, x → 0, so y → 1, and type y is selected over type x.
-
-        Martin Nowak calls this model “Survival of the Fitter”. But models like this can also display
-        many other exciting behaviours! :)
-
-        By the way, before we proceed, you should beware of thinking of the frequencies x and y as
-        species, because they might simply be different groups in a population of one species. It
-        might even be that x's can genetically transform into y's. We shall refer to them here
-        simply as "frequencies" or "types".
+        In this laboratory, we implement a program to demonstrate chaos in a gravitational system
+        containing three bodies of equal mass in two dimensions. We will use julia to analyse the
+        execution of a complex simulation program, and adapt this program to use Runge-Kutta
+        integration to demonstrate graphically chaotic 3-body motion.
         """,
         "",
         x -> true
     ),
     Activity(
         """
-        We can extend this 2-type model to selection between N different types within a population.
-        If we label the individual type frequencies x[i](t) (where i is in 1:N), the structure
-        describing all N types is a vector: x ≡ [x1,x2, …, xN]. Now define r[i] ≥ 0 as the fitness
-        of type i, then the average fitness of the entire population of N types is:
-            R = sum([r[i]*x[i] for i in 1:N]), or simply dot(r,x)
+        In this lab, we investigate DETERMINISTIC CHAOS. Chaos is extremely important in biology,
+        because it is the source of the spontaneity that we observe in living organisms. To see how
+        chaos works, start by loading my julia implementation of the Mathematica function nestlist():
+            include("Computation/Utilities.jl")
+            using .Utilities
 
-        We can then write the selection dynamics model as:
-            d(x[i])/dt = x[i]*(r[i] .- R)
-
-        This is the general LINEAR SELECTION model. The frequency x[i] of type i increases if its
-        fitness r[i] is higher than the population average R; otherwise x[i] decreases. However,
-        the total population stays constant:
-            sum(x) ≡ 1 and sum(dx/dt) ≡ 0
-
-        We will find these relations very useful when we study the growth and decline of types
-        within a population. In particular, we shall want to make use of the dot product between two
-        vectors. At the julia prompt, create two vectors a = [1,2,3] and b = [4,5,6], then verify
-        that a'*b calculates the dot product of a and b. Then look up and tell me which library we
-        need to load in order to make use of the dot product function: dot(a,b).
-        """,
-        "LinearAlgebra",
-        x -> x == "LinearAlgebra"
-    ),
-    Activity(
-        """
-        The set of all values x[i] > 0 obeying the property that sum(x) = 1 is called a SIMPLEX.
-        The useful thing about simplexes is that we can represent them both graphically and as
-        coordinates. Given any two points P1 and P2 in the plane, we can represent any point on the
-        straight line between P1 and P2 as a weighted average of P1 and P2. So, for example:
-            (1,0)			corresponds to the point P1
-            (0,1)			corresponds to the point P2
-            (0.25,0.75)		corresponds to a point three-quarters of the way from P1 towards P2
-
-        The coefficients of a weighted average are always frequencies that add up to 1, and we are
-        using them here as coefficients that define a linear combination of the two points P1 and
-        P2. Any linear combination whose coefficients add up to 1 is called a CONVEX COMBINATION.
-
-        What are the convex coordinates of the midpoint lying halfway between P1 and P2?
+        Take a look at the implementation of nestlist(), and then experiment with it. For example,
+        what is the result of the following method call?
+            nestlist(x->2x,3,5)
         """,
         "",
-        x -> collect(x) == [0.5,0.5]
+        x -> x == [3,6,12,24,48,96]
     ),
     Activity(
         """
-        So if we have two population types x and y, we can represent any particular values of these
-        two types as a convex combination of two points in a graph. Now, you might not at first
-        think this is particularly useful, but what if we had three populations? It would be quite
-        difficult to visualise these three numbers in a 3-D graph, but is very easy to visualise
-        them as convex combinations of the three vertices of a triangle!
+        nestlist() applies a function f repeatedly to the initial value x0, creating a list of the
+        values that it generates in this way. This might be useful if we're modelling some specific
+        population growth rule over time. Take for example the discrete logistic situation ...
 
-        This is exactly what I have done in the graphics function Simplex.plot3(), which takes a 3-d
-        state vector and displays it graphically in a 3-simplex based on three populations x, y and
-        z. To see this in action, enter the following at the julia prompt:
-            include("Development/Altruism/Simplex.jl")
-            Simplex.plot3([1,2,3])
-            
-        Simplex.plot3() automatically normalises your state vector so that the sum of the three
-        frequencies is equal to 1, then plots this vector as a dot inside a 3-simplex. Notice how
-        each population frequency represents how close the dot is to the corresponding vertex of
-        the simplex. Which vertex is closest to the dot?
-        """,
-        "Which species type has the highest frequency?",
-        x -> occursin("z",lowercase(x))
-    ),
-    Activity(
-        """
-        Now try plotting the trajectory of a population over time by entering the following:
-            Simplex.plot3([[(1+sin(t))/2,(1+cos(t))/3,t] for t in 0:0.1:6])
-
-        Which colour have I used to signify graphically the START of the trajectory?
-        """,
-        "Locate the value of z in the first state vector of the above list comprehension",
-        x -> occursin("green",lowercase(x)) || x == :green
-    ),
-    Activity(
-        """
-        Which vector of frequencies corresponds to the centre of the 3-simplex? Test your answer
-        graphically.
-        """,
-        "Which coordinates are equally far away from all three vertices?",
-        x -> x[1] == x[2] == x[3]
-    ),
-    Activity(
-        """
-        Which point would represent the situation in which type y is absent, and types x and z
-        are present in equal quantities?
+        Imagine a population of wasps living on an island with renewable but limited resources:
+            -   They can saturate the island's resource capacity (population x = 1).
+            -   They can die out (x = 0).
+            -   The population can have any size in the range 0 ≤ x ≤ 1.
+            -   If the population gets too big (i.e., x close to 1), wasps will starve.
+            -   If the population gets very small (x close to 0), wasps will thrive.
+            -   All wasps die each winter, so their seasonal population has a new value each year:
+                    [x0,x1,x2,...,xn].
         """,
         "",
-        x -> x == [0.5,0,0.5]
+        x -> true
     ),
     Activity(
         """
-        In the linear selection model above, imagine that the type k in 1:N has greater fitness
-        r[k] than any other type: r[k] > r[i], ∀i≠k. What effect does this have on the value of the
-        factor (r[i]-R)? What effect will this have on the growth rate dx[k]/dt of type k whenever
-        other types are present? What will be the frequency of the types after a long time? Over
-        time, where will any state vector of population frequencies within the simplex move to?
+        These assumptions suggest that there exists some growth function L() that maps the wasp
+        population size in one year onto the population size in the following year. That is:
+            x[n+1] = L(x[n]) , or written differently: L : x[n] -> x[n+1]
+
+        One commonly used growth function is the Discrete Logistic function. In the julia console,
+        define the discrete logistic function L for the specific growth rate r = 2:
+            r = 2
+            L(p) = r * p * (1-p)
+
+        Check out the values of L(0.1), L(0.2), L(0.8) and L(0.9). What is the value of L(0.5)?
         """,
-        "Which vertex will the frequencies move towards?",
-        x -> occursin("vertex",lowercase(x)) && occursin("k",lowercase(x))
+        "",
+        x -> x==0.5
     ),
     Activity(
         """
-        In the following activities, we'll build a slightly more general model of selection:
-            dx[i]/dt = r[i]*x[i]^c - R*x[i]; R = sum([r[i]*x[i]^c for i in 1:N])
+        As you see, when r=2, the logistic function causes small populations (p<0.5) to grow, and
+        large populations (p>0.5) shrink. We call p=0.5 a Fixed Point of this growth function,
+        because the population neither grows nor shrinks from this value.
+
+        Verify these statements by using nestlist() to generate a sequence of 10 population values
+        starting from the initial value 0.01:
+            nestlist(L,0.01,10)
+
+        Towards which value does this sequence converge?
+        """,
+        "",
+        x -> x==0.5
+    ),
+    Activity(
+        """
+        We can also visualise such sequences:
+            using GLMakie
+            lines(nestlist(L,0.001,15))
+
+        Towards which value does this sequence converge?
+        """,
+        "",
+        x -> x==0.5
+    ),
+    Activity(
+        """
+        I'd like to start investigating how these graphs change as we modify the value of the
+        specific growth rate r. However, I can't be bothered with constantly redefining the value
+        of r in a separate assignment, as we did above. Instead, I will define L to be a
+        Functional - that is, L takes the value r and produces a function that depends on r. Do
+        this now - define L(r) to return a discrete logistic function that is dependent on the
+        wasp population's specific growth-rate r:
+            L(r) = (p -> r * p * (1-p))
+
+        Now verify that L(2) is a discrete logistic function with all the properties you found
+        above, for example, towards which value does this sequence converge?
+            lines(nestlist(L(2),0.001,15))
+        """,
+        "",
+        x -> x==0.5
+    ),
+    Activity(
+        """
+        Now we've set up a test-bed for our experiments, use your functional L to calculate the
+        wasp population two years after an intial population of x0 = 0.3, assuming that r = 0.5:
+        """,
+        "nestlist(L(0.5),0.3,2)[end]",
+        x -> (0.04698 < x < 0.04699)
+    ),
+    Activity(
+        """
+        Use nestlist() to create a list of 5 simulation steps of the wasp population, starting from
+        an initial value of 0.3 and using specific growth rate r = 0.5. You will see that the
+        population x is converging towards a particular limiting value - what is that limit value?
+        """,
+        "nestlist(L(0.5),0.3,5)",
+        x -> x==0
+    ),
+    Activity(
+        """
+        Now plot a graph, using nestlist() to create a list of 20 simulation steps of the wasp
+        population with x0=0.3 and r=0.9. What is the limit point of this sequence?
+        """,
+        "lines(nestlist(L(0.9),0.3,20))",
+        x -> x==0
+    ),
+    Activity(
+        """
+        OK, everything seems to be working ok, so let's investigate the onset of CHAOS! We will
+        slowly increase the value of the specific growth-rate r to discover how this affects the
+        developmental trajectory of the wasp population. Use the initial value x0=0.3 for all of
+        the folloiwng experiments until I tell you otherwise...
         
-        If c < 1, we call this selection model SUBlinear; if c > 1, it is SUPERlinear. What model
-        does this reduce to if we set c = 1?
+        Just to make our language clear: a LIMIT POINT of the wasp population's motion is any
+        value of the population that stays the same from one generation to the next:
+            L(r)(x) == x.
+        
+        What was the limit point of the trajectory L(0.9)?
         """,
-        "Look earlier in this chapter",
-        x -> occursin( "linear", lowercase(x))
+        "",
+        x -> x==0
     ),
     Activity(
         """
-        In the sublinear selection model, where c < 1, the population growth is slower than
-        exponential (subexponential), and if c> 1, the growth is faster than exponential
-        (superexponential). An extreme example of subexponential growth is immigration at a
-        constant rate. An example of superexponential growth is sexual reproduction, where two
-        organisms must cooperate in order to replicate.
+        What is the approximate value of the limit point of the trajectory L(1.1)?
+        """,
+        "",
+        x -> 0.07<x<0.1
+    ),
+    Activity(
+        """
+        What is the EXACT value of the limit point of the trajectory L(1.5)?
+        """,
+        "You can work it out for yourself by solving the equation L(r)(x) == x, or: r x (1-x) == x",
+        x -> x == 1//3
+    ),
+    Activity(
+        """
+        Use the technique from the hint in the previous activity to calculate the limit point of
+        the trajectory L(2), then check this value using your simulator:
+        """,
+        "",
+        x -> x==0.5
+    ),
+    Activity(
+        """
+        Now investigate the trajectory L(2.1). In which direction does the population change from
+        x[6] to x[7]: positive (+) or negative (-)?
+        """,
+        "",
+        x -> (x == -)
+    ),
+    Activity(
+        """
+        This is interesting 00! Up to now, the wasps' trajectory has been monotone: the population
+        has only either shrunk or grown. But now it grows above the value, then drops back down
+        again. Let's investigate this further: find the limit point of the trajectory L(2.5) both
+        by calculating and by simulating:
+        """,
+        "",
+        x -> x==0.6
+    ),
+    Activity(
+        """
+        Notice that now we have an oscillating motion that dies away as x comes to rest at the
+        limit point. Try out various values of r between 2.5 and 2.95. Does the oscillation
+        still die away?
+        """,
+        "",
+        x -> occursin("y",lowercase(x))
+    ),
+    Activity(
+        """
+        Now find the limiting motion of the population for L(3). Does the oscillation die away?
+        """,
+        "",
+        x -> occursin("n",lowercase(x))
+    ),
+    Activity(
+        """
+        It now no longer makes sense to speak of a limit VALUE, since the trajectory oscillates
+        forever around the value 2/3. Instead, we speak of a limit CYCLE: the motion L(3) displays
+        a limit cycle around the value 2/3. "cycle" means the value oscillates forever, and
+        "limit" means that it will converge to this cycle, no matter where we start the motion.
+        Check this for yourself by changing the value of x0. Does the motion always converge on
+        a cycle around 2/3?
+        """,
+        "",
+        x -> occursin("y",lowercase(x))
+    ),
+    Activity(
+        """
+        Now comes some terminilogy that will seem strange to you at first, but which will make
+        sense as we proceed. Notice that within each period of the limit cycle, the motion jumps up
+        one step, then back down one step to the original value: the period of the limit cycle
+        contains a single complete oscillation. We therefore call the motion L(3) a
+            "Period-1 limit-cycle"
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        Let's explore further. Look at the limit-cycle of the motion L(3.2) (You may want to extend
+        the duration to 50). How many oscillations are in each period of this limit cycle?
+        """,
+        "The number of periods should not (yet) have changed",
+        x -> x==1
+    ),
+    Activity(
+        """
+        What is the period-length of the limit-cycle of the motion L(3.45)? That is, how many
+        complete oscillations does the population perform before the motion repeats itself?
+        """,
+        "Count very carefully: This should be a period-2 limit-cycle",
+        x -> x==2
+    ),
+    Activity(
+        """
+        What is the period-length of the limit-cycle of the motion L(3.55)? By now, things will
+        be moving quite quickly and the wasp population will need a while to stabilise towards the
+        limit-cycle. You may like to save time by using a line like this:
+            lines(nestlist(L(3.55),0.5,5000)[end-40:end])
+        """,
+        "Look very carefully!",
+        x -> x==4
+    ),
+    Activity(
+        """
+        What is the period-length of the limit-cycle of the motion L(3.567)?
+        """,
+        "Count ve-ery carefully - remembering to inspect the smaller oscillations as well!",
+        x -> x==8
+    ),
+    Activity(
+        """
+        What is the period-length of the limit-cycle of the motion L(3.5695)? You will find this
+        one very difficult to count, but it is actually a period-16 limit-cycle. If you can't
+        distinguish the oscillations, don't worry - just go on to the next activity.
+        """,
+        "",
+        x -> x==16
+    ),
+    Activity(
+        """
+        We have seen that as r increases, Period-Doubling occurs. That is, the period-length
+        doubles at each step-change in r, so the motion takes longer and longer before it repeats.
+        Now check out the motion Λ(3.7). How long does it take before this motion repeats itself?
+        Or in other words: What is the period-length of this limit-cycle?
+        """,
+        "Find out how to write \"Infinity\" in julia :)",
+        x -> x==Inf
+    ),
+    Activity(
+        """
+        We have come a long way. We have learned is that some naturally occurring systems can
+        exhibit a type of motion in which they require an infinite amount of time to repeat. This
+        means we can never predict this motion in advance, but must always perform ALL of the
+        calculation steps that lead up to it. We call such motions CHAOTIC.
 
-        In our more general selection model, let’s take the simple case N = 3. Show that in this
-        case, so long as the population lies inside the 3-simplex (so sum(x) = 1), the rate of
-        change (sum(dx/dt)) of the entire population is equal to zero. What does this imply for
-        the evolving population in relation to the 3-simplex?
+        Notice that Chaos has nothing to do with randomness. We can always calculate the population
+        of Vespula Island for any year, but ONLY by actually simulating it. There are apparently
+        things that mathematics cannot predict in advance, but must calculate step by step.
+
+        Actually, the situation is even worse than this. Use the following command to inspect the
+        behaviour of L(3.7) for the different starting conditions x0 ∈ [0.5,0.50001,4.99999]
+            lines(nestlist(L(3.7),0.5,5000)[end-40:end])
+
+        Are these three graphs at all similar to each other?
         """,
-        "What constraint will automatically apply to all population values throughout evolution?",
-        x -> occursin("inside",lowercase(x))
+        "",
+        x -> occursin("n",lowercase(x))
     ),
     Activity(
         """
-        Take the module Replicators as a template, and extend the module Selectors (in Selectors.jl)
-        to include a datatype Selector that uses RK2 to simulate the evolution of a population of
-        three types under sub- and superlinear selection. Your client function unittest() should:
-            -	use a constructor method to set the value of c and the three specific growth rates;
-            -	then call the method simulate!(s,[x0 y0 z0],T) to evolve the population over a time
-                T, starting from the initial frequencies [x0 y0 z0];
-            -	then plot this evolution graphically within a triangular 3-simplex.
+        As you see, chaotic motion meanns that even very tiny changes in the initial conditions
+        of a chaotic system lead to completely different behaviour. So even if we measured the
+        current wasp population, we could never be sure that we had done it sufficiently accurately
+        to be ABSOLUTELY sure that we are accurately predicting the development of the system!
+
+        So. What has all this to do with your project? Henri Poincaré was the first to notice
+        deterministic chaos in 1908. He showed that the gravitational motion of three orbiting
+        bodies cannot be solved exactly. Weather, dripping taps and driven pendula have a similar
+        problem: We cannot predict the story of their future motion without simulation, which as
+        you know is never precise! As an introduction to chaos in the three-body problem, please
+        view the following video-clip now, and then proceed to the next activity:
+            https://www.youtube.com/watch?v=LwkvO3t1b30&t=113s
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        Now we will see how to build up a complex scientific program starting from a set of
+        requirements. Use VSC to take a look at version 0 of my NBodies module:
+            setup("NBodies")
+            include("Development/NBodies/NBodies0.jl")
+
+        The aim of the NBodies module is to simulate Poincarés chaotic 3-body motion. If you look
+        at the unittest() function, you will see that my basic use-case creates an instance of the
+        type NBody, pushes two bodies into this model, then requests a simulation and graphical
+        animation of the model.
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        Notice that simulate() and animate() are at present just dummy functions that do nothing
+        other than report back values. This use of dummy functions is EXTREMELY important in
+        software development - it enables me to start designing my module from the external
+        requirements, then to develop step-by-step the deeper mechanisms of the software. First we
+        set up the use-case, then we slowly fill in the program details, making sure that each
+        stage of development is fully correct and robust before we go on to the next.
             
-        For example:
-            fig = Figure()
-            ax = Axis(fig[1,1])
-            sel = Selector( [0.5,0.4,0.1], 1.3)
-            simulate!( sel, [0.3,0.3,0.4], 100)
-            plot3!(ax,sel)
+        Study version 0 of NBodies and tell me a line number where the code defines that this is a
+        TWO-dimensional simulation.
+        """,
+        "Where does the code first specifiy that the position is a 2-dimensional vector?",
+        x -> x in [109,110]
+    ),
+    Activity(
+        """
+        Software development is always driven by the needs of its CLIENT program - in our case,
+        this is the function NBodies.unittest(). When you design unittest() in your own projects,
+        think carefully about what kinds of behaviour you as a user require of the datatype NBody,
+        then incorporate that requirement into unittest(), then start implementing that
+        functionality in your module design. For example ...
 
-        Nowak describes the case c < 1 as Survival of All, and the case c > 1 as Survival of the
-        First. Use your Selector class to understand why he uses these names for the two cases.
+        The client program unittest() in version 1 of NBodies (NBodies1.jl) is identical with the
+        client program of version 0. The only things we have changed in the file are to generate
+        dummy (sin/cos) trajectory data in simulate() and then display this data in animate(). This
+        enables us to develop the graphical interface of the project first, which will later help
+        us to visualise the result of our changes to the project. All we are doing in version 1 is
+        to set up the link between the unittest() use-case function and GLMakie.
+
+        Look at the dummy code in simulate() and animate() in version 1. What shape of curve do
+        you expect to be generated by the dummy data in simulate()?
+        """,
+        "If you have difficulty, run the program, then explain to a friend how it generates the output",
+        x -> occursin("ellipse",lowercase(x))
+    ),
+    Activity(
+        """
+        Now look at version 2 of NBodies. Here we start to implement Euler's method for integrating
+        differential equations by introducing a very simple force acting on the masses, and
+        then visualising the path of the integrated motion. Compile and run NBodies2.jl to see
+        the results.
+
+        In which line of NBodies2.jl do we define the force acting on the bodies?
+        """,
+        "Try running the program, then explain to a partner how it generates the output curve",
+        x -> x == 105
+    ),
+    Activity(
+        """
+        In NBodies3.jl, we develop animation code for the simplified motion that we defined in
+        version 2. Try out a few experiments at the julia prompt to make sure you fully understand
+        how we are using the julia `map` command in lines l06, 107, 120 and 121.
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        In NBodies4.jl, we introduce the full interactional dynamics of the two bodies in the
+        method simulate(). You need to make sure you understand the matrix programming techniques
+        we are using - they are not easy! The core of the implementation is the matrix-based code
+        in the method forceOnMasses(), which calculates for each body the (vector) sum of all
+        gravitational forces caused by the other bodies. You will need to analyse this code and use
+        Help and internet search to look up EVERYTHING you do not yet understand in
+        forceOnMasses(). In the coming few activities we will learn how to do this ...
+
+        First remember: Matrices work very naturally in julia, so if a=[1 2;3 5] and b=[2 3;4 5],
+        then a*b, b*a and a.*b will all deliver very different results. Test this idea now at the
+        julia prompt, then tell me the value of a*b-a.*b .
+        """,
+        "",
+        x -> x == [8 7;14 9]
+    ),
+    Activity(
+        """
+        The secret of matrix programming is this: Whenever you think you need a for-loop to
+        manipulate some values, try instead building them together into a matrix that does the job
+        for you. As an example of how to do this, try out the following activity:
+            
+        Define and test an anonymous version of the factorial function that requires no
+        recursion or iteration, but instead uses the prod() function.
+        """,
+        "",
+        x -> occursin("->prod(1:",replace(x," "=>""))
+    ),
+    Activity(
+        """
+        Study the definition of the local variable `relpos` in lines 103 and 104 of NBodies4.jl.
+        These lines calculate the relative positions x[i]-x[j] between all pairs of bodies i and j.
+        However, instead of looping over the bodies, this code computes the relative positions more
+        efficiently by constructing a matrix. Notice that this construction starts in line 103
+        with the input argument `locations`, which is a Vector containing all Vector locations of
+        the N bodies.
+        
+        We start our journey of understanding by defining a simple, toy example of `locations` at
+        the julia prompt - something like this:
+            locations = [[1,2],[3,4]]
+
+        Next, at the julia prompt, carry out step by step each of the codelines 103 to 105. After
+        each step, look carefully at your result, and discuss it with your partners:
+            locnPerBody = repeat(locations,1,length(locations))
+            permdims = permutedims(locnPerBody)
+            relpos = locnPerBody - permdims
+
+        When you have finished, work out in your head the result of `repeat([1,2],2,3)`.
+        """,
+        "",
+        x -> x==[1 1 1;2 2 2;1 1 1;2 2 2]
+    ),
+    Activity(
+        """
+        Now set a breakpoint and use the VSC Debugger to investigate how simulate() uses `relpos`
+        to calculate the gravitational forces acting between the different bodies in the system.
+        What is the name of the variable that is used to calculate Newton's inverse-square law that
+        falls with increased distance between the sources?
+        """,
+        "",
+        x -> x=="invCube"
+    ),
+    Activity(
+        """
+        OK, now we have understood how the code in NBodies4.jl works, notice that we have a
+        runtime problem. Because of inaccuracies of the simulator, the orbits of the two bodies
+        are not closed ellipses, but instead the bodies spiral outwards. NBodies5.jl solves this
+        problem by replacing Euler integration by Runge-Kutta-2 integration in simulate().
+
+        Study now the method runge_kutta_2() to see how the integration is performed by using
+        two Euler steps. Run unittest() to see that the orbits are now much cleaner.
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        Finally, check out the new use-case method demo() in NBodies5.jl, which tests our simulator
+        using three bodies. Notice how it does not take long for the system to throw out the small
+        planet and turn into a binary star system.
+
+        Congratulate yourself on completing this lab by playing around with different starting
+        conditions for this 3-body simulation. Can you set up a stable 3-body system?
         """,
         "",
         x -> true

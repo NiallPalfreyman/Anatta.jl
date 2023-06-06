@@ -1,330 +1,331 @@
 #========================================================================================#
 #	Laboratory 4
 #
-# Accessing the data in arrays.
+# Ranges, Arrays, Vectors and indexing
 #
-# Author: Niall Palfreyman, 22/03/2022
+# Author: Niall Palfreyman, 10/01/2022
 #========================================================================================#
 [
     Activity(
         """
-        Hi! Welcome to Anatta Lab 004: Accessing the data in arrays
+        Hi! Welcome to Anatta Lab 004: Storing data in Arrays and Vectors
 
-        Arrays play a very fundamental role in julia, so we need to learn how to access them
-        efficiently. In this laboratory we learn how to index into arrays in julia - that is,
-        how to use indices to access and manipulate the entries in an array. We will also look
-        at various ways of applying code to the elements in an array.
+        In this laboratory we study a structure that is extremely important for data science:
+        arrays. Once you understand how arrays work, and how amazingly useful they are, you will
+        (almost) never need to write a for-loop again!
+
+        ... But first we start with Ranges. A Range is an interval of values between start
+        and stop boundaries. Here is a range of values between 1 and 5:
+            r = 1:5
+
+        What is the type of r?
+        """,
+        "typeof(1:5)",
+        (x -> x <: UnitRange)
+    ),
+    Activity(
+        """
+        We can collect() the individual values of a Range into a collection:
+            collect(1:5)
+
+        What is the type of this data structure?
+        """,
+        "typeof(collect(1:5))",
+        (x -> x <: Vector)
+    ),
+    Activity(
+        """
+        We can also construct ranges for other types, and we can also specify our own
+        steplength between the values:
+            0.0:0.2:1.0
+
+        Use collect() to list the values in this range and find out how many different
+        values the range contains:
+        """,
+        "length(collect(0.0:0.2:1.0))",
+        x -> x==6
+    ),
+    Activity(
+        """
+        collect() turns a Range into an Array. Arrays are the daily workhorse of data science:
+        they collect elements into tables of 1 or more dimensions. A 1-dimensional Array is
+        called a Vector. Here is a COLUMN vector:
+            v = [5,4,7,6,3]
+
+        What is its size()?
+        """,
+        "size(v)",
+        x -> x==(5,)
+    ),
+    Activity(
+        """
+        What is the size of this ROW vector: w = [5 4 7 6 3 2 1] ?
+        """,
+        "size(w)",
+        x -> x==(1,7)
+    ),
+    Activity(
+        """
+        As you can see, the FIRST dimension of an array runs down its columns, and
+        the SECOND dimension runs across its rows.
+
+        If you want to write a really super-duper-speedy program, you can create arrays
+        using the values that are accidentally hanging around in memory:
+            A = Array{Int}(undef,2,3)
+
+        However, more usually we want to INITIALISE the elements of a new array. What
+        is the value of the elements in this array:
+            A = ones(2,3)
+        """,
+        "A[1]",
+        x -> x == 1.0
+    ),
+    Activity(
+        """
+        What about this array: zeros(3,4). What is its size?
+        """,
+        "size(zeros(3,4))",
+        x -> x==(3,4)
+    ),
+    Activity(
+        """
+        A MATRIX is an Array with just two dimensions. We often want to fill a matrix
+        with a particular value. For example:
+            B = Matrix{Int}(undef,3,2)
+            fill!( B, 42)
+
+        What is the size of this array?
+        """,
+        "size(B)",
+        x -> x==(3,2)
+    ),
+    Activity(
+        """
+        We can create an array literal by explicitly naming the array's elements
+        in square brackets:
+            C = [2 4 7;3 9 1.2]
+
+        Which value determines the type of the array elements here?
+        """,
+        "The element from the least restrictive number set",
+        x -> x==1.2
+    ),
+    Activity(
+        """
+        We can also use square brackets to concatenate arrays, for example:
+            [ones(2,3) zeros(2,4)]
+
+        Find the symbol for using square brackets to concatenate two arrays vertically:
+        """,
+        "",
+        x -> occursin( ";", x)
+    ),
+    Activity(
+        """
+        A very powerful way of constructing arrays is by COMPREHENSION. That is, we
+        write a formula in square brackets that specifies (comprehends) the entire
+        contents of the array. For example, here is a vector of square values:
+            [x^2 for x in 1:12]
+
+        What do you get if you add the condition "if isodd(x)" to the end of this
+        comprehension?
+        """,
+        "[x^2 for x in 1:12 if isodd(x)]",
+        x -> x == [x^2 for x in 1:12 if isodd(x)]
+    ),
+    Activity(
+        """
+        We can use several comprehension variables:
+            [x*y for x in 1:5, y in 1:5]
+
+        Use array comprehension to generate a matrix of values for the function
+        exp(-(x^2 + y^2)) with x and y in the range from -1 to +1 in steps of 0.2. This
+        function is a 'hill' with a peak value of 1.0 at the centre where x = y = 0.
+        """,
+        "[exp(-(x^2 + y^2)) for x in -1:0.2:1, y in -1:0.2:1]",
+        x -> abs(sum(x) - 61.02) < 0.01
+    ),
+    Activity(
+        """
+        Once we have created an array, we usually want to inspect it. First create
+        this array:
+            my_matrix = ((1:3)*(1:4)')//3
         
-        Julia offers four kinds of indexing: SUBSCRIPTING, LINEAR indexing, MULTIPLE indexing
-        and LOGICAL indexing. All four are extremely useful for scientific programming. To
-        investigate these forms of indexing, first create a (4x4) matrix by reshaping a range:
-            m = reshape(1:16,(4,4))
+        Now use eltype() to find the type of the elements in the array my_matrix:
+        """,
+        "eltype(my_matrix)",
+        x -> x <: Rational
+    ),
+    Activity(
+        """
+        The length() of a matrix is the number of elements in it. What is the length
+        of my_matrix?
+        """,
+        "length(my_matrix)",
+        x -> x==12
+    ),
+    Activity(
+        """
+        What is the ndims() of my_matrix?
+        """,
+        "ndims(my_matrix)",
+        x -> x==2
+    ),
+    Activity(
+        """
+        You have already used size() to return the size of a matrix, but you can also
+        add a second argument to specify which dimension of the matrix you wish to know
+        the size of. What is the size of the second dimension of my_matrix?
+        """,
+        "size(my_matrix,2)",
+        x -> x==4
+    ),
+    Activity(
+        """
+        Matrix-based languages like Julia offer very many different ways of inspecting
+        individual parts of an array. To experiment with this various ways, first define
+        the following two arrays:
+            my_vector = collect(1:5)
+            my_matrix = [1 2 3;4 5 6;7 8 9]
 
-        First notice the order in which julia has placed the numbers 1:16. Do they run down the
-        columns or along the rows?
+        We can access individual elements of these arrays easily using square brackets
+        and subscripts. How do we use subscripts to view the element 8 in my_matrix?
         """,
-        "",
-        x -> occursin("col",lowercase(x))
+        "my_matrix[r,c]",
+        x -> occursin("my_matrix[3,2]",replace(x," "=>""))
     ),
     Activity(
         """
-        So: SUBSCRIPTING! To access a matrix element with subscripts, we use square brackets
-        enclosing two subscripts i (row) and j (column) like this: m[i,j]. In julia, the row
-        index ALWAYS comes before the column index! Display the element m[3,4] now, then tell
-        me its value:
+        The keyword 'end' denotes the last subscript in an array dimension. For example,
+        what value is denoted by my_matrix[1,end-1]?
         """,
-        "Just enter m[3,4] at the julia prompt",
-        x -> x==15
+        "my_matrix[2,end-1]",
+        x -> x==2
     ),
     Activity(
         """
-        We have already used the colon operator to create ranges of numbers, for example 1:3 can
-        be collected into a vector [1,2,3]. We can also use ranges to select regions of an array.
-        Use m[1:3,2:4] to display the top-right (3x3) region of m, then tell me the result
-        (Remember you can use reply(ans) to tell me the result of the previous calculation):
+        Use subscripting with '=' to change the first entry in my_vector from 1 to 0, then
+        give me the new vector that results from this change:
         """,
-        "",
-        x -> x == [5 9 13;6 10 14;7 11 15]
+        "reply(my_vector)",
+        x -> x==[0,2,3,4,5]
     ),
     Activity(
         """
-        1:2:7 creates a range of numbers from 1 to 7 in steps of 2: [1,3,5,7]. Reshape 1:81 into a
-        (9x9) matrix, then extract from it the (3x3) matrix obtained by taking the first, then
-        every third, row and column of your (9x9) matrix. Then tell me the result:
+        Often, we wish to work not just with individual array elements, but with a whole
+        slice of the array. What is the result of the expression my_vector[2:4]?
         """,
-        "",
-        x -> x == [1 28 55;4 31 58;7 34 61]
+        "my_vector[2:4]",
+        x -> x==Main.my_vector[2:4]
     ),
     Activity(
         """
-        We can select a whole row or column by writing ":". Display and tell me the third row of m:
+        The colon also stands for a complete row or column of an array. What is the
+        result of the expression my_matrix[:,3]?
         """,
-        "",
-        x -> x == [3,7,11,15]
+        "my_matrix[:,3]",
+        x -> x==Main.my_matrix[:,3]
     ),
     Activity(
         """
-        To assign values to regions of a matrix, we select the desired matrix range and assign to it
-        a value. However, we should first be aware of something important. Tell me the type of m:
+        What is the result of the expression my_matrix[begin+1:end,end]?
         """,
-        "",
-        x -> x <: Base.ReshapedArray
+        "my_matrix[begin+1:end,end]",
+        x -> x==Main.my_matrix[begin+1:end,end]
     ),
     Activity(
         """
-        Notice that m only LOOKS like an ordinary matrix, but is actually a reshaped range, so julia
-        will not let us change its value by writing to it. To see this, try out the following:
-            m[2:3,3:4] .= 1
+        We can also use slices to change the values in an array. What is the new
+        value of the array my_matrix if we perform the following operation:
+            my_matrix[3,:] = [17,18,19]
+        """,
+        "reply(my_matrix)",
+        x -> x==[1 2 3;4 5 6;17 18 19]
+    ),
+    Activity(
+        """
+        What is the value of the array new_matrix if we construct it like this:
+            new_matrix = reshape(my_matrix,1,9)
+        """,
+        "reshape(my_matrix,1,9)",
+        x -> x==reshape(Main.my_matrix,1,9)
+    ),
+    Activity(
+        """
+        Notice the strange order of elements in new_matrix. This order arises
+        because Julia uses "column-major" ordering of matrix elements: that is,
+        these elements have a linear ordering that runs first down the columns
+        and then across the rows. You can see this if you list all elements of
+        my_matrix using ':'. Show me the result of doing this:
+        """,
+        "my_matrix[:]",
+        x -> x==Main.my_matrix[:]
+    ),
+    Activity(
+        """
+        We can perform any function on all elements of an array by using the
+        broadcast operator "." like this:
+            log.(my_matrix)
 
-        Then tell me the name of the function that the error message recommends we use:
+        What is the sin() of all elements of my_matrix?
         """,
-        "",
-        x -> occursin("collect",lowercase(x))
+        "sin.(my_matrix)",
+        x -> x==sin.(Main.my_matrix)
     ),
     Activity(
         """
-        Let's take the error message's advice:
-            m = collect(m)
-            m[2:3,3:4] .= 1
+        We can also use broadcasting with infix operators, for example:
+            my_matrix .+ 5
 
-        Now tell me the new value of m:
+        What is the result of taking the reciprocal (1/x) of each element
+        in my_matrix?
         """,
-        "",
-        x -> x == [1 5 9 13;2 6 1 1;3 7 1 1;4 8 12 16]
+        "1 ./ my_matrix",
+        x -> x == 1 ./ Main.my_matrix
     ),
     Activity(
         """
-        And what is the type of m now?
-        """,
-        "",
-        x -> x <: Matrix
-    ),
-    Activity(
-        """
-        What kind of error do you get if you try to add an element outside the size of the array m:
-            m[5,1] = 1
-        """,
-        "",
-        x -> occursin("bounds",lowercase(x))
-    ),
-    Activity(
-        """
-        Although we can't add elements outside m's bounds, we can extend the size of m by adding
-        new rows or columns: Blank ' ' adds columns (hcat: horizontal concatenation), and
-        semicolon ';' adds rows (vcat: vertical concatenation). Tell me the result of this line:
-            p = ones(4)
-            pp = [m p]
-        """,
-        "",
-        x -> size(x) == (4,5)
-    ),
-    Activity(
-        """
-        And what is the result of this line of code?
-            q = ones(4)'
-            qq = [m;q]
-        """,
-        "",
-        x -> size(x) == (5,4)
-    ),
-    Activity(
-        """
-        OK, now let's look at LINEAR indexing! Internally, julia represents all arrays as vectors =
-        it simply makes this vector look like a matrix to us. Create the following matrix:
-            A = [1 2 3;4 5 6]
+        Another way of operating on all elements in an array is to map() the
+        operation over the array:
+            map(log,my_matrix)
 
-        If we just enter A at the julia prompt, we see a (2x3) matrix, but if you enter A[:], you
-        will see a list of all elements of A in a linear order. Does this order first run down the
-        columns or along the rows?
+        What is the sin() of my_matrix?
         """,
-        "",
-        x -> occursin("col",lowercase(x))
+        "map(sin,my_matrix)",
+        x -> x==map(sin,Main.my_matrix)
     ),
     Activity(
         """
-        We can use the linear ordering to index the elements of A. What is the value of A[5]?
-        """,
-        "",
-        x -> x==3
-    ),
-    Activity(
-        """
-        We can also use linear indexing to change the elements of A. What is the content of A
-        after entering this line of code?
-            A[5] = 99
-        """,
-        "",
-        x -> x==[1 2 99;4 5 6]
-    ),
-    Activity(
-        """
-        Arrays can have MULTIPLE indices: Vectors have one index and Matrices have two, but we
-        can have 3, 4, 5, ...! Of course we need to be a bit careful with the size of these arrays:
-        A size (10) Vector contains 10 elements; a size (10,10) Matrix contains 100 elements. How
-        many elements will there be in a size (10,10,10,10) array?
-        """,
-        "",
-        x -> x == 1e4
-    ),
-    Activity(
-        """
-        We can create multiply indexed arrays using zeros(), ones(), rand(), randn() or reshape().
-        A 3-dimensional array might represent 3-dimensional data, such as a chemical concentration
-        at various locations in a cell, or it might represent the time-series of elements of a
-        matrix A(t). In this case, A[3,5,4] might represent the element [3,5] at time t=4 of the
-        time-series.
+        The map() function is particularly useful when we are using anonymous
+        functions:
+            map(x->5x,my_matrix)
 
-        Enter R = rand(1:9,(2,3,4)); at the julia prompt, and study the following expressions:
-            R[1,:,:]
-            R[:,1,:]
-            R[:,:,1]
-            size(R)
-        
-        How many elements does R contain?
+        What do we obtain if we apply the function (x->5sin(x+3)) to my_matrix?
         """,
-        "Use the length function",
-        x -> x == 24
+        "map(x->5sin(x+3),my_matrix)",
+        x -> x==map(x->5sin(x+3),Main.my_matrix)
     ),
     Activity(
         """
-        Here is a (4,4) magic square:
-            A = [1 15 14 4;10 11 8 5;7 6 9 12;16 2 3 13]
+        We can combine mapping with slicing:
+            map(x->5x,my_matrix[:,3])
 
-        Use julia's sum() function to find the sum of A's elements along any row, column or
-        diagonal:
+        What is the result of applying the function (x->5sin(x+3)) to the central
+        column of my_matrix?
         """,
-        "",
-        x -> x==34
+        "map(x->5sin(x+3),my_matrix[:,2])",
+        x -> x==map(x->5sin(x+3),Main.my_matrix[:,2])
     ),
     Activity(
         """
-        We can generate new magic squares by swapping columns of an existing magic square. Study
-        the matrix B = A[:,[1,3,2,4]]. Is this also a magic square (remember that rows, columns and
-        diagonals of a magic square must all sum to the same number)? Which substructures of A were
-        permuted by using the Vector [1,3,2,4] as a permutation index?
-        """,
-        "",
-        x -> occursin("col",lowercase(x))
-    ),
-    Activity(
-        """
-        Use a permutation index to swap ROWS 2 and 3 of A, and tell me the result:
-        """,
-        "",
-        x -> x == [1 15 14 4;7 6 9 12;10 11 8 5;16 2 3 13]
-    ),
-    Activity(
-        """
-        LOGICAL indexing uses an array of logical values as an index to another array. For example,
-        suppose we want to reduce to zero all elements less than 3 in the Vector v = [1,2,3,4,5].
-        One way would be to access each individual element in v, check whether it is less than 3,
-        and set it to zero. But this would be very inefficient, because accessing each individual
-        element costs time. Instead, we can use LOGICAL indexing to change the entire vector v in
-        one sweep ...
-
-        First, create the Vector v. Then tell me the result of entering this line:
-            d = (v .< 3)
-        """,
-        "",
-        x -> x == [1,1,0,0,0]
-    ),
-    Activity(
-        """
-        What is the type of the elements of d?
-        """,
-        "",
-        x -> x == Bool
-    ),
-    Activity(
-        """
-        Notice that d is a Vector of Bools with the same length as v. We can use d to index
-        elements of v:
-            v[d]
-
-        How many elements of v does d pick out?
-        """,
-        "",
-        x -> x == 2
-    ),
-    Activity(
-        """
-        Now enter this line:
-            v[d] .= 0
-
-        You will see that this zeros out all elements of v that are less than 3. If you recreate
-        v, you can even condense this entire process into one step:
-            v = collect(1:5)
-            v[v.<3] .= 0
-
-        Now set to zero all numbers in the vector -5:2:5 which are greater than 2, and tell me
-        the number of non-zero elements in your result:
-        """,
-        "",
-        x -> x == 4
-    ),
-    Activity(
-        """
-        Before continuing, let's look at several different ways to apply some code to all elements
-        in an array. If the code is just one function, this is easy: we just use the broadcast
-        dot (.):
-            v = 1:7
-            isodd.(v)
-        """,
-        "",
-        x -> x == isodd.(1:7)
-    ),
-    Activity(
-        """
-        If the code is a little more complicated, we might map() an anonymous function over
-        the array:
-            map( x->(sin(x) >= 0), v)
-        """,
-        "",
-        x -> x == map( y->(sin(y) >= 0), 1:7)
-    ),
-    Activity(
-        """
-        And finally, if the code is particularly complicated, we can use a do statement that
-        allows us to define a complicated mapping over all elements of the array:
-            map(v) do x
-                if x < 4
-                    isodd(x)
-                else
-                    iseven(x)
-                end
-            end
-        """,
-        "",
-        x -> x == (map(1:7) do y if y<4 isodd(y) else iseven(y) end end)
-    ),
-    Activity(
-        """
-        OK, now the last two activities in this laboratory give you practice in applying indexing,
-        broadcasting and mapping to problems that often arise in signal-processing. You should
-        solve each of these two activities by writing just ONE line of code. Have fun! :)
-
-        Use logical indexing to generate a list of all odd multiples of 3 in the range 1:50 :
-        """,
-        "Use comprehension, isodd(), rem() and &&",
-        x -> x == [x for x in 1:50 if (isodd(x) && rem(x,3)==0)]
-    ),
-    Activity(
-        """
-        This function decides whether or not its argument n is a prime number:
-
-            function isprime(n::Int)
-                if n < 2 return false end
-                if n in 2:3 return true end
-                for i in 2:floor(Int,sqrt(n))
-                    if rem(n,i) == 0 return false end
-                end
-                true
+        We can also iterate (i.e.: loop) over the elements in any array:
+            for m in my_array
+                print( m, ", ")
             end
 
-        Use the isprime function to generate a list of twenty numbers from 1 to 20, in which
-        all prime numbers AND all multiples of 3 are zeroed out:
+        Write a loop to calculate the sum of all elements in my_matrix:
         """,
-        "Use rem(), isprime(), || and map",
-        x -> x == map((n -> (isprime(n)||rem(n,3)==0) ? 0 : n),(1:20))
+        "reply(ans)",
+        x -> x==sum(Main.my_matrix)
     ),
 ]

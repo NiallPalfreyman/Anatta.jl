@@ -1,442 +1,457 @@
 #========================================================================================#
 #	Laboratory 6
 #
-# Tuples, Pairs, Dict, Symbol, files, Dates, Random numbers and downloading.
-# Files and Dates are available in Julia Programming Cookbook
+# Replication: How do populations grow? (Including encapsulation and software design)
 #
-# Author: Niall Palfreyman, 13/01/2022
+# Author: Niall Palfreyman, 05/09/2022
 #========================================================================================#
 [
     Activity(
         """
-        Hi! Welcome to Anatta Lab 006: Tuples, Dictionaries and suchlike ...
+        Hi! Welcome to Anatta Lab 006: Encapsulation, simulation and software design
 
-        In this laboratory we introduce several helpful Julia tools that make life a
-        little easier: Tuples, Pairs, Dicts, Symbols, Files, DateTimes, Random and downloading.
-
-        A Tuple is an immutable container that can contain several different types. We
-        construct Tuples using round brackets, for example:
-            my_tuple = (5, 2.718, "Ani")
-
-        What is my_tuple[2]?
-        """,
-        "my_tuple[2]",
-        x -> x==Main.my_tuple[2]
-    ),
-    Activity(
-        """
-        You have already seen that size() returns a Tuple. Enter the following code:
-            ret_size = size(zeros(3,4))
-
-        What is the value of ret_size[1]? Try changing the value of ret_size[2].
-        Finally, what is the type of ret_size? 
-        """,
-        "typeof(ret_size)",
-        x -> x==typeof(size(zeros(3,4)))
-    ),
-    Activity(
-        """
-        Tuples are especially useful when we want to define anonymous functions with
-        more than one argument:
-            map((x,y)->3x+2y,4,5)
-
-        Construct a single line mapping that calculates sin(x*y) for corresponding
-        elements in the two ranges x = 1:5 and y = 5:-1:1
-        """,
-        "map((x,y)->sin(x*y),1:5,5:-1:1)",
-        x -> x==map((x,y)->sin(x*y),1:5,5:-1:1)
-    ),
-    Activity(
-        """
-        A Pair is a structure that contains two objects - typically a key and its
-        entry in a dictionary. We construct a Pair like this:
-            my_pair = "Yellow Submarine" => "Beatles"
-
-        Construct my_pair and then find the value of last(my_pair):
-        """,
-        "",
-        x -> x==last("Yellow Submarine" => "Beatles")
-    ),
-    Activity(
-        """
-        A Dict(ionary) is a hashed database of Pairs. Dicts are very lightweight, so
-        we can easily use them in everyday code. We construct a Dict by passing a
-        sequence of Pairs to the constructor:
-            my_dict = Dict( "pi" => 3.142, "e" => 2.718)
-
-        Construct my_dict, and notice that the Pairs are not necessarily in the same
-        order that you entered them. Now look up the value of "pi" in my_dict:
-        """,
-        "my_dict[\"pi\"]",
-        x -> x==3.142
-    ),
-    Activity(
-        """
-        We can find out whether our Dict contains the key "e" by using the keys() function:
-            "e" in keys(my_dict)
-
-        Delete the entry for "e" from my_dict using the delete!() function. What word do
-        you now see in red if you enter my_dict["e"]?
-        """,
-        "delete!(my_dict,\"e\")",
-        x -> x=="ERROR"
-    ),
-    Activity(
-        """
-        Now add two extra entries to my_dict:
-            my_dict["root2"] = 1.414
-            my_dict["epsilon0"] = 8.854e-12
-
-        What is the result of calling haskey(my_dict,"root2")?
-        """,
-        "",
-        x -> x==true
-    ),
-    Activity(
-        """
-        We have already met Symbols - they define components of the Julia language, and
-        we use them to extend the language with new components. We construct Symbols
-        using the colon ':'. Enter the following lines:
-            a,b = 2,3
-            expr = :(a+b)
-            dump(expr)
-
-        What is the value of expr.args?
-        """,
-        "",
-        x -> x==Main.expr.args
-    ),
-    Activity(
-        """
-        You can see that the arguments of expr are Symbols waiting to be evaluated. Try:
-            typeof(expr.args[2])
-
-        What do you get if you enter string(expr)?
-        """,
-        "",
-        x -> occursin("a+b",replace(x," "=>""))
-    ),
-    Activity(
-        """
-        Symbols and Strings are very similar to each other. You will see that graphics
-        functions often use Symbols to define special switches such as :red or :filled.
+        In this laboratory we look at the issue of Encapsulation - a super-important topic in
+        modern software engineering. There are two important reasons for using encapsulation:
+            -   If everyone is able to change the value of important variables in our program, this
+                will make it REALLY difficult for our program to behave reliably, so encapsulation
+                hides data from unwanted changes.
+            -   In addition, we want to cooperate with other people. They will only be able to
+                adapt, develop and maintain our code, if they can understand what it is doing, so
+                encapsulation hides details of our program that others don't need to understand.
+                
+        I have seen one firm come to bankruptcy because they didn't understand encapsulation!
         
-        In fact, a Symbol is a String that has been prepared for being evaluated.
-        What do you get if you apply the function eval() to expr?
+        So encapsulation is all about hiding data - let's find out how it works ...
         """,
-        "eval(expr)",
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        In a moment, you will discover that the variables inside a module or function have LOCAL
+        SCOPE - that is, they are only visible and available inside that function, and not in
+        the GLOBAL SCOPE outside the function.
+
+        Sometimes, we are tempted to pass data from one function to another by storing that data
+        in global variables, but this ALWAYS brings with it the danger that someone might change
+        that data by accident, and so cause our program to crash! In this laboratory we investigate
+        how to pass data in ways that protect it from being changed by accident.
+
+        In our first experiment, enter the following code, then tell me the value of paula:
+            linus = [5,4,3,2,1]; paula = 5
+        """,
+        "",
         x -> x==5
     ),
     Activity(
         """
-        We use the "splat" operator (...) to convert a collection into a set of
-        arguments for a function. Define this function and test it with a few numbers:
-            my_function(x,y,z) = x * (y+z)
+        Now enter the following function:
+            function change_paula()
+                paula = 7
+                paula
+            end
+
+        Then call the function change_paula() and tell me the value you get back:
+        """,
+        "Your result may (or not) surprise you, depending on how you think about scoping rules",
+        x -> x==7
+    ),
+    Activity(
+        """
+        Your result shows us that the variable paula has two different meanings: the meaning in
+        the GLOBAL scope outside the function change_paula, and the meaning inside the LOCAL
+        scope of change_paula.
+
+        Now tell me the current value of paula:
+        """,
+        "Ask julia for the value of paula",
+        x -> x==5
+    ),
+    Activity(
+        """
+        Aha! So although we can change the value of LOCAL paula inside the function change_paula(),
+        this does not affect the value of GLOBAL paula. In fact, there exist two different variables
+        named paula: the GLOBAL variable containing the value 5, and a LOCAL variable containing
+        the value 7. When change_paula() ends, the variables in its local scope are thrown away,
+        and the LOCAL paula disappears.
+
+        If we REALLY want to change the global value of paula, we can do so by redefining the
+        function change_paula():
+            function change_paula()
+                global paula = 7
+                paula
+            end
+
+        NOTE: Doing this is a Very Bad Idea! Nevertheless, tell me the value of paula after you
+        have called your new version of change_paula().
+        """,
+        "",
+        x -> x==7
+    ),
+    Activity(
+        """
+        So julia does allow us to make use of global values inside a local scope, but it forces us
+        to announce this by using the keyword "global".
+
+        There is a further issue here. Enter this code:
+            function change_linus()
+                linus[3] = 7
+                linus
+            end
+
+        Again, when we call change_linus(), the return value shows us that we are able to change
+        the value of a local variable named linus. But now tell me the value of the GLOBAL variable
+        named linus:
+        """,
+        "",
+        x -> x==[5,4,7,2,1]
+    ),
+    Activity(
+        """
+        The point here is that linus is a (global) Vector that refers to its contents (5,4,3,2,1).
+        If we do not use the keyword `global`, julia does not allow us to change linus itself,
+        however julia DOES allow us to change the CONTENTS that linus refers to. So global
+        variables are still very unsafe! What are we to do? Here is the solution:
+
+            ALWAYS encapsulate (i.e.: wrap/hide) EVERYTHING you do inside a MODULE!
+
+        Modules offer a very effective tool for preventing our variables and code from being
+        changed by other programmers. Let's see how to do this. Enter the following code:
+            module MyModule
+                function change_paula1()
+                    global paula = 9
+                    paula
+                end
+            end
+
+        Now call MyModule.change_paula1(), then tell me the global value of paula afterwards:
+        """,
+        "",
+        x -> x==7
+    ),
+    Activity(
+        """
+        OK, so putting change_paula1() inside the module MyModule means it cannot interfere
+        with the value of our global variable paula. But wait! We know that we can load
+        modules into global scope by means of the keyword "using": will that make it possible
+        for users change paula's value by accident? Load the module MyModule now:
+            using .MyModule
+
+        Repeat the previous experiment - what is the global value of paula afterwards?
+        """,
+        "You should find that change_paula1() is still safe, even when you have loaded MyModule",
+        x -> x==7
+    ),
+    Activity(
+        """
+        Great! Now that we know how to hide variables and functions inside a module, we can do
+        some real live software development! In later laboratories we will develop our own
+        software modules; however, these modules can get quite complex, so we must first learn
+        to build them up step-by-step within a file.
+
+        We will start by modifying some code that I have written. In the subfolder
+        `Development\\Computation` of your Anatta home folder is the julia file Replicators.jl.
+        Open this file now in VSC and study its contents. What is the name of the data type
+        defined in the file Replicators.jl?
+        """,
+        "The definition is in line 22 of Replicators.jl",
+        x -> x=="Replicator"
+    ),
+    Activity(
+        """
+        Replicators.jl is the starting point of a project to simulate a growing population of bio-
+        logical replicators (e.g. genes, bacteria, yeast, ...). I recommend STRONGLY that you use
+        Replicators.jl as a general template for starting new projects of your own. When you start
+        a new project, copy Replicators.jl to a new file, then adapt its contents to fit your needs.
+
+        Take a good look at the following important aspects of the file Replicators.jl:
+            1.  It uses comment lines and boxes to divide the code into simple explanatory chunks.
+                Please never neglect these comments - ALWAYS keep their information up to date!
+            2.  It contains just one module called Replicators, which will hold together all the
+                data and methods that we need for our coming project.
+            3.  The Replicators module contains the definition of a new data type Replicator which
+                will form the central storage point for the information in our simulation.
+            4.  The Replicators module also contains just ONE method: the Use-Case demo() which
+                specifies and tests all the high-level actions that we will want our program to do.
+                For example, we intend to design a method run!() that will simulate a Replicator
+                population, so demo() calls this method, even though I haven't implemented it yet.
+            5.  Before EVERY module, type and method is a string that serves as help documentation.
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        Now parse the file Replicator.jl. You can do this either by opening the file in VSC and
+        pressing the Play button, or else by calling the include() function from a julia console
+        located within your Anatta home folder:
+            include("Development/Computation/Replicators.jl")
+
+        This should go smoothly, and include() reports back the presence of the new module
+        Replicators in your console's Main scope. Tell me the return value of include():
+        """,
+        "",
+        x -> x==Main.Replicators || strip(x)=="Main.Replicators"
+    ),
+    Activity(
+        """
+        It is important that our use-case runs correctly, because it is the springboard for
+        developing and testing the entire project. Run the use-case now by calling the function
+        Replicators.demo() and tell me in which line of code you get your first error:
+        """,
+        "",
+        x -> x==46
+    ),
+    Activity(
+        """
+        Ani's Law of Programming: You will ALWAYS get error messages, and this is a Good Thing! :)
+
+        The point is this: NO-ONE else in your life is able to give you such consistently patient,
+        supportive, nonjudgemental feedback as a compiler! Compilers never get cross - they simply
+        tell you how it is.
+
+        You have already started making friends with the julia compiler by noting the line number
+        in which the error occurred: 46. Now take it one step further - in the ERROR line, it says
+        there is an UndefVarError. That is, we forgot to define something. What is the name of the
+        thing we forgot to define?
+        """,
+        "",
+        x -> occursin("run!",x)
+    ),
+    Activity(
+        """
+        As you see, julia reminds us that we are calling the function run!(), but we haven't yet
+        defined a method for it. We will need to do that later, but for now, just comment out the
+        three lines in demo() which call run!(). That is:
+            -   Set a line-comment marker (#) before each of the three lines where run!() is called.
+            -   Save the file Replicator.jl
+            -   In the julia console, include() again the file Replicator.jl
+            -   At the julia prompt, call the method Replicators.demo(), and
+                check that it now runs correctly without errors.
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        OK, now we will develop our Replicators module by introducing successive small (!) changes
+        into the file Replicators.jl. We start by thinking about how to construct a Replicator:
+            -   First, we need to give users (in this case, demo()) the tools to specify values
+                of time-scale, time-step and time-series in line 41, although we of course can't
+                know the value of the time-series until the Replicator simulation has run.
+            -   Second, although the simulation needs to know all three of these values, for users
+                it is more convenient to only have to enter the duration and time-step of the
+                simulation in line 41. For example, change line 41 to look like this:
+                    repl = Replicator(5,1)
+
+        Now recompile and run demo() and tell me in which line you get an error:
+        """,
+        "Look at the StackTrace information lower down in the error message.",
+        x -> x == 41
+    ),
+    Activity(
+        """
+        To fix this error, we must implement an appropriate constructor that can build a Replicator
+        from the two values `duration` and `dt`. In fact, we don't really want users to use the
+        default constructor Replicator(t,dt,x) at all! After all, what would happen if users
+        specified a time-step that was inconsistent with the steps contained in the time-scale?
+
+        We can block this possibility by defining an Inner Constructor. Go to line 22 of
+        Replicators.jl and change the definition of the data type Replicator to look like this:
+            struct Replicator
+                t::Vector{Real}			# The simulation time-scale
+                dt::Real				# The simulation time-step
+                x::Vector{Real}			# The population time-series
+            
+                function Replicator( duration::Real, dt=1)
+                    timescale = 0.0:dt:duration
+                    new( timescale, dt, zeros(Float64,length(timescale)))
+                end
+            end
         
-        Now define this vector: v = [2,3,4]. Suppose we want to use the three numbers
-        in v as arguments for my_function. First try it like this: my_function(v), and
-        see what happens ...
-
-        It didn't work, did it? Now tell me what you get when you enter this:
-            my_function(v...)
+        Now rerun demo() and tell me value of your Replicator's time-scale:
         """,
-        "",
-        x -> x==14
+        "You can read this from the first element in the displayed Replicator",
+        x -> x == 0.0:1:5
     ),
     Activity(
         """
-        Files are an important part of everyday data science. First of all, we need to
-        be able to find files in the background filesystem. Enter `pwd()` at the Julia
-        prompt. This stands for Present Working Directory, and will return a string containing
-        the directory path of your current folder.
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        Now enter `readdir()`. This gives you a list of filenames in the current folder. Choose
-        a file in this list - for example maybe "elisabeth.jl". Now use `in` to ask whether that
-        file is contained in the current folder. What answer do you get back?
-        """,
-        "\"elisabeth.jl\" in readdir()",
-        x -> x==true
-    ),
-    Activity(
-        """
-        pwd() gives us the path of the current folder, and readdir() gives us a vector of files
-        in that folder. We can put these together using joinpath(). Investigate this idea by first
-        entering the following:
-            joinpath(pwd(),"elisabeth.jl")
-
-        This gives you a full path description of the file you investigated in the previous
-        activity. Now you can ask whether this file exists by entering:
-            isfile(joinpath(pwd(),"elisabeth.jul"))
-
-        What value is returned by this function call?
-        """,
-        "",
-        x -> x==true
-    ),
-    Activity(
-        """
-        Now let's create a new file. The following command creates a file named
-        "my_data.txt", and sets up a FILESTREAM named "file" for "w"riting to it:
-            file = open("my_data.txt","w")
-
-        Now write some information to the file:
-            write( file, "This is my file\nIt belongs to me!\n")
-
-        The value returned by write() is the number of bytes you have written to the
-        file. We can also use the print() and println() functions, for example:
-            println( file, "It really does!")
-
-        Finally, close() file and tell me the result of isfile("my_data.txt"):
-        """,
-        "close(file)",
-        x -> x==true
-    ),
-    Activity(
-        """
-        Congratulations! You have created your first file! Now let's try r(eading) from the file:
-            file = open("my_data.txt","r")
-
-        Now enter: readline(file) several times to read the lines of the file.
-        Once you have read all the lines, the file is in an end-of-file state:
-            eof(file)
-
-        What value does readline() return if you continue to read lines after
-        the end-of-file?
-        """,
-        "readline(file)",
-        x -> isempty(x)
-    ),
-    Activity(
-        """
-        Now close() the file, then reopen it again to start reading at the
-        beginning of the file. We can read all lines of the file at once.
-        What is the type of the structure returned by the following code?
-            file = open("my_data.txt","r")
-            readlines( file)
-        """,
-        "",
-        x -> x <: Vector
-    ),
-    Activity(
-        """
-        If our file contained binary data, it would not be possible to read
-        it in separate lines - in this case we use the read() function.
-
-        Rewind the file to the beginning using: seekstart(file).
-        Enter read(file) to see the characters in the file, and tell me the
-        first character:
-        """,
-        "0x54: Scroll the Julia console back up to see the beginning",
-        x -> x==0x54
-    ),
-    Activity(
-        """
-        Well, that wasn't very pleasant, was it, with all those characters
-        screaming across the screen? Let's do it in a more civilised way this time...
-
-        Rewind the file to the beginning using seekstart().
-        Now enter:
-            data = read(file);
-
-        Did you remember to write ';' at the end of the line? If not, you
-        had the "screaming characters" problem. ';' at the end of a line
-        stops the return value being written to the console. Now tell me
-        the value of the fifth element of data:
-        """,
-        "data[5]",
-        x -> x==0x20
-    ),
-    Activity(
-        """
-        This hex code represents a character. Can you convert the code to
-        a character?
-        """,
-        "Char(data[5])",
-        x -> x==' '
-    ),
-    Activity(
-        """
-        We can even convert the data entirely to a String like this:
-            str = String(data)
-
-        However, this conversion uses up the data values. What value is
-        now returned by the function call isempty(data)?
-        """,
-        "",
-        x -> x==true
-    ),
-    Activity(
-        """
-        Finally, we must always close a filestream after we have finished
-        with it: close(file).
-        Also, we should clean up afterwards, so now remove the file we have
-        created using rm("my_data.txt"), and tell me the return type of rm():
-        """,
-        "First call rm(), and then ask: typeof(ans)",
-        x -> x==Nothing
-    ),
-    Activity(
-        """
-        Now we investigate DateTimes in Julia. Support for date and time
-        handling is provided by the Dates package, which we must first load:
-            using Dates
-
-        We can access the current time using the now() function:
-            datim = Dates.now()
-
-        What is the type of datim?
-        """,
-        "",
-        x -> x==Main.DateTime
-    ),
-    Activity(
-        """
-        To create a new date, we pass year, month and day to the constructor:
-            Date( 1996, 7, 16)
-            Date( 2020, 6)
-
-        What Date value is constructed by the call Date(2022)?
-        """,
-        "",
-        x -> x==Main.Date(2022)
-    ),
-    Activity(
-        """
-        We can also create times. Use the minute() function to find the number
-        of minutes past the hour in this time:
-            DateTime(1992,10,13,6,18)
-        """,
-        "minute(ans)",
-        x -> x==Main.minute(Main.DateTime(1992,10,13,6,18))
-    ),
-    Activity(
-        """
-        The module Dates also makes available Periods of time. Use the subtypes()
-        function to find the subtypes of Period and also the subtypes of these
-        subtypes. How many subtypes does the type TimePeriod have?
-        """,
-        "subtypes(TimePeriod)",
-        x -> x==length(Main.subtypes(Main.TimePeriod))
-    ),
-    Activity(
-        """
-        However, we don't just want to construct dates and times - we usually
-        want to PARSE (i.e., analyse) them. We can construct a Date from a
-        String by passing a DateTime format argument:
-            Date("19760915","yyyymmdd")
-
-        For DateTimes, this format gets a little more complicated, so you may
-        wish to define your own format:
-            format = DateFormat("HH:MM, dd.mm.yyyy")
-
-        Use this format to parse the DateTime "06:18, 13.10.1992". What
-        character separates the date from the time in the result?
-        """,
-        "",
-        x -> x=='T' || x=="T"
-    ),
-    Activity(
-        """
-        DateTimes contains many useful functions that you can look up at
-        docs.julialang.org. For example, use the function dayname() to find
-        out the day on which you were born ...
-
-        When you've finished experimenting, just enter reply() to move on
-        to the next activity.
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        Find out your age in days by subtracting your birthday Date from
-        today(), then move on with reply():
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        Form a list of the past 8 days by collecting this Range into a Vector:
-            today()-Week(1):Day(1):today()
-        """,
-        "",
-        x -> x==Main.eval(:(collect((today()-Week(1)):Day(1):today())))
-    ),
-    Activity(
-        """
-        Next we'll look at a very important tool of data science: Random numbers.
-        First load the functions that we'll be using:
-            using Random: rand, randn, seed!
-
-        By itself, the rand() function returns a pseudo-random Float64 number in the
-        half-open interval [0.0,1.0). Try this now.
+        OK! Now we have a real Replicator model, let's make it run!!! Insert the following lines of
+        code directly underneath the comment box "Module methods:":
+            \"""
+                run!( replicator, x0, mu=1.0)
+            
+            Simulate the exponential growth of a Replicator population, starting from the initial
+            value x0, and with specific growth constant mu.
+            \"""
+            function run!( repl::Replicator, x0::Real, mu::Real=1.0)
+                repl.x[1] = x0                  # Set initial value of the population
+            
+                for i in 2:length(repl.t)
+                    # Perform Euler step:
+                    repl.x[i] = repl.x[i-1] + repl.dt * mu * repl.x[i-1]
+                end
+            end
         
-        If you pass rand() a range as its first argument, it returns a random element
-        from that range. If you pass it a tuple of integers, it returns an array with
-        the size specified by those integers. Use rand() to produce a (2,3) array of
-        integer values between -1 and +1:
-        """,
-        "rand(Range,Size)",
-        x -> (typeof(x) <: Matrix{Int}) && size(x) == (2,3) && all(map(y->in(y,-1:1),x))
-    ),
-    Activity(
-        """
-        randn() works just the same as rand(), but returns normally distributed values
-        with mean 0.0 and standard deviation 1.0. Create a (5,7) array of such normally
-        distributed numbers:
+        Now remove the comment marker in front of the first call of run!(), then run demo()
+        and tell me the value of your Replicator's timeseries:
         """,
         "",
-        x -> size(x) == (5,7) && sum(x)/length(x) < 0.5
+        x -> x == [1,2,4,8,16,32]
     ),
     Activity(
         """
-        When we perform simulations with random numbers, we never know in advance how
-        our program will behave. On the one hand, this is certainly good, because many
-        biological processes are essentially random. On the other hand, it can be very
-        frustrating if you observe some special problem or phenomenon, because you may
-        never again be able to reproduce that special situation. Because of this, we
-        need to be able to make random-number generation REPRODUCIBLE. We do this by
-        SEEDING the random-number generator (rng).
-
-        To do this, we use the function seed!() at the beginning of our program to make
-        sure all random numbers follow an identical pattern across separate runs of the
-        program. Run the following code several times, then tell me what result you get:
-            seed!(123); rand(5)
-        """,
-        "",
-        x -> x==(Main.seed!(123); Main.rand(5))
-    ),
-    Activity(
-        """
-        OK, and fi-i-inally at the end of this very long (phew!) laboratory, we look
-        briefly at how to download resources from the internet. First, we load the
-        download() function from the package Downloads:
-            using Downloads: download
-
-        Next we define the url of our resource:
-            url = "https://raw.githubusercontent.com/NiallPalfreyman/Anatta.jl/master/src/Anatta.jl"
-
-        Next, we download this page into a local file:
-            file = download(url)
-        
-        Use readlines() (don't forget the ';'!) to discover the Date on which Niall Palfreyman
-        started writing the Anatta project:
-        """,
-        "data = readlines(file);",
-        x -> x == Main.Date("1/01/2023","d/mm/yyyy")
-    ),
-    Activity(
-        """
-        OK, that's the end of this laboratory. The resource we have downloaded is my own
-        source code - feel free to explore it and use it as much as you like. Bye! :-)
+        Congratulations! You have implemented your first simulation in julia! Now remove the comment
+        markers in front of the remaining calls to run!() and make sure everything runs correctly.
         """,
         "",
         x -> true
+    ),
+    Activity(
+        """
+        Now we can use our Replicator to start doing some experiments with replicating populations.
+        You have already seen from demo() how to change the values of dt and mu, but we'd like
+        to do this manually for ourselves outside demo(). Enter the following command at the
+        julia prompt - does it run successfully?
+            yeast = Replicator(5,1)
+        """,
+        "You should get at error",
+        x -> occursin("no",lowercase(x))
+    ),
+    Activity(
+        """
+        Of course we can't call Replicator() - we haven't yet loaded the module into our Main
+        environment! So let's do that now:
+            using .Replicators
+
+        Can you now successfully create your Replicator?
+        """,
+        "You should still get an error",
+        x -> occursin("no",lowercase(x))
+    ),
+    Activity(
+        """
+        What has happened?! Well, using a module doesn't load all of the methods in that module.
+        After all, we sometimes want to write some private methods in the module that should not
+        be used by users outside the module. For this reason, julia requires us to explicitly
+        export any names in our module to which we want external users to have access. Insert the
+        following line between lines 11 and 12 in Replicators.jl:
+            export Replicator, run!
+
+        This makes the data type Replicator and the method run!() available to external users.
+        Now save the file, include() it, then enter the following at the julia prompt:
+            using .Replicators
+            yeast = Replicator(5,1)
+            run!(yeast,1)
+
+        What is the value of the timeseries?
+        """,
+        "This should run correctly",
+        x -> x == [1,2,4,8,16,32]
+    ),
+    Activity(
+        """
+        Now let's do an experiment. You have already created a Replicator whose population
+        doubles in each generation, but large, asynchronous populations do not usually jump
+        in size at regular time intervals! (Can you think of an animal population that does
+        actually behave this way?)
+
+        Let's now see what happens when our population grows in steps of 0.5 instead of 1:
+            yeast = Replicator(5,0.5)
+            run!(yeast,1)
+
+        What is now the size of the yeast population when t = 1?
+        """,
+        "Remember that our timestep is now half the previous size, so more steps are needed",
+        x -> x == 2.25
+    ),
+    Activity(
+        """
+        This is interesting. If the population grows in smaller timesteps, it also grows faster!
+        So if we study the population over ever smaller timesteps, will it grow infinitely
+        quickly? Let's investigate this phenomenon by looking at the population's growth more
+        closely over the timescale 0-1:
+            yeast = Replicator(1,0.2)
+            run!(yeast,1)
+
+        What is now the size of the yeast population when t = 1?
+        """,
+        "Since our timescale only runs to 1, it should be the last value in yeast.x",
+        x -> abs(x-2.48832) < 0.1
+    ),
+    Activity(
+        """
+        OK, so reducing the timestep doesn't make the value increase infinitely. So does it maybe
+        increase towards an upper limit? Find out by mapping the population over the timescale
+        0-1 with a timestep of 0.001. Even this value is not yet accurate, since the sequence
+        converges only very slowly, so you may want to investigate the case dt=1e-6. (You can
+        suppress output from the julia prompt by ending your input with a semicolon ;)
+
+        What symbol do we use to represent the value of this limit?
+        """,
+        "You'll find that the limit lies around 2.718",
+        x -> occursin('e',x)
+    ),
+    Activity(
+        """
+        You have discovered the reason why nature (and our cognition) cannot be a computer: NO
+        computer can EVER simulate continuous time, because dt would then be infinitely close to 0!
+
+        However, we can do better than the Euler method above. If we set dt=0.01, we can improve our
+        simulation results by using the more accurate Runge-Kutta-2 integration method. Replace the
+        loop in your run!() method by the following code. Is your result closer to e than before?
+
+            dt_2 = repl.dt/2                                # dt2 is one half-timestep
+            for i in 2:length(repl.t)
+                # Perform Runge-Kutta-2 step:
+                x_2 = repl.x[i-1] + mu*dt_2*repl.x[i-1]     # Calculate new x halfway thru step
+                repl.x[i] = repl.x[i-1] + mu*repl.dt*x_2    # Use x2 as better approximation
+            end
+        """,
+        "",
+        x -> occursin("yes",lowercase(x))
+    ),
+    Activity(
+        """
+        Finally, you will now apply your exponential model to the problem of drinking and driving.
+        If you drink two 25ml shots of whiskey, 8ml of alcohol immediately enters your blood. In
+        Europe, you may only drive if the concentration of alcohol in your blood is less than 0.05%
+        by volume. If you contain 6 litres of blood, this legal limit corresponds to a blood alcohol
+        volume of 3ml. So how long must you wait until your liver has broken down the 8ml of blood
+        alcohol to 3ml?
+
+        To find this out, think about the story of how the liver works. In this bioprocess, the
+        liver takes a cupful of your blood, then filters the alcohol out of this cupful. If there is
+        no alcohol in the cupful, the alcohol breakdown rate is zero; the more alcohol there is, the
+        higher the breakdown rate. If there are x=10 ml of blood alcohol, your liver breaks it down
+        at a rate of dx/dt=-3 ml/hr. Assuming that breakdown is proportional to blood alcohol lever
+        (i.e.: dx/dt=μx), what is the numerical value of μ in our particular case?
+        """,
+        "Remember that this is a breakdown process - not growth!",
+        x -> x == -0.3
+    ),
+    Activity(
+        """
+        What function is the exact (analytic) solution of the equation dx/dt = -0.3 x ?
+        """,
+        "If you are unsure how to write the exponential function, look it up in this lab file.",
+        f -> (f isa Function) && (t->f(t)==exp(-0.3t))(rand())
+    ),
+    Activity(
+        """
+        If μ is negative, the exponent of e in this solution is negative, so as time progresses,
+        your blood alcohol level gets divided (not multiplied!) by e≈2.718 over each unit of time.
+        What is the numerical value of x0 in our particular case?
+        """,
+        "",
+        x -> x == 8
+    ),
+    Activity(
+        """
+        Create a simulation to calculate how many hours you must wait before you can drive legally
+        after your two shots of whiskey.
+        """,
+        "Use logical indexing and findfirst to locate the time when x falls below 3.",
+        x -> abs(x-3.3) < 0.1
     ),
 ]

@@ -1,237 +1,320 @@
 #========================================================================================#
 #	Laboratory 10
 #
-# Exploratory data analysis, datasets and Dataframes.
+# Data visualisation and concrete data types
 #
-# Author: Niall Palfreyman, 04/01/2022
+# Author: Niall Palfreyman, 06/09/2022
 #========================================================================================#
 [
     Activity(
         """
-        Hi! Welcome to Anatta Lab 010: Exploratory data analysis
+        Hi! Welcome to Anatta Lab 010: Visualising data graphically
 
-        In this laboratory we use Exploratory Data Analysis (EDA) and the julia DataFrames
-        package to explore one of the over 750 industry standard statistical RDatasets.
+        In this laboratory we learn how to use Julia's Makie plotting package to create graphical
+        displays for data visualisation. Makie is the front-end for several different backend
+        graphics packages - for example, Cairo, GL and WebGL. We shall focus here on GLMakie,
+        which we now load with the following command:
+            using GLMakie
 
-        Since we haven't used the RDatasets package before, we must first add it to our julia
-        system. To do this, type ']' at the julia prompt - this starts julia's Package Manager,
-        which you can exit at any time by typing <Backspace>. Within the Package Manager, enter:
-            add RDatasets
-
-        This will download and compile around 200 packages that are relevant to the RDatasets
-        package (this may take a couple of minutes). When it has finished, exit Package Manager,
-        then enter:
-            using RDatasets						# Takes a few seconds ...
-            RDatasets.datasets()
-
-        How many Rows are in the "affairs" dataset?
-        """,
-        "\"affairs\" is the first dataset in the list of datasets that datasets() prints out.",
-        x -> x==601
-    ),
-    Activity(
-        """
-        OK, now we've got RDatasets up and running, we'll look specifically at the Iris dataset
-        compiled by Edgar Anderson and Ronald Fisher in the early days of genetics research in
-        1936. This dataset contains the length and width (in cm) of the sepals and petals of 50
-        samples from each of several iris flower species. Enter this code to load the Iris dataset:
-            iris = dataset("datasets","iris")
-
-        What is the SepalLength of the first specimen in iris?
-        """,
-        "This is the specimen in Row 1",
-        x -> x==5.1
-    ),
-    Activity(
-        """
-        The Iris dataset is an object iris of type DataFrame: a table of rows and columns. Each
-        row represents a single specimen, and each column represents an attribute field of that
-        specimen. To view the fields of the Iris dataset, enter names(iris). How many fields
-        does iris have?
+        Be forewarned that the first time you do this, it may take a while, since GLMakie is quite
+        a large library ...
         """,
         "",
-        x -> x==5
-    ),
-    Activity(
-        """
-        What is the size() of the dataset?
-        """,
-        "size(iris)",
-        x -> x==size(Main.iris)
-    ),
-    Activity(
-        """
-        We can view the first five rows of iris using the usual array indexing with square
-        brackets []:
-            iris[1:5,:]
-
-        Report back to me the last 5 rows of the Iris dataset:
-        """,
-        "iris[end-4:end,:]",
-        x -> x==Main.iris[end-4:end,:]
-    ),
-    Activity(
-        """
-        We've seen that the first rows of iris concern the species setosa, and the last rows
-        concern the species virginica. What other species does iris contain. To find out, we
-        want to group the dataset by Species using the command:
-            species_groups = groupby(iris,"Species")
-
-        How many groups are contained in this grouping of the data?
-        """,
-        "size(species_groups)",
-        x -> x==3
-    ),
-    Activity(
-        """
-        OK, so we've seen that the first of three Species groups contains "iris setosa" specimens,
-        and the last Species group contains "iris virginica" specimens. To inspect all three
-        Species groups, we will combine specimens from each group into a single row:
-            combine(species_groups,nrow)
-
-        What is the name of the second iris species?
-        """,
-        "",
-        x -> occursin(lowercase(x),"versicolor")
-    ),
-    Activity(
-        """
-        Don't worry if you don't yet understand how to use the combine() function - we'll soon
-        find out! For now, we'd like to understand the Iris dataset a little better. A good
-        first step is to describe() the dataset - this provides an overview of each attribute
-        column in the table. What is the median petal length of all 150 iris specimens?
-        """,
-        "describe(iris)",
-        x -> x==4.35
-    ),
-    Activity(
-        """
-        We can also extend the describe() function using additional descriptors such as the
-        25th percentile (:q25) or the standard deviation (:std). Which iris attribute has the
-        greatest standard deviation?
-        """,
-        "describe(iris,:std)",
-        x -> x=="PetalLength"
-    ),
-    Activity(
-        """
-        We can also calculate these values ourselves by loading and applying the functions
-        in julia's Statistics package:
-            using Statistics
-            std(iris[:,"PetalLength"])
-
-        What is the median sepal length?
-        """,
-        "median(iris[:,\"SepalLength\"])",
-        x -> x==5.8
-    ),
-    Activity(
-        """
-        Let's investigate the covariance attributes in the Iris database. Enter this code:
-
-            attributes = names(iris)[1:end-1]				# Leave out the non-numeric Species
-            for x in attributes, y in attributes
-                if x > y
-                    println( "\$x \t \$y \t \$(cov(iris[:,x],iris[:,y]))")
-                end
-            end
-
-        Look at the results: Unsurprisingly, PetalWidth covaries with PetalLength, but
-        SepalLength covaries with both PetalLength and PetalWidth. With which of these
-        does SepalLength covary least strongly?
-        """,
-        "",
-        x -> x=="PetalWidth"
-    ),
-    Activity(
-        """
-        This is what we might expect - after all, there seems no particular reason why SepalLength
-        should covary strongly PetalWidth. But wait! Covariance is a measure that depends on the
-        absolute size of the variables! Of PetalLength and PetalWidth, which has the greater
-        mean value?
-        """,
-        "mean(iris[:,\"PetalLength\"]",
-        x -> x=="PetalLength"
-    ),
-    Activity(
-        """
-        Hm. This is tricky. SepalLength covaries with PetalLength more strongly than with
-        PetalWidth, however it may be that the smaller covariance with PetalWidth arises simply
-        from the fact that PetalWidth values are much smaller than PetalLength. We can solve this
-        question using correlation instead of covariance, because correlation is a relative
-        measure rather than an absolute one.
-        
-        Write code to compare the two correlation values for SepalLength-PetalLength and for
-        SepalLength-PetalWidth. Then find out the percentage difference between these two
-        values:
-        """,
-        "100 * (cor(SL,PL)-cor(SL,PW))/cor(SL,PL)",
-        x -> abs(x-6.173) < 0.1
-    ),
-    Activity(
-        """
-        We see that the correlation of PetalWidth is definitely major - almost as large as the
-        correlation PetalLength to SepalLength. What biological function of sepals might explain
-        why SepalLength correlates so highly with PetalWidth?
-        """,
-        "Both length and width of petals increases the bud volume that sepals must enclose.",
         x -> true
     ),
     Activity(
         """
-        We can use the columns of iris as ranges for generating random values, for example:
-            rand(iris[:,"SepalLength"])
-
-        Create a Vector containing a random sample of 21 PetalWidths:
+        julia uses Just-in-Time (JiT) compilation, so the first time you call a graphics method, it
+        will always take longer than later calls. Enter the following command (being sure to
+        include the semicolon at the end!), then tell me the type of the return value fig:
+            fig = scatterlines( 0:10, (0:10).^2);
         """,
-        "rand(range,10)",
-        x -> length(x)==21 && all(map(x) do pw in(pw,Main.iris[:,"PetalWidth"]) end)
+        "Enter the command exactly as I have done here",
+        x -> x==Main.Makie.FigureAxisPlot
     ),
     Activity(
         """
-        Let's create our own dataframe of the Group I chemical elements. It is a bad idea to
-        clutter our global namespace with lots of trivial names, so we'll create the dataframe
-        inside a function using local names:
+        As you can see, fig contains a graphics object; the only reason you can't see it is
+        because of that semicolon you included. As always, a semicolon at the end of a function
+        call prevents the function's value being returned from the function-call.
+
+        Makie plotting commands like scatterlines() create three things: a Figure that can be
+        displayed, an Axis system contained in that Figure, and Plot objects such as curves and
+        test boxes that Makie draws inside that Axis system. When we display the Figure, it already
+        contains one or more Axis systems, and one of these Axis systems contains our Plot curve.
+
+        Let's study this internal structure a little - reply() me the fieldnames of fig:
+            fieldnames(typeof(fig))
+        """,
+        "",
+        x -> x == (:figure,:axis,:plot)
+    ),
+    Activity(
+        """
+        Now we know about the structure of Figures, let's display our figure in graphical form.
+        Simply ask the julia prompt to display the value of fig:
+            fig
+
+        Doesn't it look pretty? :) What is the return type of the graphic you have just displayed?
+        """,
+        "typeof(ans)",
+        x -> x <: Main.Makie.FigureAxisPlot
+    ),
+    Activity(
+        """
+        Our figure is still a little primitive - let's customise its attributes. First capture
+        the three different fields contained in fig, so that we can manipulate them for ourselves:
+            fg,ax,plt = fig;
+
+        Every plot object (curve, text, etc.) has a whole bunch of attributes that we can adjust,
+        like colour, thickness, dotted line, and so on. Check out the `attributes`` field of plt to
+        find out how many different attributes it has:
+        """,
+        "",
+        x -> x >= 14
+    ),
+    Activity(
+        """
+        We can inspect the available plot attributes by pressing the '?' character. Try:
+            ? scatterlines
+
+        As you see, scatterlines shares many attributes with the lines() command (a scatterline is
+        a line with marker points scattered along it), so we can get even more information by
+        looking up help on lines:
+            ? lines
+
+        Which attribute would you change if you wanted your graph curve to be a dotted line:
+        """,
+        "Study the list of attributes in help",
+        x -> x=="linestyle"
+    ),
+    Activity(
+        """
+        Now we'll use this information on line attributes to replot our curve. Try entering this:
+            fig = scatterlines(0:10,(0:10).^2,color=:red)
+
+        Now replot this graph using a line with thickness 9-point, then tell me exactly which value
+        you needed to assign to the relevant attribute in order to do this:
+        """,
+        "The important point here is that numbers are already symbols, so you don't need the colon",
+        x -> x==9
+    ),
+    Activity(
+        """
+        It might be useful to save our curve to a picture file, but to do this, we first need to
+        check out the filesystem. Enter the Present Working Directory command:
+            pwd()
+
+        In the chapter "Filesystem" of the Julia user manual you will find many other functions for
+        exploring the filesystem. If you are not currently in your Anatta home folder, move there
+        now by entering home(). You may also choose to create a new subfolder named "Graphics" in
+        which to save your wonderful pictures. In this case, enter:
+            mkdir("Graphics")
+            cd("Graphics")
+
+        Now we are ready to save our Makie figure. Enter the following command, go and look at the
+        resulting file using Adobe Acrobat, then come back here and tell me the highest number on
+        the vertical axis:
+            save("myfig.jpg", fig)
+        """,
+        "",
+        x -> x==100
+    ),
+    Activity(
+        """
+        OK, now let's get fancy. We don't always want the scatter points on our plot, so we'll try
+        out the lines() function. Also, it would be nice to plot something a little more exciting,
+        like maybe the Hill kinetics that I have implemented in the file HillTFs.jl in the
+        Computation folder. Hill kinetics are a generalisation of the Michaelis-Menten reaction
+        kinetics used in bioreactor engineering. Hill kinetics describe the effect of a catalyst on
+        a chemical reaction - in particular, they model the activation or inhibition of DNA
+        expression in biological cells by a transcription factor (tf).
+
+        In VSC, open HillTFs.jl and take a look at the overall structure of the file. I highly
+        recommend that you use this file as a model for all modules you write in the future. You
+        can see that it contains three basic items:
+            -   a public (i.e., exported) data type HillTF, which stores all information needed to
+                calculate the catalytic effect of a range of transcription factor concentrations;
+            -   a private (i.e., not exported) utility method hill() for calculating Hill kinetics;
+            -   a public method expression() for calculating expression rates of the entire
+                range of transcription factor concentrations stored in a HillTF variable.
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        Inside the HillTF type definition, I have also defined a Constructor: a special function
+        that can construct new variables of the type HillTF. Compile and load the HillTFs module,
+        that is, compile using the Play button in VSC, then enter `using .HillTFs`. All public
+        (exported) services provided by the HillTFs module are now available to you at the julia
+        command line. Enter the following line now, then reply() me the new HillTF variable tf:
+            tf = HillTF(0:30,5)
+        """,
+        "",
+        x -> x == Main.HillTF(0:30,5)
+    ),
+    Activity(
+        """
+        Now load GLMakie, and use this function call to visualise Hill kinetics for K=3, n=1:
+            lines(tf.range,expression(tf))
+            
+        The plotted Hill kinetics converge to a maximum upper limit; what is this limit?
+        """,
+        "The limiting value will probably not be labelled, but should be obvious to you",
+        x -> x==1.0
+    ),
+    Activity(
+        """
+        The lines() function returns a Plot object: the line that is to be plotted. This line is
+        positioned within a set of axes: an Axis object. We can make our plot a little easier to
+        understand by using the keyword argument `axis` to add labels to this Axis object:
+            lines( tf.range, expression(tf), axis=(;xlabel="TF", ylabel="Expression rate"))
+
+        What is the value of the expression rate when the TF concentration reaches the value K=5?
+        """,
+        "Again, the value will not be labelled, but you should be able to estimate it",
+        x -> x==0.5
+    ),
+    Activity(
+        """
+        Use the following commands to visualise Hill kinetics for several different values of K,
+        while keeping n at the default value of 1.0, for example:
+            tf = HillTF(0:30,10)
+            lines( tf.range, expression(tf), axis=(;xlabel="TF", ylabel="Expression rate"))
+
+        Use your visualisations to verify that the value of K in the Hill function always specifies
+        the "half-response" level of transcription factor concentration, at which the expression
+        rate is equal to half of its maximum value. Study the hill() method to see why this is so.
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        We can brighten up our Hill graphs by adding some interesting keyword attributes:
+            lines( tf.range, expression(tf), color=:blue, linewidth=3, linestyle=:dash)
         
-            function group1()
-                symbol = ["Li","Na","K","Rb","Cs","Fr"]
-                protons = [3,11,19,37,55,87]
-                nucleons = [7,23,39,85,133,223]
-                electronegativity = [1.0,0.9,0.8,0.8,0.7,0.7]
-                DataFrame(; symbol, protons, nucleons, electronegativity)
-            end
-
-        You may first need to add the DataFrames package and load it with the keyword "using".
-        Now enter the function group1(), use it to create a dataframe named grp1, then extract
-        from grp1 the subtable consisting of the 3rd and 4th rows:
+        Experiment with your lines() plot by changing the keyword arguments. What linestyle value
+        displays a line consisting of a sequence of two dots and a dash (-..-..-..-)?
         """,
-        "",
-        x -> size(x)==(2,4) && x[1:2,"symbol"] == ["K","Rb"]
+        "Search for keyword arguments on the site: https://makie.juliaplots.org/",
+        x -> x==:dashdotdot
     ),
     Activity(
         """
-        Finally, we'll learn to save and load dataframes to and from a file. First we'll do it
-        simply, using comma-separated variable (CSV) files. Add and load the CSV package, then
-        write the group1 dataframe to a CSV file:
-            CSV.write( "group1.csv", group1())
+        We can specify the value of n by specifying a third argument in our HillTF constructor,
+        for example:
+            tf = HillTF(0:30,5,2)
 
-        Now give me the result of reading the csv file:
-
-        str = read("group1.csv",String);
+        Use lines() to discover which value, n=1 or n=-1, corresponds to inhibition of expression
+        by the transcription factor, then tell me your answer
         """,
-        "",
-        x -> x[43:44] == "Li"
+        "Plot the Hill curve for each of these two values of n, and study the difference",
+        x -> x == -1
     ),
     Activity(
         """
-        Sometimes we want to write to other file formats, such as Excel files, and julia offers
-        us a range of packages such as XLSX for doing this. However, the advantage of csv files
-        for small projects is that we can read them into text strings and with a text editor.
-
-        We can also read our csv file as a DataFrame. Give me the following dataframe:
-            CSV.read("group1.csv",DataFrame)
+        Experiment with other keyword arguments of the lines() function, for example:
+            figure=(; figure_padding=5, backgroundcolor=:green, fontsize=20)
         """,
         "",
-        x -> typeof(x)==Main.DataFrame && size(x)==(6,4)
+        x -> true
+    ),
+    Activity(
+        """
+        Once we have set up a Plot object inside an Axis, we can add extra Plot objects to this
+        same Axis using bang! methods that update the current Axis, for example:
+            tf = HillTF(0:30,10,-5)
+            scatterlines!( tf.range, expression(tf), color=:red, label="repression", linewidth=3)
+
+        At any time, we can view the result by redisplaying the current figure:
+            current_figure()
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        Now we'll do something a little bit exciting: we will try to understand the meaning of the
+        cooperation number n by using animation to simulate changes in n over time. To do this, we
+        will create a series of curves using different values of n, but all with the SAME value of
+        K. We will use Observables to do this ...
+
+        To understand how Observables work, first enter the following lines at the julia prompt to
+        convince yourself that changing the value of t has no influence on the value of x:
+            t = 1
+            x = cos(t)
+            t = 2
+            x
+        """,
+        "Work very carefully: check the result of each individual line to be sure you understand",
+        x -> true
+    ),
+    Activity(
+        """
+        x and t are simply two different locations in memory, so if we change the value of t, it
+        has no effect at all on the value of x. Now we'll perform a similar experiment, but this
+        time we will make t an Observable:
+            using Observables
+            t = Observable(1)
+            t
+            t[]
+            x = cos(t[])
+            t[] = 2
+            t
+            x
+
+        Does the value of x change when we change the value of t?
+        """,
+        "",
+        x -> occursin('n',lowercase(x))
+    ),
+    Activity(
+        """
+        As you see, simply making t Observable doesn't yet influence the value of x. To achieve
+        this, we must first tell x that it is an observer of t - that is, its value depends on t.
+        Enter the following code, then reply() me the value of x[]:
+            t = Observable(1)
+            x = map(cos,t)
+            t
+            x
+            t[] = 2
+            t[]
+            x[]
+        """,
+        "",
+        x -> x == cos(2)
+    ),
+    Activity(
+        """
+        An Observable is a variable that contains a list of listeners that react to changes in its
+        value. We can make use of this idea to create an animation of the Hill function under
+        changes in the cooperativity n. I have done this in the method animate() in the module
+        HillTFs. Call this method now to see the animation, then change the range of values of n to
+        run downwards from -1 to -10.
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        And now, to finish this lab, we will use our new-found knowledge of plotting to display a
+        bubble-plot and add some complicated bits and pieces. Simply copy and paste my code, and
+        enjoy the pretty pictures:
+            xdata = rand(50); ydata = rand(50); colours = rand(50);
+            fig, ax, plt = scatter( xdata, ydata;
+                color=colours, label="Bubbles", colormap=:plasma,
+                markersize=30*abs.(colours),
+                axis=(; aspect=DataAspect()),
+                figure=(; resolution=(600,400))
+            );
+            limits!(-0.3,0.3,-0.3,0.3);
+            Legend( fig[1,2], ax, valign=:top);
+            Colorbar( fig[1,2], plt, height=Relative(3/4));
+            fig
+        """,
+        "",
+        x -> true
     ),
 ]

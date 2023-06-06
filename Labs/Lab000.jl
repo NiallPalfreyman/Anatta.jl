@@ -35,8 +35,8 @@
         Anatta is a philosophical position based on two interwoven ideas:
             i)  scientific knowledge is not Truth, but is rather something that living organisms
                 construct in order to survive; and
-            ii) organisms are not substantial Structures, but biological Processes of longer or
-                shorter duration.
+            ii) living organisms are not substantial Structures, but biological Processes of longer
+                or shorter duration.
             
         These two ideas completely change the way we understand the world. We can already notice
         that together they mean we must find a new way of evaluating Knowledge, not as being more

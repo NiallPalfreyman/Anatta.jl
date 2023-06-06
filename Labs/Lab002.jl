@@ -1,361 +1,587 @@
 #========================================================================================#
 #	Laboratory 2
 #
-# Programs, types and functions
+# Introduction to computational thinking and data science.
 #
-# Author: Niall Palfreyman, 04/01/2022
+# Author: Niall Palfreyman, 16/05/2023
 #========================================================================================#
 [
     Activity(
         """
-        Hi! Welcome to Anatta Lab 002: Programming Basics
+        Hi! Welcome to Anatta Lab 002: Computational thinking and data science
 
-        In this laboratory we look at the very heart of julia: How it uses types to dispatch
-        functions. That is, how does julia decide which particular method it will use to implement
-        whatever it is we ask it to do? Remember: I call a Function, but julia executes a Method.
+        Now that we have gained some experience using variables, let try doing some data science -
+        that is, we will read in some data and use computation to analyse it. First, set up the
+        Computation library by calling this function at the julia prompt:
+            setup("Computation")
 
-        First, let's start with the structure of a Julia program. Every julia program starts life
-        as a text string, for example:
-            prog = "8 / (2 + 3.0)"
-
-        Enter this tiny program, then reply() me the string prog to make sure you have typed it
-        correctly:
+        This copies the Computation files into the Development folder of your Anatta home folder.
+        Use the functions cd() and readdir() to explore the structure and contents of the
+        Computation library. When you have finished, use home() to return to your Anatta home
+        folder and reply() me the name of one of the two .dat files in the Computation library:
         """,
-        "Just enter: reply(prog)",
-        x -> (replace(strip(x)," "=>"") == "8/(2+3.0)")
+        "Give me the file-name as a double-quoted string, like this: reply(\"filename\")",
+        x -> occursin("pax6_",x)
     ),
     Activity(
         """
-        A quick tip to help us understand each other: Sometimes, in the text, I want to tell you
-        the specific characters that you should enter at the console. That is, I'll want to
-        distinguish between normal text and julia `text`. I will do this by using backticks (``).
-        So, Ani is my name, but `Ani` is a set of three characters that you should enter.
+        In a moment, we will read one of these data files into julia. However, since we shall be
+        reading the file into a Vector, we should first understand what a Vector is.
 
-        Now, check that you have understood this by entering `prog`, then reply() me the `ans`
-        that you receive back from julia:
-       """,
-        "Again, simply enter: reply(prog)",
-        x -> (replace(strip(x)," "=>"") == "8/(2+3.0)")
-    ),
-    Activity(
-        """
-        Notice that brackets are important in this little program: `8/(2+3.0)` will return a very
-        different value from `8/2+3.0`. Now use Meta.parse() to analyse your little program prog
-        into an expression `expr` and reply() me the typeof() expr:
+        A Vector is a list of items (elements) contained in square brackets. It can contain all
+        different kinds of elements. For example, enter this definition of the Vector b:
+            b = [3,5,"4",[1,2]]
+            
+        Then use length() to find the length of b:
         """,
-        "Enter: expr = Meta.parse(prog)",
-        x -> (x==Expr)
+        "length(b)",
+        x -> x == 4
+    ),
+    Activity(
+        "Use b[2] to access the 2nd element of b, and use the function isodd() to see if it is odd:",
+        "isodd(b[2])",
+        x -> x == true
+    ),
+    Activity(
+        "What is the type of (typeof) the 4th element of b?",
+        "Vector{Int64}",
+        x -> (x <: Vector)
+    ),
+    Activity(
+        "Change the 3rd element of b to my name \"Ani\" and find the length of that 3rd element",
+        "b[3] = \"Ani\"",
+        x -> x == 3
     ),
     Activity(
         """
-        By the way, notice that in julia there is a very big difference between the two names
-        `Expr` and `expr`: upper- an lowercase letters are different from each other. Here, `expr`
-        is your own name for a new variable containing your parsed (i.e. translated) program, and
-        `Expr` is the type of the thing that julia has stored under that name.
+        OK, now we've built up some experience with Vectors, let's use them to analyse data...
 
-        So let's look at what an Expr looks like. An Expr is a structure with two parts: a head
-        (named `expr.head`) and a vector of arguments (named `expr.args`). Tell me what is
-        contained in the head of expr:
+        First, set up an input stream named `is` by opening the file "pax6_hs.dat" for reading ("r").
+        Assuming you are currently in your Anatta home folder, enter:
+            is = open("Development/Computation/pax6_hs.dat","r")
+
+        Then reply() me the type of the new variable `is` ...
         """,
-        "expr.head",
-        x -> x==:call
+        "When you are finished, `is` should be an IOStream",
+        x -> x isa IOStream
     ),
     Activity(
         """
-        The :call symbol tells julia that your program Expr is something that can actually be
-        called, or executed on a computer. Use the function dump() to view the entire structure
-        of expr now, and note what you see:
+        Now read the first line of "pax6_hs.dat" from the input stream `is` by entering:
+            readline(is)
+
+        What is the typeof() your answer?
         """,
-        "Simply enter: `dump(expr)`. You can then enter `reply()` to continue with this lab",
+        "",
+        x -> x <: String
+    ),
+    Activity(
+        """
+        This is a String of characters, all of which are either 'A', 'C', 'G' or 'T'. It looks like
+        genome data. Let's look at the next line:
+            readline(is)
+        
+        Yes, that's genome data alright. Let's try playing around with it. First, rewind to the
+        start of the file and read in the first line again, storing it in the variable `data`:
+            seekstart(is)
+            data = readline(is)
+
+        reply() me the first 5 characters of `data` using the call `data[1:5]`:
+        """,
+        "reply(data[1:5])",
+        x -> x == "GCATG"
+    ),
+    Activity(
+        """
+        What is the length of the data string?
+        """,
+        "length(data)",
+        x -> x == 70
+    ),
+    Activity(
+        """
+        Now let's find out at which data locations the nucleotide guanine (G) is specified:
+            findall('G',data)
+
+        You can check that these locations are correct by selecting those elements from data:
+            data[ans]
+
+        You should get a string consisting only of the character 'G'.
+        """,
+        "",
         x -> true
     ),
     Activity(
         """
-        As you can see, the `.args` field of expr is a Vector. Use your experience of accessing
-        vector elements to find out the typeof the second argument of the third argument of expr:
+        What is the G-content of the data:
+            length(findall('G',data)) / length(data)
         """,
-        "dump(expr) or expr.args[3].args[2] - Try both! :-)",
-        x -> x==typeof(Main.expr.args[3].args[2])
+        "",
+        x -> 0.328<x<0.329
     ),
     Activity(
         """
-        julia has interpreted your "2" as an integer (e.g. Int64), but as you can see, your "3.0"
-        has been interpreted as a floating-point number (e.g. Float64).
+        Hm. This is interesting. On average, I would expect the G-content to be around one-quarter,
+        or 0.25, but this value is significantly higher. Let's look at the content for all four
+        nucleotides. We could write our question like this:
+            [   length(findall('A',data))/length(data),length(findall('C',data))/length(data),
+                length(findall('G',data))/length(data),length(findall('T',data))/length(data)
+            ]
+
+        but this way of writing it seems very repetitive. julia offers us another way of doing
+        this: we use the keyword `do` to build a function that asks our question for a single
+        nucleotide, then we map that function over a list (i.e. Vector) of the four nucleotides.
+        reply() me the result of this mapping process:
+            map(['A','C','G','T']) do nucleotide
+                length(findall(nucleotide,data))/length(data)
+            end
+        """,
+        "Your answer should be a Vector of four numbers adding up to 1.0000",
+        x -> 0.9999<sum(x)<1.0001
+    ),
+    Activity(
+        """
+        There is quite a difference in the content values for the four nucleotides, but of course
+        we are only investigating 70 characters of the genome. Let's read in all of the PAX6 data
+        for Homo sapiens:
+            seekstart(is)
+            data_hs = readlines(is)
+            close(is)
+
+        You can see that data is now a Vector of Strings - one for each line of the file. How many
+        lines have been read from the file?
+        """,
+        "length(data_hs)",
+        x -> x==39
+    ),
+    Activity(
+        """
+        39 lines of 70 nucleotides each - that's about 2700 nucleotides. To measure the nucleotide
+        content, we're going to have to put all these strings together into one long string. julia
+        offers us a way of doing this - to concatenate two strings, we multiply them. Tell me the
+        result of concatenating these three strings:
+            "Ani" * " " * "Anatta"
+        """,
+        "",
+        x -> x == "Ani Anatta"
+    ),
+    Activity(
+        """
+        Great. Now, the operator '*' is just a short notation for the function prod(). For example,
+        check out the result of this expression:
+            prod([2,3,4])
         
-        We can execute (that is, evaluate) your expression expr using the function `eval()`.
-        What is the value of expr?
-        """,
-        "eval(expr)",
-        x -> x==1.6
-    ),
-    Activity(
-        """
-        Every julia program is just like your little prog. It starts as a text string, which julia
-        then parses into an expression: a tree structure that your computer can evaluate. We call
-        such an evaluation tree a METHOD: a single, particular implementation of some function we
-        wish to evaluate.
-
-        Let's look at a slightly more complicated evaluation tree. Enter this text-string program:
-            prog = "susan = 3sin(pi/2)"
-
-        Parse this program into the variable `expr`, then dump it. You will see that this time, the
-        head of expr is no longer `:call`, but the Symbol `=`. This is because your new program is
-        not something that can be called, but instead creates a new variable named `susan`, whose
-        value is 3 times the sine of π/2. Evaluate `expr` now, and give me the answer you receive:
-        """,
-        "Just reply() to me with the value that you get - which should be 3.0",
-        x -> x==3.0
-    ),
-    Activity(
-        """
-        OK, so your new program has correctly calculated the result 3.0, but has it created a
-        variable named `susan`? Enter `susan` at the julia prompt and tell me what answer you
-        get:
+        Then reply() me the result of this expression:
+            prod( ["Ani"," ","Anatta"])
         """,
         "",
-        x -> x==3.0
+        x -> x == "Ani Anatta"
     ),
     Activity(
         """
-        Bingo! Your program works! :) julia has created a variable called `susan`, containing the
-        value 3.0! Now let's move on to more complicated things. We'll stop parsing the expressions
-        ourselves from now on, and instead, we'll just enter them at the julia prompt and let julia
-        do all the parsing work for us ...
+        So prod() multiplies together the elements of a Vector. But of course, `data_hs` is a
+        Vector of Strings, so we can concatenate these Strings using this function call:
+            pax6_hs = prod(data_hs)
 
-        Now create your own function by entering at the julia prompt:
-            ahmed(x) = 3sin(pi/x)
+        Now we can measure the nucleotide content for the entire PAX6 gene:
+            map(['A','C','G','T']) do nucleotide
+                length(findall(nucleotide,pax6_hs))/length(pax6_hs)
+            end
 
-        We know from the previous activities that ahmed(2) should evaluate to 3sin(π/2)==3.0. So
-        test your ahmed method now by entering ahmed(2), and tell me what you get:
+        Which nucleotide has the highest content in the PAX6 gene for Homo sapiens?
         """,
         "",
-        x -> x==3.0
+        x -> x == 'A'
     ),
     Activity(
         """
-        Great! now we know how to create function methods, so let's create the more complicated
-        factorial function fact(). How do we calculate the factorial of a number N? We multiply N
-        by the next number down (N-1), then by the next number down (N-2), and so on down to 1.
-        We can implement this in julia like this:
-            fact(N) = (N <= 0) ? 1 : (N * fact(N-1))
+        To investigate further, instead of just calling functions from the julia prompt, we will
+        write programming code. When you set up the Computation library earlier, you also copied
+        to your Anatta home folder the julia file Computation.jl, which we'll now fill with code.
 
-        (If you are unsure about the ternary operator ?:, enter `?` now at the julia prompt now to
-        get into help mode, then enter `?:` to ask about how this operator works)
-
-        When you enter this method definiton, julia will tell you that it has created a generic
-        function `fact` with one method implementation. Test this implementation - enter fact(5):
+        Before proceeding further, I will assume in the next learning activities that you ...
+            -   have VSC open with its Explorer located at your Anatta home folder;
+            -   can see the contents of your Development/Computation folder in VSC Explorer;
+            -   can see that this Development/Computation folder contains Computation.jl and the
+                PAX6 datafiles pax6_hs.dat and pax6_mm.dat for Homo sapiens and Mus musculus;
+            -   have opened the file Computation.jl in the VSC editor;
+            -   have a separate julia console open, in which you are reading this text;
+            -   have created in this console the two variables data_hs and pax6_hs from the file
+                pax6_hs.dat. We will use the shorter strings contained in data_hs as practice data
+                before working on the full gene contained in pax6_hs ...
         """,
-        "As always, try it out, then reply() me the result so I can check it for you",
-        x -> x===120
+        "",
+        x -> true
     ),
     Activity(
         """
-        Our fact() method seems to be working fine. Check this by testing some other factorial
-        values that you know. For instance, did you know that fact(0) is 1? Try this out:
+        Right, so let's start programming! :)
+
+        Locate in Computation.jl the method count_seq(). PLEASE DO NOT RUN IT YET! Let's just think
+        for a moment about what it does. For instance, what is the return value of the following
+        call?
+            Computation.count_seq("abcde","abc")
         """,
-        "Enter `fact(0)`, then enter `reply(ans)` to give me the result",
+        "Check out the very first if-statement in the method",
+        x -> x==0
+    ),
+    Activity(
+        """
+        That's right - the needle sequence "abcde" cannot occur in the haystack sequence "abc",
+        since it is too long to fit into the haystack. To understand what happens if the needle
+        does fit into the haystack, let's consider specific example values for needle and haystack:
+            Computation.count_seq("bc","abcde")
+
+        In this example, length(needle)==2. What is the value of length(haystack)?
+        """,
+        "How many characters are in the second argument?",
+        x -> x==5
+    ),
+    Activity(
+        """
+        In the second part of the method (that is, after the first if-statement) there is a
+        for-loop in which the loop-counter i runs in steps of 1 from i=1 to:
+            i=length(haystack)-length(needle)+1
+        
+        We call each separate cycle of the loop, in which the loop-counter i takes a new value, an
+        Iteration. Over how many iterations will this loop run in our example call of count_seq()?
+        """,
+        "",
+        x -> x==4
+    ),
+    Activity(
+        """
+        Each iteration of this loop compares the needle string with a new portion of the haystack,
+        then adds 1 to its overall `count`` if this comparison is successful. When i==4, this
+        compared portion of the haystack extends along the range i:(i+length(needle)-1). In this
+        case, the compared portion of the haystack therefore runs from 4 to which value?
+        """,
+        "",
+        x -> x==5
+    ),
+    Activity(
+        """
+        When the loop is finished, the function count_seq() returns the value of `count` to its
+        caller. What is the value of `count` for our example call?
+        """,
+        "",
         x -> x==1
     ),
     Activity(
         """
-        It even works for floating-point numbers as well as integers. Test this by calculating
-        the value of fact(3.0), which should be 6.0:
-        """,
-        "As before, enter `fact(3.0)`, then enter `reply(ans)` to give me the result",
-        x -> x==6.0
-    ),
-    Activity(
-        """
-        However, we do still have a problem with our fact() method. Try calculating the value of
-        fact(3.1):
+        Now we understand how count_seq() works, let's try it out. In VSC, first make sure your
+        cursor is positioned in the file Computation.jl, then click on the triangular Play (or
+        include) button at the top right of the editor screen. A julia console will appear within
+        VSC, which first include()s the file Computation.jl, then after a short while reports back
+        with the name of the compiled module:
+            Main.Computation
         """,
         "",
-        x -> 0.7<x<0.72
+        x -> true
     ),
     Activity(
         """
-        This answer seems a little strange, but actually it makes perfect sense. Always remember:
-            A computer always does EXACTLY what you tell it, and always gives you PERFECT feedback!
+        Try out our first call to the count_seq() function and ensure that it returns 0:
+            Computation.count_seq("abcde","abc")
 
-        We told julia to calculate the fact() function by multiplying the argument N by (N-1), then
-        by (N-2), and so on until we get below 0, when we return the answer 1:
-            fact(3.1) == 3.1 * 2.1 * 1.1 * 0.1 * 1 == 0.7161...
+        Great! Now try out our second call from above and ensure that it returns 1:
+            Computation.count_seq("bc","abcde")
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        OK! Now things are getting moving! :)
+
+        Let's test the count_seq() function a little. What value do you get if you call:
+            Computation.count_seq("GCAT",data_hs[1])
+        """,
+        "",
+        x -> x==1
+    ),
+    Activity(
+        """
+        Hm. Only 1 occurrence. OK, let's try it with the longer string:
+            Computation.count_seq("GCAT",pax6hs)
+        """,
+        "",
+        x -> x==8
+    ),
+    Activity(
+        """
+        OK, so obviously the occurrences of "GCAT" are scattered across different portions of the
+        pax6 gene. We can investigate further by using our variable `data_hs` to scan growing
+        portions of the gene. How many occurrences occur within the first 11 string entries
+        contained in `data_hs`:
+            Computation.count_seq("GCAT",prod(data_hs[1:2]))
+            Computation.count_seq("GCAT",prod(data_hs[1:3]))
+            Computation.count_seq("GCAT",prod(data_hs[1:4]))
+            ...
+            Computation.count_seq("GCAT",prod(data_hs[1:11]))
+        """,
+        "",
+        x -> x==3
+    ),
+    Activity(
+        """
+        Of course, it costs us more time and memory to search through the entire gene, rather than
+        just through the first entry in data_hs[1]. We can measure this cost using the julia macro
+        @time, which prints out execution information on our calls to the function count_seq() ...
+
+        If you enter the following two lines, you will discover that searching the full pax6hs gene
+        takes longer than just searching the first entry of data. However, your program's running
+        time will vary greatly depending on how many programs are running in the background on your
+        computer. For this reason, it more useful to look at the middle figure in the printout,
+        which shows the number of memory allocations that your program's execution caused:
+            @time Computation.count_seq("GCAT",data_hs[1])
+            @time Computation.count_seq("GCAT",pax6_hs)
+
+        On my computer, the first of these calls caused 67 memory allocations. On your computer,
+        divide the number of memory allocation for pax6hs by the number for data_hs[1]:
+        """,
+        "On my computer, 2700 / 67",
+        x -> 38<=x<=42
+    ),
+    Activity(
+        """
+        Think about this value - what might it mean? To help you, reply() me the number of String
+        entries in data_hs:
+        """,
+        "length(data_hs)",
+        x -> 39
+    ),
+    Activity(
+        """
+        This actually makes sense, doesn't it? count_seq() has to match needle with every possible
+        portion of haystack, so if pax6_hs is 39 times as long as data_hs[1], count_seq() will have
+        to do 39 times as much work. We say that the method count_seq() has "complexity O(n)", or
+        "Linear complexity". These terms mean that if we multiply the size (n) of our haystack by
+        3, this also creates 3 times as much work for count_seq() in terms of time and memory use.
+
+        Check that the complexity of count_seq() really does grow linearly with the size of the
+        haystack by entering the following line at the julia prompt. Notice that each successive
+        increase in the size of the haystack causes the number of memory allocations to rise by a
+        constant amount:
+            for i in 1:12
+                @time Computation.count_seq("GCAT",prod(data_hs[1:i]))
+            end
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        This idea of complexity is extremely powerful: it offers us a way of measuring the amount
+        of "effort" involved in a particular solution method:
+            -   We can't measure this effort in seconds, because we might run the method using
+                faster or slower computers or even people.
+            -   We can't measure effort in numbers of steps because different computers and people
+                use bigger or smaller steps to perform the same calculations.
+
+        Instead, we measure the complexity of solution method by seeing how fast they grow as the
+        size of the problem gets bigger: Since doubling the size n of the haystack also doubles the
+         work involved in finding the needle, we say that that count_seq() displays linear
+        complexity of order n: O(n).
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        To see that solution methods aren't always so simple, imagine doing a jigsaw puzzle. If I
+        do one puzzle with with n pieces, then another with 3n pieces, the number of possible
+        combinations of pieces doesn't just double, it gets exponentially bigger, and so we say
+        that solving a jigsaw puzzle has exponential complexity: O(2^n).
+
+        Let's look now at a less extreme example of higher complexity. In Computation.jl, locate
+        the method count_common() and tell me the value it would return if you called it right
+        now in its present incomplete state with two arbitrary strings:
+        """,
+        "",
+        x -> x==0
+    ),
+    Activity(
+        """
+        At present, count_common() contains "dummy code" - that is, it contains code that enables
+        us to call the method, but without getting a sensible answer back. We will now design julia
+        code to replace this dummy code in order to make the method count_common() run properly.
+
+        First, let's think about the function's requirements. As the header documentation for
+        count_common() specifies, the call count_common(seq1,seq2,len) should calculate the number
+        of common substrings of the sequences seq1 and seq2 that have the length len.
         
-        As I said, julia gives us PERFECT feedback on the result of our implementation method if we
-        use it with floating-point numbers - it's just that this result turns out to be not quite
-        what we expected!
-
-        However, there does exist a library function that does what we want with floating-point
-        values - this is the Γ-function gamma(), contained in the SpecialFunctions library:
-            using SpecialFunctions
-
-        Now experiment with the gamma function to find out its relationship to the factorial
-        function. For example, what value of N yields the result gamma(N) == fact(5)?
+        In software design, we make this requirement more specific by studying "use-cases" - that
+        is, specific scenarios in which the software will later be used ...
         """,
-        "Call gamma(n) with varying values of n, and compare results with fact()",
-        x -> x==6
+        "",
+        x -> true
     ),
     Activity(
         """
-        Of course, the difficulty with the gamma() function is that it is a little expensive to
-        evaluate - our method fact() is faster for integer arguments. So let's define two
-        different methods - one for Ints and one for Reals:
-            fact(n::Int) = (n <= 0) ? 1 : (n * fact(n-1))
-            fact(x::Real) = gamma(x+1)
+        Our first use-case for the count_common() function is contained in Computation.demo(), and
+        looks like this:
+            count_common( "abcde", "xyzcdegh", len),
 
-        Check these methods by entering the two calls `fact(3)` and `fact(3.0)`. What is the
-        type of the value returned by `fact(3)`?
-        """,
-        "eval(fact(5.0))",
-        x -> x==120.0
-    ),
-    Activity(
-        """
-        OK, so now what is the value of fact(3.1)?
-        """,
-        "eval(fact(5.01))",
-        x -> 6.812<x<6.813
-    ),
-    Activity(
-        """
-        This result seems a little more reasonable, doesn't it? If you enter the call
-            methods(fact)
-
-        you will see a list of methods stored under the name "fact". As you can see, julia has
-        stored (at least) 2 different methods: one for when you call fact() with an Integer
-        argument, and one for when you call fact() with a Real (floating-point) argument.
-
-        julia takes over this decision for you at the instant when you call fact() with either
-        an integer or a floating-point argument: the decision-process is called DISPATCHING,
-        and we will see that it makes programming very much easier!
+        where n takes one of the following Int-values, leading to the corresponding return value:
+            count_common( "abcde", "xyzcdegh", 0)   -> 0
+            count_common( "abcde", "xyzcdegh", 1)   -> 3
+            count_common( "abcde", "xyzcdegh", 2)   -> _
+            count_common( "abcde", "xyzcdegh", 3)   -> 1
+            count_common( "abcde", "xyzcdegh", 4)   -> 0
         
-        What is the typeof the return value of the methods() function?
+        I have missed out the number of common substrings of length 2. What should this number be?
         """,
-        "methods(fact)",
-        x -> x == Base.MethodList
+        "",
+        x -> x==2
     ),
     Activity(
         """
-        Since argument types are so important for dispatching functions, let's try creating our
-        own user-defined types. First create a few ABSTRACT types to represent various
-        biological organisms:
-            abstract type Organism end
-            abstract type Animal <: Organism end
+        These use-cases make clear the boundary conditions of our requirements: We wish to return 0
+        whenever either n==0 OR (||) n is greater than the length of the shortest sequence. Our
+        method can achieve this straight away without having to do any work at all. Insert the
+        following code before our dummy code in count_common() so that it looks like this:
+            function count_common( seq1::String, seq2::String, len::Int)
+                if len < 1 || len > min(length(seq1),length(seq2))
+                    return 0
+                end
 
-        Now use the supertype() function to find the supertype of Animal. What type is
-        returned if you ask for the subtypes() of Organism?
+                5                                               # Dummy code
+            end
+        
+        Save, compile and test your code by calculating the following Vector at the julia prompt:
+            [Computation.count_common( "abcde", "xyzcdegh", 0),
+            Computation.count_common( "abcde", "xyzcdegh", 6)]
         """,
-        "subtypes(Organism)",
-        x -> (x <: Vector)
+        "",
+        x -> x==[0,0]
     ),
     Activity(
         """
-        Next create a CONCRETE subtype of our abstract Animal type:
-            struct Weasel <: Animal
-                name::String
-                weight::Integer
-                female::Bool
+        <sigh> But you know, it isn't much fun typing all these lines out, is it? And we'll be
+        doing a lot more code-testing later in this course, so how can we save ourselves all this
+        effort? Fortunately, offers us a way to save ourselves all this typing by first using the
+        arrow symbol `->` to quickly create a small "anonymous" function:
+            (n -> Computation.count_common( "abcde", "xyzcdegh", n))
+            
+        and then using the `.` operator to "broadcast" this anonymous function over each component
+        of a Vector of values for len. Try this out now by entering the following code at the julia
+        prompt, and then reply() me the result you get:
+            (n -> Computation.count_common( "abcde", "xyzcdegh", n)).([0,1,2,6])
+        """,
+        "",
+        x -> x==[0,5,5,0]
+    ),
+    Activity(
+        """
+        Just quickly check that you have correctly understood broadcasting by using the following
+        call to broadcast the logarithm function over a Vector of three different values:
+            log.([1,exp(1),exp(2)])
+        """,
+        "This calculates the logarithms of 1, e and e^2",
+        x -> x==[0.0,1.0,2.0]
+    ),
+    Activity(
+        """
+        Now we've dealt with the boundary cases of count_common(), we need to implement the core
+        part of the functionality. Replace the dummy line "5" by the following lines of code, then
+        save, compile and repeat your previous test over the entire range 0:6:
+            count = 0
+            for i in 1:length(seq1)-len+1
+                for j in 1:length(seq2)-len+1
+                    if seq1[i:i+len-1] == seq2[j:j+len-1]
+                        count += 1
+                    end
+                end
             end
 
-        Use the function fieldnames() to inspect the individual fields of the Weasel
-        type, then give me the descriptor of the third field
+            count
         """,
-        "fieldnames(Weasel)[3]",
-        x -> x == :female
+        """
+        Your test call at the julia prompt should look like this:
+            (n -> Computation.count_common( "abcde", "xyzcdegh", n)).(0:6)
+        """,
+        x -> x==[0,3,2,1,0,0,0]
     ),
     Activity(
         """
-        We use struct types to instantiate concrete OBJECTs in computer memory by
-        entering specific values for the individual fields of the Weasel struct:
-            wendy = Weasel( "Wendy", 101, true)
-            willy = Weasel( "Willy", 115, false)
+        Our count_common() method seems to be working correctly - let's try it out with some real
+        data. You already have the two variables data_hs and pax6_hs; now we will compare this
+        Homo sapiens data with Mus musculus (mouse) data. First read in the data from the julia
+        propmpt, just as you did before for H. sapiens, using the following lines of code:
+            is = open("Development/Computation/pax6_mm.dat","r")
+            data_mm = readlines(is);
+            close(is)
+            pax6_mm = prod(data_mm);
 
-        Notice that types start with an UPpercase letter, whereas objects start with a
-        lowercase letter. By default, Julia creates structs as IMMUTABLE - that is, we
-        cannot modify the value of their fields. This means Julia can always know exactly
-        how much memory an object needs, which provides major performance advantages. Try
-        changing the value of Wendy's gender to see that this is not allowed. What word
-        does the resulting exception message use to describe the struct you tried to modify?
+        (By the way, notice how I end the lines with a semicolon to avoid the data flooding all
+        over the screen!)
         """,
-        "wendy.female = false",
-        x -> lowercase(strip(x)) == "immutable"
+        "",
+        x -> true
     ),
     Activity(
         """
-        Immutability might at first seem awkward, but very often we don't want to change
-        an object's fields, but instead want to replace one object by another. This way
-        of using objects is far faster and less error-prone. If, however, we do want to
-        change the fields of a type, we must define it as MUTABLE, like this:
-            mutable struct Rabbit <: Animal
-                name::String
-                length::Integer
+        You can now analyse the common content of the pax6 gene for H. sapiens and M. musculus by
+        entering commands such as the following:
+            Computation.count_common(pax6_hs,pax6_mm,5)
+
+        With this command, I look for common substrings of length 5. Experiment for yourself by
+        finding out the maximum length of common substring contained in both pax6_hs and pax6mm:
+        """,
+        "",
+        x -> x==116
+    ),
+    Activity(
+        """
+        Before we close this lab, I want to return briefly to the issue of complexity that we
+        discussed earlier. You may have noticed that our calls to the method count_common() took
+        took a little longer than count_seq() did, before the answer came back. We can study this
+        effect more closely using @time to view the number of allocations needed to search for
+        common substrings of length 100 that are contained in successively longer segments of our
+        two pax6 datasets:
+            for i in 1:12
+                @time Computation.count_common(prod(data_hs[1:i]),prod(data_mm[1:i]),100)
             end
 
-            rabia = Rabbit( "Rabia", 27)
-
-        Change Rabia's length to 29 cm, then give Rabia to me to look at for myself:
+        In this displayed information, the last (12th) row searches through strings that are twice
+        as long as the strings searched in the 6th row. But just look at the comparative numbers of
+        allocations - these grow much quicker! What result to you get if you divide the number of
+        allocations for row 12 by the number of allocations for row 6?
         """,
-        "rabia.length = 29",
-        x -> (x.length == 29)
+        "",
+        x -> 4<x<6
     ),
     Activity(
         """
-        Unlike object-oriented languages, which only dispatch on the first argument of a
-        function, a major design feature of Julia is that it uses MULTIPLE DISPATCHING,
-        which is particularly important when we use Julia to perform biological simulations.
-        To see multiple dispatching in action, let's use our above type definitions. 
+        So doubling the size of the common substring search problem leads to a factor 5 increase in
+        the amount of effort involved in doing the search. If we were to perform this comparison
+        for even longer strings, we would discover that the resource allocation requirements grow
+        as the square of the size of the gene sequences. That is, if we increased the length of the
+        sequences by a factor of 3, we would multiply the associated search effort by 3^2==9! In
+        other words, the complexity of count_common() is O(n^2).
 
-        When Animals meet each other, they react in different ways according to their type:
-        Weasels challenge each other, but they attack Rabbits. We could implement these
-        different interactions using if-else conditionals, but it is easier to use
-        multiple dispatching. Enter the following definitions at the Julia prompt:
-            meet( meeter::Weasel, meetee::Rabbit) = "attacks"
-            meet( meeter::Weasel, meetee::Weasel) = "challenges"
-            meet( meeter::Rabbit, meetee::Rabbit) = "sniffs"
-            meet( meeter::Rabbit, meetee::Weasel) = "hides"
-            meet( meeter::Organism, meetee::Organism) = "ignores"
+        You can actually see why this is true if you look at the program code in the second half of
+        the method count_common(). Suppose that both sequences are n nucleotides long. Do you
+        notice how the loop over seq2 is nested INSIDE the loop over seq1? So count_common()
+        compares substrings starting at EVERY location in seq1, and for each such location in seq1,
+        we compares the substring at that location with EVERY location in seq2. The result is that
+        it performs n*n == n^2 string comparisons.
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        Just one closing comment before we end this first lab. Programming is actually just the
+        science of problem-solving: we will learn how to use julia to solve problems. But we also
+        want to solve problems EFFICIENTLY. In other words, we want to keep the complexity of our
+        solution methods as low as possible. Our count_common() method is not particularly
+        efficient - we can do better than O(n^2) complexity by using Hashing Structures.
         
-        Test these definitions by finding out what happens when Rabia meets Wendy:
+        But that is a story for a later lab - bye! :)
         """,
-        "meet(rabia,wendy)",
-        x -> occursin( "hide", lowercase(x))
-    ),
-    Activity(
-        """
-        The dispatcher must make these decisions during the execution time of our
-        simulation program. Enter the following function definition:
-            function encounter( meeter::Organism, meetee::Organism)
-                println( meeter.name, " meets ", meetee.name, " and ", meet(meeter,meetee), ".")
-            end
-        
-        Now test this function by calling encounter() with various combinations of
-        Wendy, Willy and Rabia.
-
-        What happens if you create a new Rabbit called Robby, and Rabia encounters him?
-        """,
-        "meet(robby,rabia)",
-        x -> occursin( "sniff", lowercase(x))
-    ),
-    Activity(
-        """
-        Now, to see the full power of multiple dispatching, add your own new concrete
-        type and then check how an encounter between your type and Rabia works out. Do
-        it something like this:
-            struct Tree <: Organism; name::String end
-            tilly = Tree( "Tilly")
-
-        How does Rabia react to Tilly?
-        """,
-        "encounter(rabia,tilly)",
-        x -> occursin( "ignores", lowercase(x))
-    ),
-    Activity(
-        """
-        And now one final Activity for you: Can you add a new type of Organism called
-        Grass, and arrange for Rabia to eat it? It is possible to do this in just 3-4
-        new lines of code.
-        """,
-        "encounter(meeter::Rabbit,meetee::Grass) = \"eats\"",
-        x -> occursin( "eats", lowercase(x))
+        "",
+        x -> true
     ),
 ]
