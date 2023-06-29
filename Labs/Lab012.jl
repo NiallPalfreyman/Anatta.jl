@@ -1,134 +1,237 @@
 #========================================================================================#
 #	Laboratory 12
 #
-# Mutation: How do population types change?
+# Exploratory data analysis, datasets and Dataframes.
 #
-# Author: Niall Palfreyman, 15/09/2022
+# Author: Niall Palfreyman, 04/01/2022
 #========================================================================================#
 [
     Activity(
         """
-        Hi! Welcome to Anatta Lab 012: Implementing Mutation
+        Hi! Welcome to Anatta Lab 012: Exploratory data analysis
 
-        We have seen that different types in a population grow and decline in relation to their
-        replication rates r[i], but there is an additional factor in evolution: mutation. Many
-        mutations occur when the genomic material of a cell is being copied during replication,
-        but mutagens can also induce changes in the genetic material of a single cell. We shall
-        study here a simple model of mutation that can be applied in both situations.
+        In this laboratory we use Exploratory Data Analysis (EDA) and the julia DataFrames
+        package to explore one of the over 750 industry standard statistical RDatasets.
 
-        Discuss with your partner the difference between 'genomic' and 'genetic' material. Talk
-        with your instructor if you cannot find out the difference.
+        Since we haven't used the RDatasets package before, we must first add it to our julia
+        system. To do this, type ']' at the julia prompt - this starts julia's Package Manager,
+        which you can exit at any time by typing <Backspace>. Within the Package Manager, enter:
+            add RDatasets
+
+        This will download and compile around 200 packages that are relevant to the RDatasets
+        package (this may take a couple of minutes). When it has finished, exit Package Manager,
+        then enter:
+            using RDatasets						# Takes a few seconds ...
+            RDatasets.datasets()
+
+        How many Rows are in the "affairs" dataset?
+        """,
+        "\"affairs\" is the first dataset in the list of datasets that datasets() prints out.",
+        x -> x==601
+    ),
+    Activity(
+        """
+        OK, now we've got RDatasets up and running, we'll look specifically at the Iris dataset
+        compiled by Edgar Anderson and Ronald Fisher in the early days of genetics research in
+        1936. This dataset contains the length and width (in cm) of the sepals and petals of 50
+        samples from each of several iris flower species. Enter this code to load the Iris dataset:
+            iris = dataset("datasets","iris")
+
+        What is the SepalLength of the first specimen in iris?
+        """,
+        "This is the specimen in Row 1",
+        x -> x==5.1
+    ),
+    Activity(
+        """
+        The Iris dataset is an object iris of type DataFrame: a table of rows and columns. Each
+        row represents a single specimen, and each column represents an attribute field of that
+        specimen. To view the fields of the Iris dataset, enter names(iris). How many fields
+        does iris have?
         """,
         "",
-        x -> true
+        x -> x==5
     ),
     Activity(
         """
-        First, suppose we have two population types 1 and 2 whose fitness is equal: r[1] = r[2] = 1.
-        Suppose mutation turns type 2 into type 1 with probability q[1,2], and turns type 1 into
-        type 2 with probability q[2,1]. Now, every type must generate either itself or some other
-        type, so q[2,2] = 1 - q[1,2] must be the probability that type 2 is generated from type 2,
-        and q[1,1] = 1 - q[2,1] is the probability that type 1 is generated from type 1. In this
-        case,
-            dx[1]/dt = (1 - q[2,1])*x[1] +    q[1,2]*x[2]    - R*x[1] ;
-            dx[2]/dt =    q[2,1]*x[1]    + (1 - q[1,2])*x[2] - R*x[2] ;
-
-        Or in other words:
-            dx/dt = (Q - R*I)*x , where Q = [q[1,1] q[1,2]; q[2,1] q[2,2]]
-
-        So we can represent mutation by a MUTATION MATRIX Q, which satisfies the conditions
-        q[i,j] ∈ [0,1] and sum(q,dims=1) = 1 (i.e., components are probability values, and the sum
-        of all elements in each column is 1).
-
-        What is the population's average fitness R = x[1]*r[1] + x[2]*r[2], given x[2] = 1 - x[1]?
+        What is the size() of the dataset?
         """,
-        "Remember that r[1] = r[2] = 1",
-        x -> x == 1
+        "size(iris)",
+        x -> x==size(Main.iris)
     ),
     Activity(
         """
-        Substitute these values in the above dynamical equations to show that:
-            dx[1]/dt = q[1,2] - x[1]*(q[2,1] + q[1,2])
+        We can view the first five rows of iris using the usual array indexing with square
+        brackets []:
+            iris[1:5,:]
+
+        Report back to me the last 5 rows of the Iris dataset:
+        """,
+        "iris[end-4:end,:]",
+        x -> x==Main.iris[end-4:end,:]
+    ),
+    Activity(
+        """
+        We've seen that the first rows of iris concern the species setosa, and the last rows
+        concern the species virginica. What other species does iris contain. To find out, we
+        want to group the dataset by Species using the command:
+            species_groups = groupby(iris,"Species")
+
+        How many groups are contained in this grouping of the data?
+        """,
+        "size(species_groups)",
+        x -> x==3
+    ),
+    Activity(
+        """
+        OK, so we've seen that the first of three Species groups contains "iris setosa" specimens,
+        and the last Species group contains "iris virginica" specimens. To inspect all three
+        Species groups, we will combine specimens from each group into a single row:
+            combine(species_groups,nrow)
+
+        What is the name of the second iris species?
         """,
         "",
-        x -> true
+        x -> occursin(lowercase(x),"versicolor")
     ),
     Activity(
         """
-        Show that this dynamical equation has a fixed point x[1]* = q[1,2] / (q[2,1] + q[1,2]) 
+        Don't worry if you don't yet understand how to use the combine() function - we'll soon
+        find out! For now, we'd like to understand the Iris dataset a little better. A good
+        first step is to describe() the dataset - this provides an overview of each attribute
+        column in the table. What is the median petal length of all 150 iris specimens?
         """,
-        "Set dx[1]/dt = 0",
-        x -> true
+        "describe(iris)",
+        x -> x==4.35
     ),
     Activity(
         """
-        What you have discovered here is that in the long term, mutation leads to the stabilisation
-        of two populations. Their relative frequencies depend on their respective mutation rates:
-        if q[2,1] > q[1,2], the type 2 population ends up larger than type 1; if q[2,1] < q[1,2],
-        the type 1 population will end up bigger. In both cases, the crucial point is that type 1
-        and type 2 coexist; it is not necessary for one type to drive the other to extinction!
+        We can also extend the describe() function using additional descriptors such as the
+        25th percentile (:q25) or the standard deviation (:std). Which iris attribute has the
+        greatest standard deviation?
+        """,
+        "describe(iris,:std)",
+        x -> x=="PetalLength"
+    ),
+    Activity(
+        """
+        We can also calculate these values ourselves by loading and applying the functions
+        in julia's Statistics package:
+            using Statistics
+            std(iris[:,"PetalLength"])
 
-        Often, the mutation rate in one direction is much larger than in the other direction.
-        Imagine that in our 2-type model, q[2,1] ≫ q[1,2]: type 1 individuals mutate much more
-        frequently to type 2 individuals than in the reverse direction. We can approximate this
-        situation by setting q[1,2] = 0. Substitute this value into the dynamical equations for
-        dx[1]/dt and dx[2]/dt, and solve these equations to find the exact behaviour of x[1] and
-        x[2] over time. What mathematical name to we give to this type of behaviour over time?
+        What is the median sepal length?
+        """,
+        "median(iris[:,\"SepalLength\"])",
+        x -> x==5.8
+    ),
+    Activity(
+        """
+        Let's investigate the covariance attributes in the Iris database. Enter this code:
+
+            attributes = names(iris)[1:end-1]				# Leave out the non-numeric Species
+            for x in attributes, y in attributes
+                if x > y
+                    println( "\$x \t \$y \t \$(cov(iris[:,x],iris[:,y]))")
+                end
+            end
+
+        Look at the results: Unsurprisingly, PetalWidth covaries with PetalLength, but
+        SepalLength covaries with both PetalLength and PetalWidth. With which of these
+        does SepalLength covary least strongly?
         """,
         "",
-        x -> occursin("exponential",lowercase(x))
+        x -> x=="PetalWidth"
     ),
     Activity(
         """
-        We can easily extend this 2-type model of mutation into an N-type model. Again, we define
-        the mutation matrix Q ≡ (q[i,j]) as an (NxN) stochastic matrix of probability elements
-        satisfying the conditions q[i,j] ∈ [0,1] and sum(q,1) = 1. Again, since each type
-        generates some other type, the sum of all elements in each column is 1. We can write the
-        mutation dynamics like this:
-            dx/dt = (dx[i]/dt) = sum([q[i,j]*x[j] for j in 1:N]) - R*x[i] = (Q - R*I)*x
-
-        Again, in N-type mutation dynamics, R = 1. Why?.
+        This is what we might expect - after all, there seems no particular reason why SepalLength
+        should covary strongly PetalWidth. But wait! Covariance is a measure that depends on the
+        absolute size of the variables! Of PetalLength and PetalWidth, which has the greater
+        mean value?
         """,
-        "Think about how mutation converts one type into another",
+        "mean(iris[:,\"PetalLength\"]",
+        x -> x=="PetalLength"
+    ),
+    Activity(
+        """
+        Hm. This is tricky. SepalLength covaries with PetalLength more strongly than with
+        PetalWidth, however it may be that the smaller covariance with PetalWidth arises simply
+        from the fact that PetalWidth values are much smaller than PetalLength. We can solve this
+        question using correlation instead of covariance, because correlation is a relative
+        measure rather than an absolute one.
+        
+        Write code to compare the two correlation values for SepalLength-PetalLength and for
+        SepalLength-PetalWidth. Then find out the percentage difference between these two
+        values:
+        """,
+        "100 * (cor(SL,PL)-cor(SL,PW))/cor(SL,PL)",
+        x -> abs(x-6.173) < 0.1
+    ),
+    Activity(
+        """
+        We see that the correlation of PetalWidth is definitely major - almost as large as the
+        correlation PetalLength to SepalLength. What biological function of sepals might explain
+        why SepalLength correlates so highly with PetalWidth?
+        """,
+        "Both length and width of petals increases the bud volume that sepals must enclose.",
         x -> true
     ),
     Activity(
         """
-        Think back to what you already know about matrices and linear algebra. The fixed points of
-        mutation dynamics are defined by dx/dt(x*) = 0. Substitute this constraint into the above
-        mutation dynamical equation. What does this tell us about the mathematical relationship
-        between Q, x* and R?
-        """,
-        "When is (Q - R*I)*x = 0?",
-        x -> occursin("eigen",lowercase(x))
-    ),
-    Activity(
-        """
-        In julia, create a module Mutators containing a dataype Mutator that is mutated according
-        to a pure mutation matrix of your choice that mutates three types cyclically into each
-        other: 1 → 2 → 3 → 1. Use an appropriate julia function to calculate the fixed point of
-        your chosen mutation matrix, and then verify the result of this calculation by visualising
-        the mutation dynamics graphically in a 3-simplex.
-        """,
-        "I recommend using the function eigen() in the LinearAlgebra library",
-        x -> true
-    ),
-    Activity(
-        """
-        Finally, we can combine mutation with constant selection to derive the QUASI-SPECIES
-        EQUATION. Manfred Eigen and Peter Schuster used the term QUASI-SPECIES to describe what we
-        have here called a TYPE: the quasi-species equation describes how types evolve if they
-        possess linear fitness values AND can mutate into each other:
-            dx/dt    = Q*(x.*r) - (x∙r)*x ; or
-            dx[i]/dt = sum([q[i,j]*(x[j]*r[j]) for j in 1:N]) - R(x)*x[i], where
-            R(x)     ≡ sum([x[j]*r[j] for j in 1:N])
+        We can use the columns of iris as ranges for generating random values, for example:
+            rand(iris[:,"SepalLength"])
 
-        Use the quasi-species equation to include constant selection into your Mutators model from
-        the previous activity. Experiment to see what effect various fitness values have on the
-        behaviour of your cyclically mutating model. How is this behaviour different from simple
-        "Survival of the Fittest"?
+        Create a Vector containing a random sample of 21 PetalWidths:
+        """,
+        "rand(range,10)",
+        x -> length(x)==21 && all(map(x) do pw in(pw,Main.iris[:,"PetalWidth"]) end)
+    ),
+    Activity(
+        """
+        Let's create our own dataframe of the Group I chemical elements. It is a bad idea to
+        clutter our global namespace with lots of trivial names, so we'll create the dataframe
+        inside a function using local names:
+        
+            function group1()
+                symbol = ["Li","Na","K","Rb","Cs","Fr"]
+                protons = [3,11,19,37,55,87]
+                nucleons = [7,23,39,85,133,223]
+                electronegativity = [1.0,0.9,0.8,0.8,0.7,0.7]
+                DataFrame(; symbol, protons, nucleons, electronegativity)
+            end
+
+        You may first need to add the DataFrames package and load it with the keyword "using".
+        Now enter the function group1(), use it to create a dataframe named grp1, then extract
+        from grp1 the subtable consisting of the 3rd and 4th rows:
         """,
         "",
-        x -> true
+        x -> size(x)==(2,4) && x[1:2,"symbol"] == ["K","Rb"]
+    ),
+    Activity(
+        """
+        Finally, we'll learn to save and load dataframes to and from a file. First we'll do it
+        simply, using comma-separated variable (CSV) files. Add and load the CSV package, then
+        write the group1 dataframe to a CSV file:
+            CSV.write( "group1.csv", group1())
+
+        Now give me the result of reading the csv file:
+
+        str = read("group1.csv",String);
+        """,
+        "",
+        x -> x[43:44] == "Li"
+    ),
+    Activity(
+        """
+        Sometimes we want to write to other file formats, such as Excel files, and julia offers
+        us a range of packages such as XLSX for doing this. However, the advantage of csv files
+        for small projects is that we can read them into text strings and with a text editor.
+
+        We can also read our csv file as a DataFrame. Give me the following dataframe:
+            CSV.read("group1.csv",DataFrame)
+        """,
+        "",
+        x -> typeof(x)==Main.DataFrame && size(x)==(6,4)
     ),
 ]

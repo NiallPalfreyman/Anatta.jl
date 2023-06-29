@@ -16,8 +16,11 @@ module Replicators
 """
 	Replicator
 
-A Replicator represents a time-scale t in time-steps dt, and a corresponding time-series x
-over this time-scale. The initial time-series consists solely of zeros.
+Replicator is a concrete data-type. That is, it is not just an abstract name that guides multiple
+dispatch, but contains concrete data that it stores in memory. It encapsulates (i.e., hides from
+the outside world) three concrete items of data: a time-scale t in time-steps dt, and a
+corresponding time-series x representing the size of the replicator population over this
+time-scale. The initial time-series consists solely of zeros.
 """
 struct Replicator
 	t::Vector{Real}			# The simulation time-scale
@@ -31,12 +34,12 @@ end
 
 #-----------------------------------------------------------------------------------------
 """
-	unittest()
+	demo()
 
-Unit-test the Replicators module.
+Demonstrate use of the Replicators module.
 """
-function unittest()
-	println("\n============ Unit test Replicators: ===============")
+function demo()
+	println("\n============ Demonstrate Replicators: ===============")
 	println("An exponential population of replicators from t=0-5 generations:")
 	repl = Replicator( [0,1,2,3,4,5], 1, [0,0,0,0,0,0])
 	display( repl)

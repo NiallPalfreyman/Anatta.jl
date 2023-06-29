@@ -1,19 +1,19 @@
 #========================================================================================#
 #	Laboratory 1
 #
-# Introduction to Julia, variables and data.
+# Introduction to Julia, variables and functions.
 #
-# Author: Niall Palfreyman, 22/12/2021
+# Author: Niall Palfreyman, 08/05/2023
 #========================================================================================#
 [
     Activity(
         """
         Hi! Welcome to Anatta Subject 001:
-            Programming - Using structures to explore and predict the world
+            Computation - Using structures to explore and predict the world
 
-        Anatta is a course in thinking about the complex issues around Wholeness, Self, biological
-        Autonomy and Learning. This first 0-level Anatta subject introduces you to the computer
-        language Julia, which we shall use to investigate the concept of Anatta. We will use
+        Anatta is a course in thinking about the complex issues around Wholeness, Life, biological
+        Autonomy and Learning. This first 0-level Anatta Subject introduces you to the computer
+        language julia, which we shall use to investigate the concept of Anatta. We will use
         activities and questions to explore the basics of programming in any computer language.
         Feel free to experiment at any time by entering your own commands at the julia prompt! :)
         
@@ -29,92 +29,99 @@
     ),
     Activity(
         """
-        The environment that you are interacting with right now is called the julia REPL (Read-
-        Execute-Proces-Loop) - it is signalled by the julia prompt "julia>". You can use the julia
-        REPL like a calculator. Arithmetic operations in julia have their usual priority, so tell
-        me the result you get if you enter "(3+4)*5":
+        You have just created a Variable - that is, a name for a type of data in computer memory.
+        In this particular case, the name of the variable is "concept", and the contents of that
+        variable is the String of characters "Anatta". Whenever I want to refer in this text to
+        some julia code, I will either write it on a new line like this:
+            x = 5
+
+        or else I will write it within the text enclosed in backticks, like this: `sin(x)`. Enter
+        each of these two lines of code now, then tell me your result like this:
+            reply(sin(x))
         """,
-        "35",
+        "",
+        x -> abs(x-sin(5)) < 0.1
+    ),
+    Activity(
+        """
+        Every variable has a Type that determines how julia will handle it. Find out the type of
+        your new variable x now:
+            typeof(x)
+
+        then reply() me the result of your inquiry:
+        """,
+        "",
+        x -> x <: Int
+    ),
+    Activity(
+        """
+        The environment that you are interacting with right now is called the julia REPL (Read-
+        Execute-Process-Loop) - it is signalled by the julia prompt "julia>". You can use the julia
+        REPL like a calculator. All the arithmetic operations (+,-,*,/,^) have their usual
+        priorities, so tell me the result of entering `(3+4)*5`.
+
+        As always, use reply() to tell me your result ...
+        """,
+        "reply((3+4)*5)",
         x -> x==35
+    ),
+    Activity(
+        """
+        OK, now before we move on, I want to explain something very important...
+
+        I want you to learn from this course. I'll be giving you activities to do, or sometimes
+        just give you information. But you will ONLY learn if you try things out for yourself!
+        So make sure with each learning activity that you always follow these useful learning tips:
+            -   If I ask you to do something, like calculating `(3+4)*5`, try also doing something
+                slightly different, such as `(3+4)/5`, to increase your understanding efficiently.
+            -   The Docs subfolder of your Anatta home folder contains the full julia documentation,
+                so keep checking in there if there is anything you want to find out about.
+            -   If I use a julia function whose meaning you are curious about, try pressing `?` at
+                the julia prompt, then entering the name of the function. This provides quick help.
+
+        Try this now: Enter `?sin`, then reply() me whether this statement is `true` or `false`:
+            "The function sin(x) computes the sine of x, where x is in degrees."
+        """,
+        "Look carefully at the units of the angle x",
+        x -> x==false
     ),
     Activity(
         """
         A very useful feature of the Julia REPL is that you can always retrieve the result of
-        your previous calculation by entering "ans" at the Julia prompt. Press up-arrow a few
-        times until you see your previous calculation "(3+4)*5". Enter this calculation, and
-        then enter "ans" at the Julia prompt. What value is returned?
+        your previous calculation by entering `ans` at the Julia prompt. Press up-arrow a few
+        times until you see your previous calculation `(3+4)*5`. Enter this calculation, and
+        then enter `ans` at the Julia prompt. What value is returned?
         """,
         "35",
         x -> x==35
     ),
     Activity(
         """
-        Remove the brackets: "3+4*5". First calculate this value, then retrieve it again
-        by entering the variable "ans". Finally, show me the value using "reply(ans)":
+        Remove the brackets: `3+4*5`. First calculate this value, then retrieve it again
+        by entering the variable `ans`. Finally, show me the value using `reply(ans)`:
         """,
         "23",
         x -> x==23
     ),
     Activity(
-        "What answer do you get if you remove the multiplication sign: \"5(3+4)\"?",
+        "What answer do you get if you remove the multiplication sign: `5(3+4)`?",
         "35",
         x -> x==35
     ),
     Activity(
-        "What do you get if you use floating-point division \"1 + 1/7\"?",
+        "What do you get if you use floating-point division `1 + 1/7`?",
         "$(1+1/7)",
         x -> abs(x-(1+1/7)) < 0.01
     ),
     Activity(
-        "Or you can use exact division to produce a rational number \"a = 1 + 1//7\":",
+        "Or you can use exact division to produce a rational number `a = 1 + 1//7`:",
         "$(1+1//7)",
         x -> x == 1+1//7
     ),
     Activity(
-        "You can then convert this to a floating-point number: \"Float64(a)\"",
+        "You can then convert this to a floating-point number: `Float64(a)`",
         "$(1+1/7)",
         x -> abs(x-(1+1/7)) < 0.01
-    ),
-    Activity(
-        """
-        Let's try working with Vectors. A Vector is a linearly ordered list in square
-        brackets. They can contain all kinds of elements. Enter this definition of the
-        Vector b: "b = [3,5,"4",[1,2]]". Then use length() to find the length of b:
-        """,
-        "length(b)",
-        x -> x == 4
-    ),
-    Activity(
-        "Use b[2] to access the 2nd element of b, and use the function isodd() to see if it is odd:",
-        "isodd(b[2])",
-        x -> x == true
-    ),
-    Activity(
-        "What is the type of (typeof) the 4th element of b?",
-        "Vector{Int64}",
-        x -> (x <: Vector)
-    ),
-    Activity(
-        "Change the 3rd element of b to my name \"Niall\" and find the length of that 3rd element",
-        "b[3] = \"Niall\"",
-        x -> x == 5
-    ),
-    Activity(
-        """
-        Ranges are closely related to Vectors. Investigate the expression \"2:4\", then use
-        collect() to convert it into a Vector. Finally, use b[2:4] to extract the last three
-        elements of b:
-        """,
-        "[5,\"4\",[1,2]",
-        x -> x == [5,"Niall",[1,2]]
-    ),
-    Activity(
-        """
-        We can also work with BigInt numbers: \"c = factorial(big(100))\". Find out how
-        many digits this number has by using digits() to convert it into a Vector.
-        """,
-        "158",
-        x -> x == 158
     ),
     Activity(
         """
@@ -200,7 +207,7 @@
         using the call join([name1,name2]," "). What String results from this?
         """,
         "\"Ani Anatta\"",
-        x -> (x == "Niall Palfreyman")
+        x -> (x == "Ani Anatta")
     ),
     Activity(
         """
@@ -284,5 +291,122 @@
         """,
         "parse() parses argument 2 according to the type of argument 1.",
         x -> x == 2.718
+    ),
+    Activity(
+        """
+        Computer-programming is nothing other than Problem-Solving. Before completing this lab, I
+        want to introduce you briefly to three Very Important problem-solving concepts: Branching,
+        Iteration and Recursion. All three techniques show us how to solve big, complicated
+        problems by breaking them down into smaller problems:
+            -   Branching: If I go to visit my daughter, I either cycle or take the bus. As soon as
+                I choose one means of travel, I no longer have to worry about how to do the other;
+            -   Iteration: If I want to read a book, I read page 1, then I read page 2, then 3, 4,
+                and so on. I apply the same skill of reading to one page after another;
+            -   Recursion: If I want to travel from here to Mullaitivu, I plan travel between the
+                two nearest airports, then I plan travel between those airports and my destination
+                and home towns, then between the two towns and my exact destinantion and home
+                addresses. I use travel-planning skills to solve smaller and smaller sub-problems.
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        We will use the factorial problem to explore these three techniques. To calculate the
+        factorial of the number 5 - factorial(5) - we multiply together all of the positive
+        integers less than or equal to 5:
+            factorial(5) == 1 * 2 * 3 * 4 * 5 == 120
+        
+        The factorial problem is the task of calculating this value. First, explore the julia
+        factorial() function at the julia prompt, for example:
+            factorial(3) returns the value: 6
+        
+        What is the value of factorial(0)?
+        """,
+        "Type in factorial(0)",
+        x -> x==1
+    ),
+    Activity(
+        """
+        OK, let's use Branching to solve for ourselves the problem of how to calculate the
+        factorial of a number. First, notice that 0 is a special case: factorial(0)==1. We cannot
+        calculate this value by multiplying numbers together, because multiplying by 0 always
+        returns the value 0. Instead, we must use branching to choose whether we want to multiply
+        numbers together or simply return the value 1:
+            function fact(n)
+                if n < 1
+                    1
+                else
+                    5
+                end
+            end
+
+        This function doesn't yet do a very good job of calculating factorial when n is greater
+        than 1, but it does a GREAT job of calculating the special case fact(0)! :) Enter this code
+        and check that it calculates fact(0) correctly ...
+        """,
+        "",
+        x -> x==1
+    ),
+    Activity(
+        """
+        OK, now Iteration. We've used branching to solve the special case of n==0, but now we need
+        to solve the factorial problem for other numbers. We want to multiply together all integers
+        less than or equal to n. We'll handle the case n==0 in the if-branch, and use a for-loop to
+        Iterate through the multiplications:
+            function fact(n)
+                if n < 1
+                    1
+                else
+                    f = 1
+                    for i in 2:n
+                        f = i*f
+                    end
+                    f
+                end
+            end
+
+        This implementation keeps multiplying by numbers (i) between 2 and n, until it has
+        calculated the result. Enter the code and check it calculates factorial(5) correctly ...
+        """,
+        "",
+        x -> x==120
+    ),
+    Activity(
+        """
+        Finally, let's look quickly at Recursion - breaking problems down into smaller and smaller
+        chunks that are easier to solve. We have already found an adequate iterative solution to
+        the factorial problem; however, there are many problems such as the travel planning problem
+        that we cannot solve using iteration. In such cases, Recursion is often useful. Even though
+        we don't need it for the factorial problem, this problem shows us how to use Recursion in
+        other, more complicated, situations ...
+
+        First, notice that:
+            -   factorial(100) == 100 * 99 * 98 * ... * 5 * 4 * 3 * 2 * 1
+            -   factorial(99)  ==  99 * 98 * 97 * ... * 5 * 4 * 3 * 2 * 1
+
+        So by which number must we multiply factorial(99) in order to get factorial(100)?
+        """,
+        "",
+        x -> x==100
+    ),
+    Activity(
+        """
+        We can build this idea into a Recursive solution to the factorial problem, in which our
+        fact() function now calls itself (Recursion means "calling itself"):
+            function fact(n)
+                if n < 1
+                    1
+                else
+                    n * fact(n-1)
+                end
+            end
+
+        Notice how this recursive method is much more compact and intuitive than our iterative
+        method. That is the main advantage of recursion: recursive solutions are easier to
+        understand. Check that our new fact() method works correctly ...
+        """,
+        "",
+        x -> true
     ),
 ]

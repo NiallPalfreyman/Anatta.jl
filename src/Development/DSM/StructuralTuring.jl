@@ -52,7 +52,8 @@ function structural_turing(;
 		:outer_radius_x => outer_radius_x,
 		:outer_radius_y => outer_radius_y,
 		:inhibition => inhibition,
-		:differentiation => rand(Float64,extent...),
+		:differentiation => zeros(Float64,extent...),
+#		:differentiation => rand(Float64,extent...),
 		:activators => fill(Int[],extent),
 		:inhibitors => fill(Int[],extent),
 		:pPop => pPop,
@@ -74,7 +75,7 @@ function structural_turing(;
 	end
 
 	for _ in 1:pPop*width*width
-		add_agent!( SlimeMould, st, (0,0), 0.0)
+		add_agent!( SlimeMould, st, (0,0), 0.1)
 	end
 
 	st

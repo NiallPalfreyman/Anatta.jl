@@ -1,232 +1,280 @@
 #========================================================================================#
 #	Laboratory 13
 #
-# Eco-evo: What happens when fitness is nonlinear?
+# Selection: How do populations stop growing?
 #
-# Author: Niall Palfreyman, 15/09/2022
+# Author: Niall Palfreyman, 10/09/2022
 #========================================================================================#
 [
     Activity(
         """
-        Hi! Welcome to Anatta Lab 013: Implementing non-linear fitness
+        Hi! Welcome to Anatta Lab 013: Implementing Replication and Selection
 
-        Until now, we have made a very simple, but also an over-simple assumption: We have
-        assumed that the fitness r[i] of a type i is a constant number independent of the
-        frequencies x[i] of the various types. However, we know that there are many situations
-        where this is just not so. For example, the fitness of a rabbit depends very much on the
-        frequency of lynxes in its area, and also on the frequency of other rabbits that might be
-        easier for the lynxes to catch!
+        In this laboratory we really get started with the biological content of this course.
+        We know from lab 6 that replication is represented by the Exponential model:
+            dx/dt = r*x
+
+        where x is the size of a population and r is the specific growth rate of that population.
+        This model generates the exponential growth story, for which we can formulate an exact model:
+            x(t) = x0 exp(r*t), with doubling time T2 = ln(2)/r
         
-        The important point here is that simplistic slogans like “Survival of the Fittest!” often
-        rely on the unjustified assumption that you as an organism have a constant, measurable
-        "fitness" number that is determined only by the genomic makeup of your type. But fitness is
-        simply the specific growth rate of a population type, and we cannot measure that in you,
-        but rather only by watching how your population type grows wthin_a_specific_context:
-
-        Genetics plays a role in determining fitness, but we can only ever measure fitness ecologically!
-
-        And of course, ecology depends on all the details of how your type interacts with this
-        context, so fitness is not constant, linear or even particularly simple! In practice, an
-        organism's fitness depends highly NONLINEARLY on the interactive games it plays with its
-        environment …
+        Suppose a particular bacteria population has a specific growth rate of r = 0.035 /min . Use
+        the julia REPL to calculate the population's doubling time.
         """,
-        "",
+        "You will need to look up the julia function for ln()",
         x -> true
     ),
     Activity(
         """
-        First, let's formulate a definition of general, nonlinear selection. Remember that our
-        definition of linear selection looked like this:
-            dx[i]/dt = x[i]*(r[i] - R); R = sum(x.*r)				(Linear selection)
-
-        The only change we now need to make is to allow the fitness values r[i] to depend
-        explicitly upon the frequencies x[i]:
-            dx[i]/dt = x[i]*(r[i](x) - R); R = sum(x.*r(x))			(Frequency-dependent selection)
-
-        If we set N = 2 in these equations, we obtain the simple 2-type situation. In this case, we
-        immediately see that the dynamics of frequency-dependent selection is far more interesting
-        and fun than boring old constant selection:
-            dx[1]/dt = x[1]*(r[1](x) - R);		dx[2]/dt = x[2]*(r[2](x) - R);		where
-            R = x[1]*r[1](x) + x[2]*r[2](x);	x[1] + x[2] = 1
-
-        Use this last equation to replace x[2] by (1 - x[1]) in our frequency-dependent selection
-        equations and show that they then become:
-            dx[1]/dt = x[1]*(1-x[1])*(r[1](x) - r[2](x))
+        Use julia as a calculator to calculate the number of minutes in a day. How many cells will
+        one bacterium generate over 3 days?
         """,
-        "",
+        "The population doubles in each doubling time over the three days",
+        x -> 151 < log(x) < 152
+    ),
+    Activity(
+        """
+        This number is enooormous! In fact, it is so enormous that it cannot be true! In the
+        biological world, there is no such thing as exponential growth. Instead, as Darwin
+        realised, limited resources always cause the population growth rate to drop as the
+        population x gets bigger. This is modelled by the logistic equation:
+            dx/dt = r*x*(1 - x/K)
+
+        Here, r is the specific replication rate of the population only when x is much smaller
+        than the resource limitation (carrying capacity) K. If x → 0, or if x → K, then the growth
+        rate dx/dt → 0. In this case, the population has an unstable fixed point at x* = 0, but
+        grows from any initial value x0 > 0 towards the stable fixed point at x* = K. (An asterisk
+        denotes a fixed-point value.)
+
+        Again using the value r = 0.035 /min from the previous activity, use a value of K = 100 to
+        calculate the growth rate dx/dt of the bacteria population when x = 99.
+        """,
+        "Apply the logistic equation",
+        x -> (0.0346 < x < 0.0347)
+    ),
+    Activity(
+        """
+        Suppose we have two exponential populations x and y that reproduce at different rates r and
+        s. Suppose they have initial conditions x(0)=x0 and y(0)=y0, then:
+            dx/dt = r*x and dy/dt = s*y, so that
+            x(t) = x0*exp(r*t) and y(t) = y0*exp(s*t)
+
+        Both x and y grow exponentially, and if r > s, x will grow faster than y. Eventually, there
+        will be more x's than y's. Let's define ρ(t) ≡ x(t)/y(t). Use the quotient rule to prove
+        that ρ(t) also follows an exponential model: dρ/dt = (r - s)*ρ .
+        """,
+        "On paper, divide the exponential expression for x by the exponential for y, then differentiate",
         x -> true
     ),
     Activity(
         """
-        Again replacing x[2] by 1 - x[1], we can replace the rates r[1] and r[2] by functions of x[1]:
-            dx[1]/dt = x[1] * (1-x[1]) * (r[1](x[1])-r[2](x[1]))
+        The solution of this equation is ρ(t) = ρ0*exp((r - s)*t), so if r > s, ρ will grow toward
+        infinity, and x outcompetes y. In addition, if we also suppose that resources are limited,
+        the populations x and y will grow toward a point where the total population (x + y) stays
+        constant, so that if x gets infinitely bigger than y, this must mean that y → 0.
 
-        This equation defines dynamics on the interval x[1] ∈ [0,1]. Sketch this interval as a
-        horizontal axis and draw arrows on it to represent the dynamical flow from all points of
-        the interval toward some single stable fixed point inside that interval. Now see if you can
-        invent two functions r[1](x[1]) and r[2](x[1]) with the property that they together
-        generate the dynamics you have just drawn.
-        """,
-        "If you have difficulties, rename the variables from x[1], r[1], r[2] to x, α, β",
-        x -> true
-    ),
-    Activity(
-        """
-        OK, so we can see that frequency-dependent selection might generate fun dynamics, but can
-        we find some realistic situation that produces frequency-dependent selection? In the
-        1970's, John Maynard Smith invented EVOLUTIONARY GAME THEORY. His idea was that the
-        difference between the types in a population might be behavioural: maybe type 1 uses a very
-        different strategy from type 2 for its ecological interactions (with its environment and
-        with other individuals), and this strategy might be important for its evolutionary survival!
-
-        A good example is the Hawks and Doves (HD) game. In HD, two dogs meet in a forest at a
-        place where a tasty sandwich is lying on the ground whose nutritional benefit is b = 4.
-        Each dog has a choice between two strategies: H (hawk: attack) and D (dove: surrender). If
-        the first dog adopts strategy H, and the second adopts D, the first dog will gain the
-        sandwich benefit b, and the second dog gets nothing. On the other hand, if both dogs adopt
-        strategy H, they will probably both pay the cost c = 2 of getting injured; on average,
-        each dog will get the sandwich half of the time and so gain an average benefit of b/2.
-        If both play strategy D, each will again get the sandwich half the time (benefit b/2),
-        and will pay no injury cost.
-
-        At the julia prompt, define the benefit and cost parameters b = 4 and c = 2.
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        Now define the HD game as a PAYOFF MATRIX A, and its two strategies as basis vectors h and d:
-            A = [(b-c)/2 b; 0 b/2];		h = [1,0];		d = [0,1]
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        The payoff matrix A tells us how each individual will benefit on average from using a
-        particular strategy to interact with other individuals in the HD game. We can think of the
-        component A[i,j] in row i and column j as representing the payoff that strategy i will
-        achieve if it interacts with strategy j. Suppose for example I am playing against a hawk,
-        then I will achieve payoff 1 if I use the hawk strategy H, and 0 if I use a dove strategy:
-            A*h = [1,0]
-
-        Use matrix multiplication at the julia prompt to find out what payoff I will typically
-        achieve if I play a hawk strategy against a dove.
-        """,
-        "Calculate A*d",
-        x -> x==4
-    ),
-    Activity(
-        """
-        A hawk meeting a dove will always do well, getting a payoff of 4, whereas the dove gets
-        nothing. On the other hand, the hawk strategy is much less useful in a population containing
-        only hawks, since the hawk then only receives an average payoff of 1. In fact, it may well
-        happen that all the hawks die out from injuries, whereas a population of doves can survive.
-
-        Suppose we have a population that contains 75% hawks and 25% doves. The population frequency
-        vector is then x = [0.75,0.25], and the typical payoff for a hawk or dove is given by the
-        product A*x. What is this typical payoff for a hawk?
-        """,
-        "Look at the components of A*d",
-        x -> x==1.75
-    ),
-    Activity(
-        """
-        What is the typical payoff for a dove in this situation?
-        """,
-        "",
-        x -> x==0.5
-    ),
-    Activity(
-        """
-        Now suppose instead that we are living in a more peaceful environment containing 25% hawks
-        and 75% doves. Calculate the typical payoff for a hawk and for a dove in this population.
-        Is this new environment better or worse for doves than the previous environment, which had
-        more hawks in it?
-        """,
-        "",
-        x -> occursin("better",lowercase(x))
-    ),
-    Activity(
-        """
-        You can see that the typical payoff for a hawk or a dove is highly frequency-dependent:
-        the 'fitness' of a dove is much higher in a dove population than in a hawk-dominated
-        population! For an individual using strategy i to play the game with payoff A≡(A[i,j])
-        in a population with type frequencies x=(x[j]), the typical payoff is (A*x)[i]. This value
-        represents the average benefit that this individual achieves in its daily life from
-        interacting with other individuals in the population. And that average payoff is the
-        source of this individual's replicative success r[i] ! Because of this, we can insert the
-        payoff success, or fitness, into the frequency-dependent selection equation:
-            dx[i]/dt = x[i] * (sum([A[i,j]*x[j] for j in 1:N]) - R) ; where
-            R = sum([x[i]*a[i,j]*x[j] for i,j in 1:N])
-
-        or in matrix form:
-            dx/dt = x.*(A*x - R) ; where R = x'*A*x						(Replicator equation)
-
-        This is Josef Hofbauer and Karl Sigmund's REPLICATOR EQUATION. It describes the dynamics of
-        an infinite population of N strategy-types playing a 2-player game.
+        This is selection: where the growth of x drives y to extinction. For selection to happen,
+        we need different rates of growth of the populations x and y, plus resource limitation.
         
-        In the 2-player game of Chicken, two teenagers ski straight towards each other at high
-        speed on a narrow piste. Each teenager chooses one of two possible strategies: C (Chicken
-        out and leave the piste) or D (ski Directly ahead). The loser is the one who chickens out
-        first; in this case, the other skier gets the prestige benefit b = 3. If neither chickens
-        out, both are injured with a cost c = 5, and if both chicken out, they share the benefit. At
-        the julia prompt, set up a general payoff matrix A for the game of Chicken. Use the Replicator
-        Equation to calculate the population average payoff R for the two population frequency
-        vectors cc = [0.75,0.25] and dd = [0.25,0.75]. Which population is LEAST successful?
-        """,
-        "Set up the variables b, c, A, cc and dd, then calculate R from the Replicator Equation",
-        x -> occursin("dd",lowercase(x))
-    ),
-    Activity(
-        """
-        N-strategy games: All our examples so far have had only two possible strategies (H/D or
-        C/D), but in general there may be N different strategies for playing a game. In this case,
-        the payoff matrix A contains (NxN) entries for playing each strategy against each of the
-        others. A simple example is the 3-strategy game rock-scissors-paper (RSP), in which three
-        strategies cyclically dominate each other: R beats S, S beats P, and P beats R.
-        
-        There is in fact a species of lizard whose interactions with each other form a cyclical
-        3-strategy game in which strategy 1 beats strategy 2, 2 beats 3 and 3 beats 1. The (3x3)
-        payoff matrix for the lizards' interaction looks like this:
-            Aliz = [4 2 1;3 1 3;5 0 2]
+        To study selection situations, we often use two simple modelling tricks:
+        - We think of x and y not as populations, but as FREQUENCIES. That is, we assume that the
+            sum of both population types is 1 (x + y = 1), so that x describes the proportion of
+            the combined population that are x-individuals, while y describes the proportion that
+            are y-individuals.
+        - In addition, we think of the growth rates r and s as FITNESS values: r describes how
+            fit the type x is, in terms of how effectively it grows by comparison with y.
 
-        The dynamics defined by the Replicator Equation remain unchanged if we subtract an
-        arbitrary constant from any column of the payoff matrix. Reduce Aliz to a simpler form Arsp
-        by subtracting 4 from the first column, 1 from the second column, and 2 from the third
-        column. Tell me the new payoff matrix Arsp that you obtain by doing this:
+        We want to make sure that the sum x + y = 1 of the two frequencies stays constant. To
+        achieve this, we will reduce the growth rates of x and y by equal amounts R in the
+        selection equations:
+            dx/dt = (r - R)*x and dy/dt = (s - R)*y .
+            
+        Prove that this will only work if R is the average fitness of the two population types:
+            R ≡ r*x + s*y .
         """,
-        "",
-        x -> x==[0 1 -1;-1 0 1;1 -1 0]
-    ),
-    Activity(
-        """
-        Define three strategy vectors r = [1,0,0], s = [0,1,0] and p = [0,0,1] at the julia prompt.
-        Using your simplified payoff matrix Arsp, find the results of playing these strategies
-        against each other by comparing products like r'*A*s and s'*A*r . Do your results support
-        your expectations from the RSP game?
-        """,
-        "",
-        x -> occursin("y",lowercase(x))
-    ),
-    Activity(
-        """
-        Now set up the Replicator Equation for the RSP game using the simplified matrix A. Build a
-        julia module Interactors comtaining a datatype Interactor that simulates 3-strategy
-        population dynamics. To test your Interactor type, implement a use-case in which the
-        payoff matrix is that of the RSP game. Simulate this game and display its results in a
-        3-simplex.
-        """,
-        "Your dynamics will show how the frequency of strategies in the population change over time",
+        "The condition for (x + y) to stay constant is: d(x + y)/dt = 0",
         x -> true
     ),
     Activity(
         """
-        Now you will use your RSPs module to verify that the lizard dynamics are the same as RSP
-        dynamics. Adapt your RSP implementation to use the original lizard payoff matrix Aliz, then
-        display your results for the three lizard types in a 3-simplex. Verify that these dynamics
-        are identical to those of RSP.
+        One advantage of using these selection model tricks is that y now depends upon x:
+            y = 1 - x.
+            
+        Show that in this case, we can eliminate y from the two selection equations, so that we
+        now only need to solve the single equation:
+            dx/dt = (r - s)*x*(1 - x)
+        """,
+        "Substitute the constraint y = 1 - x into the logistic equations for x and y",
+        x -> true
+    ),
+    Activity(
+        """
+        We recognise this equation: it is the logistic equation with specific growth rate (r - s)
+        and carrying capacity 1. We also know how the logistic story evolves over time - it has two
+        equilibria at 0 and 1:
+            If r > s, x → 1, so y → 0, and type x is selected over type y;
+            If s > r, x → 0, so y → 1, and type y is selected over type x.
+
+        Martin Nowak calls this model “Survival of the Fitter”. But models like this can also display
+        many other exciting behaviours! :)
+
+        By the way, before we proceed, you should beware of thinking of the frequencies x and y as
+        species, because they might simply be different groups in a population of one species. It
+        might even be that x's can genetically transform into y's. We shall refer to them here
+        simply as "frequencies" or "types".
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        We can extend this 2-type model to selection between N different types within a population.
+        If we label the individual type frequencies x[i](t) (where i is in 1:N), the structure
+        describing all N types is a vector: x ≡ [x1,x2, …, xN]. Now define r[i] ≥ 0 as the fitness
+        of type i, then the average fitness of the entire population of N types is:
+            R = sum([r[i]*x[i] for i in 1:N]), or simply dot(r,x)
+
+        We can then write the selection dynamics model as:
+            d(x[i])/dt = x[i]*(r[i] .- R)
+
+        This is the general LINEAR SELECTION model. The frequency x[i] of type i increases if its
+        fitness r[i] is higher than the population average R; otherwise x[i] decreases. However,
+        the total population stays constant:
+            sum(x) ≡ 1 and sum(dx/dt) ≡ 0
+
+        We will find these relations very useful when we study the growth and decline of types
+        within a population. In particular, we shall want to make use of the dot product between two
+        vectors. At the julia prompt, create two vectors a = [1,2,3] and b = [4,5,6], then verify
+        that a'*b calculates the dot product of a and b. Then look up and tell me which library we
+        need to load in order to make use of the dot product function: dot(a,b).
+        """,
+        "LinearAlgebra",
+        x -> x == "LinearAlgebra"
+    ),
+    Activity(
+        """
+        The set of all values x[i] > 0 obeying the property that sum(x) = 1 is called a SIMPLEX.
+        The useful thing about simplexes is that we can represent them both graphically and as
+        coordinates. Given any two points P1 and P2 in the plane, we can represent any point on the
+        straight line between P1 and P2 as a weighted average of P1 and P2. So, for example:
+            (1,0)			corresponds to the point P1
+            (0,1)			corresponds to the point P2
+            (0.25,0.75)		corresponds to a point three-quarters of the way from P1 towards P2
+
+        The coefficients of a weighted average are always frequencies that add up to 1, and we are
+        using them here as coefficients that define a linear combination of the two points P1 and
+        P2. Any linear combination whose coefficients add up to 1 is called a CONVEX COMBINATION.
+
+        What are the convex coordinates of the midpoint lying halfway between P1 and P2?
+        """,
+        "",
+        x -> collect(x) == [0.5,0.5]
+    ),
+    Activity(
+        """
+        So if we have two population types x and y, we can represent any particular values of these
+        two types as a convex combination of two points in a graph. Now, you might not at first
+        think this is particularly useful, but what if we had three populations? It would be quite
+        difficult to visualise these three numbers in a 3-D graph, but is very easy to visualise
+        them as convex combinations of the three vertices of a triangle!
+
+        This is exactly what I have done in the graphics function Simplex.plot3(), which takes a 3-d
+        state vector and displays it graphically in a 3-simplex based on three populations x, y and
+        z. To see this in action, enter the following at the julia prompt:
+            include("Development/Computation/Simplex.jl")
+            Simplex.plot3([1,2,3])
+            
+        Simplex.plot3() automatically normalises your state vector so that the sum of the three
+        frequencies is equal to 1, then plots this vector as a dot inside a 3-simplex. Notice how
+        each population frequency represents how close the dot is to the corresponding vertex of
+        the simplex. Which vertex is closest to the dot?
+        """,
+        "Which species type has the highest frequency?",
+        x -> occursin("z",lowercase(x))
+    ),
+    Activity(
+        """
+        Now try plotting the trajectory of a population over time by entering the following:
+            Simplex.plot3([[(1+sin(t))/2,(1+cos(t))/3,t] for t in 0:0.1:6])
+
+        Which colour have I used to signify graphically the START of the trajectory?
+        """,
+        "Locate the value of z in the first state vector of the above list comprehension",
+        x -> occursin("green",lowercase(x)) || x == :green
+    ),
+    Activity(
+        """
+        Which vector of frequencies corresponds to the centre of the 3-simplex? Test your answer
+        graphically.
+        """,
+        "Which coordinates are equally far away from all three vertices?",
+        x -> x[1] == x[2] == x[3]
+    ),
+    Activity(
+        """
+        Which point would represent the situation in which type y is absent, and types x and z
+        are present in equal quantities?
+        """,
+        "",
+        x -> x == [0.5,0,0.5]
+    ),
+    Activity(
+        """
+        In the linear selection model above, imagine that the type k in 1:N has greater fitness
+        r[k] than any other type: r[k] > r[i], ∀i≠k. What effect does this have on the value of the
+        factor (r[i]-R)? What effect will this have on the growth rate dx[k]/dt of type k whenever
+        other types are present? What will be the frequency of the types after a long time? Over
+        time, where will any state vector of population frequencies within the simplex move to?
+        """,
+        "Which vertex will the frequencies move towards?",
+        x -> occursin("vertex",lowercase(x)) && occursin("k",lowercase(x))
+    ),
+    Activity(
+        """
+        In the following activities, we'll build a slightly more general model of selection:
+            dx[i]/dt = r[i]*x[i]^c - R*x[i]; R = sum([r[i]*x[i]^c for i in 1:N])
+        
+        If c < 1, we call this selection model SUBlinear; if c > 1, it is SUPERlinear. What model
+        does this reduce to if we set c = 1?
+        """,
+        "Look earlier in this chapter",
+        x -> occursin( "linear", lowercase(x))
+    ),
+    Activity(
+        """
+        In the sublinear selection model, where c < 1, the population growth is slower than
+        exponential (subexponential), and if c> 1, the growth is faster than exponential
+        (superexponential). An extreme example of subexponential growth is immigration at a
+        constant rate. An example of superexponential growth is sexual reproduction, where two
+        organisms must cooperate in order to replicate.
+
+        In our more general selection model, let’s take the simple case N = 3. Show that in this
+        case, so long as the population lies inside the 3-simplex (so sum(x) = 1), the rate of
+        change (sum(dx/dt)) of the entire population is equal to zero. What does this imply for
+        the evolving population in relation to the 3-simplex?
+        """,
+        "What constraint will automatically apply to all population values throughout evolution?",
+        x -> occursin("inside",lowercase(x))
+    ),
+    Activity(
+        """
+        Take the module Replicators as a template, and extend the module Selectors (in Selectors.jl)
+        to include a datatype Selector that uses RK2 to simulate the evolution of a population of
+        three types under sub- and superlinear selection. Your client function unittest() should:
+            -	use a constructor method to set the value of c and the three specific growth rates;
+            -	then call the method simulate!(s,[x0 y0 z0],T) to evolve the population over a time
+                T, starting from the initial frequencies [x0 y0 z0];
+            -	then plot this evolution graphically within a triangular 3-simplex.
+            
+        For example:
+            fig = Figure()
+            ax = Axis(fig[1,1])
+            sel = Selector( [0.5,0.4,0.1], 1.3)
+            simulate!( sel, [0.3,0.3,0.4], 100)
+            plot3!(ax,sel)
+
+        Nowak describes the case c < 1 as Survival of All, and the case c > 1 as Survival of the
+        First. Use your Selector class to understand why he uses these names for the two cases.
         """,
         "",
         x -> true

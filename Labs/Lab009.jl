@@ -1,484 +1,236 @@
 #========================================================================================#
 #	Laboratory 9
 #
-# Deterministic CHAOS and software development.
+# Writing scientific code for human understanding.
 #
-# Author: Niall Palfreyman, 06/09/2022
+# NOTE: This lab makes heavy use of George Datseris' eratosthenes() example from his
+#		excellent course Good Scientific Code at: https://github.com/Datseris/ .
+#
+# Author: Niall Palfreyman, 07/09/2022
 #========================================================================================#
 [
     Activity(
         """
-        Hi! Welcome to Anatta Lab 009: Chaos and software development
+        Hi! Welcome to Anatta Lab 009: Writing simple, understandable code
 
-        In this laboratory, we implement a program to demonstrate chaos in a gravitational system
-        containing three bodies of equal mass in two dimensions. We will use julia to analyse the
-        execution of a complex simulation program, and adapt this program to use Runge-Kutta
-        integration to demonstrate graphically chaotic 3-body motion.
+        OK, now it's time to start writing good code for real scientific computing. Remember what
+        I said earlier in this course: Good scientific code is clear text whose purpose is to
+        communicate to others your understanding of how to solve a particular problem. I have
+        allowed plenty of time for you to complete this chapter, because it is so important that we
+        learn to write clean scientific code. Please take time to work thoroughly through the
+        exercises in this lab. In VSC, open the following file from your home folder:
+            Development/Computation/Utilities.jl
+
+        With your text cursor inside the file Utilities.jl in VSC, press the Play button at the
+        top-right of VSC - this will include the file and open a julia console in VSC.
         """,
         "",
         x -> true
     ),
     Activity(
         """
-        In this lab, we investigate DETERMINISTIC CHAOS. Chaos is extremely important in biology,
-        because it is the source of the spontaneity that we observe in living organisms. To see how
-        chaos works, start by loading my julia implementation of the Mathematica function nestlist():
+        Utilities.jl contains a module named Utilities, and in this module is a method named
+        eratosthenes_bad(). This method generates prime numbers up to a user specified maximum N.
+        It implements the algorithm known as the Sieve of Eratosthenes, which is quite simple:
+            Given an array of integers from 1 to N, cross out all multiples of 2. Find the next
+            uncrossed integer, and cross out all of its multiples. Repeat this until you have
+            passed the square root of N. The remaining uncrossed numbers are then all of the
+            prime numbers less than N.
 
-            include("Tools/Utilities.jl")
-            using .Utilities
+        Test the eratosthenes_bad() method now. Enter the following at the julia prompt:
+            Utilities.eratosthenes_bad(100)
 
-        Take a look at the implementation of nestlist(), and then experiment with it. For example,
-        what is the result of the following method call?
-
-            nestlist(x->2x,3,5)
+        What answer do you get?
         """,
         "",
-        x -> x == [3,6,12,24,48,96]
+        x -> x == [2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97]
     ),
     Activity(
         """
-        nestlist() applies a function f repeatedly to the initial value x0, creating a list of the
-        values that it generates in this way. This might be useful if we're modelling some specific
-        population growth rule over time. Take for example the discrete logistic situation ...
-
-        Imagine a population of wasps living on an island with renewable but limited resources:
-            -   They can saturate the island's resource capacity (population x = 1).
-            -   They can die out (x = 0).
-            -   The population can have any size in the range 0 ≤ x ≤ 1.
-            -   If the population gets too big (i.e., x close to 1), wasps will starve.
-            -   If the population gets very small (x close to 0), wasps will thrive.
-            -   All wasps die each winter, so their seasonal population has a new value each year:
-                    [x0,x1,x2,...,xn].
+        This eratosthenes_bad() method has been ported directly from Java, and so does not make use
+        of higher-level features offered by Julia. I have copied the implementation of
+        eratosthenes_bad() into a second method eratosthemes_good() - the code is identical. You
+        will now adapt the code in eratosthenes_good() create your own better implementation.
         """,
         "",
         x -> true
     ),
     Activity(
         """
-        These assumptions suggest that there exists some growth function L() that maps the wasp
-        population size in one year onto the population size in the following year. That is:
-            x[n+1] = L(x[n]) , or written differently: L : x[n] -> x[n+1]
+        First, think carefully about function and variable NAMES. The purpose of the name of a
+        function or variable is always to indicate to readers how you intend to use the function or
+        variable. Names communicate to readers the INTENTION of your code.
 
-        One commonly used growth function is the Discrete Logistic function. In the julia console,
-        define the discrete logistic function L for the specific growth rate r = 2:
-            r = 2
-            L(p) = r * p * (1-p)
+        In Julia, these names should always be in lower case, with multiple words separated by _.
+        The name should be brief, but understandable for strangers reading your code (for example,
+        NOT: rsdt, rsut and rsus!). Also, NEVER use constant literals in your program, for example,
+        not '2022', but rather: 'year=2022', and then use 'year' in your code. The problem, of
+        course, is that literals say nothing about your intentions.
 
-        Check out the values of L(0.1), L(0.2), L(0.8) and L(0.9). What is the value of L(0.5)?
-        """,
-        "",
-        x -> x==0.5
-    ),
-    Activity(
-        """
-        As you see, when r=2, the logistic function causes small populations (p<0.5) to grow, and
-        large populations (p>0.5) shrink. We call p=0.5 a Fixed Point of this growth function,
-        because the population neither grows nor shrinks from this value.
-
-        Verify these statements by using nestlist() to generate a sequence of 10 population values
-        starting from the initial value 0.01:
-            nestlist(L,0.01,10)
-
-        Towards which value does this sequence converge?
-        """,
-        "",
-        x -> x==0.5
-    ),
-    Activity(
-        """
-        We can also visualise such sequences:
-            using GLMakie
-            lines(nestlist(L,0.001,15))
-
-        Towards which value does this sequence converge?
-        """,
-        "",
-        x -> x==0.5
-    ),
-    Activity(
-        """
-        I'd like to start investigating how these graphs change as we modify the value of the
-        specific growth rate r. However, I can't be bothered with constantly redefining the value
-        of r in a separate assignment, as we did above. Instead, I will define L(r) to be a
-        Functional - that is, a function that produces another function.
-        
-        In the following line of code, define L(r) to return a discrete logistic function that
-        depends upon the wasp population's specific growth-rate r:
-            L(r) = (p -> r * p * (1-p))
-
-        Now verify that L(2) is a discrete logistic function with all the properties you found
-        above, for example, towards which value does this sequence converge?
-            lines(nestlist(L(2),0.001,15))
-        """,
-        "",
-        x -> x==0.5
-    ),
-    Activity(
-        """
-        Now we've set up a test-bed for our experiments, use your functional L to calculate the
-        wasp population two years after an intial population of x0 = 0.3, assuming that r = 0.5:
-        """,
-        "nestlist(L(0.5),0.3,2)[end]",
-        x -> (0.04698 < x < 0.04699)
-    ),
-    Activity(
-        """
-        Use nestlist() to create a list of 5 simulation steps of the wasp population, starting from
-        an initial value of 0.3 and using specific growth rate r = 0.5. You will see that the
-        population x is converging towards a particular limiting value - what is that limit value?
-        """,
-        "nestlist(L(0.5),0.3,5)",
-        x -> x==0
-    ),
-    Activity(
-        """
-        Now plot a graph, using nestlist() to create a list of 20 simulation steps of the wasp
-        population with x0=0.3 and r=0.9. What is the limit point of this sequence?
-        """,
-        "lines(nestlist(L(0.9),0.3,20))",
-        x -> x==0
-    ),
-    Activity(
-        """
-        OK, everything seems to be working ok, so let's investigate the onset of CHAOS! We will
-        slowly increase the value of the specific growth-rate r to discover how this affects the
-        developmental trajectory of the wasp population. Use the initial value x0=0.3 for all of
-        the folloiwng experiments until I tell you otherwise...
-        
-        Just to make our language clear: a LIMIT POINT of the wasp population's motion is any
-        value of the population that stays the same from one generation to the next:
-            L(r)(x) == x.
-        
-        What was the limit point of the trajectory L(0.9)?
-        """,
-        "",
-        x -> x==0
-    ),
-    Activity(
-        """
-        What is the approximate value of the limit point of the trajectory L(1.1)?
-        """,
-        "",
-        x -> 0.07<x<0.1
-    ),
-    Activity(
-        """
-        What is the EXACT value of the limit point of the trajectory L(1.5)?
-        """,
-        "You can work it out for yourself by solving the equation L(r)(x) == x, or: r x (1-x) == x",
-        x -> x == 1//3
-    ),
-    Activity(
-        """
-        Use the technique from the hint in the previous activity to calculate the limit point of
-        the trajectory L(2), then check this value using your simulator:
-        """,
-        "",
-        x -> x==0.5
-    ),
-    Activity(
-        """
-        Now investigate the trajectory L(2.1). In which direction does the population change from
-        x[6] to x[7]: positive (+) or negative (-)?
-        """,
-        "",
-        x -> (x == -)
-    ),
-    Activity(
-        """
-        This is interesting 00! Up to now, the wasps' trajectory has been monotone: the population
-        has only either shrunk or grown. But now it grows above the value, then drops back down
-        again. Let's investigate this further: find the limit point of the trajectory L(2.5) both
-        by calculating and by simulating:
-        """,
-        "",
-        x -> x==0.6
-    ),
-    Activity(
-        """
-        Notice that now we have an oscillating motion that dies away as x comes to rest at the
-        limit point. Try out various values of r between 2.5 and 2.95. Does the oscillation
-        still die away?
-        """,
-        "",
-        x -> occursin("y",lowercase(x))
-    ),
-    Activity(
-        """
-        Now find the limiting motion of the population for L(3). Does the oscillation die away?
-        """,
-        "",
-        x -> occursin("n",lowercase(x))
-    ),
-    Activity(
-        """
-        It now no longer makes sense to speak of a limit VALUE, since the trajectory oscillates
-        forever around the value 2/3. Instead, we speak of a limit CYCLE: the motion L(3) displays
-        a limit cycle around the value 2/3. "cycle" means the value oscillates forever, and
-        "limit" means that it will converge to this cycle, no matter where we start the motion.
-        Check this for yourself by changing the value of x0. Does the motion always converge on
-        a cycle around 2/3?
-        """,
-        "",
-        x -> occursin("y",lowercase(x))
-    ),
-    Activity(
-        """
-        Now comes some terminilogy that will seem strange to you at first, but which will make
-        sense as we proceed. Notice that within each period of the limit cycle, the motion jumps up
-        one step, then back down one step to the original value: the period of the limit cycle
-        contains a single complete oscillation. We therefore call the motion L(3) a
-            "Period-1 limit-cycle"
+        Start by changing the name of your method. "eratosthenes_good" is really not a useful name;
+        change it to "eratosthenes", then recompile and test to make sure that it works properly.
         """,
         "",
         x -> true
     ),
     Activity(
         """
-        Let's explore further. Look at the limit-cycle of the motion L(3.2) (You may want to extend
-        the duration to 50). How many oscillations are in each period of this limit cycle?
+        Now consider the first 8 lines of eratosthenes(). The intention of these lines is to set up
+        a particular structure (or variable) - what is the name of this structure?
         """,
-        "The number of periods should not (yet) have changed",
-        x -> x==1
+        "Which variable is built up in steps over the course of these 8 lines?",
+        x -> x=="f" || x==:f
     ),
     Activity(
         """
-        What is the period-length of the limit-cycle of the motion L(3.45)? That is, how many
-        complete oscillations does the population perform before the motion repeats itself?
+        What is the intention of the structure f in the code that follows? What name would better
+        describe this intentions?
         """,
-        "Count very carefully: This should be a period-2 limit-cycle",
-        x -> x==2
+        "is_prime?",
+        x -> occursin("prime",lowercase(x))
     ),
     Activity(
         """
-        What is the period-length of the limit-cycle of the motion L(3.55)? By now, things will
-        be moving quite quickly and the wasp population will need a while to stabilise towards the
-        limit-cycle. You may like to save time by using a line like this:
-            lines(nestlist(L(3.55),0.5,5000)[end-40:end])
-        """,
-        "Look very carefully!",
-        x -> x==4
-    ),
-    Activity(
-        """
-        What is the period-length of the limit-cycle of the motion L(3.567)?
-        """,
-        "Count ve-ery carefully - remembering to inspect the smaller oscillations as well!",
-        x -> x==8
-    ),
-    Activity(
-        """
-        What is the period-length of the limit-cycle of the motion L(3.5695)? You will find this
-        one very difficult to count, but it is actually a period-16 limit-cycle. If you can't
-        distinguish the oscillations, don't worry - just go on to the next activity.
+        I will assume in the following that you have chosen the name `is_prime`, but feel free to
+        use your own name if you think of a better one. Rename the variable throughout the
+        eratosthenes() method, then recompile and make sure that the method still runs correctly.
         """,
         "",
-        x -> x==16
+        x - true
     ),
     Activity(
         """
-        We have seen that as r increases, Period-Doubling occurs. That is, the period-length
-        doubles at each step-change in r, so the motion takes longer and longer before it repeats.
-        Now check out the motion Λ(3.7). How long does it take before this motion repeats itself?
-        Or in other words: What is the period-length of this limit-cycle?
-        """,
-        "Find out how to write \"Infinity\" in julia :)",
-        x -> x==Inf
-    ),
-    Activity(
-        """
-        We have come a long way. We have learned is that some naturally occurring systems can
-        exhibit a type of motion in which they require an infinite amount of time to repeat. This
-        means we can never predict this motion in advance, but must always perform ALL of the
-        calculation steps that lead up to it. We call such motions CHAOTIC.
-
-        Notice that Chaos has nothing to do with randomness. We can always calculate the population
-        of Vespula Island for any year, but ONLY by actually simulating it. There are apparently
-        things that mathematics cannot predict in advance, but must calculate step by step.
-
-        Actually, the situation is even worse than this. Use the following command to inspect the
-        behaviour of L(3.7) for the different starting conditions x0 ∈ [0.5,0.50001,4.99999]
-            lines(nestlist(L(3.7),0.5,5000)[end-40:end])
-
-        Are these three graphs at all similar to each other?
-        """,
-        "",
-        x -> occursin("n",lowercase(x))
-    ),
-    Activity(
-        """
-        As you see, chaotic motion meanns that even very tiny changes in the initial conditions
-        of a chaotic system lead to completely different behaviour. So even if we measured the
-        current wasp population, we could never be sure that we had done it sufficiently accurately
-        to be ABSOLUTELY sure that we are accurately predicting the development of the system!
-
-        So. What has all this to do with your project? Henri Poincaré was the first to notice
-        deterministic chaos in 1908. He showed that the gravitational motion of three orbiting
-        bodies cannot be solved exactly. Weather, dripping taps and driven pendula have a similar
-        problem: We cannot predict the story of their future motion without simulation, which as
-        you know is never precise! As an introduction to chaos in the three-body problem, please
-        view the following video-clip now, and then proceed to the next activity:
-            https://www.youtube.com/watch?v=LwkvO3t1b30&t=113s
+        Now go through all names of variables/functions in your eratosthenes() method to make the
+        code easier to follow and understand. Don't change the code operations - only the names!
+        (And remember to recompile and test afterwards! :)
         """,
         "",
         x -> true
     ),
     Activity(
         """
-        Now we will see how to build up a complex scientific program starting from a set of
-        requirements. Use VSC to take a look at version 0 of my NBodies module:
-            setup("NBodies")
-            include("Development/NBodies/NBodies0.jl")
-
-        The aim of the NBodies module is to simulate Poincarés chaotic 3-body motion. If you look
-        at the unittest() function, you will see that my basic use-case creates an instance of the
-        type NBody, pushes two bodies into this model, then requests a simulation and graphical
-        animation of the model.
+        Now focus again on the first 8 lines of eratosthenes(). Why has the author set i=0 before
+        the loop (remember this function was ported from Java)? Do we need this line in julia?
+        """,
+        "",
+        x -> occursin('n',lowercase(x))
+    ),
+    Activity(
+        """
+        So cross out the initialisation of i, and then think: Do we even use i in the loop? If not,
+        its name is misleading, and might be replaced by `_`.
         """,
         "",
         x -> true
     ),
     Activity(
         """
-        Notice that simulate() and animate() are at present just dummy functions that do nothing
-        other than report back values. This use of dummy functions is EXTREMELY important in
-        software development - it enables me to start designing my module from the external
-        requirements, then to develop step-by-step the deeper mechanisms of the software. First we
-        set up the use-case, then we slowly fill in the program details, making sure that each
-        stage of development is fully correct and robust before we go on to the next.
+        Now think about how is_prime is constructed in several steps. Each step takes time, and
+        poor julia cannot know in advance how long the final Vector is going to be, so has to
+        reallocate it each time is_prime becomes too short for a newly pushed element.
             
-        Study version 0 of NBodies and tell me a line number where the code defines that this is a
-        TWO-dimensional simulation.
+        But of course in julia, we can use comprehension to allocate the complete is_prime Vector
+        in one line, so please do that now ...
         """,
-        "Where does the code first specifiy that the position is a 2-dimensional vector?",
-        x -> x in [109,110]
+        "Just to remind you, here is an example of comprehension: [x*(1-x) for x in 0:0.1:1]",
+        x -> true
     ),
     Activity(
         """
-        Software development is always driven by the needs of its CLIENT program - in our case,
-        this is the function NBodies.unittest(). When you design unittest() in your own projects,
-        think carefully about what kinds of behaviour you as a user require of the datatype NBody,
-        then incorporate that requirement into unittest(), then start implementing that
-        functionality in your module design. For example ...
+        Bingo! You have now replaced the first 8 lines of eratosthenes_bad by a single line! :)
+        (Btw, you could also use the trues() function to do the same job, if you wish)
 
-        The client program unittest() in version 1 of NBodies (NBodies1.jl) is identical with the
-        client program of version 0. The only things we have changed in the file are to generate
-        dummy (sin/cos) trajectory data in simulate() and then display this data in animate(). This
-        enables us to develop the graphical interface of the project first, which will later help
-        us to visualise the result of our changes to the project. All we are doing in version 1 is
-        to set up the link between the unittest() use-case function and GLMakie.
+        Now we'll continue this work, at each stage deciding what the intention of some section of
+        the code is, then thinking how we might achieve this more efficiently...
 
-        Look at the dummy code in simulate() and animate() in version 1. What shape of curve do
-        you expect to be generated by the dummy data in simulate()?
-        """,
-        "If you have difficulty, run the program, then explain to a friend how it generates the output",
-        x -> occursin("ellipse",lowercase(x))
-    ),
-    Activity(
-        """
-        Now look at version 2 of NBodies. Here we start to implement Euler's method for integrating
-        differential equations by introducing a very simple force acting on the masses, and
-        then visualising the path of the integrated motion. Compile and run NBodies2.jl to see
-        the results.
-
-        In which line of NBodies2.jl do we define the force acting on the bodies?
-        """,
-        "Try running the program, then explain to a partner how it generates the output curve",
-        x -> x == 105
-    ),
-    Activity(
-        """
-        In NBodies3.jl, we develop animation code for the simplified motion that we defined in
-        version 2. Try out a few experiments at the julia prompt to make sure you fully understand
-        how we are using the julia `map` command in lines l06, 107, 120 and 121.
+        For example, we can improve the efficiency of our eratosthenes() method by making use of
+        Julia's built-in functions from the standard library. Look up the findall() function in
+        julia's help; this function finds the indices of all true elements in an array. Use
+        findall() now to replace the entire final section of eratosthenes().
         """,
         "",
         x -> true
     ),
     Activity(
         """
-        In NBodies4.jl, we introduce the full interactional dynamics of the two bodies in the
-        method simulate(). You need to make sure you understand the matrix programming techniques
-        we are using - they are not easy! The core of the implementation is the matrix-based code
-        in the method forceOnMasses(), which calculates for each body the (vector) sum of all
-        gravitational forces caused by the other bodies. You will need to analyse this code and use
-        Help and internet search to look up EVERYTHING you do not yet understand in
-        forceOnMasses(). In the coming few activities we will learn how to do this ...
-
-        First remember: Matrices work very naturally in julia, so if a=[1 2;3 5] and b=[2 3;4 5],
-        then a*b, b*a and a.*b will all deliver very different results. Test this idea now at the
-        julia prompt, then tell me the value of a*b-a.*b .
+        Now look at the nested for-loop that crosses out multiples in the is_prime Vector. Can you
+        make this code a little easier to read by using julia's abbreviated notation for
+        multiplying numerical constants?
         """,
-        "",
-        x -> x == [8 7;14 9]
+        "5x means the same as 5*x",
+        x -> true
     ),
     Activity(
         """
-        The secret of matrix programming is this: Whenever you think you need a for-loop to
-        manipulate some values, try instead building them together into a matrix that does the job
-        for you. As an example of how to do this, try out the following activity:
-            
-        Define and test an anonymous version of the factorial function that requires no
-        recursion or iteration, but instead uses the prod() function.
-        """,
-        "",
-        x -> occursin("->prod(1:",replace(x," "=>""))
-    ),
-    Activity(
-        """
-        Study the definition of the local variable `relpos` in lines 103 and 104 of NBodies4.jl.
-        These lines calculate the relative positions x[i]-x[j] between all pairs of bodies i and j.
-        However, instead of looping over the bodies, this code computes the relative positions more
-        efficiently by constructing a matrix. Notice that this construction starts in line 103
-        with the input argument `locations`, which is a Vector containing all Vector locations of
-        the N bodies.
+        Julia is a FUNCTIONAL programming language. That is, you break your code down into reusable
+        functions that each performs a single, specific task. It is very important that a function
+        has JUST ONE responsbility, and its name clearly indicates the specific task that the
+        function performs. Higher level functions are composed out of lower-level functions. Also,
+        function methods are SHORT: usually between 3-30 lines of code. Long methods and long
+        method names usually indicate that your method has more than one responsibility.
         
-        We start our journey of understanding by defining a simple, toy example of `locations` at
-        the julia prompt - something like this:
-            locations = [[1,2],[3,4]]
+        Functional programming dramatically increases the reusability of our code, and also reduces
+        the risk of duplicating code, which can often lead to runtime errors!
 
-        Next, at the julia prompt, carry out step by step each of the codelines 103 to 105. After
-        each step, look carefully at your result, and discuss it with your partners:
-            locnPerBody = repeat(locations,1,length(locations))
-            permdims = permutedims(locnPerBody)
-            relpos = locnPerBody - permdims
-
-        When you have finished, work out in your head the result of `repeat([1,2],2,3)`.
-        """,
-        "",
-        x -> x==[1 1 1;2 2 2;1 1 1;2 2 2]
-    ),
-    Activity(
-        """
-        Now set a breakpoint and use the VSC Debugger to investigate how simulate() uses `relpos`
-        to calculate the gravitational forces acting between the different bodies in the system.
-        What is the name of the variable that is used to calculate Newton's inverse-square law that
-        falls with increased distance between the sources?
-        """,
-        "",
-        x -> x=="invCube"
-    ),
-    Activity(
-        """
-        OK, now we have understood how the code in NBodies4.jl works, notice that we have a
-        runtime problem. Because of inaccuracies of the simulator, the orbits of the two bodies
-        are not closed ellipses, but instead the bodies spiral outwards. NBodies5.jl solves this
-        problem by replacing Euler integration by Runge-Kutta-2 integration in simulate().
-
-        Study now the method runge_kutta_2() to see how the integration is performed by using
-        two Euler steps. Run unittest() to see that the orbits are now much cleaner.
+        Use functional programming to pull the nested crossing-out loops out of eratosthenes() into
+        a separate function whose SINGLE intention is to crossout_prime_multiples!().
         """,
         "",
         x -> true
     ),
     Activity(
         """
-        Finally, check out the new use-case method demo() in NBodies5.jl, which tests our simulator
-        using three bodies. Notice how it does not take long for the system to throw out the small
-        planet and turn into a binary star system.
+        Now we will work on the COMMENTS in your eratosthenes() method. By now, you should find
+        that you don't actually need many comments. Quite generally, it is the case that:
+            - Comments compensate for our failure to express ourselves clearly in code!
 
-        Congratulate yourself on completing this lab by playing around with different starting
-        conditions for this 3-body simulation. Can you set up a stable 3-body system?
+        A great problem with comments is that they are difficult to maintain as your code changes,
+        and inappropriate comments are much worse than no comments. But there is a better way:
+            - Write simple, self-explanatory code, rather than complicated but commented code!
+        
+        Here are my comment rules:
+            - Never use CAPITALISED comments - they look like shouting, and distract the reader.
+            - Use comments only to point out the high-level intentions or risks of your code.
+            - Place comments at the beginning of a code block or aligned(!) to the right of code.
+            - Replace header comments by docstrings that precede functions, datatype and modules.
+
+        Now apply these rules to the comments in your eratosthenes() method.
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        Use VERTICAL formatting to divide your code into blocks with a consistent internal logic -
+        like paragraphs in an essay. Place a comment box at the top of each logical section of a
+        source file to communicate the intention of that section, and use blank lines ONLY to
+        divide logically distinct trains of thought from each other. You never need to put a
+        comment box inside a method.
+        
+        Improve the vertical formatting of the Utilities module now.
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        HORIZONTAL formatting is often determined by your company's style-guide, but general
+        rules are:
+            - Code lines always have a maximum length - use 100 characters in this course.
+            - All binary operators (including =) have enclosing white spaces, except for: *, ^, /.
+            - Each new code block (for/map loops, functions, ifs) adds 4 spaces of indentation.
+            - Floating-point literals always have a leading/trailing zero (e.g.: 0.5 or 5.0)
+
+        Make these alterations to your eratosthenes() method now.
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        Finally, check out George Datseris' solution, which I have implemented in Utilities.jl
+        as the function senehtsotare(). Make any additional changes that you think appropriate
+        to your eratosthenes() function.
         """,
         "",
         x -> true
