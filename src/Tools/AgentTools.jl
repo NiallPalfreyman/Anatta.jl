@@ -5,7 +5,7 @@
 This module provides a collection of utility functions for agent-based models that extendi
 the Agents package towards conformity with NetLogo.
 
-Authors:  Emilio Borelli, Nick Diercksen, Stefan Hausner, Niall Palfreyman, Dominik Pfister
+Authors:  Emilio Borelli, Nick Diercksen, Stefan Hausner, Niall Palfreyman, Dominik Pfister, Maximilian Meyer
 Date: July 2022
 """
 module AgentTools
@@ -15,7 +15,7 @@ using Agents, GLMakie, InteractiveDynamics, LinearAlgebra, Observables
 import InteractiveUtils:@which
 
 export abmplayground, multicoloured, dejong2, diffuse4, diffuse4!, diffuse8, diffuse8!,
-		gradient, size, spectrum, turn!, valleys, wedge
+		gradient, size, spectrum, turn!, valleys, wedge, diffuse4_parallel!
 
 #-----------------------------------------------------------------------------------------
 # Module methods:
@@ -124,6 +124,42 @@ function diffuse4( heatarray::Matrix{Float64}, diffrate=1.0)
 		circshift(heatarray,(-1,0)) + circshift(heatarray,(0,-1))
 		- 4heatarray
 	)
+end
+
+"""
+	diffuse4_parallel!( heatarray::Matrix{Float64}, diffrate::Float64)
+
+Diffuse heatarray in place via 4-neighbourhoods with periodic boundary conditions and the given
+diffusion rate. Multithreaded
+"""
+function diffuse4_parallel!(heatarray::Matrix{Float64}, diffrate=1.0)
+    n, m = size(heatarray)
+    temp = similar(heatarray)
+    Threads.@threads for i in 1:n
+        for j in 1:m
+            temp[i, j] = heatarray[i, j] + 0.25diffrate * (heatarray[mod1(i+1,n), j] + heatarray[i, mod1(j+1,m)] + heatarray[mod1(i-1,n), j] + heatarray[i, mod1(j-1,m)] - 4heatarray[i, j])
+        end
+    end
+    heatarray[:] = temp[:]
+    return heatarray
+end
+
+"""
+	diffuse4_parallel!( heatarray::Matrix{Real}, diffrate::Float64)
+
+Diffuse heatarray in place via 4-neighbourhoods with periodic boundary conditions and the given
+diffusion rate. Multithreaded
+"""
+function diffuse4_parallel!(heatarray::Matrix{Real}, diffrate=1.0)
+    n, m = size(heatarray)
+    temp = similar(heatarray)
+    Threads.@threads for i in 1:n
+        for j in 1:m
+            temp[i, j] = heatarray[i, j] + 0.25diffrate * (heatarray[mod1(i+1,n), j] + heatarray[i, mod1(j+1,m)] + heatarray[mod1(i-1,n), j] + heatarray[i, mod1(j-1,m)] - 4heatarray[i, j])
+        end
+    end
+    heatarray[:] = temp[:]
+    return heatarray
 end
 
 #-----------------------------------------------------------------------------------------
