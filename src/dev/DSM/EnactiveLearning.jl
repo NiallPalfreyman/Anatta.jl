@@ -17,7 +17,7 @@ using Agents, .AgentTools, GLMakie, Random
 
 
 const SMALL = 10^-5
-const WIDTH = 100                 # global const for size of playground
+const WIDTH = 40                 # global const for size of playground
 
 #-----------------------------------------------------------------------------------------
 
