@@ -8,9 +8,9 @@ Author: Francisco Hella, Felix Rollbühler, Melanie Heinrich, Jan Wichmann, 22/0
 """
 module IdealGas_Sim
 
-include("AgentTools.jl")
-include("PhysicalModel.jl")
-include("ViewModel.jl")
+include( "../../Tools/AgentTools.jl")
+include("../../Tools/PhysicalModel.jl")
+include("../../Tools/ViewModel.jl")
 using Agents, LinearAlgebra, GLMakie, InteractiveDynamics, .AgentTools, .PhysicalModel
 
 #-----------------------------------------------------------------------------------------
