@@ -8,15 +8,19 @@
 [
     Activity(
         """
-        Hi! Welcome to Anatta Lab 003: Compilation and multiple dispatch
+        Hi! Welcome to Anatta Lab 003: Compilation, data types and multiple dispatch
 
         In this laboratory we look at the very heart of julia: How it uses types to dispatch
         functions. That is, how does julia decide which particular method it will use to implement
         whatever it is we ask it to do?
-            Terminology: I call a Function, but in response, julia executes a Method.
+            Remember: Whenever I call a Function, julia executes a Method. This method is the julia
+            program code that implements the function.
+
+        You will also learn in this lab how to write your own full julia module to define a new
+        data type together with its associated methods.
         """,
-        "Just enter: reply(prog)",
-        x -> (replace(strip(x)," "=>"") == "8/(2+3.0)")
+        "Just enter: reply()",
+        x -> true
     ),
     Activity(
         """
@@ -106,8 +110,8 @@
 
         Parse this program into the variable `expr`, then dump it. You will see that this time, the
         head of expr is no longer `:call`, but the Symbol `=`. This is because your new program is
-        not something that can be called, but instead creates a new variable named `susan`, whose
-        value is 3 times the sine of π/2. Evaluate `expr` now, and give me the answer you receive:
+        not something that calculates a number, but instead creates a new variable named `susan`,
+        whose value is 3 times the sine of π/2. Evaluate `expr` now, and give me your answer:
         """,
         "Just reply() to me with the value that you get - which should be 3.0",
         x -> x==3.0
@@ -143,10 +147,7 @@
         factorial function fact(). How do we calculate the factorial of a number N? We multiply N
         by the next number down (N-1), then by the next number down (N-2), and so on down to 1.
         We can implement this in julia like this:
-            fact(N) = (N <= 0) ? 1 : (N * fact(N-1))
-
-        (If you are unsure about the ternary operator ?:, enter `?` now at the julia prompt now to
-        get into help mode, then enter `?:` to ask about how this operator works)
+            fact(N) = if (N <= 0) 1 else (N * fact(N-1)) end
 
         When you enter this method definiton, julia will tell you that it has created a generic
         function `fact` with one method implementation. Test this implementation - enter fact(5):
@@ -206,7 +207,7 @@
         Of course, the difficulty with the gamma() function is that it is a little expensive to
         evaluate - our method fact() is faster for integer arguments. So let's define two
         different methods - one for Ints and one for Reals:
-            fact(n::Int) = (n <= 0) ? 1 : (n * fact(n-1))
+            fact(n::Int) = if (n <= 0) 1 else (n * fact(n-1)) end
             fact(x::Real) = gamma(x+1)
 
         Check these methods by entering the two calls `fact(3)` and `fact(3.0)`. What is the
@@ -243,7 +244,17 @@
     Activity(
         """
         Since argument types are so important for dispatching functions, let's try creating our
-        own user-defined types. First create a few ABSTRACT types to represent various
+        own user-defined types. To do this, it is best if we create our code in a julia file that
+        we can compile, test and develop in the VSC environment. In the Computation folder, you
+        will find a julia file named Dummies.jl. This is a template that you can use to create
+        your own modules in the future. Copy Dummies.jl to a new file named Organisms.jl, open the
+        new file in VSC, then:
+            -   Replace all occurrences of the word "Dummies" by "Organisms"
+            
+        
+        
+        . Then
+        First create a few ABSTRACT types to represent various
         biological organisms:
             abstract type Organism end
             abstract type Animal <: Organism end

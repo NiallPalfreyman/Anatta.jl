@@ -30,7 +30,7 @@
     ),
     Activity(
         """
-        "Anatta" means: "Lacking substantial structure".
+        "Anatta" means: "Has no substantial structure".
         
         Anatta is a philosophical position based on two interwoven ideas:
             i)  scientific knowledge is not Truth, but is rather something that living organisms
@@ -110,7 +110,7 @@
         broadly divided into two areas: system data and user data. This division is a great idea,
         because you work with your user data every day, but the system data needs to stay very
         stable. Therefore, we will set up two different areas on your computer: a system area for
-        you to configure the Anatta system, and a user area for you to do the Activities ...
+        you to configure the Anatta system, and a user area where you work on the Activities ...
 
         I have already set up a learner configuration file for you at this location:
             $(joinpath(session.anatta_config,session.learner*".lnr"))
@@ -188,7 +188,7 @@
     ),
     Activity(
         """
-        OK, so we'll create the home folder your present working directory (PWD). Do this by
+        OK, so we'll create the home folder in your present working directory (PWD). Do this by
         entering:
             mkdir("Anatta")
 
@@ -330,9 +330,9 @@
     ),
     Activity(
         """
-        This value is called a String - that is, a sequence of characters contained between double
-        quotes (") that are intended to communicate some kind of information. Strings use the
-        backslash character '\' to signify special characters such as the Alarm character '\a';
+        This type of value is called a String - that is, a sequence of characters contained between
+        double quotes (") that are intended to communicate some kind of information. Strings use
+        the backslash character '\' to signify special characters such as the Alarm character '\a';
         test this now by printing the Alarm character from the julia prompt:
             print("\a")
 
@@ -408,7 +408,7 @@
             3.  Our null hypothesis was the worry that VSC and julia were not communicating.
             4.  Our successful program run disproves that worry: We now know they ARE communicating.
             5.  Keep these ideas in mind during the entire Anatta course: We use Theory to
-                construct a null hypothesis, then use Practice to contradict it.
+                construct a null hypothesis (a 'worry'), then use Practice to contradict it.
         """,
         "",
         x -> true

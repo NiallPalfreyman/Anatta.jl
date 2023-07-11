@@ -197,7 +197,7 @@
         """
         To investigate further, instead of just calling functions from the julia prompt, we will
         write programming code. When you set up the Computation library earlier, you also copied
-        to your Anatta home folder the julia file Computation.jl, which we'll now fill with code.
+        into your Anatta home folder the julia file Computation.jl, which we'll now fill with code.
 
         Before proceeding further, I will assume in the next learning activities that you ...
             -   have VSC open with its Explorer located at your Anatta home folder;
@@ -217,9 +217,16 @@
         """
         Right, so let's start programming! :)
 
+        First, take a moment to scan through the file Computation.jl. If you go to line 9, you will
+        notice that it defines a module called Computation. If you then allow your cursor to hover
+        over the final `end` at the end of the file, VSC will tell you that this marks the end of
+        the module Computation. Between these two lines is a whole set of methods contained in the
+        Computation module - for example, the method count_seq(). This is the usual structure of
+        any julia program: a single module containing methods and often an associated data type.
+
         Locate in Computation.jl the method count_seq(). PLEASE DO NOT RUN IT YET! Let's just think
-        for a moment about what it does. For instance, what is the return value of the following
-        call?
+        for a moment about what it does. For instance, what will be the return value of the
+        following call?
             Computation.count_seq("abcde","abc")
         """,
         "Check out the very first if-statement in the method",
