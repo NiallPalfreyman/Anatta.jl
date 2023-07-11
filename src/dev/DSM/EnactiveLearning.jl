@@ -58,8 +58,8 @@ function enactive_learning(
     enl = ABM(Atom, ContinuousSpace(extent, spacing=1.0); properties)
 
     # Agents are placed evenly across the world
-    for i in 0:1:99
-        for j in 0:1:99
+    for i in 0:1:WIDTH-1
+        for j in 0:1:WIDTH-1
             add_agent!((i, j), Atom, enl,        # Agent, enl 
                 (0.5, 0.5),                      # velocities
                 0.2,                             # secretion_rate
