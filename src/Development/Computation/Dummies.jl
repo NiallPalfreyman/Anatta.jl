@@ -27,7 +27,7 @@ struct Dummy
 
 	function Dummy( name::String, age)
 		int_age = round(Int,age)
-		new(name,int_age)
+		return new(name,int_age)
 	end
 end
 

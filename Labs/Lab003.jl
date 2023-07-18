@@ -247,45 +247,129 @@
         own user-defined types. To do this, it is best if we create our code in a julia file that
         we can compile, test and develop in the VSC environment. In the Computation folder, you
         will find a julia file named Dummies.jl. This is a template that you can use to create
-        your own modules in the future. Copy Dummies.jl to a new file named Organisms.jl, open the
-        new file in VSC, then:
-            -   Replace all occurrences of the word "Dummies" by "Organisms"
-            
-        
-        
-        . Then
-        First create a few ABSTRACT types to represent various
-        biological organisms:
-            abstract type Organism end
-            abstract type Animal <: Organism end
-
-        Now use the supertype() function to find the supertype of Animal. What type is
-        returned if you ask for the subtypes() of Organism?
+        your own modules in the future. Now do the following
+            -   Select the file Dummies.jl in VSC Explorer. Press ctrl-C then ctrl-V to copy
+                Dummies.jl to a new file that you rename Organisms.jl. Open the new file in VSC.
+            -   In Organisms.jl, replace all occurrences of the word "Dummies" by "Organisms".
+                This is the name of the complete module that you are now creating. We usually name
+                modules using either an abstract or a plural noun.
+            -   Replace all occurrences of the word "Dummy" by "Weasel". This is the name of the
+                first of several types that we will create within the Organisms module. Notice
+                that both modules and types start with a CAPITAL letter!
+            -   Change the code of the demo() method inside the module Organsims so that instead
+                of a Dummy variable named Dimmy, it creates a Weasel variable named Wendy. So, for
+                example, the line in which you create Wendy will look like this:
+                    wendy = Weasel( "Wendy", 3.1415)
+                (Notice that variables always start with a small letter!)
         """,
-        "subtypes(Organism)",
-        x -> (x <: Vector)
+        "Just enter everything into the file Organisms.jl, EXACTLY as I have described it here",
+        x -> isfile("Organisms.jl")
     ),
     Activity(
         """
-        Next create a CONCRETE subtype of our abstract Animal type:
+        Your Organisms.jl program should now run. In the julia console, you would compile it by
+        entering:
+            julia> include("Organisms.jl")
+
+        inside your Anatta home directory, but in VSC it is easier to just press the compilation
+        triangle in the top-right of your VSC pane. This compiles your new Organisms module inside
+        a new julia console within VSC, which is a good place to test new code.
+        
+        If you get compiler-error messages, use them to correct your code in VSC. Finally, enter
+        the following line at the julia prompt to run your code, and correct any new errors you
+        might get until the demo() method runs correctly:
+                Organisms.demo()
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        Notice that you had to type `Organisms.demo()` to specify that you wanted to run the demo()
+        method defined inside the module Organisms. For the same reason, if you want to create your
+        own Weasel in the Main julia environment, you will need to enter this:
+            willy = Organisms.Weasel( "Willy", 2)
+
+        Do this now. Is it possible for you to now to display Willy's greeting by entering the
+        following line of code at the julia prompt?
+            greeting(willy)
+        """,
+        "",
+        x -> occursin("n",lowercase(x))
+    ),
+    Activity(
+        """
+        The problem, of course, is that greeting() is only defined within the Organisms module.
+        You could call it like this:
+            Organisms.greeting(willy)
+
+        but that is slightly awkward. So now load the Organisms module into your Main environment:
+            using .Organisms
+
+        and then enter greeting(willy). Does this now work?
+        """,
+        "",
+        x -> occursin("y",lowercase(x))
+    ),
+    Activity(
+        """
+        Great! :) So now we have loaded the two symbols `greeting` and `Weasel` into our Main
+        environment. You can check this by entering `willy` at the julia prompt and noticing that
+        the REPL no longer tells us that Weasel is inside Organisms.
+
+        Now we'll create a few ABSTRACT types to represent various biological organisms. Enter
+        the following lines of code above the definition of Weasel, and make sure you enter for
+        each new type a docstring that describes their meaning:
+            "Organism: a general living being."
+            abstract type Organism end
+
+            "Animal: an animate Organism."
+            abstract type Animal <: Organism end
+
+        Now modify Weasel to announce that it is a subtype of Animal:
             struct Weasel <: Animal
                 name::String
-                weight::Integer
-                female::Bool
+                age::Int
             end
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        However, our abstract types Organism and Animal are not yet contained in Main, but only
+        inside Organisms. So now extend the export line at the beginning of the Organisms moule
+        to look like this:
+            export Weasel, greeting, Organism, Animal
+
+        Now discard your current Main environment by pressing the dustbin icon in the VSC console,
+        then reload Organisms.jl (press the triangular compile button in the VSC editor). Now enter
+            using .Organisms
+            willy = Weasel( "Willy", 2)
+        
+        Now check whether willy is an Organism:
+            typeof(willy) <: Organism
+        """,
+        "Tell me the answer that you get back from this line",
+        x -> x==true
+    ),
+    Activity(
+        """
+        Now use the supertype() function to find the supertype of Animal. What type is
+        returned if you ask for the subtypes() of Organism?
 
         Use the function fieldnames() to inspect the individual fields of the Weasel
-        type, then give me the descriptor of the third field
+        type, then give me the descriptor of the second field.
         """,
-        "fieldnames(Weasel)[3]",
-        x -> x == :female
+        "subtypes(Organism)",
+        x -> x == :age
     ),
     Activity(
         """
         We use struct types to instantiate concrete OBJECTs in computer memory by
         entering specific values for the individual fields of the Weasel struct:
-            wendy = Weasel( "Wendy", 101, true)
-            willy = Weasel( "Willy", 115, false)
+            wendy = Weasel( "Wendy", 3)
+            willy = Weasel( "Willy", 2)
 
         Notice that types start with an UPpercase letter, whereas objects start with a
         lowercase letter. By default, Julia creates structs as IMMUTABLE - that is, we
@@ -308,12 +392,14 @@
                 length::Integer
             end
 
-            rabia = Rabbit( "Rabia", 27)
+        Enter this new concrete type in Organisms.jl, recompile, then create a Rabbit named
+        Rabbia in Main:
+            rabia = Rabbit( "Rabia", 5)
 
-        Change Rabia's length to 29 cm, then give Rabia to me to look at for myself:
+        Change Rabia's age to 4, then give Rabia to me to look at for myself:
         """,
-        "rabia.length = 29",
-        x -> (x.length == 29)
+        "rabia.age = 4",
+        x -> (x.length == 4)
     ),
     Activity(
         """
@@ -325,28 +411,38 @@
         When Animals meet each other, they react in different ways according to their type:
         Weasels challenge each other, but they attack Rabbits. We could implement these
         different interactions using if-else conditionals, but it is easier to use
-        multiple dispatching. Enter the following definitions at the Julia prompt:
+        multiple dispatching. Enter the following method definitions in the Organisms module
+        after the method greeting() and before the method demo(), making sure that you preceed
+        them by appropriate doc-strings:
             meet( meeter::Weasel, meetee::Rabbit) = "attacks"
             meet( meeter::Weasel, meetee::Weasel) = "challenges"
             meet( meeter::Rabbit, meetee::Rabbit) = "sniffs"
             meet( meeter::Rabbit, meetee::Weasel) = "hides"
             meet( meeter::Organism, meetee::Organism) = "ignores"
-        
-        Test these definitions by finding out what happens when Rabia meets Wendy:
         """,
-        "meet(rabia,wendy)",
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        Test these definitions by recompiling Organisms, then finding out what happens when Rabia
+        meets Willy:
+            meet(rabia,willy)
+        """,
+        "meet(rabia,willy)",
         x -> occursin( "hide", lowercase(x))
     ),
     Activity(
         """
-        The dispatcher must make these decisions during the execution time of our
-        simulation program. Enter the following function definition:
+        The dispatcher must be able to make these type-dependent decisions during the execution
+        of our simulation program. Insert the following method definition into Organisms.jl below
+        the meet() methods:
             function encounter( meeter::Organism, meetee::Organism)
                 println( meeter.name, " meets ", meetee.name, " and ", meet(meeter,meetee), ".")
             end
         
-        Now test this function by calling encounter() with various combinations of
-        Wendy, Willy and Rabia.
+        Now test this method by recompiling, then calling encounter() at the julia prompt, using
+        various combinations of Wendy, Willy and Rabia.
 
         What happens if you create a new Rabbit called Robby, and Rabia encounters him?
         """,
@@ -357,7 +453,7 @@
         """
         Now, to see the full power of multiple dispatching, add your own new concrete
         type and then check how an encounter between your type and Rabia works out. Do
-        it something like this:
+        it something like this (at the julia prompt!):
             struct Tree <: Organism; name::String end
             tilly = Tree( "Tilly")
 
@@ -368,11 +464,18 @@
     ),
     Activity(
         """
-        And now one final Activity for you: Can you add a new type of Organism called
-        Grass, and arrange for Rabia to eat it? It is possible to do this in just 3-4
-        new lines of code.
+        Notice how multiple dispatching enables your new type (which the Organisms module knows
+        nothing about!) to make use of the existing code for meet(Organism,Organism). This
+        ability to dynamically extend existing code is the enormously useful power of ...
+            MULTIPLE DISPATCHING!
+
+        I have one last task for you: Rewrite the Organisms.demo() method to provide a proper
+        demonstration of the new data types and methods that you have written in Organisms.jl.
+        Make sure you test your demo() method to be sure it runs properly, and it is a VERY
+        good idea to get your instructor to check your file Organisms.jl to be sure you have
+        formatted and commented it well. Good-bye for now! :)
         """,
-        "encounter(meeter::Rabbit,meetee::Grass) = \"eats\"",
-        x -> occursin( "eats", lowercase(x))
+        "",
+        x -> true
     ),
 ]
