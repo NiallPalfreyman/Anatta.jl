@@ -424,8 +424,8 @@
         liver takes a cupful of your blood, then filters the alcohol out of this cupful. If there is
         no alcohol in the cupful, the alcohol breakdown rate is zero; the more alcohol there is, the
         higher the breakdown rate. If there are x=10 ml of blood alcohol, your liver breaks it down
-        at a rate of dx/dt=-3 ml/hr. Assuming that breakdown is proportional to blood alcohol lever
-        (i.e.: dx/dt=μx), what is the numerical value of μ in our particular case?
+        at a rate of dx/dt=-3 ml/hr. Assuming that the breakdown rate is proportional to blood
+        alcohol level (i.e.: dx/dt=μx), what is the numerical value of μ in our particular case?
         """,
         "Remember that this is a breakdown process - not growth!",
         x -> x == -0.3
