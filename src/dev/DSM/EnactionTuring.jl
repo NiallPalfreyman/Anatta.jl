@@ -1,12 +1,12 @@
 """
-	EnactWorld
+	EnactionWorld
 
-This simulation demonstrates the emergence of complex activity in a reaction-diffusion
-(i.e., Turing) system.
+This simulation demonstrates the enaction of experience in an EnactionWorld based on Turing
+reaction-diffusion dynamics.
 
 Author: Niall Palfreyman (July 2023)
 """
-module EnactWorld
+module EnactionWorld
 
 include( "../../Tools/AgentTools.jl")
 
@@ -15,13 +15,16 @@ using Agents, GLMakie, InteractiveDynamics, Random, .AgentTools
 #-----------------------------------------------------------------------------------------
 # Module constants:
 #-----------------------------------------------------------------------------------------
-const TINY_CONCENTRATION	= 0.001			# Minimum functional concentration
+const TINY_CONCENTRATION	= 0.001			# Minimum functional A/I concentration
 const SENSORY_RANGE			= 0.1			# How far a Enactor can 'see'
 const ACCELERATION			= 0.01			# Acceleration factor
 const TOLERANCE				= 0.01			# Minimum detectable change in concentration
-const TEMPERATURE			= 0.0001		# EnactWorld temperature: Source of thermal jitter
-const POP_DENSITY			= 0.6			# Population density in EnactWorld
+const TEMPERATURE			= 0.0001		# EnactionWorld temperature: Source of thermal jitter
+const POP_DENSITY			= 0.8			# Population density in EnactionWorld
 const DT					= 0.5			# Simulation timestep length
+const SCENARIO_LENGTH		= 3000			# Number of cycles per training scenario
+const TRAINING_EPOCHS		= 30			# Number of training epochs
+const TRAINING_STRENGTH		= 00			# Strength factor of training patterns
 
 #-----------------------------------------------------------------------------------------
 # Module types:
@@ -29,7 +32,7 @@ const DT					= 0.5			# Simulation timestep length
 """
 	Enactor
 
-A Enactor can in principle move, and secretes the chemical A(ctivator).
+A Enactor moves with a certain speed, and secretes the chemical activator.
 """
 @agent Enactor ContinuousAgent{2} begin
 	speed::Float64					# Enactor's current speed
@@ -39,17 +42,23 @@ end
 # Module methods:
 #-----------------------------------------------------------------------------------------
 """
-	enact_world( kwargs)
+	enaction_world( kwargs)
 
-Initialise the EnactWorld reaction-diffusion system.
+Initialise the EnactionWorld reaction-diffusion system.
 """
-function enact_world(;
+function enaction_world(;
 	a_secr_rate = TINY_CONCENTRATION,
-	a_diff_rate = 0.022,				# These parameter values deliver curved stripes
-	i_diff_rate = 0.40,
-	a_evap_rate = 0.01,
+	a_diff_rate = 0.055,				# These parameter values deliver curved stripes
+	i_diff_rate = 0.50,
+	a_evap_rate = 0.02,
 	i_evap_rate = 0.03,
 )
+#=
+a_diff_rate = 0.055,				# These parameter values deliver curved stripes
+i_diff_rate = 0.50,
+a_evap_rate = 0.02,
+i_evap_rate = 0.03,
+=#
 	width = 50
 	extent = (width,width)
 	properties = Dict(
@@ -60,6 +69,9 @@ function enact_world(;
 		:i_diff_rate	=> i_diff_rate,
 		:a_evap_rate	=> a_evap_rate,
 		:i_evap_rate	=> i_evap_rate,
+		:training		=> true,
+		:generation		=> 0,
+		:epoch			=> 0,
 	)
 
 	enworld = ABM( Enactor, ContinuousSpace(extent,spacing=1.0); properties)
@@ -93,12 +105,12 @@ function agent_step!( emily::Enactor, enworld::ABM)
 	end
 
 	# Note step-change in local activator concentration:
-	step_activator =
+	delta_activator =
 		enworld.activator[get_spatial_index( emily.pos, enworld.activator, enworld)] - prev_activator
-	if step_activator < -TOLERANCE
+	if delta_activator < -TOLERANCE
 		# Somersault if local activator concentration is falling:
 		turn!( emily, 2π*rand())
-	elseif abs(step_activator) < TOLERANCE
+	elseif abs(delta_activator) < TOLERANCE
 		# Settle down if local activator concentration is unchanging:
 		accelerate!( emily, -ACCELERATION)
 	end
@@ -118,7 +130,7 @@ end
 """
 	model_step!(enworld)
 
-EnactWorld dynamics: Allow both A and I to react, evaporate and diffuse.
+EnactionWorld dynamics: Allow both A and I to react, evaporate and diffuse.
 """
 function model_step!( enworld::ABM)
 	# Chemical reaction:
@@ -134,6 +146,9 @@ function model_step!( enworld::ABM)
 	# Diffusion:
 	diffuse4!( enworld.activator, DT*enworld.a_diff_rate)
 	diffuse4!( enworld.inhibitor, DT*enworld.i_diff_rate)
+
+	# Training:
+	train_and_test!( enworld)
 end
 
 #-----------------------------------------------------------------------------------------
@@ -152,12 +167,53 @@ end
 
 #-----------------------------------------------------------------------------------------
 """
+	train_and_test!( enworld::EnactionWorld)
+
+Orchestrate the training and testing regimes: Increment generations counter, alternate between
+training scenarios, and advance to testing when training has completed requisite number of
+TRAINING_EPOCHS.
+"""
+function train_and_test!( enworld::ABM)
+	enworld.generation += 1
+
+	if enworld.epoch < TRAINING_EPOCHS
+		# Conduct a training cycle
+		if enworld.generation < SCENARIO_LENGTH
+			# Conduct first training scenario
+			enworld.activator[7:7:end,:] .+= TRAINING_STRENGTH * TINY_CONCENTRATION
+		else
+			# Conduct second training scenario
+			enworld.activator[:,7:7:end] .+= TRAINING_STRENGTH * TINY_CONCENTRATION
+			if enworld.generation >= 2SCENARIO_LENGTH
+				# Move to next epoch:
+				enworld.generation = 0
+				enworld.epoch += 1
+			end
+		end
+	else
+		# Conduct a testing cycle
+		if enworld.generation < SCENARIO_LENGTH
+			# Conduct first test scenario:
+			enworld.activator[21,:] .+= TRAINING_STRENGTH * TINY_CONCENTRATION
+		else
+			# Conduct second test scenario:
+			enworld.activator[:,21] .+= TRAINING_STRENGTH * TINY_CONCENTRATION
+			if enworld.generation >= 2SCENARIO_LENGTH
+				enworld.generation = 0
+				enworld.epoch += 1
+			end
+		end
+	end
+end
+
+#-----------------------------------------------------------------------------------------
+"""
 	run()
 
-Create and run a playground with a complete EnactWorld full of Emily Enactor babies.
+Create and run a playground with a complete EnactionWorld full of Emily Enactor babies.
 """
 function run()
-	enworld = enact_world()
+	enworld = enaction_world()
 	params = Dict(
 		:a_diff_rate => 0:0.001:0.05,
 		:i_diff_rate => 0:0.01:1,
@@ -173,7 +229,7 @@ function run()
 		spu = 1:20,
 	)
 
-	playground, abmobs = abmplayground( enworld, enact_world;
+	playground, abmobs = abmplayground( enworld, enaction_world;
 		agent_step!, model_step!, params, plotkwargs...
 	)
 
