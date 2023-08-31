@@ -16,8 +16,7 @@
         but mutagens can also induce changes in the genetic material of a single cell. We shall
         study here a simple model of mutation that can be applied in both situations.
 
-        Discuss with your partner the difference between 'genomic' and 'genetic' material. Talk
-        with your instructor if you cannot find out the difference.
+        Please read Script014.pdf in your Docs subfolder BEFORE proceeding further with this lab...
         """,
         "",
         x -> true

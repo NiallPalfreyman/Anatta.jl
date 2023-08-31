@@ -20,6 +20,8 @@
         all the work. By adopting young crows to share the work of survival, a gang of crows
         increases the replicative fitness of the gang and its entire DS, and it is this DS, rather
         than individual birds, that stably survives or fails.
+
+        Please read Script016.pdf in your Docs subfolder BEFORE proceeding further with this lab...
         """,
         "",
         x -> true

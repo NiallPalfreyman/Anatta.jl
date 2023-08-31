@@ -10,7 +10,21 @@
         """
         Hi! Welcome to Anatta Lab 013: Implementing Replication and Selection
 
-        In this laboratory we really get started with the biological content of this course.
+        You should be aware that this and the next three labs are accompanied by a script located
+        in your Docs subfolder. The script for this lab is Script013.pdf. Please read that script
+        now, before proceeding with this lab.
+        In this laboratory we really get started with the biological content of this course. We are
+        now also preparing for the final assessed project of the course, so it is Very Important
+        that you prepare yourself properly for each of the labs 013-016 by first working through
+        the accompanying script in your Docs subfolder.
+
+        Please read Script013.pdf in your Docs subfolder BEFORE proceeding further with this lab...
+        """,
+        "For now, simply read the script Script013.pdf to prepare for working through this lab",
+        x -> true
+    ),
+    Activity(
+        """
         We know from lab 6 that replication is represented by the Exponential model:
             dx/dt = r*x
 

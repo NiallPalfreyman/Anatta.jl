@@ -25,10 +25,7 @@
 
         Genetics plays a role in determining fitness, but we can only ever measure fitness ecologically!
 
-        And of course, ecology depends on all the details of how your type interacts with this
-        context, so fitness is not constant, linear or even particularly simple! In practice, an
-        organism's fitness depends highly NONLINEARLY on the interactive games it plays with its
-        environment …
+        Please read Script015.pdf in your Docs subfolder BEFORE proceeding further with this lab...
         """,
         "",
         x -> true
