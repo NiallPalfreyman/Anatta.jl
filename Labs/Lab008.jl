@@ -175,7 +175,7 @@
         """
         We can also define rules using Regular Expressions (denoted, for example, by r"xyz"). For
         example, the following line tells julia to replace all repeated spaces by single spaces:
-            replace(sample_text, r"\s+" => " ")
+            replace(sample_text, r"\\s+" => " ")
 
         If you enter this command now, you should see that the multiple spaces are cleaned up:
         """,
@@ -185,10 +185,10 @@
     Activity(
         """
         We can use the julia method split() to divide the text up into words:
-            split(sample_text, r"\s")
+            split(sample_text, r"\\s")
 
         However, as you see, we need to split the words on other punctuation symbols as well:
-            split(sample_text, r"(\s|\b)")
+            split(sample_text, r"(\\s|\\b)")
         """,
         "",
         x -> true
