@@ -103,14 +103,38 @@ end
 """
 home!( dir::String=pwd())
 
-Move to the learner's home directory.
+Set the learner's home directory.
 """
 function home!( dir::String=pwd())
 	cd( dir)							# Check that the directory actually exists
 	session.home_dir = dir				# Then set new home directory
+
+	# Ensure tools are set up:
+	tool_path = joinpath(session.home_dir,"Tools")
+	if !isdir(tool_path)
+		cp( joinpath( session.anatta_home, "Tools"), tool_path, force=true)
+	end
+
+	# Ensure scripts are set up:
+	scripts_path = joinpath(session.home_dir,"Scripts")
+	if !isdir(scripts_path)
+		cp( joinpath( session.anatta_home, "../Scripts"), scripts_path, force=true)
+	end
+
 	save()
+	session.home_dir
 end
-home() = cd(session.home_dir)
+
+#-----------------------------------------------------------------------------------------
+"""
+home()
+
+Move to the learner's home directory.
+"""
+function home()
+	cd(session.home_dir)
+	session.home_dir
+end
 
 #-----------------------------------------------------------------------------------------
 """
@@ -316,18 +340,6 @@ function setup( library::String; force=false)
 	if isdir(topath) && !force
 		println("Local library $(library) already exists. Specify force=true to overwrite.")
 		return
-	end
-
-	# Ensure tools are set up:
-	tool_path = joinpath(session.home_dir,"Tools")
-	if !isdir(tool_path)
-		cp( joinpath( session.anatta_home, "Tools"), tool_path, force=true)
-	end
-
-	# Ensure docs are set up:
-	docs_path = joinpath(session.home_dir,"Docs")
-	if !isdir(docs_path)
-		cp( joinpath( session.anatta_home, "../docs"), docs_path, force=true)
 	end
 
 	# Ensure Development directory exists:
