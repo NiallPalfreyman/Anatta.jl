@@ -17,9 +17,9 @@ A single activity to be performed and responded to by the learner.
 An Activity is the basic unit of learning in Anatta. It contains ... 
 
 # Fields
-* `affordance`	: Text affording an activity to the learner.
-* `hint`		: Text suggesting to the learner how to respond to the affordance.
-* `success`		: Boolean function that defines the criteria for a successful learner response.
+* `prompt`	: Text prompting an activity by the learner.
+* `hint`	: Text suggesting to the learner how to respond to the prompt.
+* `success`	: Boolean function that defines the criteria for a successful learner response.
 
 # Notes
 * None
@@ -30,9 +30,9 @@ julia> act = Activity( "What is 2+3?", "Add the numbers together", x -> x==5)
 ```
 """
 struct Activity
-	affordance :: String				# Affordance text
-	hint :: String						# A hint to the learner, if she requires one
-	success :: Function					# The criterion for a successful response
+	prompt :: String				# Prompt text
+	hint :: String					# A hint to the learner, if she requires one
+	success :: Function				# The criterion for a successful response
 end
 
 #-----------------------------------------------------------------------------------------
@@ -82,10 +82,10 @@ end
 """
 pose( act::Activity)
 
-Present the affordance of the given Activity to the learner.
+Present the prompting text of the given Activity to the learner.
 """
 function pose( act::Activity)
-	print( act.affordance)
+	print( act.prompt)
 end
 
 #-----------------------------------------------------------------------------------------
