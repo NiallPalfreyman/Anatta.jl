@@ -11,12 +11,13 @@
         """
         Welcome to Anatta: Exploring a World based on Process, rather than Substance.
 
-        Two key concepts lie at the heart of post-modern scientific philosopy: Change and
-        Wholeness. On the one hand, the world is not as stable as we thought: the world is not a
-        bottomless rubbish-tip for carbon-dioxide, plastic and nuclear waste, but changes in
-        response to our actions. And on the other hand, these changes arise from the fact that the
-        world is also a deeply connected Whole. Indeed, it is precisely these changing processes
-        that bind our world into a complete, evolving Unity.
+        Two key concepts are central to post-modern scientific philosopy: Change and Wholeness.
+        -   On the one hand, the world is not as stable as we thought. It is not a bottomless
+            rubbish-tip for carbon-dioxide, plastic and nuclear waste - rather, it changes in
+            response to our actions.
+        -   And on the other hand, these changes in the world arise from the fact that it is also
+            a deeply connected Whole. Indeed, it is precisely these changing processes that bind
+            our world into a complete, evolving Unity.
 
         Hi, my name is Ani! I will be your guide on this fascinating process-oriented journey. This
         is also the story of my own personal journey of discovery that the world is so different
@@ -38,13 +39,15 @@
             ii) living organisms are not substantial Structures, but biological Processes of longer
                 or shorter duration.
             
-        These two ideas completely change the way we understand the world. We can already notice
-        that together they mean we must find a new way of evaluating Knowledge, not as being more
-        or less True, but rather as being more or less useful in stabilising biological processes.
-        The Big Question of Anatta is this:
+        These two ideas completely change the way we understand the world. We can immediately see
+        that together they mean we must find a new way of evaluating Knowledge. For we can no
+        longer think of knowledge as being true or false, but instead we must think of knowledge as
+        being more or less useful in our attempts to our biological processes against external danger.
+        
+        The Big Question that Anatta asks, is this:
 
-            "How can an ever-changing world of processes enact so much stability that we might
-                come to believe that it consists entirely of substantial structures?"
+            "How can an ever-changing world of processes produce so much stability that we start
+                to believe that the world consists entirely of substantial structures?"
         """,
         "Again, enter reply() at the julia prompt to move on ...",
         x -> true
@@ -52,8 +55,8 @@
     Activity(
         """
         While exploring Anatta, we will investigate this question very deeply. To help us do so,
-        I have divided our exploration into Subjects that build successively upon each other, each
-        Subject corresponding roughly to a 5-credit undergraduate-level lecture course:
+        I have divided our exploration into Subjects that build successively upon each other. Each
+        Subject corresponds roughly to a 5-credit undergraduate-level lecture course:
             Subject 0: Computation          - Using structures to explore and predict the world
             Subject 1: Formal Logic         - Beliefs have structure, but structures ALWAYS have gaps!
             Subject 2: System dynamics      - Dynamical stories can fill logical gaps
@@ -124,12 +127,14 @@
         """
         As you probably realised, the first two lines in your learner configuration file contain
         the number of the Lab and of the learning Activity that you are currently working on. What
-        about the third line? This appears to be the path of some folder on your computer ...
+        about the third line? This appears to be the path of some folder on your computer, but
+        what does it mean? We will now change this line of your learner configuration file. :)
 
         As you play with Anatta, you will write julia programs to create new ideas and solve
-        problems. You will want to save these solutions and ideas for later reference in a special
-        "home" folder on your computer. We will now choose that home folder and at the same time
-        get to know how julia helps us move around the computer ...
+        problems. It is a good idea to save these solutions and ideas for later reference in a
+        special "home" folder on your computer. In the following exercises, you will choose where
+        you want that home folder to lie in your computer, and at the same time you will start to
+        understand how julia helps us to move around the computer ...
         """,
         "Again, enter reply(). From now on, I'll stop irritating you with this hint :)",
         x -> true
@@ -192,7 +197,7 @@
         entering:
             mkdir("Anatta")
 
-        Then use `readdir()` to check that julia has created the new folder.
+        Then use `isdir("Anatta")` to check that julia has created the new folder.
         """,
         "Use reply() to continue",
         x -> true
@@ -273,9 +278,10 @@
     ),
     Activity(
         """
-        Now that you have installed VSC, the next step is to make sure it knows about julia. Select
-        View, and then click on Extensions so that the Extensions View opens down the left-hand
-        of the VSC screen. Type the string "julia" (WITHOUT quotes) in the searchbox at the top.
+        Now that you have installed VSC, the next step is to make sure it knows about julia. inside
+        VSC, select View, and then click on Extensions so that the Extensions View opens down the
+        left-hand side of the VSC screen. Type the string "julia" (WITHOUT quotes) in the searchbox
+        at the top.
 
         In the list of extensions that appears, you will see an entry for "Julia Language Support".
         If you click on this, a VSC pane opens that describes the julia extension. Click on the
