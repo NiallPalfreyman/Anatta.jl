@@ -23,8 +23,8 @@
         is also the story of my own personal journey of discovery that the world is so different
         from, and so much MORE than, it seems on the surface.
         
-        As we follow this journey, whenever you want to move on from one learning activity (like this
-        one) to the next, enter `reply()` at the julia prompt. Do this now:
+        Whenever you want to take the next step on this journey from one learning activity (like
+        this one) to the next, enter `reply()` at the julia prompt. Do this now:
         """,
         "We're still getting started - simply enter `reply()` at the julia prompt. :)",
         x -> true
@@ -92,15 +92,17 @@
         how we learn naturally as children: we take our first step, fall down, dust ourselves off
         and take another step - but this time a little more skilfully.
 
-        There is literally no better way to learn than through making mistakes and receiving
-        friendly, supportive feedback that helps you do it better next time. And believe me,
-        computers are GREAT at respectful feedback: they never want to make anyone feel bad - they
-        just say "No, sorry - that didn't work!" or "Yup, that worked great!"
+        There is really no better way to learn than through making mistakes and receiving friendly,
+        supportive feedback that helps you do it better next time. And believe me, computers are
+        GREAT at respectful feedback: they never want to make anyone feel bad - they just say,
+        "No, sorry - that didn't work!" or "Yup, that worked just fine!"
         
         So let's get started! At the julia prompt, enter the following code:
             concept = "Anatta"
 
-        Then enter your reply as:
+        This line creates a variable named `concept`, in which is stored the value "Anatta". The
+        double quotes mean that this value is a String of the characters "Anatta". You can view
+        this value by entering `concept` at the julia prompt. Try this now, then enter this reply:
             reply(concept)
         """,
         "Another way of doing this is to enter: reply(\"Anatta\")",
@@ -144,13 +146,13 @@
         julia offers us many ways to guide its console around the computer. For example, type
             pwd()
         
-        at the julia prompt now. PWD stands for "Present Working Directory", and the pwd() function
-        tells you exactly where you are right now within your computer's folder structure. For
-        example, when I enter pwd() on my computer right now, I get:
+        at the julia prompt now. `pwd` stands for "Present Working Directory", and the pwd()
+        function tells you exactly where you are right now within your computer's folder structure.
+        For example, when I enter pwd() on my computer right now, I get this output:
             "C:\\\\Users\\\\Ani\\\\AppData\\\\Local\\\\Programs\\\\julia-1.8.4\\\\bin"
 
-        This is julia's system binary area, and I DEFINITELY don't want to mess around with the
-        data there! So now try entering the following Anatta command:
+        This is julia's system binary area, and I DEFINITELY don't want to mess around with the data
+        there! So now try entering the following Anatta command to move to your Anatta home folder:
             home()
 
         Now enter pwd() again to find out where you are now, and then reply() me the last few
@@ -162,22 +164,22 @@
     Activity(
         """
         Well, at least we're no longer in the system area! In fact, since you haven't yet set up an
-        Anatta home folder, the home() function has probably landed you in the system's Temp area.
+        Anatta home folder, the home() function has probably sent you to the system's Temp area.
         But we also don't want to store our wonderful discoveries there, so we'll want to navigate
         through our folder structure and create a new Anatta home folder in a place of OUR choosing.
         
         The functions for moving through the folders are cd() ("Change Directory") and readdir():
-            cd()            = Change to my own user area (e.g.: "C:\\Users\\Ani")
-            cd("..")        = Change UP to the parent folder of my current folder
-            cd("docs")      = Change DOWN to the subfolder "docs" of my current folder
-            cd("D:/Proj")   = Change ACROSS to this absolute folder location
-            readdir()       = Give me a list of files and subfolders within my current folder
+            cd()                = Change to my own user area (e.g.: "C:\\Users\\Ani")
+            cd("..")            = Change UP to the parent folder of my current folder
+            cd("docs")          = Change DOWN to the subfolder "docs" of my current folder
+            cd("C:/Users/Ani")  = Change ACROSS to this absolute folder location
+            readdir()           = Give me a list of files and subfolders within my current folder
 
         Use these functions now to step slowly through the folder structure until you arrive in
         the parent folder of where you want to create your Anatta home folder. When you get there,
         reply() me to let me know. If you need to see the above commands again, enter `askme()`.
         """,
-        "Remember: entering `askme()` shows you this Activity again",
+        "Remember: entering `askme()` will show you the text for this Activity again",
         x -> true
     ),
     Activity(
