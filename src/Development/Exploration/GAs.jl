@@ -346,7 +346,7 @@ function compare(geneticAlgorithms::Vector{T}, nSteps=100; multiThreading::Bool=
 			elseif typeof(algo) == ExploratoryGA
 				return algo.nTrials
 			else
-				throw(TypeError())
+				throw("TypeError()")
 			end
 		end
 	, geneticAlgorithms)

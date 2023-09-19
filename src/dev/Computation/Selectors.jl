@@ -9,7 +9,7 @@ Author: Niall Palfreyman, 16/11/2022
 """
 module Selectors
 
-include( "../../Development/Altruism/Simplex.jl")
+include( "../../Development/Computation/Simplex.jl")
 
 using GLMakie
 

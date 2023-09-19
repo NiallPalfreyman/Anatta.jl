@@ -7,8 +7,7 @@ Module Mutators: A model of mutation and the quasi-species equation.
 Author: Niall Palfreyman, 22/11/2022
 """
 module Mutators
-
-include( "../../Development/Altruism/Simplex.jl")
+include( "../../Development/Computation/Simplex.jl")
 
 using GLMakie
 

@@ -8,7 +8,7 @@ Author: Niall Palfreyman, 29/11/2022
 """
 module Interactors
 
-include( "../../Development/Altruism/Simplex.jl")
+include( "../../Development/Computation/Simplex.jl")
 
 using GLMakie
 

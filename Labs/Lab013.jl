@@ -11,8 +11,8 @@
         Hi! Welcome to Anatta Lab 013: Implementing Replication and Selection
 
         You should be aware that this and the next three labs are accompanied by a script located
-        in your Docs subfolder. The script for this lab is Script013.pdf. Please read that script
-        now, before proceeding with this lab.
+        in your Scripts subfolder. The script for this lab is Script013.pdf. Please read that
+        script now, before proceeding with this lab.
         In this laboratory we really get started with the biological content of this course. We are
         now also preparing for the final assessed project of the course, so it is Very Important
         that you prepare yourself properly for each of the labs 013-016 by first working through

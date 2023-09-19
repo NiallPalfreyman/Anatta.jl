@@ -14,6 +14,9 @@
         and texts. Along the way, we will discover some fun stuff about how large language models
         (LLMs) like GPT are constructed, and we will also learn how to use the julia REPL for
         developing a code module. :)
+
+        Please be aware: Lab 008 also contains your first assessed project for Subject 0, so we
+        will allow ourselves a full week to complete all the work for this lab.
         """,
         "",
         x -> true
@@ -215,14 +218,15 @@
 
         We want to eliminate duplicate words from our list, and we shall use a julia Dict(ionary)
         to achieve this. Try out the following commands at the julia prompt:
-            d = Dict()
-            d["France"] = "Paris"
-            d["Tanzania"] = "Dar-es-salaam"
+            capitals = Dict()
+            capitals["France"] = "Paris"
+            capitals["Tanzania"] = "Dar-es-salaam"
 
-        Display the entire dictionary by entering `d`, an notice that the entries are (probably)
-        not in the same order as you entered them. Dicts are Hashing structures - that is, the
-        entries in the Dict are Key=>Value Pairs in whatever order enables them to be accessed as
-        quickly as possible. What is the value of haskey(d,"Tanzania")?
+        Now add a few more capital cities of your own to the `capitals` dictionary, then display
+        the entire dictionary by entering `capitals` at the julia prompt. Notice that the entries
+        are probably not in the same order as you entered them. Dicts are Hashing structures - that
+        is, the entries in the Dict are Key=>Value Pairs in whatever order enables users to access
+        them as quickly as possible. What is the value of haskey(d,"Tanzania")?
         """,
         "",
         x -> x==true
@@ -487,9 +491,10 @@
         write_novel() generates a text file novel.txt containing num_words words, generated from a
         language model based on n-grams of the source_text. The generated novel should contain an
         appropriate title and copyright date. Here are some questions you may wish to answer:
-            -   How do I handle special characters?
+            -   Have I written my julia code so that other students will understand it easily?
+            -   How do I handle special characters in the Pride and Prejudice text?
             -   How do I implement the ideas from this lab as short, convenient methods?
-            -   How do I document the module and demonstrate how users should call write_novel()?
+            -   How can I document my module to demonstrate how users should call write_novel()?
             -   How do I generate today's date? (see Dates module in the julia ddocumentation)
         """,
         "Good luck! :)",

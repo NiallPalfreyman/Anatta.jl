@@ -174,7 +174,7 @@ function nicheDynamics(model::ABM)
 	#evaporate
 	model.u .*= (1 - model.rEvapU)
 	#diffuse
-	model.u = diffuse4(model.u, model.rDiffU, true)
+	model.u = diffuse(model.u, model.rDiffU, true)
 	#set the colormap to math chemoattractants
 	model.cMap = model.u
 end
