@@ -297,8 +297,8 @@
             sample_wordcounts = entry_counts(sample_wordlist)
             sample_wordcounts["lazy"]
 
-        Now construct pandp_wordcounts, and tell me how many times the book Pride and Prejudice
-        mentions the name "Elizabeth":
+        Now construct two new julia variables pandp_wordlist and pandp_wordcounts according to this
+        scheme, them tell me how often the book Pride and Prejudice mentions the name "Elizabeth":
         """,
         "pandp_wordlist = splitwords(pandp_text); pandp_wordcounts = entry_counts(pandp_wordlist)",
         x -> x == 634
