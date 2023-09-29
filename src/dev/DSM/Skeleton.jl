@@ -2,7 +2,7 @@
 	Skeleton
 
 This simulation demonstrates how flow is enacted into structure by simulating the building
-of a skeleton (Skeleton) by Osteoblasts using Turing reaction-diffusion dynamics.
+of a skeleton (Skeleton) by Osteoblast agents using Turing reaction-diffusion dynamics.
 
 Author: Niall Palfreyman (July 2023)
 """
@@ -37,7 +37,8 @@ An Osteoblast moves with a certain speed, and secretes a chemical activator.
 """
 @agent Osteoblast ContinuousAgent{2} begin
 	speed::Float64					# Osteoblast's current speed
-	secretion_rate::Float64
+	secretion_rate::Float64			# Rate of secretion of activator/inhibitor
+	builder::Bool					# Do I build activator concentration?
 end
 
 #-----------------------------------------------------------------------------------------
@@ -75,7 +76,9 @@ function create_skeleton(;
 	for _ in 1:POP_DENSITY*prod(extent)
 		# Baby emilies have maximum (unit) speed in a random direction:
 		θ = 2π * rand()
-		add_agent!( Osteoblast, skeleton, (cos(θ),sin(θ)), 1.0, TINY_CONCENTRATION)
+		add_agent!( Osteoblast, skeleton, (cos(θ),sin(θ)),
+			1.0, TINY_CONCENTRATION, rand(Bool)
+		)
 	end
 
 	skeleton
@@ -85,17 +88,26 @@ end
 """
 	agent_step!( ossie::Osteoblast, skeleton::ABM)
 
-Osteoblast dynamics: Somersault if activator concentration is falling, but decelerate if it is
-unchanging. Also, slow down if other emilies are around. Finally, add some random thermal jitter
-and deposit activator protein.
+Osteoblast dynamics: Builders tend to climb activator concentration gradients, while non-builders
+tend to slide down them. This is achieved as follows:
+	-	Builders deposit activator protein; non-builders deposit inhibitor protein;
+	-	Builders somersault if activator concentration is falling;
+	-	Non-builders somersault if activator concentration is rising;
+	-	All Osteoblasts decelerate if activator concentration is unchanging;
+	-	All Osteoblasts decelerate if other ossies are in the immediate neighbourhood;
+	-	All Osteoblasts add some random thermal jitter.
 """
 function agent_step!( ossie::Osteoblast, skeleton::ABM)
 	# Gather local information:
 	prev_idx = get_spatial_index( ossie.pos, skeleton.activator, skeleton)
 	prev_activator = skeleton.activator[prev_idx]
 
-	# Deposit activator and move on:
-	skeleton.activator[prev_idx] += DT * ossie.secretion_rate
+	# Deposit either activator or inhibitor, then move on:
+	if ossie.builder
+		skeleton.activator[prev_idx] += DT * ossie.secretion_rate
+	else
+		skeleton.inhibitor[prev_idx] += DT * ossie.secretion_rate
+	end
 	if rand() < ossie.speed
 		move_agent!( ossie, skeleton, STEP_LENGTH)
 	end
@@ -103,14 +115,15 @@ function agent_step!( ossie::Osteoblast, skeleton::ABM)
 	# Note step-change in local activator concentration:
 	new_idx = get_spatial_index( ossie.pos, skeleton.activator, skeleton)
 	delta_activator = skeleton.activator[new_idx] - prev_activator
-	if delta_activator < -TOLERANCE
-		# Somersault if local activator concentration is falling:
+	if ossie.builder && delta_activator < -TOLERANCE ||
+			!ossie.builder && delta_activator > TOLERANCE
+		# Somersault if local activator concentration is changing against my needs:
 		turn!( ossie, 2π*rand())
 	elseif abs(delta_activator) < TOLERANCE
 		# Settle down if local activator concentration is unchanging:
 		accelerate!( ossie, -ACCELERATION)
 	else
-		# "Fall uphill": Accelerate if local activator concentration is rising:
+		# Accelerate if local activator concentration is changing according to needs:
 		accelerate!( ossie, ACCELERATION)
 	end
 
@@ -161,6 +174,20 @@ function accelerate!( ossie::Osteoblast, accn::Float64=1.0)
 		ossie.speed += accn * (1.0-ossie.speed)
 	else
 		ossie.speed *= (1.0+accn)
+	end
+end
+
+#-----------------------------------------------------------------------------------------
+"""
+	agent_colour( ossie::Osteoblast)
+
+Builders are blue; non-builders are red.
+"""
+function agent_colour( ossie::Osteoblast)
+	if ossie.builder
+		:blue
+	else
+		:red
 	end
 end
 
@@ -243,7 +270,7 @@ function run()
 	)
 	plotkwargs = (
 		am = :circle,
-		ac = :red,
+		ac = agent_colour,
 		as = 15,
 		heatarray = :activator,
 		add_colorbar = false,
