@@ -41,8 +41,9 @@
             
         These two ideas completely change the way we understand the world. We can immediately see
         that together they mean we must find a new way of evaluating Knowledge. For we can no
-        longer think of knowledge as being true or false, but instead we must think of knowledge as
-        being more or less useful in our attempts to our biological processes against external danger.
+        longer think of knowledge as being true or false. Instead, we must think of knowledge as
+        being more or less useful to us, as we try to protect our biological processes against
+        external danger from our environmen.
         
         The Big Question that Anatta asks, is this:
 
