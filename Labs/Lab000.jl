@@ -43,7 +43,7 @@
         that together they mean we must find a new way of evaluating Knowledge. For we can no
         longer think of knowledge as being true or false. Instead, we must think of knowledge as
         being more or less useful to us, as we try to protect our biological processes against
-        external danger from our environmen.
+        external danger from our environment.
         
         The Big Question that Anatta asks, is this:
 
