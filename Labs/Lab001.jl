@@ -69,13 +69,13 @@
         """
         OK, now before we move on, I want to explain something very important...
 
-        I want you to learn from this course. I'll be giving you activities to do, or sometimes
-        just give you information. But you will ONLY learn if you try things out for yourself!
+        I want you to learn from this course. I'll be giving you information and activities for you
+        to do, or sometimes, but you will ONLY learn if you try things out for yourself!
         So make sure with each learning activity that you always follow these useful learning tips:
             -   If I ask you to do something, like calculating `(3+4)*5`, try also doing something
                 slightly different, such as `(3+4)/5`, to increase your understanding efficiently.
-            -   The Docs subfolder of your Anatta home folder contains the full julia documentation,
-                so keep checking in there if there is anything you want to find out about.
+            -   The Scripts subfolder of your Anatta home folder contains the full documentation
+                for julia. If I say Anything that you don't understand, just look it up in there.
             -   If I use a julia function whose meaning you are curious about, try pressing `?` at
                 the julia prompt, then entering the name of the function. This provides quick help.
 
@@ -166,7 +166,8 @@
     ),
     Activity(
         """
-        You can use conditionals in the usual way, for example:
+        You can use conditionals in the usual way, for example we might implement the
+        "absolute value" function like this:
             function f(x)
                 if x ≥ 0
                     x
@@ -222,8 +223,8 @@
         (Note: You can enter the symbol π by typing "\\pi" and then pressing Tab.
         Alternatively, you can replace this symbol by the named constant "pi".)
         """,
-        "\"typeof(ans)\"",
-        x -> (x == Nothing)
+        "",
+        x -> true
     ),
     Activity(
         """

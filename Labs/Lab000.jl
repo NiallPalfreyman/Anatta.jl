@@ -341,9 +341,9 @@
         """
         This type of value is called a String - that is, a sequence of characters contained between
         double quotes (") that are intended to communicate some kind of information. Strings use
-        the backslash character '\' to signify special characters such as the Alarm character '\a';
+        the backslash character '\\' to signify special characters such as the Alarm character '\\a';
         test this now by printing the Alarm character from the julia prompt:
-            print("\a")
+            print("\\a")
 
         (Make sure your speakers are switched on!) If you really like the sound, you can irritate
         friends by repeating it several times: Just press up-arrow and enter the command again.
