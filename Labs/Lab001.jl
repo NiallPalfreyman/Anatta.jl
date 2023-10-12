@@ -346,7 +346,7 @@
         than 1, but it does a GREAT job of calculating the special case fact(0)! :) Enter this code
         and check that it calculates fact(0) correctly ...
         """,
-        "",
+        "Reply() me your value for fact(0)",
         x -> x==1
     ),
     Activity(
@@ -370,12 +370,12 @@
         This implementation keeps multiplying by numbers (i) between 2 and n, until it has
         calculated the result. Enter the code and check it calculates factorial(5) correctly ...
         """,
-        "",
+        "Reply() me your value for fact(5)",
         x -> x==120
     ),
     Activity(
         """
-        Finally, let's look quickly at Recursion - breaking problems down into smaller and smaller
+        Finally, let's look quickly at Recursion, or breaking problems down into smaller and smaller
         chunks that are easier to solve. We have already found an adequate iterative solution to
         the factorial problem; however, there are many problems such as the travel planning problem
         that we cannot solve using iteration. In such cases, Recursion is often useful. Even though

@@ -63,7 +63,7 @@
         Then reply() me the type of the new variable `is` ...
         """,
         "When you are finished, `is` should be an IOStream",
-        x -> x isa IOStream
+        x -> x <: IOStream
     ),
     Activity(
         """
@@ -86,7 +86,7 @@
             seekstart(is)
             data = readline(is)
 
-        reply() me the first 5 characters of `data` using the call `data[1:5]`:
+        reply() me the first 5 characters of `data` using the code `data[1:5]`:
         """,
         "reply(data[1:5])",
         x -> x == "GCATG"
