@@ -52,10 +52,80 @@
     ),
     Activity(
         """
-        Again, we are looking for the dynamical mechanisms underlying such periodic patterns as a
-        zebra's stripes, a leopard's spots or the repeating vertebrae along a primate's spine. If
-        Turing's idea is correct, the rules underlying the development of such biological patterns
-        are similar across species, and only the parameters are different.
+        However, there seems to be a problem with our structural implementation of a Turing system.
+        Notice how very straight the emerging lines seem to be. Reset the StructuralTuring model a
+        few times to be sure that these straight-line patterns are a reliable feature.
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        The straight lines look suspiciously like at Artefact - that is, their straightness looks
+        like a feature that does not occur naturally, but which has been caused by some mistake in
+        our implementation. Let's check this...
+        
+        If you go to the model-initialisation function, structural_turing(), you will see that I
+        have initialised the property `differentiation` to a zero matrix, since I want the agents
+        to generate the emerging pattern. However, the following line contains an alternative
+        initialisation to a random matrix, which I have commented out.
+
+        I want you to now comment out my zero-matrix initialisation, and instead remove the comment
+        marker at the beginning of the random-matrix initialisation. Now re-run the simulation. Are
+        the Turing-pattern lines still straight?
+        """,
+        "",
+        x -> occursin("no",lowercase(x))
+    ),
+    Activity(
+        """
+        What is happening here? Random initialisation of the differentiation matrix produces
+        natural-looking patterns, whereas zero initialisation generates straight lines. If the
+        values start from zero, it is only the exploratory processes of the agents that can
+        cause the pattern. Replace the random initialisation by the zero initialisation again,
+        then run the model and notice that the agents tend to lie on the white stripes. This
+        suggests that they are indeed triggering the patterns, but somehow the Turing process is
+        generating straight lines - even though there is nothing in the model to say that the lines
+        have to run vertically or horizontally.
+
+        What is the name of the method in the StructuralTuring model that generates the Turing
+        pattern?
+        """,
+        "Look for the code that generates the new state of differentiation from the old state",
+        x -> occursin("model_step!",lowercase(x))
+    ),
+    Activity(
+        """
+        Look at the code that generates the Turing pattern, and notice that the straight Turing
+        lines tend to run vertically, rather than horizontally. Which control structure in the
+        code might you expect to change the differentiation matrix preferentially in a vertical
+        direction, rather than another?
+        """,
+        "which control structure determines the order in which we process individual matrix entries?",
+        x -> occursin("for",lowercase(x))
+    ),
+    Activity(
+        """
+        Do you see how the for-loop uses linear indexing to access the differentiation matrix? This
+        means that the reaction-diffusion process ALWAYS changes the differentiation values in one
+        particular order. THAT is what we mean by an Artefact: It is caused by the rigid sequences
+        of formal computation.
+
+        We must break up this rigidity, and we can achieve this quite easily by shuffling the order
+        in which matrix entries are processed. Simply enclose the range of the for-loop inside a
+        call to the function shuffle() from the Random package. Then notice how our artefact
+        disappears!
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        OK, now our simulation is working properly, so we can use it to look for dynamical
+        mechanisms underlying such periodic patterns as a zebra's stripes, a leopard's spots or the
+        repeating vertebrae along a primate's spine. If Turing's idea is correct, the rules
+        underlying the development of such biological patterns are similar across species, and
+        differences only arise from dynamical parameters such as diffusion rates.
 
         This brings us back to the idea of EXPLORATORY PROCESSES, and helps us to understand how
         Darwinian variation of these patterns might occur over evolutionary time. Remember that
