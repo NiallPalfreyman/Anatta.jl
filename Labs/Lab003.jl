@@ -58,23 +58,34 @@
     ),
     Activity(
         """
-        By the way, notice that in julia there is a very big difference between the two names
-        `Expr` and `expr`: upper- an lowercase letters are different from each other. Here, `expr`
-        is your own name for a new variable containing your parsed (i.e. translated) program, and
-        `Expr` is the type of the thing that julia has stored under that name.
+        By the way, please note that in julia it makes a very big difference whether you spell a
+        name using upper- or lowercase letters, for example: `expr` and `Expr`. In the previous
+        activity, `expr` is our own name for a new variable containing your parsed (i.e.
+        translated) program, whereas `Expr` is the type of the value that julia has stored under
+        that name in computer memory. Check for yourself that typeof(expr) == Expr.
 
-        So let's look at what an Expr looks like. An Expr is a structure with two parts: a head
-        (named `expr.head`) and a vector of arguments (named `expr.args`). Tell me what is
-        contained in the head of expr:
+        Quite generally, every item of data, and every program, function, expression, statement in
+        julia is simply an Expression object with the type Expr. Expr is the fundamental type of
+        EVERYTHING in the julia language!
+        
+        So let's investigate what objects of type Expr look like. An Expr is a structure with two
+        parts: a head (named `expr.head`) and a vector (named `expr.args`) of arguments of that
+        head. Tell me what is contained in the head of the object `expr` that we created in the
+        previous activity:
         """,
         "expr.head",
         x -> x==:call
     ),
     Activity(
         """
-        The :call symbol tells julia that your program Expr is something that can actually be
-        called, or executed on a computer. Use the function dump() to view the entire structure
-        of expr now, and note what you see:
+        The :call symbol tells julia that your program Expr is something that it can actually call,
+        or execute, on a computer. Basically, julia interprets the variable `expr` like this:
+            `call` the function `/` with the two arguments `8` and `2 + 3.0`,
+
+        and julia interprets the subexpression `2 + 3.0` like this:
+            `call` the function `+` with the two arguments `2` and `3.0`
+        
+        Use the function dump() to visualise the structure of expr, and note carefully what you see:
         """,
         "Simply enter: `dump(expr)`. You can then enter `reply()` to continue with this lab",
         x -> true
@@ -92,7 +103,7 @@
         julia has interpreted your "2" as an integer (e.g. Int64), but as you can see, your "3.0"
         has been interpreted as a floating-point number (e.g. Float64).
         
-        We can execute (that is, evaluate) your expression expr using the function `eval()`.
+        We can execute (that is, evaluate) your expression `expr` using the function `eval()`.
         What is the value of expr?
         """,
         "eval(expr)",
@@ -118,9 +129,8 @@
     ),
     Activity(
         """
-        OK, so your new program has correctly calculated the result 3.0, but has it created a
-        variable named `susan`? Enter `susan` at the julia prompt and tell me what answer you
-        get:
+        OK, so your new program has correctly calculated the result 3.0. But has it created a
+        variable named `susan`? Enter `susan` at the julia prompt, then tell me your answer:
         """,
         "",
         x -> x==3.0
@@ -132,7 +142,7 @@
         ourselves from now on, and instead, we'll just enter them at the julia prompt and let julia
         do all the parsing work for us ...
 
-        Now create your own function by entering at the julia prompt:
+        First, create your own function by entering at the julia prompt:
             ahmed(x) = 3sin(pi/x)
 
         We know from the previous activities that ahmed(2) should evaluate to 3sin(π/2)==3.0. So
