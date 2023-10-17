@@ -310,7 +310,7 @@
     Activity(
         """
         Hm. Only 1 occurrence. OK, let's try it with the longer string:
-            Computation.count_seq("GCAT",pax6hs)
+            Computation.count_seq("GCAT",pax6_hs)
         """,
         "",
         x -> x==8
@@ -356,7 +356,7 @@
         entries in data_hs:
         """,
         "length(data_hs)",
-        x -> 39
+        x -> x==39
     ),
     Activity(
         """
@@ -406,7 +406,7 @@
         now in its present incomplete state with two arbitrary strings:
         """,
         "",
-        x -> x==0
+        x -> x==5
     ),
     Activity(
         """
