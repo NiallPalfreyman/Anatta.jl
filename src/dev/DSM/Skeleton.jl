@@ -19,7 +19,7 @@ const TINY_CONCENTRATION	= 0.001			# Minimum functional chemical concentration
 const STEP_LENGTH			= 0.1			# Length of a single Osteoblast step
 const ACCELERATION			= 0.01			# Acceleration factor
 const TOLERANCE				= 0.01			# Minimum detectable change in concentration
-const TEMPERATURE			= 0.0001		# Skeleton temperature: Source of thermal jitter
+const TEMPERATURE			= 0.0005		# Skeleton temperature: Source of thermal jitter
 const ACTIVATION_RADIUS		= 2				# Inner radius of activation
 const INHIBITION_RADIUS		= 4				# Outer radius of inhibition
 const INHIBITION_RATIO		= 0.34			# 0.33 links up long lines; 0.36 chops them up
@@ -133,7 +133,11 @@ function agent_step!( ossie::Osteoblast, skeleton::ABM)
 		accelerate!( ossie, ACCELERATION)
 	end
 
-	if length(collect(nearby_agents( ossie, skeleton, STEP_LENGTH))) > skeleton.population_density
+	# Slow down in presence of at least 2 like-minded neighbours:
+	nbrs = collect(nearby_agents( ossie, skeleton, STEP_LENGTH))
+	n_builders = count(builder,nbrs)
+	n_friends = builder(ossie) ? n_builders : length(nbrs) - n_builders
+	if n_friends > 2skeleton.population_density
 		# Slow down for neighbours:
 		accelerate!(ossie,-ACCELERATION)
 	end
@@ -165,7 +169,7 @@ function model_step!( skeleton::ABM)
 	end
 
 	# Training:
-#	orchestrate!( skeleton)
+	#orchestrate!( skeleton)
 end
 
 #-----------------------------------------------------------------------------------------
@@ -234,7 +238,7 @@ function agent_colour( ossie::Osteoblast)
 	if builder(ossie)
 		:blue
 	else
-		:red
+		:lime
 	end
 end
 
@@ -283,13 +287,13 @@ function orchestrate!( skeleton::ABM)
 		if skeleton.scenario == 1
 			# Conduct first training scenario:
 #			println( "Yup: ", skeleton.epoch, "; ", skeleton.scenario, "; ", skeleton.generation)
-			skeleton.activator[2idx_quarter,idx_quarter]		+= dollop
+			skeleton.activator[2idx_quarter,:] .+= dollop
 #			skeleton.activator[idx_quarter,3idx_quarter]	+= dollop
 #			skeleton.activator[3idx_quarter,1]				+= dollop
 #			skeleton.activator[3idx_quarter,2idx_quarter]	+= dollop
 		else
 			# Conduct second training scenario:
-			skeleton.activator[2idx_quarter,3idx_quarter]		+= dollop
+			skeleton.activator[:,2idx_quarter] .+= dollop
 #			skeleton.activator[3idx_quarter,idx_quarter]	+= dollop
 #			skeleton.activator[1,3idx_quarter]				+= dollop
 #			skeleton.activator[2idx_quarter,3idx_quarter]	+= dollop
