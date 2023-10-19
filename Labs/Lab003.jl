@@ -221,10 +221,10 @@
             fact(x::Real) = gamma(x+1)
 
         Check these methods by entering the two calls `fact(3)` and `fact(3.0)`. What is the
-        type of the value returned by `fact(3)`?
+        type of the value returned by `fact(3.0)`?
         """,
-        "eval(fact(5.0))",
-        x -> x==120.0
+        "fact(3.0)",
+        x -> x <: AbstractFloat
     ),
     Activity(
         """
@@ -257,7 +257,7 @@
         own user-defined types. To do this, it is best if we create our code in a julia file that
         we can compile, test and develop in the VSC environment. In the Computation folder, you
         will find a julia file named Dummies.jl. This is a template that you can use to create
-        your own modules in the future. Now do the following
+        your own modules in the future. Now do the following:
             -   Select the file Dummies.jl in VSC Explorer. Press ctrl-C then ctrl-V to copy
                 Dummies.jl to a new file that you rename Organisms.jl. Open the new file in VSC.
             -   In Organisms.jl, replace all occurrences of the word "Dummies" by "Organisms".
@@ -272,18 +272,18 @@
                     wendy = Weasel( "Wendy", 3.1415)
                 (Notice that variables always start with a small letter!)
         """,
-        "Just enter everything into the file Organisms.jl, EXACTLY as I have described it here",
-        x -> isfile("Organisms.jl")
+        "Make sure you create the file Computation/Organisms.jl, EXACTLY as I have described it here",
+        x -> isfile(joinpath(Main.Anatta.session.home_dir,"Development","Computation","Organisms.jl"))
     ),
     Activity(
         """
-        Your Organisms.jl program should now run. In the julia console, you would compile it by
-        entering:
-            julia> include("Organisms.jl")
+        Your Organisms.jl program should now run. In the julia console, you would compile it from
+        within your home directory by entering:
+            julia> include("Development/Computation/Organisms.jl")
 
-        inside your Anatta home directory, but in VSC it is easier to just press the compilation
-        triangle in the top-right of your VSC pane. This compiles your new Organisms module inside
-        a new julia console within VSC, which is a good place to test new code.
+        However, in VSC it is easier to just press the compilation triangle in the top-right of
+        your VSC pane. This compiles your new Organisms module inside a new julia console within
+        VSC, which is a good place to test new code.
         
         If you get compiler-error messages, use them to correct your code in VSC. Finally, enter
         the following line at the julia prompt to run your code, and correct any new errors you
@@ -399,11 +399,24 @@
         change the fields of a type, we must define it as MUTABLE, like this:
             mutable struct Rabbit <: Animal
                 name::String
-                length::Integer
+                age::Integer
             end
 
-        Enter this new concrete type in Organisms.jl, recompile, then create a Rabbit named
-        Rabbia in Main:
+        Enter this new concrete type in Organisms.jl, recompile, then try creating a Rabbit
+        named Rabbia in Main:
+            rabia = Rabbit( "Rabia", 5)
+
+        Does this line work properly?
+        """,
+        "Don't worry if you get an error - that's how it's supposed to be! :)",
+        x -> occursin('n',lowercase(x))
+    ),
+    Activity(
+        """
+        The problem is that although we have created the new type Rabbit, we have not yet
+        exported this type to the outside world. To do this, enter the name Rabbit in the
+        export list at the top of the module Organisms. Now recompile, then create a Rabbit
+        named Rabbia in Main:
             rabia = Rabbit( "Rabia", 5)
 
         Change Rabia's age to 4, then give Rabia to me to look at for myself:
