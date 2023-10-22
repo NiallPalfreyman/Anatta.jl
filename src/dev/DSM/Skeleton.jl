@@ -2,7 +2,7 @@
 	Skeleton
 
 This simulation demonstrates how flow is enacted into structure by simulating the building
-of a skeleton (Skeleton) by Osteoblast agents using Turing reaction-diffusion dynamics.
+of a skeleton (Skeleton) by Osteocyte agents using Turing reaction-diffusion dynamics.
 
 Author: Niall Palfreyman (July 2023)
 """
@@ -15,30 +15,31 @@ using Agents, GLMakie, InteractiveDynamics, Random, .AgentTools
 #-----------------------------------------------------------------------------------------
 # Module constants:
 #-----------------------------------------------------------------------------------------
-const TINY_CONCENTRATION	= 0.001			# Minimum functional chemical concentration
-const STEP_LENGTH			= 0.1			# Length of a single Osteoblast step
-const ACCELERATION			= 0.01			# Acceleration factor
-const TOLERANCE				= 0.01			# Minimum detectable change in concentration
-const TEMPERATURE			= 0.0005		# Skeleton temperature: Source of thermal jitter
-const ACTIVATION_RADIUS		= 2				# Inner radius of activation
-const INHIBITION_RADIUS		= 4				# Outer radius of inhibition
-const INHIBITION_RATIO		= 0.34			# 0.33 links up long lines; 0.36 chops them up
-const DT					= 1.0			# Simulation timestep length
-const GENS_PER_SCENARIO		= 1000			# Number of cycles per training scenario
-const SCENARIOS_PER_EPOCH	= 2				# Number of training scenarios per epoch
-const EPOCHS_PER_REGIME		= 100			# Number of training epochs in entire training regime
-const TRAINING_STRENGTH		= 9				# Strength factor of training patterns
+const D_SECRETION			= 0.0001			# Agent-generated differentiation
+const D_EXCITATION			= 1e3D_SECRETION	# Interaction-generated differentiation
+const D_TRAINING			= 10D_SECRETION		# Training-generated differentiation
+const STEP_LENGTH			= 0.1				# Length of a single Osteocyte step
+const ACCELERATION			= 0.01				# Acceleration factor
+const TOLERANCE				= 0.01				# Minimum detectable change in concentration
+const TEMPERATURE			= 0.0005			# Skeleton temperature: Source of thermal jitter
+const ACTIVATION_RADIUS		= 2					# Inner radius of activation
+const INHIBITION_RADIUS		= 4					# Outer radius of inhibition
+const INHIBITION_WEIGHT		= 0.3				# Weighting of inhibition ring
+const DT					= 1.0				# Simulation timestep length
+const GENS_PER_SCENARIO		= 1000				# Number of cycles per training scenario
+const SCENARIOS_PER_EPOCH	= 2					# Number of training scenarios per epoch
+const EPOCHS_PER_REGIME		= 100				# Number of epochs in entire training regime
 
 #-----------------------------------------------------------------------------------------
 # Module types:
 #-----------------------------------------------------------------------------------------
 """
-	Osteoblast
+	Osteocyte
 
-An Osteoblast moves with a certain probability, and secretes a chemical activator.
+An Osteocyte moves with a certain probability, and secretes a chemical activator.
 """
-@agent Osteoblast ContinuousAgent{2} begin
-	speed::Float64					# Osteoblast's current speed
+@agent Osteocyte ContinuousAgent{2} begin
+	speed::Float64					# Osteocyte's current speed
 	secretion_rate::Float64			# Rate of secretion of activator/inhibitor
 end
 
@@ -52,7 +53,7 @@ Initialise the Skeleton reaction-diffusion system.
 """
 function create_skeleton(;
 	population_density = 1.0,
-	secretion = TINY_CONCENTRATION
+	secretion = D_SECRETION
 )
 	width = 100
 	extent = (width,width)
@@ -68,7 +69,7 @@ function create_skeleton(;
 		:training			=> true,
 	)
 
-	skeleton = ABM( Osteoblast, ContinuousSpace(extent,spacing=1.0); properties)
+	skeleton = ABM( Osteocyte, ContinuousSpace(extent,spacing=1.0); properties)
 
 	for i in 1:width, j in 1:width
 		# Inner circle of activating next-door neighbours:
@@ -85,7 +86,7 @@ function create_skeleton(;
 	for _ in 1:population_density*prod(extent)
 		# Baby emilies have maximum (unit) speed in a random direction:
 		θ = 2π * rand()
-		add_agent!( Osteoblast, skeleton, (cos(θ),sin(θ)),
+		add_agent!( Osteocyte, skeleton, (cos(θ),sin(θ)),
 			1.0, secretion*(2rand() - 1)
 		)
 	end
@@ -95,24 +96,24 @@ end
 
 #-----------------------------------------------------------------------------------------
 """
-	agent_step!( ossie::Osteoblast, skeleton::ABM)
+	agent_step!( ossie::Osteocyte, skeleton::ABM)
 
-Osteoblast dynamics: Builders tend to climb activator concentration gradients, while non-builders
+Osteocyte dynamics: Osteoblasts tend to climb differentiation gradients, while osteoclasts
 tend to slide down them. This is achieved as follows:
-	-	Builders deposit activator protein; somersault if ambient activator concentration is falling;
-	-	Non-builders deposit inhibitor protein; somersault if activator concentration is rising;
-	-	All Osteoblasts decelerate if activator concentration is unchanging;
-	-	All Osteoblasts decelerate if other ossies are in the immediate neighbourhood;
-	-	All Osteoblasts add some random thermal acceleration.
+	-	Osteoblasts deposit collagen; somersault if ambient collagen concentration is falling;
+	-	Osteoclasts dissolve collagen; somersault if collagen concentration is rising;
+	-	All Osteocytes decelerate if collagen concentration is unchanging;
+	-	All Osteocytes decelerate if other Osteocytes are in the immediate neighbourhood;
+	-	All Osteocytes add some random thermal acceleration.
 """
-function agent_step!( ossie::Osteoblast, skeleton::ABM)
+function agent_step!( ossie::Osteocyte, skeleton::ABM)
 	# Gather local information:
 	prev_idx = get_spatial_index( ossie.pos, skeleton.differentiation, skeleton)
 	prev_differentiation = skeleton.differentiation[prev_idx]
 
 	# Deposit either activator or inhibitor, then move on:
 	if skeleton.secretion != 0.0
-		skeleton.differentiation[prev_idx] += DT*ossie.secretion_rate
+		skeleton.differentiation[prev_idx] += ossie.secretion_rate*DT
 	end
 	if rand() < ossie.speed
 		move_agent!( ossie, skeleton, STEP_LENGTH)
@@ -121,8 +122,8 @@ function agent_step!( ossie::Osteoblast, skeleton::ABM)
 	# Note step-change in local activator concentration:
 	new_idx = get_spatial_index( ossie.pos, skeleton.differentiation, skeleton)
 	delta_differentiation = skeleton.differentiation[new_idx] - prev_differentiation
-	if builder(ossie) && delta_differentiation < -TOLERANCE ||
-			!builder(ossie) && delta_differentiation > TOLERANCE
+	if osteoblast(ossie) && delta_differentiation < -TOLERANCE ||
+			!osteoblast(ossie) && delta_differentiation > TOLERANCE
 		# Somersault if local activator concentration is changing against my needs:
 		turn!( ossie, 2π*rand())
 	elseif abs(delta_differentiation) < TOLERANCE
@@ -135,8 +136,8 @@ function agent_step!( ossie::Osteoblast, skeleton::ABM)
 
 	# Slow down in presence of at least 2 like-minded neighbours:
 	nbrs = collect(nearby_agents( ossie, skeleton, STEP_LENGTH))
-	n_builders = count(builder,nbrs)
-	n_friends = builder(ossie) ? n_builders : length(nbrs) - n_builders
+	n_osteoblasts = count(osteoblast,nbrs)
+	n_friends = osteoblast(ossie) ? n_osteoblasts : length(nbrs) - n_osteoblasts
 	if n_friends > 2skeleton.population_density
 		# Slow down for neighbours:
 		accelerate!(ossie,-ACCELERATION)
@@ -156,20 +157,24 @@ Skeleton dynamics: Allow both A and I to react, evaporate and diffuse.
 """
 function model_step!( skeleton::ABM)
 	for i in shuffle(1:length(skeleton.differentiation))
-		# Calculate total activatory influence on me ...
-		activation = sum( skeleton.differentiation[skeleton.activators[i]]) -
-			INHIBITION_RATIO * sum( skeleton.differentiation[skeleton.inhibitors[i]])
+		# Calculate logistic squashing of neighbours' excitatory influence on my differentiation:
+		nbrhd_excitation = D_EXCITATION * DT * logistic(
+			sum( skeleton.differentiation[skeleton.activators[i]]) -
+				INHIBITION_WEIGHT * sum( skeleton.differentiation[skeleton.inhibitors[i]])
+		)
 
-		# ... then adjust differentiation level accordingly - either downwards towards zero:
-		skeleton.differentiation[i] *= (1-DT)
-		if activation > 0
-			# ... or else upwards:
-			skeleton.differentiation[i] += DT
+		# ... then adjust differentiation level towards either 0.0 or 1.0:
+		if nbrhd_excitation < 0
+			# Down towards 0.0:
+			skeleton.differentiation[i] += nbrhd_excitation * (skeleton.differentiation[i] - 0.0)
+		else
+			# Up towards 1.0:
+			skeleton.differentiation[i] += nbrhd_excitation * (1.0 - skeleton.differentiation[i])
 		end
 	end
 
 	# Training:
-	#orchestrate!( skeleton)
+	orchestrate!( skeleton)
 end
 
 #-----------------------------------------------------------------------------------------
@@ -206,11 +211,11 @@ end
 
 #-----------------------------------------------------------------------------------------
 """
-	accelerate!( ossie::Osteoblast, accn::Float64=1.0)
+	accelerate!( ossie::Osteocyte, accn::Float64=1.0)
 
 If ossie is positively accelerating, increase speed; otherwise slow down.
 """
-function accelerate!( ossie::Osteoblast, accn::Float64=1.0)
+function accelerate!( ossie::Osteocyte, accn::Float64=1.0)
 	if accn > 0.0
 		ossie.speed += accn * (1.0-ossie.speed)
 	else
@@ -220,23 +225,34 @@ end
 
 #-----------------------------------------------------------------------------------------
 """
-	builder( ossie::Osteoblast)
+	logistic( y::Real)
 
-Does this Osteoblast build up the differentiation level with a positive secretion_rate?
+Calculate logistic squashing function of Real value y.
 """
-function builder( ossie::Osteoblast)
+function logistic( y::Real)
+	expy = exp(y)
+	2expy/(1+expy) - 1
+end
+
+#-----------------------------------------------------------------------------------------
+"""
+	osteoblast( ossie::Osteocyte)
+
+Does this Osteocyte build up the differentiation level with a positive secretion_rate?
+"""
+function osteoblast( ossie::Osteocyte)
 	ossie.secretion_rate > 0
 end
 
 #-----------------------------------------------------------------------------------------
 """
-	agent_colour( ossie::Osteoblast)
+	agent_colour( ossie::Osteocyte)
 
-Builders are blue; non-builders are red.
+Osteoblasts are blue; non-osteoblasts are red.
 """
-function agent_colour( ossie::Osteoblast)
-	if builder(ossie)
-		:blue
+function agent_colour( ossie::Osteocyte)
+	if osteoblast(ossie)
+		:red
 	else
 		:lime
 	end
@@ -278,7 +294,7 @@ function orchestrate!( skeleton::ABM)
 	tick!( skeleton)
 
 	idx_quarter = round(Int,skeleton.space.extent[1]/4)
-	dollop = TRAINING_STRENGTH * TINY_CONCENTRATION
+	dollop = D_TRAINING * D_SECRETION
 	if skeleton.generation == 1
 		skeleton.activator[:] .= 0.0
 	end
@@ -302,10 +318,10 @@ function orchestrate!( skeleton::ABM)
 		# Conduct a testing regime:
 		if skeleton.generation < GENS_PER_SCENARIO
 			# Conduct first test scenario:
-			skeleton.activator[21,:] .+= TRAINING_STRENGTH * TINY_CONCENTRATION
+			skeleton.activator[21,:] .+= D_TRAINING * D_SECRETION
 		else
 			# Conduct second test scenario:
-			skeleton.activator[:,21] .+= TRAINING_STRENGTH * TINY_CONCENTRATION
+			skeleton.activator[:,21] .+= D_TRAINING * D_SECRETION
 			if skeleton.generation >= 2GENS_PER_SCENARIO
 				skeleton.generation = 0
 				skeleton.epoch += 1
@@ -318,13 +334,13 @@ end
 """
 	run()
 
-Create and run a playground with a complete Skeleton full of Ossie Osteoblast babies.
+Create and run a playground with a complete Skeleton full of Ossie Osteocyte babies.
 """
 function run()
 	skeleton = create_skeleton()
 	params = Dict(
 		:population_density	=> 0:0.1:5,
-		:secretion			=> 0:0.1TINY_CONCENTRATION:10TINY_CONCENTRATION,
+		:secretion			=> 0:0.1D_SECRETION:10D_SECRETION,
 	)
 	plotkwargs = (
 		am = :circle,
