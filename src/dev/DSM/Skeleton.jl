@@ -15,18 +15,20 @@ using Agents, GLMakie, InteractiveDynamics, Random, .AgentTools
 #-----------------------------------------------------------------------------------------
 # Module constants:
 #-----------------------------------------------------------------------------------------
-const D_SECRETION			= 0.0001			# Agent-generated differentiation
-const D_EXCITATION			= 1e3D_SECRETION	# Interaction-generated differentiation
-const D_TRAINING			= 10D_SECRETION		# Training-generated differentiation
+const SECRETION_RATE		= 0.0001			# Agent-generated differentiation rate
+const EXCITATION_RATE		= 1e3SECRETION_RATE	# Interaction-generated differentiation rate
+const TRAINING_RATE			= 7SECRETION_RATE	# Training-generated differentiation rate
 const STEP_LENGTH			= 0.1				# Length of a single Osteocyte step
-const ACCELERATION			= 0.01				# Acceleration factor
+const ACCELERATION			= 0.005				# Acceleration factor
 const TOLERANCE				= 0.01				# Minimum detectable change in concentration
-const TEMPERATURE			= 0.0005			# Skeleton temperature: Source of thermal jitter
+const TEMPERATURE			= 0.001				# Skeleton temperature: Source of thermal jitter
 const ACTIVATION_RADIUS		= 2					# Inner radius of activation
 const INHIBITION_RADIUS		= 4					# Outer radius of inhibition
 const INHIBITION_WEIGHT		= 0.3				# Weighting of inhibition ring
 const DT					= 1.0				# Simulation timestep length
-const GENS_PER_SCENARIO		= 1000				# Number of cycles per training scenario
+const POPULATION_DENSITY	= 5					# Number of Osteocytes per patch
+const WORLD_WIDTH			= 40				# Width of Skeleton
+const GENS_PER_SCENARIO		= 50				# Number of cycles per training scenario
 const SCENARIOS_PER_EPOCH	= 2					# Number of training scenarios per epoch
 const EPOCHS_PER_REGIME		= 100				# Number of epochs in entire training regime
 
@@ -52,25 +54,27 @@ end
 Initialise the Skeleton reaction-diffusion system.
 """
 function create_skeleton(;
-	population_density = 1.0,
-	secretion = D_SECRETION
 )
-	width = 100
+	width = WORLD_WIDTH
 	extent = (width,width)
 	properties = Dict(
 		:differentiation 	=> zeros(Float64,extent...),
 		:activators 		=> fill(Int[],extent),
 		:inhibitors			=> fill(Int[],extent),
-		:population_density	=> population_density,
-		:secretion			=> secretion,
+		:population_density	=> POPULATION_DENSITY,
+		:secretion_rate			=> SECRETION_RATE,
 		:generation			=> 0,
 		:scenario			=> 1,
 		:epoch				=> 1,
+		:temperature		=> TEMPERATURE,
 		:training			=> true,
+		:training_set		=> Vector{Vector{Int}}(),
+		:testing_set		=> Vector{Vector{Int}}(),
 	)
 
 	skeleton = ABM( Osteocyte, ContinuousSpace(extent,spacing=1.0); properties)
 
+	# Set up activation and inhibition neighbourhoods:
 	for i in 1:width, j in 1:width
 		# Inner circle of activating next-door neighbours:
 		skeleton.activators[i,j] = nearby_patches(
@@ -83,12 +87,30 @@ function create_skeleton(;
 		)
 	end
 
-	for _ in 1:population_density*prod(extent)
+	# Insert all agents:
+	for _ in 1:POPULATION_DENSITY*prod(extent)
 		# Baby emilies have maximum (unit) speed in a random direction:
 		θ = 2π * rand()
 		add_agent!( Osteocyte, skeleton, (cos(θ),sin(θ)),
-			1.0, secretion*(2rand() - 1)
+			1.0, SECRETION_RATE*(2rand() - 1)
 		)
+	end
+
+	# Set up training and testing sets - 2 annuli centred either side of middle of space:
+	middle = width ÷ 2
+	r_outer = 2INHIBITION_RADIUS
+	r_inner = r_outer - 2ACTIVATION_RADIUS
+	centres = [(middle-r_outer+ACTIVATION_RADIUS,middle),(middle+r_outer-ACTIVATION_RADIUS,middle)]
+	skeleton.training_set = map(centres) do centre
+		# Return annulus around centre:
+		setdiff(
+			nearby_patches( centre, skeleton, (r_outer,r_outer)),
+			nearby_patches( centre, skeleton, (r_inner,r_inner))
+		)
+	end
+	skeleton.testing_set = map(skeleton.training_set) do tset
+		# Only activate 1/4 of the annulus cells:
+		shuffle(tset)[1:length(tset)÷4]
 	end
 
 	skeleton
@@ -112,7 +134,7 @@ function agent_step!( ossie::Osteocyte, skeleton::ABM)
 	prev_differentiation = skeleton.differentiation[prev_idx]
 
 	# Deposit either activator or inhibitor, then move on:
-	if skeleton.secretion != 0.0
+	if skeleton.secretion_rate != 0.0
 		skeleton.differentiation[prev_idx] += ossie.secretion_rate*DT
 	end
 	if rand() < ossie.speed
@@ -144,7 +166,7 @@ function agent_step!( ossie::Osteocyte, skeleton::ABM)
 	end
 
 	# Add in some random jitter:
-	if rand() < TEMPERATURE
+	if rand() < skeleton.temperature
 		accelerate!(ossie)
 	end
 end
@@ -158,7 +180,7 @@ Skeleton dynamics: Allow both A and I to react, evaporate and diffuse.
 function model_step!( skeleton::ABM)
 	for i in shuffle(1:length(skeleton.differentiation))
 		# Calculate logistic squashing of neighbours' excitatory influence on my differentiation:
-		nbrhd_excitation = D_EXCITATION * DT * logistic(
+		nbrhd_excitation = EXCITATION_RATE * DT * logistic(
 			sum( skeleton.differentiation[skeleton.activators[i]]) -
 				INHIBITION_WEIGHT * sum( skeleton.differentiation[skeleton.inhibitors[i]])
 		)
@@ -277,8 +299,20 @@ function tick!( skeleton::ABM)
 			skeleton.epoch += 1
 		end
 		if skeleton.epoch > EPOCHS_PER_REGIME
+			skeleton.generation = 1
+			skeleton.scenario = 1
 			skeleton.epoch = 1
 			skeleton.training = false
+			skeleton.temperature /= 100.0
+		end
+	else
+		if skeleton.generation > GENS_PER_SCENARIO
+			skeleton.generation = 1
+			skeleton.scenario += 1
+		end
+		if skeleton.scenario > SCENARIOS_PER_EPOCH
+			skeleton.scenario = 1
+			skeleton.epoch += 1
 		end
 	end
 end
@@ -293,39 +327,27 @@ and move to testing after training has completed requisite number of EPOCHS_PER_
 function orchestrate!( skeleton::ABM)
 	tick!( skeleton)
 
-	idx_quarter = round(Int,skeleton.space.extent[1]/4)
-	dollop = D_TRAINING * D_SECRETION
-	if skeleton.generation == 1
-		skeleton.activator[:] .= 0.0
+	dollop = EXCITATION_RATE * DT
+	if skeleton.epoch == 1
+		skeleton.differentiation[:] .= 0.0
 	end
 	if skeleton.training
 		# Conduct a training regime:
 		if skeleton.scenario == 1
 			# Conduct first training scenario:
-#			println( "Yup: ", skeleton.epoch, "; ", skeleton.scenario, "; ", skeleton.generation)
-			skeleton.activator[2idx_quarter,:] .+= dollop
-#			skeleton.activator[idx_quarter,3idx_quarter]	+= dollop
-#			skeleton.activator[3idx_quarter,1]				+= dollop
-#			skeleton.activator[3idx_quarter,2idx_quarter]	+= dollop
+			skeleton.differentiation[skeleton.training_set[1]] .+= dollop
 		else
 			# Conduct second training scenario:
-			skeleton.activator[:,2idx_quarter] .+= dollop
-#			skeleton.activator[3idx_quarter,idx_quarter]	+= dollop
-#			skeleton.activator[1,3idx_quarter]				+= dollop
-#			skeleton.activator[2idx_quarter,3idx_quarter]	+= dollop
+			skeleton.differentiation[skeleton.training_set[2]] .+= dollop
 		end
 	else
 		# Conduct a testing regime:
-		if skeleton.generation < GENS_PER_SCENARIO
-			# Conduct first test scenario:
-			skeleton.activator[21,:] .+= D_TRAINING * D_SECRETION
+		if skeleton.scenario == 1
+			# Conduct first testing scenario:
+			skeleton.differentiation[skeleton.testing_set[1]] .+= dollop
 		else
-			# Conduct second test scenario:
-			skeleton.activator[:,21] .+= D_TRAINING * D_SECRETION
-			if skeleton.generation >= 2GENS_PER_SCENARIO
-				skeleton.generation = 0
-				skeleton.epoch += 1
-			end
+			# Conduct second testing scenario:
+			skeleton.differentiation[skeleton.testing_set[2]] .+= dollop
 		end
 	end
 end
@@ -340,7 +362,7 @@ function run()
 	skeleton = create_skeleton()
 	params = Dict(
 		:population_density	=> 0:0.1:5,
-		:secretion			=> 0:0.1D_SECRETION:10D_SECRETION,
+		:secretion_rate		=> 0:0.1SECRETION_RATE:10SECRETION_RATE,
 	)
 	plotkwargs = (
 		am = :circle,
