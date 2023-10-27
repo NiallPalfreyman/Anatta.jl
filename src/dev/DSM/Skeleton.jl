@@ -15,22 +15,22 @@ using Agents, GLMakie, InteractiveDynamics, Random, .AgentTools
 #-----------------------------------------------------------------------------------------
 # Module constants:
 #-----------------------------------------------------------------------------------------
-const SECRETION_RATE		= 0.0001			# Agent-generated differentiation rate
-const EXCITATION_RATE		= 1e3SECRETION_RATE	# Interaction-generated differentiation rate
-const TRAINING_RATE			= 7SECRETION_RATE	# Training-generated differentiation rate
+const SECRETION_RATE		= 0.001				# Agent-generated differentiation rate
+const EXCITATION_RATE		= 0.2				# Interaction-generated differentiation rate
+const TRAINING_RATE			= 1.0				# Training-generated differentiation rate
 const STEP_LENGTH			= 0.1				# Length of a single Osteocyte step
-const ACCELERATION			= 0.005				# Acceleration factor
-const TOLERANCE				= 0.01				# Minimum detectable change in concentration
-const TEMPERATURE			= 0.001				# Skeleton temperature: Source of thermal jitter
+const ACCELERATION			= 0.1				# Acceleration factor
+const TOLERANCE				= 0.1				# Minimum detectable change in concentration
+const TEMPERATURE			= 0.01				# Skeleton temperature: Source of thermal jitter
 const ACTIVATION_RADIUS		= 2					# Inner radius of activation
 const INHIBITION_RADIUS		= 4					# Outer radius of inhibition
 const INHIBITION_WEIGHT		= 0.3				# Weighting of inhibition ring
 const DT					= 1.0				# Simulation timestep length
-const POPULATION_DENSITY	= 5					# Number of Osteocytes per patch
+const POPULATION_DENSITY	= 10				# Number of Osteocytes per patch
 const WORLD_WIDTH			= 40				# Width of Skeleton
-const GENS_PER_SCENARIO		= 50				# Number of cycles per training scenario
+const GENS_PER_SCENARIO		= 30				# Number of cycles per training scenario
 const SCENARIOS_PER_EPOCH	= 2					# Number of training scenarios per epoch
-const EPOCHS_PER_REGIME		= 100				# Number of epochs in entire training regime
+const EPOCHS_PER_REGIME		= 50				# Number of epochs in entire training regime
 
 #-----------------------------------------------------------------------------------------
 # Module types:
@@ -62,7 +62,7 @@ function create_skeleton(;
 		:activators 		=> fill(Int[],extent),
 		:inhibitors			=> fill(Int[],extent),
 		:population_density	=> POPULATION_DENSITY,
-		:secretion_rate			=> SECRETION_RATE,
+		:secretion_rate		=> SECRETION_RATE,
 		:generation			=> 0,
 		:scenario			=> 1,
 		:epoch				=> 1,
@@ -98,9 +98,9 @@ function create_skeleton(;
 
 	# Set up training and testing sets - 2 annuli centred either side of middle of space:
 	middle = width ÷ 2
-	r_outer = 2INHIBITION_RADIUS
-	r_inner = r_outer - 2ACTIVATION_RADIUS
-	centres = [(middle-r_outer+ACTIVATION_RADIUS,middle),(middle+r_outer-ACTIVATION_RADIUS,middle)]
+	r_outer = 1.5INHIBITION_RADIUS
+	r_inner = r_outer - ACTIVATION_RADIUS
+	centres = [(middle-2INHIBITION_RADIUS,middle),(middle+2INHIBITION_RADIUS,middle)]
 	skeleton.training_set = map(centres) do centre
 		# Return annulus around centre:
 		setdiff(
@@ -148,19 +148,14 @@ function agent_step!( ossie::Osteocyte, skeleton::ABM)
 			!osteoblast(ossie) && delta_differentiation > TOLERANCE
 		# Somersault if local activator concentration is changing against my needs:
 		turn!( ossie, 2π*rand())
-	elseif abs(delta_differentiation) < TOLERANCE
-		# Settle down if local activator concentration is unchanging:
-		accelerate!( ossie, -ACCELERATION)
-	else
-		# Accelerate if local activator concentration is changing according to needs:
 		accelerate!( ossie, ACCELERATION)
 	end
 
-	# Slow down in presence of at least 2 like-minded neighbours:
-	nbrs = collect(nearby_agents( ossie, skeleton, STEP_LENGTH))
+	# Slow down in presence of at least 5 like-minded neighbours:
+	nbrs = collect(nearby_agents( ossie, skeleton, 0.1STEP_LENGTH))
 	n_osteoblasts = count(osteoblast,nbrs)
 	n_friends = osteoblast(ossie) ? n_osteoblasts : length(nbrs) - n_osteoblasts
-	if n_friends > 2skeleton.population_density
+	if n_friends > 5skeleton.population_density
 		# Slow down for neighbours:
 		accelerate!(ossie,-ACCELERATION)
 	end
@@ -327,8 +322,8 @@ and move to testing after training has completed requisite number of EPOCHS_PER_
 function orchestrate!( skeleton::ABM)
 	tick!( skeleton)
 
-	dollop = EXCITATION_RATE * DT
-	if skeleton.epoch == 1
+	dollop = TRAINING_RATE * DT
+	if skeleton.epoch == 1 && skeleton.scenario == 1 && skeleton.generation == 1
 		skeleton.differentiation[:] .= 0.0
 	end
 	if skeleton.training
@@ -362,7 +357,6 @@ function run()
 	skeleton = create_skeleton()
 	params = Dict(
 		:population_density	=> 0:0.1:5,
-		:secretion_rate		=> 0:0.1SECRETION_RATE:10SECRETION_RATE,
 	)
 	plotkwargs = (
 		am = :circle,
