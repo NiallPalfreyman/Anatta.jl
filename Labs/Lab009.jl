@@ -228,9 +228,9 @@
     ),
     Activity(
         """
-        Finally, check out George Datseris' solution, which I have implemented in Utilities.jl
-        as the function senehtsotare(). Make any additional changes that you think appropriate
-        to your eratosthenes() function.
+        Finally, compare carefully your improved code with the code of George Datseris' solution,
+        which I have implemented in Utilities.jl as the function senehtsotare(). Make any
+        additional changes that you think appropriate to your eratosthenes() function.
         """,
         "",
         x -> true

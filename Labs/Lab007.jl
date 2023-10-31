@@ -24,10 +24,10 @@
     ),
     Activity(
         """
-        To lower the complexity of our common subsequence solution method, we use a particular
-        hashing structure called a Set, so it will be a good idea for us to first experiment with
-        Sets, to find out why we call them Hashing Structures. At the julia prompt, enter:
-            s = Set([1,2,,1,3,1,4,1,5,1])
+        To lower the complexity of our common subsequence solution method, we will use a particular
+        hashing structure called a Set, so it is a good idea for us to first experiment with Sets,
+        to find out why we call them Hashing Structures. At the julia prompt, enter:
+            s = Set([1,2,1,3,1,4,1,5,1])
 
         Look at the display of s, and tell me the number of times that the number 1 appears in it:
         """,
@@ -37,7 +37,7 @@
     Activity(
         """
         Julia Sets encapsulate the idea of a mathematical set, in which elements exist only once.
-        This means that if we insert a new element into the Set, julia must immediately an quickly
+        This means that if we insert a new element into the Set, julia must immediately and quickly
         check whether the new element is already in the Set. Insert the new element 5 into the Set
         s, then tell me the number of times that the number 5 appears in s after this insertion:
             push!(s,5)
@@ -109,7 +109,7 @@
         Your first step is the same step that any software developer takes: we copy any of our
         previous work that is relevant to what we want to do now! We have already implemented the
         slow version (O(n^2)) method count_common(), so copy the code from there into fast_common()
-        and check that it works by compiling and running the Compilation.demo() method.
+        and check that it works by compiling and running the Computation.demo() method.
         """,
         "",
         x -> true
@@ -376,7 +376,7 @@
         It's like magic, isn't it? :)
 
         Memoisation is enormously helpful in analysing biological sequence structures that require
-        us to perform exponentiatlly complex searches through trees of sequence combinations.
+        us to perform exponentially complex searches through trees of sequence combinations.
         """,
         "",
         x -> true

@@ -285,12 +285,13 @@
     ),
     Activity(
         """
-        I'll now assume you are in the following situation: You have TextAnalysis.jl open in VSC,
-        and also a julia console in which you are trying out the ideas in this laboratory. In
-        addition, you have included and are using the module TextAnalysis, so that the methods
-        splitwords() and entry_counts() are available at the julia prompt, and in the julia console,
-        you have two String variables: sample_text contains the short test text that we wrote
-        above, and pandp_text contains the complete text of the book Pride and Prejudice.
+        In the following, I assume you are in the following situation: You have TextAnalysis.jl
+        open in VSC, and also a julia console in which you are trying out the ideas in this
+        laboratory. In addition, you have included and are using the module TextAnalysis, so that
+        the methods splitwords() and entry_counts() are available at the julia prompt (either in
+        the free console or in VSC), and in the julia console you have two String variables:
+        sample_text contains the short test text that we wrote above, and pandp_text contains the
+        complete text of the book Pride and Prejudice.
 
         Perform a wordcount of sample_text and verify it contains two instances of the word "lazy":
             sample_wordlist = splitwords(sample_text)
@@ -305,9 +306,9 @@
     ),
     Activity(
         """
-        So. We want to model the language patterns of Pride and Prejudice in a way that helps us to
-        generate _new_ sentences automatically. We can solve this problem the same way we solve any
-        computation problem: by breaking it down into smaller problems...
+        OK. Now, we want to model the language patterns of Pride and Prejudice in a way that helps
+        us to generate _new_ sentences automatically. We can solve this problem the same way we
+        solve any computation problem: by breaking it down into smaller problems...
         
         Language structures involve sequences of symbols and words, and we can experiment with this
         idea by looking at sequences of numbers. Imagine a method bigrams() that takes a sequential
