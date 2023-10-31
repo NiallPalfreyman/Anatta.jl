@@ -19,7 +19,8 @@
                 adapt, develop and maintain our code, if they can understand what it is doing, so
                 encapsulation hides details of our program that others don't need to understand.
                 
-        I have seen one firm come to bankruptcy because they didn't understand encapsulation!
+        I have seen one firm come to bankruptcy because one crucial developer didn't understand
+        encapsulation!
         
         So encapsulation is all about hiding data - let's find out how it works ...
         """,
@@ -200,7 +201,7 @@
         Replicators.demo() and tell me in which line of code you get your first error:
         """,
         "",
-        x -> x==46
+        x -> x==50
     ),
     Activity(
         """
@@ -211,7 +212,7 @@
         tell you how it is.
 
         You have already started making friends with the julia compiler by noting the line number
-        in which the error occurred: 46. Now take it one step further - in the ERROR line, it says
+        in which the error occurred: 50. Now take it one step further - in the ERROR line, it says
         there is an UndefVarError. That is, we forgot to define something. What is the name of the
         thing we forgot to define?
         """,
@@ -236,18 +237,18 @@
         """
         OK, now we will develop our Replicators module by introducing successive small (!) changes
         into the file Replicators.jl. We start by thinking about how to construct a Replicator:
-            -   First, we need to give users (in this case, demo()) the tools to specify values
-                of time-scale, time-step and time-series in line 41, although we of course can't
+            -   First, we need to give users (in this case, demo()) the tools to specify values for
+                the time-scale, time-step and time-series in line 45, although we of course can't
                 know the value of the time-series until the Replicator simulation has run.
             -   Second, although the simulation needs to know all three of these values, for users
                 it is more convenient to only have to enter the duration and time-step of the
-                simulation in line 41. For example, change line 41 to look like this:
+                simulation in line 45. For example, change line 45 to look like this:
                     repl = Replicator(5,1)
 
         Now recompile and run demo() and tell me in which line you get an error:
         """,
         "Look at the StackTrace information lower down in the error message.",
-        x -> x == 41
+        x -> x == 45
     ),
     Activity(
         """
@@ -256,7 +257,7 @@
         default constructor Replicator(t,dt,x) at all! After all, what would happen if users
         specified a time-step that was inconsistent with the steps contained in the time-scale?
 
-        We can block this possibility by defining an Inner Constructor. Go to line 22 of
+        We can block this possibility by defining an Inner Constructor. Go to line 26 of
         Replicators.jl and change the definition of the data type Replicator to look like this:
             struct Replicator
                 t::Vector{Real}			# The simulation time-scale
@@ -291,6 +292,8 @@
                     # Perform Euler step:
                     repl.x[i] = repl.x[i-1] + repl.dt * mu * repl.x[i-1]
                 end
+                
+                repl											# Return the Replicator
             end
         
         Now remove the comment marker in front of the first call of run!(), then run demo()
@@ -334,8 +337,8 @@
         What has happened?! Well, using a module doesn't load all of the methods in that module.
         After all, we sometimes want to write some private methods in the module that should not
         be used by users outside the module. For this reason, julia requires us to explicitly
-        export any names in our module to which we want external users to have access. Insert the
-        following line between lines 11 and 12 in Replicators.jl:
+        export any names in our module to which we want external users to have access. Uncomment
+        and complete the following line 12 in Replicators.jl:
             export Replicator, run!
 
         This makes the data type Replicator and the method run!() available to external users.
@@ -397,7 +400,7 @@
         You have discovered the reason why nature (and our cognition) cannot be a computer: NO
         computer can EVER simulate continuous time, because dt would then be infinitely close to 0!
 
-        However, we can do better than the Euler method above. If we set dt=0.01, we can improve our
+        However, we can do better than the Euler method above. If we set dt=1e-6, we can improve our
         simulation results by using the more accurate Runge-Kutta-2 integration method. Replace the
         loop in your run!() method by the following code. Is your result closer to e than before?
 
@@ -432,7 +435,8 @@
     ),
     Activity(
         """
-        What function is the exact (analytic) solution of the equation dx/dt = -0.3 x ?
+        What function is the exact (analytic) solution of the equation dx/dt = -0.3 x ? reply()
+        me an anonymous julia function that matches this exact solution.
         """,
         "If you are unsure how to write the exponential function, look it up in this lab file.",
         f -> (f isa Function) && (t->f(t)==exp(-0.3t))(rand())
@@ -448,8 +452,8 @@
     ),
     Activity(
         """
-        Create a simulation to calculate how many hours you must wait before you can drive legally
-        after your two shots of whiskey.
+        Use a Replicator with the appropriate parameters to create a simulation which calculates
+        how many hours you must wait before you can drive legally after your two shots of whiskey. 
         """,
         "Use logical indexing and findfirst to locate the time when x falls below 3.",
         x -> abs(x-3.3) < 0.1

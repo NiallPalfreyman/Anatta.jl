@@ -9,6 +9,7 @@ Author: Niall Palfreyman, 04/09/2022
 module Replicators
 
 # Externally callable methods of Replicators:
+#export Replicator
 
 #-----------------------------------------------------------------------------------------
 # Module types:

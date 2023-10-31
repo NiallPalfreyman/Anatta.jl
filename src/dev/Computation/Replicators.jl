@@ -52,7 +52,7 @@ Simulate the exponential growth of a population starting from the value x0 with 
 constant mu.
 """
 function run!( repl::Replicator, x0::Real, mu::Real=1)
-	repl.x[1] = x0						# Set initial value
+	repl.x[1] = x0									# Set initial value
 		
 	dt2 = repl.dt/2									# dt2 is one half timestep
 	for i in 2:length(repl.t)
@@ -61,7 +61,7 @@ function run!( repl::Replicator, x0::Real, mu::Real=1)
 		repl.x[i] = repl.x[i-1] + mu*repl.dt*x2		# Use x2 as better approximation
 	end
 
-	repl								# Return the Replicator
+	repl											# Return the Replicator
 end
 
 #-----------------------------------------------------------------------------------------
@@ -73,7 +73,7 @@ Demonstrate use of the Replicators module.
 function demo()
 	println("\n============ Demonstrate Replicators: ===============")
 	println("An exponential population of replicators from t=0-5 generations:")
-	repl = Replicator( [0,1,2,3,4,5], 1, [0,0,0,0,0,0])
+	repl = Replicator( 5, 1)
 	display( repl)
 	println()
 
