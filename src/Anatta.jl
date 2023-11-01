@@ -42,8 +42,8 @@ the session accordingly.
 
 # Examples
 ```julia
-julia> go()
-Welcome to the pedagogical playground of Anatta!! ...
+julia> Anatta.go()
+Welcome Anatta: A julian guide to ...
 ```
 """
 function go()
