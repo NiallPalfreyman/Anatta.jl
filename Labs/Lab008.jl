@@ -485,15 +485,16 @@
     ),
     Activity(
         """
-        You have one week to complete your first assessed project. For the project, you will
-        write your own adapted version of the TextAnalysis module that implements and demonstrates
-        a new method with the following signature:
+        You have one week to complete your first assessed project. For the project, you will copy
+        and adapt the file TextAnalysis to create your own adapted module that implements and
+        demonstrates a new method with the following signature:
             write_novel( source_text::String, num_words::Int; n=3)
 
-        write_novel() generates a text file novel.txt containing num_words words, generated from a
-        language model based on n-grams of the complete text of Pride and Prejudice. Your generated
-        novel should contain an appropriate title and copyright date. Here are some questions you
-        may wish to consider while writing your module:
+        write_novel() uses an appropriate n-gram language model of the complete text of Pride and
+        Prejudice to generate a text file novel.txt containing num_words. Your generated novel will
+        be written in proper English in the style of Jane Austen (the author of Pride and
+        Prejudice). It will contain an appropriate title and copyright date. Here are some questions
+        you may wish to consider while writing your module:
             -   Have I adapted the existing code to the requirements of this project (which does
                 NOT involve lazy dogs or screenfuls of Dictionary entries and n-grams!)?
             -   Have I written my julia code so that other students will understand it easily?
