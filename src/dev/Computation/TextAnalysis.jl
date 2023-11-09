@@ -24,10 +24,10 @@ export splitwords, entry_counts, ngrams, ngram_counts, completion_cache
 Generate a list of words in the text, assuming the usual word-boundary separators.
 """
 function splitwords( text)
-	cleantext = replace( text, r"\s+" => " ")	# Clean up whitespace
-	words = split( cleantext, r"(\s|\b)")		# Split words on whitespace or other word boundary
-
-	words
+	no_line_breaks = replace(text, "\",\"\",\"" => " ")			# Remove linebreaks
+	ascii_quotes = replace(no_line_breaks, r"(“|”)" => "\"")	# Remove italic quotes
+	only_blanks = replace( ascii_quotes, r"\s+" => " ")			# Remove surplus whitespace
+	split( only_blanks, r"(\s)")								# Split words on whitespace
 end
 
 """
@@ -90,27 +90,59 @@ end
 
 #-----------------------------------------------------------------------------------------
 """
+	write_novel( source_text::String, num_words::Int; ngram_order=3)
+
+Build an n-gram order language model of the given source text and use this to generate a string of
+num_words written in the style of the source_text.
+"""
+function write_novel( source_text::String, num_words::Int, ngram_order=3)
+	wordlist = splitwords(source_text)
+	circular_wordlist = [wordlist..., wordlist[1:ngram_order-1]...]
+	source_ngrams = ngrams( circular_wordlist, ngram_order)
+	language_model = completion_cache(source_ngrams)
+
+	# Build first ngram_order words of novel, starting from the beginning of a sentence:
+	sentence_start = rand(1:(length(circular_wordlist)-100))
+	while !isuppercase(circular_wordlist[sentence_start][1])
+		sentence_start += 1
+	end
+	novel_wordlist = circular_wordlist[sentence_start:sentence_start+ngram_order-1]
+
+	# Expand novel from the first ngram_order words:
+	for _ in ngram_order+1:num_words
+		previous_words = novel_wordlist[end-(ngram_order-2):end]
+		potential_words = language_model[previous_words]
+		new_word = rand(potential_words)
+		push!(novel_wordlist, new_word)
+	end
+
+	join(novel_wordlist," ")
+end
+
+#-----------------------------------------------------------------------------------------
+"""
 	demo()
 
-Your module should have a demo() method at the end to show users how to use your module.
-Notice that I haven't exported the demo() method - users should call it explicitly like this:
-	TextAnalysis.demo()
+Use write_novel() to build an appropriate n-gram language model of the complete text of Pride and
+Prejudice, and use this to generate a text file novel.txt containing num_words. The generated novel
+is written in English in the style of Jane Austen (the author of Pride and Prejudice).
 """
 function demo()
-	println("\n============ Demonstrate TextAnalysis: ===============")
-	println("First create a sample_text:")
-	sample_text = "A lazy   brown fox  trips,           over the    lazy brown dog."
-	display( sample_text)
+	println("\n============ Demonstrate Nineteenth-century novel-writing: ===============")
+	println("Here are the first 100 characters of the novel Pride and Prejudice ...")
+	pandp_site = "https://shorturl.ac/pandp"
+	raw_text = read(download(pandp_site),String)
+	start_index = findfirst( "It is a truth", raw_text)[1]
+	stop_index = findlast( "of uniting them.",raw_text)[end]
+	pandp_text = raw_text[start_index:stop_index]
+	display( pandp_text[1:150])
 	println()
 
-	word_list = splitwords(sample_text)
-	println("Now divide up the sample_text into individual words:")
-	display( word_list)
+	ngram_order = 5
+	num_words = 150
+	println("Now build our $num_words-word novel based on $ngram_order-grams ...")
 	println()
-
-	println("Here is a dictionary of the word frequencies:")
-	display( entry_counts(word_list))
-	println()
+	println( write_novel( pandp_text, num_words, ngram_order))
 end
 
 end
