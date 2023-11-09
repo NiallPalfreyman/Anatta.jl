@@ -11,6 +11,7 @@ deps/deps.jl
 .vscode
 .vscode/settings.json
 .DS_Store
+docs/build
 
 # Video files
 *.mp4

@@ -15,7 +15,7 @@ Author: Niall Palfreyman, 01/01/2023
 module Anatta
 
 # Externally callable methods of Anatta
-export act, ani, askme, hint, home, home!, lab, nextact, nextlab, reply, setup
+export Activity, act, ani, askme, hint, home, home!, lab, nextact, nextlab, reply, setup
 
 #using Pluto								# We want to be able to use Pluto notebooks
 
@@ -31,19 +31,17 @@ session = Session()						# Create the single Anatta session
 
 #-----------------------------------------------------------------------------------------
 """
-	go()
+	Anatta.go()
 
-Initiate an Anatta session.
-
-Establish the name of the learner, then look up whether we possess persistent registry
-information on that learner. If not, create a new registry entry for the learner. In either
-case, decide which laboratory and current Activity this learner requires, and initialise
-the session accordingly.
+Initiate a new Anatta session. First, establish the name of the learner, then look up whether
+Ani already possesses persistent registry information on that learner. If not, create a new
+registry entry for the learner. In either case, decide which laboratory, current Activity and
+Anatta home directory this learner requires, and initialise the session accordingly.
 
 # Examples
 ```julia
 julia> Anatta.go()
-Welcome Anatta: A julian guide to ...
+Welcome to Anatta: A julian guide to ...
 ```
 """
 function go()
@@ -79,7 +77,7 @@ end
 """
 	ani()
 
-Display a friendly menu of Anatta commands.
+Ask Ani to display a friendly menu of Anatta commands.
 """
 function ani()
 	greeting = [
@@ -104,7 +102,7 @@ end
 
 #-----------------------------------------------------------------------------------------
 """
-home!( dir::String=pwd())
+	home!( dir::String=pwd())
 
 Set the learner's home directory.
 """
@@ -130,7 +128,7 @@ end
 
 #-----------------------------------------------------------------------------------------
 """
-home()
+	home()
 
 Move to the learner's home directory.
 """
@@ -141,7 +139,7 @@ end
 
 #-----------------------------------------------------------------------------------------
 """
-hint( act::Activity=session.activity[session.current_act])
+	hint( act::Activity=session.activity[session.current_act])
 
 Display a hint for the current activity
 """
@@ -160,7 +158,6 @@ end
 	askme()
 
 Display the current activity to the learner.
-
 If this activity exists, display it; otherwise move to next laboratory.
 """
 function askme()
@@ -196,11 +193,12 @@ end
 
 #-----------------------------------------------------------------------------------------
 """
-	reply( response)
+	reply( response=nothing)
 
 Learner replies to the current activity with the given response.
-
-If the answer is correct, move on to the next activity; otherwise check with learner.
+If this response fulfills the current activity's success criterion, move on to the next
+activity; otherwise check with learner whether s/he wants to move on or to stay with the
+current activity.
 """
 function reply( response=nothing)
 	if !evaluate(session.activities[session.current_act],response)
@@ -219,11 +217,10 @@ end
 
 #-----------------------------------------------------------------------------------------
 """
-	nextact( activity)
+	nextact( act::Int = 0)
 
 Move to the next activity.
-
-If activity is given, move to that number activity, otherwise move to the next activity in
+If act is provided, move to that number activity, otherwise move to the next activity in
 this lab. If that takes you beyond the end of this lab, move to the beginning of the next lab.
 """
 function nextact( act::Int = 0)
@@ -246,11 +243,10 @@ end
 
 #-----------------------------------------------------------------------------------------
 """
-	nextlab( lab)
+	nextlab( lab_num::Int = -1, current_act::Int = 1)
 
 Move to the beginning of the next lab.
-
-If lab is specified, move to that number lab, otherwise move to the next lab. If that takes
+If lab_num is specified, move to that number lab, otherwise move to the next lab. If that takes
 you beyond the end of the available labs, stay where you are and inform the learner.
 """
 function nextlab( lab_num::Int = -1, current_act::Int = 1)
@@ -308,7 +304,6 @@ end
 	save()
 
 Save the status of the current session to the learner's registry file.
-
 Write lab_file and current_act to the usr file.
 """
 function save()
@@ -322,9 +317,9 @@ end
 
 #-----------------------------------------------------------------------------------------
 """
-	setup( library::String)
+	setup( library::String; force=false)
 
-Set up the named library to the Development subdirectory of learner's home directory.
+Set up the named library within the learner's home directory, forcing overwrite if requested.
 """
 function setup( library::String; force=false)
 	# Check existence of the library code:
