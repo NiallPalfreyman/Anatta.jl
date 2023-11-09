@@ -488,7 +488,7 @@
         You have one week to complete your first assessed project. For the project, you will copy
         and adapt the file TextAnalysis to create your own adapted module that implements and
         demonstrates a new method with the following signature:
-            write_novel( source_text::String, num_words::Int; n=3)
+            write_novel( source_text::String, num_words::Int, n=3)
 
         write_novel() uses an appropriate n-gram language model of the complete text of Pride and
         Prejudice to generate a text file novel.txt containing num_words. Your generated novel will
