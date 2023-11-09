@@ -117,9 +117,9 @@
     Activity(
         """
         OK, so now let's look at what our old code does. First of all, it handles very efficiently
-        the case where len is either smaller than 1 or greater than the length of the shortest
-        sequence. This takes a great deal of work off our shoulders, since we can now assume that
-        len has a sensible value, so we'll leave that code as it is.
+        the case where the argument len is either smaller than 1 or greater than the length of the
+        shortest sequence. This takes a great deal of work off our shoulders, since we can now
+        assume that len has a sensible value, so we'll leave that code as it is.
 
         The real slowdown comes from the nested loops that together yield the O(n^2) complexity.
         We would really like to separate the seq1 loop from the seq2 loop, and we can achieve this
@@ -172,10 +172,22 @@
             end
 
         To repeat this test scenario, you'll first need to read in the datasets data_hs and
-        data_mm, then run the above lines of test code once for count_common() and once for
-        fast_common(). Finally, run each of these two tests once more, because some of the time in
-        the first run might have been due to compiling new code. Now discuss the two sets of
-        output results with a friend before replying.
+        data_mm. When you have done this, move on to the next activity.
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        Now that you have read in the datasets data_hs and data_mm, run the following lines
+        of test code once for count_common() and once for fast_common():
+            for i in 1:12
+                @time i Computation.count_common(prod(data_hs[1:i]),prod(data_mm[1:i]),100)
+            end
+            
+        Finally, run each of these two tests once again, because some of the time in the first
+        run might have been due to compiling new code. Now discuss the two sets of output
+        results with a friend before moving on ...
         """,
         "",
         x -> true
