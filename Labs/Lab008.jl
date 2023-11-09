@@ -28,11 +28,11 @@
         from within our program. You already know the function pwd() (Present Working Directory)
         and readdir() from lab 0.
         
-        At the julia prompt, use readdir() to fetch a list of files:
+        At the julia prompt, use readdir() to fetch a list of files in a subfolder of home():
             contents = readdir("Development/Computation")
 
         Choose a file in this list - for example maybe "pax6_hs.dat". Now use `in` to ask whether
-        this file is contained in the current folder. What answer do you get back?
+        this file is contained in that subfolder. What answer do you get back?
         """,
         "\"pax6_hs.dat\" in contents",
         x -> x==true
@@ -476,27 +476,31 @@
         full-stops and apostrophes are separated from the rest of the words. Also, there seem to be
         two different kinds of quotation marks (") which make things difficult.
         
-        My guess is that the strange sentences could be improved by using a language model based on
+        My guess is that we could improve the strange sentences by using a language model based on
         longer n-grams, but that is what you will find out in your first assessed project for this
         course ...
         """,
-        "I'll describe the project in the following activites",
+        "I'll describe the project in the next activity",
         x -> true
     ),
     Activity(
         """
         You have one week to complete your first assessed project. For the project, you will
-        implement a full version of the TextAnalysis module that includes this function:
+        write your own adapted version of the TextAnalysis module that implements and demonstrates
+        a new method with the following signature:
             write_novel( source_text::String, num_words::Int; n=3)
 
         write_novel() generates a text file novel.txt containing num_words words, generated from a
-        language model based on n-grams of the source_text. The generated novel should contain an
-        appropriate title and copyright date. Here are some questions you may wish to answer:
+        language model based on n-grams of the complete text of Pride and Prejudice. Your generated
+        novel should contain an appropriate title and copyright date. Here are some questions you
+        may wish to consider while writing your module:
+            -   Have I adapted the existing code to the requirements of this project (which does
+                NOT involve lazy dogs or screenfuls of Dictionary entries and n-grams!)?
             -   Have I written my julia code so that other students will understand it easily?
             -   How do I handle special characters in the Pride and Prejudice text?
             -   How do I implement the ideas from this lab as short, convenient methods?
             -   How can I document my module to demonstrate how users should call write_novel()?
-            -   How do I generate today's date? (see Dates module in the julia ddocumentation)
+            -   How do I generate today's date? (see Dates module in the julia documentation)
         """,
         "Good luck! :)",
         x -> true
