@@ -1,7 +1,7 @@
 name = "Anatta"
 uuid = "6ea38b10-3220-4105-9032-02c82e619cdd"
 authors = ["Niall Palfreyman"]
-version = "0.0.11"
+version = "0.0.10"
 
 [deps]
 Agents = "46ada45e-f475-11e8-01d0-f70cc89e6671"
