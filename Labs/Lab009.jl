@@ -50,7 +50,7 @@
         This eratosthenes_bad() method has been ported directly from Java, and so does not make use
         of higher-level features offered by Julia. I have copied the implementation of
         eratosthenes_bad() into a second method eratosthemes_good() - the code is identical. You
-        will now adapt the code in eratosthenes_good() create your own better implementation.
+        will now adapt the code in eratosthenes_good() to create your own better implementation.
         """,
         "",
         x -> true
@@ -155,7 +155,7 @@
         """
         Now look at the nested for-loop that crosses out multiples in the is_prime Vector. Can you
         make this code a little easier to read by using julia's abbreviated notation for
-        multiplying numerical constants?
+        multiplication by a numerical constant?
         """,
         "5x means the same as 5*x",
         x -> true
@@ -163,8 +163,8 @@
     Activity(
         """
         Julia is a FUNCTIONAL programming language. That is, you break your code down into reusable
-        functions that each performs a single, specific task. It is very important that a function
-        has JUST ONE responsbility, and its name clearly indicates the specific task that the
+        functions that each perform a single, specific task. It is very important that a function
+        has JUST ONE responsbility, and that its name clearly indicates that specific task that the
         function performs. Higher level functions are composed out of lower-level functions. Also,
         function methods are SHORT: usually between 3-30 lines of code. Long methods and long
         method names usually indicate that your method has more than one responsibility.
@@ -181,18 +181,19 @@
     Activity(
         """
         Now we will work on the COMMENTS in your eratosthenes() method. By now, you should find
-        that you don't actually need many comments. Quite generally, it is the case that:
+        that you don't actually need many comments. Quite generally, I can fairly state that:
             - Comments compensate for our failure to express ourselves clearly in code!
 
         A great problem with comments is that they are difficult to maintain as your code changes,
-        and inappropriate comments are much worse than no comments. But there is a better way:
-            - Write simple, self-explanatory code, rather than complicated but commented code!
+        and an out-of-date comment is much more misleading than no comments at all! However, there
+        is a much better way of documenting your code:
+            - Instead of writing comments for complicated code, write SIMPLE, SELF-EXPLANATORY CODE!
         
         Here are my comment rules:
             - Never use CAPITALISED comments - they look like shouting, and distract the reader.
             - Use comments only to point out the high-level intentions or risks of your code.
-            - Place comments at the beginning of a code block or aligned(!) to the right of code.
-            - Replace header comments by docstrings that precede functions, datatype and modules.
+            - Place comments at the start of a code block, or aligned(!) at the right of a codeline.
+            - Replace header comments by docstrings that precede functions, datatypes and modules.
 
         Now apply these rules to the comments in your eratosthenes() method.
         """,
@@ -204,7 +205,7 @@
         Use VERTICAL formatting to divide your code into blocks with a consistent internal logic -
         like paragraphs in an essay. Place a comment box at the top of each logical section of a
         source file to communicate the intention of that section, and use blank lines ONLY to
-        divide logically distinct trains of thought from each other. You never need to put a
+        divide logically distinct trains of thought from each other. You will Never need to put a
         comment box inside a method.
         
         Improve the vertical formatting of the Utilities module now.
