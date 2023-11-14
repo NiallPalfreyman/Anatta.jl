@@ -10,8 +10,10 @@ Author: Niall Palfreyman, 14/11/2023
 """
 module TextAnalysis
 
+using Dates
+
 # Externally callable symbols of the TextAnalysis module:
-export splitwords, entry_counts, ngrams, ngram_counts, completion_cache
+export splitwords, entry_counts, ngrams, ngram_counts, completion_cache, write_novel
 
 #-----------------------------------------------------------------------------------------
 # Module types:
@@ -142,9 +144,13 @@ function demo()
 
 	ngram_order = 5
 	num_words = 150
-	println("Now build our $num_words-word novel based on $ngram_order-grams ...")
+	println("... and now here is our $num_words-word novel based on $ngram_order-grams:")
 	println()
-	println( write_novel( pandp_text, num_words, ngram_order))
+	novel_text = write_novel( pandp_text, num_words, ngram_order)
+	println( "\"$(novel_text[1:ngram_order])\" - a 19th century novel for the modern age.")
+	println( "Copyright: $(year(today()))\n")
+	println( novel_text, "\n")
+	println( "THE END")
 end
 
 end
