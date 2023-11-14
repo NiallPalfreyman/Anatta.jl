@@ -2,9 +2,11 @@
 """
 	TextAnalysis
 
-Module TextAnalysis: This is a collection of methods for analysing text.
+Module TextAnalysis: This is a collection of methods for analysing text. In particular, the method
+write_novel() builds a language_model of a text and uses this model to generate a novel based on
+n-grams from the text.
 
-Author: Niall Palfreyman, 01/08/2023
+Author: Niall Palfreyman, 14/11/2023
 """
 module TextAnalysis
 
