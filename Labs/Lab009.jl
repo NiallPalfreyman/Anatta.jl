@@ -96,7 +96,7 @@
         eratosthenes() method, then recompile and make sure that the method still runs correctly.
         """,
         "",
-        x - true
+        x -> true
     ),
     Activity(
         """
