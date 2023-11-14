@@ -49,23 +49,25 @@
         """
         This eratosthenes_bad() method has been ported directly from Java, and so does not make use
         of higher-level features offered by Julia. I have copied the implementation of
-        eratosthenes_bad() into a second method eratosthemes_good() - the code is identical. You
-        will now adapt the code in eratosthenes_good() to create your own better implementation.
+        eratosthenes_bad() into a second method eratosthemes_good() - the code is identical. Over
+        the course of this lab, we will now adapt the code in eratosthenes_good() to create our
+        own (much!) better implementation! :)
         """,
         "",
         x -> true
     ),
     Activity(
         """
-        First, think carefully about function and variable NAMES. The purpose of the name of a
-        function or variable is always to indicate to readers how you intend to use the function or
+        First, think carefully about method and variable NAMES. The purpose of the name of a
+        method or variable is always to indicate to readers how you intend to use the method or
         variable. Names communicate to readers the INTENTION of your code.
 
         In Julia, these names should always be in lower case, with multiple words separated by _.
         The name should be brief, but understandable for strangers reading your code (for example,
         NOT: rsdt, rsut and rsus!). Also, NEVER use constant literals in your program, for example,
-        not '2022', but rather: 'year=2022', and then use 'year' in your code. The problem, of
-        course, is that literals say nothing about your intentions.
+        not `2022`, but rather: `year = 2022`, and then use the variable name `year` in your code.
+        The reason for this, of course, is that the literal `2022` says nothing about what we
+        intend to do with the value 2022!
 
         Start by changing the name of your method. "eratosthenes_good" is really not a useful name;
         change it to "eratosthenes", then recompile and test to make sure that it works properly.
@@ -125,9 +127,12 @@
     ),
     Activity(
         """
-        Now think about how is_prime is constructed in several steps. Each step takes time, and
-        poor julia cannot know in advance how long the final Vector is going to be, so has to
-        reallocate it each time is_prime becomes too short for a newly pushed element.
+        is_prime is intended to form a list of candidate numbers that are marked with true or
+        false, according to whether that number is actually a prime number or not. Now think about
+        how we go about constructing these true/false values in several steps. Each step takes
+        time, and poor julia cannot know in advance how long the final Vector is going to be, so
+        has to reallocate the list afresh each time is_prime becomes too short for a newly pushed
+        element. This is very wasteful!
             
         But of course in julia, we can use comprehension to allocate the complete is_prime Vector
         in one line, so please do that now ...
@@ -141,7 +146,7 @@
         (Btw, you could also use the trues() function to do the same job, if you wish)
 
         Now we'll continue this work, at each stage deciding what the intention of some section of
-        the code is, then thinking how we might achieve this more efficiently...
+        the code is, then thinking how we might fulfill this intention more efficiently...
 
         For example, we can improve the efficiency of our eratosthenes() method by making use of
         Julia's built-in functions from the standard library. Look up the findall() function in

@@ -226,15 +226,15 @@
         the entire dictionary by entering `capitals` at the julia prompt. Notice that the entries
         are probably not in the same order as you entered them. Dicts are Hashing structures - that
         is, the entries in the Dict are Key=>Value Pairs in whatever order enables users to access
-        them as quickly as possible. What is the value of haskey(d,"Tanzania")?
+        them as quickly as possible. What is the value of haskey(capitals,"Tanzania")?
         """,
         "",
         x -> x==true
     ),
     Activity(
         """
-        Right, now let's eliminate duplicate entries from our sample_text. First, create inside the
-        module TextAnalysis the following method:
+        Right, now let's eliminate duplicate entries from our sample_text. First, ensure that the
+        module TextAnalysis contains the following method:
             function entry_counts(list::Vector)
                 counts = Dict{String,Int}()
                 for entry in list
@@ -247,8 +247,8 @@
                 counts
             end
                     
-        Remember to write a docstring for the new method. Your docstring should describe precisely
-        the Contract between the method and its client: What arguments must the client provide, and
+        Ensure that this method has an appropriate docstring. This should describe precisely the
+        Contract between the method and its client: What arguments must the client provide, and
         what precisely is the result that the method delivers back to the client?
         """,
         "",
@@ -256,10 +256,10 @@
     ),
     Activity(
         """
-        Now append the name of your new method to the export list at the top of the module. Also,
-        insert testcode for the entry_counts() method into the demo() method at the end of
-        TextAnalysis. Finally, either reinclude TextAnalysis.jl in a julia console or else press
-        the include triangle in VSC and test your code.
+        Now ensure that the name of your new method exists in the export list at the top of the
+        module. Also, insert testcode for the entry_counts() method into the demo() method at the
+        end of TextAnalysis. Finally, either reinclude TextAnalysis.jl in a julia console or else
+        press the include triangle in VSC and test your code.
         """,
         "",
         x -> true

@@ -31,12 +31,12 @@ function splitwords( text)
 end
 
 """
-	entry_counts( entrylist::Vector)
+	entry_counts( list::Vector)
 
 Generate a dictionary containing all entries in the entrylist, accompanied by their frequency
 in the entrylist.
 """
-function entry_counts( entrylist::Vector)
+function entry_counts( list::Vector)
 	Dict([]=>5)
 end
 
