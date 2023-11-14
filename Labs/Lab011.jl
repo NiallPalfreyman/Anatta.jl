@@ -62,7 +62,8 @@
             r = 2
             L(p) = r * p * (1-p)
 
-        Check out the values of L(0.1), L(0.2), L(0.8) and L(0.9). What is the value of L(0.5)?
+        Experiment with this function, and make sure you understand how growth and death processes
+        explain the values of L(0.1), L(0.2), L(0.8) and L(0.9). What is the value of L(0.5)?
         """,
         "",
         x -> x==0.5
@@ -71,7 +72,7 @@
         """
         As you see, when r=2, the logistic function causes small populations (p<0.5) to grow, and
         large populations (p>0.5) shrink. We call p=0.5 a Fixed Point of this growth function,
-        because the population neither grows nor shrinks from this value.
+        because when the population equals 0.5, it neither grows nor shrinks from this value.
 
         Verify these statements by using nestlist() to generate a sequence of 10 population values
         starting from the initial value 0.01:

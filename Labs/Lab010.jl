@@ -40,7 +40,7 @@
 
         Makie plotting commands like scatterlines() create three things: a Figure that can be
         displayed, an Axis system contained in that Figure, and Plot objects such as curves and
-        test boxes that Makie draws inside that Axis system. When we display the Figure, it already
+        text boxes that Makie draws inside that Axis system. When we display the Figure, it already
         contains one or more Axis systems, and one of these Axis systems contains our Plot curve.
 
         Let's study this internal structure a little - reply() me the fieldnames of fig:
