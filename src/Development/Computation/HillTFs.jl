@@ -11,6 +11,7 @@ module HillTFs
 
 using Observables, GLMakie
 
+import Base.==
 export expression, HillTF
 
 #-----------------------------------------------------------------------------------------
@@ -36,6 +37,15 @@ end
 #-----------------------------------------------------------------------------------------
 # Module methods:
 #-----------------------------------------------------------------------------------------
+"""
+	==( tf1::HillTF, tf2::HillTF) :: Bool
+
+Equality between two HillTFs.
+"""
+function ==( tf1::HillTF, tf2::HillTF)
+	tf1.K==tf2.K && tf1.n==tf2.n && tf1.range==tf2.range
+end
+
 """
 	hill( tf::Real, K, n)
 

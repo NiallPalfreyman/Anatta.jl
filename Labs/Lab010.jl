@@ -152,11 +152,26 @@
             tf = HillTF(0:30,5)
         """,
         "",
-        x -> (a = Main.HillTF(0:30,5); x.K==a.K && x.n==a.n && x.range==a.range)
+        x -> x==Main.HillTF(0:30,5)
     ),
     Activity(
         """
-        Now load GLMakie, and use this function call to visualise Hill kinetics for K=3, n=1:
+        By the way, here's a fun fact. When I first implemented this lab, my students were
+        surprised that I didn't accept their (perfectly correct) answers to the previous activity.
+        The reason was that I had forgotten to implement the comparison == between two HillTFs.
+        Please take a moment now to look at my example of how to implement this comparison between
+        two instances of the user type HillTF. You may well want to do it yourself sometime!
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        Remember that you have now defined your own HillTF instance like this:
+            tf = HillTF(0:30,5)
+
+        Now load GLMakie, and use this function call to visualise the kinetics of your Hill
+        transcription factor tf, which possesses the default values K=3 and n=1:
             lines(tf.range,expression(tf))
             
         The plotted Hill kinetics converge to a maximum upper limit; what is this limit?
