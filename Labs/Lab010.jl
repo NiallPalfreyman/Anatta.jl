@@ -67,7 +67,7 @@
             fg,ax,plt = fig;
 
         Every plot object (curve, text, etc.) has a whole bunch of attributes that we can adjust,
-        like colour, thickness, dotted line, and so on. Check out the `attributes`` field of plt to
+        like colour, thickness, dotted line, and so on. Check out the `attributes` field of plt to
         find out how many different attributes it has:
         """,
         "",
@@ -152,7 +152,7 @@
             tf = HillTF(0:30,5)
         """,
         "",
-        x -> x == Main.HillTF(0:30,5)
+        x -> (a = Main.HillTF(0:30,5); x.K==a.K && x.n==a.n && x.range==a.range)
     ),
     Activity(
         """
