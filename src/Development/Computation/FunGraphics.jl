@@ -1,18 +1,20 @@
 #========================================================================================#
 """
-	HillTFs
+	FunGraphics
 
-A skeleton julia file, defining the Very Simple new type HillTF. Please use it as a general
-template for your own programming work.
+This is a module designed to introduce you to the fun of using graphics in julia. It includes
+two main elements: the user-defined type HillTF (that is, a Hill-function transcription factor),
+and a fun_graphics function which gives you a chance to think about how graphics commands are
+put together. Have fun! :)
 
 Author: Niall Palfreyman, 26/05/2023
 """
-module HillTFs
+module FunGraphics
 
 using Observables, GLMakie
 
 import Base.==
-export expression, HillTF
+export expression, HillTF, fun_graphics
 
 #-----------------------------------------------------------------------------------------
 # Module types:
@@ -33,6 +35,28 @@ struct HillTF
 		new(collect(range),K,n)
 	end
 end
+
+#-----------------------------------------------------------------------------------------
+# Module data:
+#-----------------------------------------------------------------------------------------
+"""
+	scrambled_code
+
+The scrambled code used for fun_graphics.
+"""
+const scrambled_code = [
+	"    markersize=100*abs.(colours),"
+	"fig, ax, plt = scatter( xdata, ydata;"
+	"    figure=(; resolution=(600,400))"
+	"limits!(0.0,1.0,0.0,1.0);"
+	"    color=colours, label=\"Bubbles\", colormap=:plasma,"
+	"Colorbar( fig[1,2], plt, height=Relative(3/4));"
+	"fig"
+	");"
+	"xdata = rand(50); ydata = rand(50); colours = rand(50);"
+	"Legend( fig[1,2], ax, valign=:top);"
+	"    axis=(; aspect=DataAspect()),"
+]
 
 #-----------------------------------------------------------------------------------------
 # Module methods:
@@ -102,6 +126,36 @@ end
 
 #-----------------------------------------------------------------------------------------
 """
+	fun_graphics( permutation::AbstractVector{Int}=ones(5), evaluate=false)
+
+Print out the given permutation of a particular block of scrambled graphics code, then evaluate
+that permuted code if requested.
+"""
+function fun_graphics( permute::AbstractVector{Int}=1:11; evaluate=false)
+	if length(permute) != 11 || any(map(x->!(x in 1:11), permute))
+		# Bad permutation:
+		return false
+	end
+
+	permuted_code = scrambled_code[permute]
+	for line in permuted_code
+		println(line)
+	end
+
+	if permute[[1,2,6,7,11]] != [9,2,3,8,7] || sum(permute[3:5]) != 17 || sum(permute[8:10]) != 20
+		# Permuted code is not executable:
+		return false
+	end
+
+	if evaluate
+		display( eval(Meta.parse(join(permuted_code))))
+	end
+
+	true
+end
+
+#-----------------------------------------------------------------------------------------
+"""
 	demo()
 
 Demonstrate the use of the HillTF module.
@@ -111,4 +165,4 @@ function demo()
 	expression(tf)
 end
 
-end		# of Hill
+end		# of FunGraphics

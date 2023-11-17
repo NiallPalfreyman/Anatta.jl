@@ -34,16 +34,18 @@
     ),
     Activity(
         """
-        As you can see, fig contains a graphics object; the only reason you can't see it is
-        because of that semicolon you included. As always, a semicolon at the end of a function
-        call prevents the function's value being returned from the function-call.
+        This type description tells us that fig contains a graphics object; the only reason you can't
+        see this object is because of that semicolon you included. As always, a semicolon at the end
+        of a function call prevents the function's value being returned from the function-call.
 
-        Makie plotting commands like scatterlines() create three things: a Figure that can be
-        displayed, an Axis system contained in that Figure, and Plot objects such as curves and
-        text boxes that Makie draws inside that Axis system. When we display the Figure, it already
-        contains one or more Axis systems, and one of these Axis systems contains our Plot curve.
+        A Makie plotting command such as scatterlines() creates three things: a Plot object such as
+        a curve or a text box; the Axis system inside which Makie draws the various Plot objects;
+        and a displayable Figure that contains one or more Axis systems. When we display our
+        Figure, it already contains one or more Axis systems, and one of these Axis systems
+        contains our scatterlines Plot.
 
-        Let's study this internal structure a little - reply() me the fieldnames of fig:
+        Let's study this internal structure a little - reply() me the fieldnames of the Figure
+        structure `fig`:
             fieldnames(typeof(fig))
         """,
         "",
@@ -124,13 +126,13 @@
         """
         OK, now let's get fancy. We don't always want the scatter points on our plot, so we'll try
         out the lines() function. Also, it would be nice to plot something a little more exciting,
-        like maybe the Hill kinetics that I have implemented in the file HillTFs.jl in the
+        like maybe the Hill kinetics that I have implemented in the file FunGraphics.jl in the
         Computation folder. Hill kinetics are a generalisation of the Michaelis-Menten reaction
         kinetics used in bioreactor engineering. Hill kinetics describe the effect of a catalyst on
         a chemical reaction - in particular, they model the activation or inhibition of DNA
         expression in biological cells by a transcription factor (tf).
 
-        In VSC, open HillTFs.jl and take a look at the overall structure of the file. I highly
+        In VSC, open FunGraphics.jl and take a look at the overall structure of the file. I highly
         recommend that you use this file as a model for all modules you write in the future. You
         can see that it contains three basic items:
             -   a public (i.e., exported) data type HillTF, which stores all information needed to
@@ -145,9 +147,9 @@
     Activity(
         """
         Inside the HillTF type definition, I have also defined a Constructor: a special function
-        that can construct new variables of the type HillTF. Compile and load the HillTFs module,
-        that is, compile using the Play button in VSC, then enter `using .HillTFs`. All public
-        (exported) services provided by the HillTFs module are now available to you at the julia
+        that can construct new variables of the type HillTF. Compile and load the FunGraphics module,
+        that is, compile using the Play button in VSC, then enter `using .FunGraphics`. All public
+        (exported) services provided by the FunGraphics module are now available to you at the julia
         command line. Enter the following line now, then reply() me the new HillTF variable tf:
             tf = HillTF(0:30,5)
         """,
@@ -156,11 +158,12 @@
     ),
     Activity(
         """
-        By the way, here's a fun fact. When I first implemented this lab, my students were
-        surprised that I didn't accept their (perfectly correct) answers to the previous activity.
-        The reason was that I had forgotten to implement the comparison == between two HillTFs.
-        Please take a moment now to look at my example of how to implement this comparison between
-        two instances of the user type HillTF. You may well want to do it yourself sometime!
+        By the way, here's a fun fact: When I first implemented this lab, students were surprised
+        that I didn't accept their (perfectly correct) answers to the previous activity. The
+        reason was that I had forgotten to implement the comparison == between two HillTFs. Please
+        take a moment now to study my example in FunGraphics.jl of how to implement the comparison
+        between two instances of a custom type (i.e., a user-defined type) such as HillTF. You may
+        well want to do this sometime with a custom type of your own!
         """,
         "",
         x -> true
@@ -305,31 +308,38 @@
         """
         An Observable is a variable that contains a list of listeners that react to changes in its
         value. We can make use of this idea to create an animation of the Hill function under
-        changes in the cooperativity n. I have done this in the method animate() in the module
-        HillTFs. Call this method now to see the animation, then change the range of values of n to
-        run downwards from -1 to -10.
+        changes in the cooperativity n. I have done this in the method animate_hill() in the module
+        FunGraphics. Call this method now to see the animation, then change the range of values of
+        n to run downwards from -1 to -10.
         """,
         "",
         x -> true
     ),
     Activity(
         """
-        And now, to finish this lab, we will use our new-found knowledge of plotting to display a
-        bubble-plot and add some complicated bits and pieces. Simply copy and paste my code, and
-        enjoy the pretty pictures:
-            xdata = rand(50); ydata = rand(50); colours = rand(50);
-            fig, ax, plt = scatter( xdata, ydata;
-                color=colours, label="Bubbles", colormap=:plasma,
-                markersize=30*abs.(colours),
-                axis=(; aspect=DataAspect()),
-                figure=(; resolution=(600,400))
-            );
-            limits!(-0.3,0.3,-0.3,0.3);
-            Legend( fig[1,2], ax, valign=:top);
-            Colorbar( fig[1,2], plt, height=Relative(3/4));
-            fig
+        Finally, to round off this lab, you will use your new-found knowledge of plotting to solve
+        a puzzle. If you call the function fun_graphics() in the module FunGraphics like this:
+            fun_graphics()
+
+        you will find that it prints out 11 scrambled lines of julia graphics code. You will also
+        see that fun_graphics() returns the value false, indicating that this code is too
+        scrambled to execute properly. Your job is to find a permutation of these lines of code
+        that will execute properly. For example, if you enter this:
+            fun_graphics([2,1,3,4,5,6,7,8,9,10,11])
+
+        you will see that this permutation vector swaps round the first two lines of code;
+        unfortunately, the resulting code is still not executable. reply() me various permutation
+        vectors until I tell you that one of them will unscramble the graphics code. When you have
+        found this permutation, you can execute the resulting unscrambled code by specifying the
+        named argument evaluate=true in fun_graphics().
+        
+        Good luck - may the Force be with you! :)
         """,
-        "",
-        x -> true
+        """
+        A permutation vector such as p=[2,3,1] specifies the order in which we want to access the
+        elements of an array. To understand this at the julia console, first define this vector p,
+        then define a = ["yah!","Hal","lelu"], and try calling a[p] and join(a[p]).
+        """,
+        x -> Main.fun_graphics(x)
     ),
 ]
