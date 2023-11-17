@@ -45,7 +45,7 @@ end
 The scrambled code used for fun_graphics.
 """
 const scrambled_code = [
-	"    markersize=100*abs.(colours),"
+	"    markersize=300*abs.(colours),"
 	"fig, ax, plt = scatter( xdata, ydata;"
 	"    figure=(; resolution=(600,400))"
 	"limits!(0.0,1.0,0.0,1.0);"
@@ -141,8 +141,9 @@ function fun_graphics( permute::AbstractVector{Int}=1:11; evaluate=false)
 	for line in permuted_code
 		println(line)
 	end
+	println()
 
-	if permute[[1,2,6,7,11]] != [9,2,3,8,7] || sum(permute[3:5]) != 17 || sum(permute[8:10]) != 20
+	if [sum(permute[3:5]),permute[[1,2,6,7,11]]...,sum(permute[8:10])] != [17,9,2,3,8,7,20]
 		# Permuted code is not executable:
 		return false
 	end
