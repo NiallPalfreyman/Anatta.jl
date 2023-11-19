@@ -342,16 +342,17 @@
     ),
     Activity(
         """
-        As you can see, p cyclically permutes the first three elements of d. Now, we want to
-        permute the lines of code in fun_graphics(). You can do this by passing to fun_graphics()
-        a permutation vector of length 11 (for 11 lines of code). For example, if you enter this:
+        As you can see, p cyclically permutes the first three elements of d. Now, we want to change
+        the order of the 11 lines of code in fun_graphics(). You can do this by passing to
+        fun_graphics() a permutation vector of length 11 containing a single number for each line
+        of code in the new ordering. For example, if you enter this method call:
             fun_graphics([2,1,3,4,5,6,7,8,9,10,11])
 
-        you will see that this permutation vector swaps round the first two lines of code;
-        unfortunately, the resulting code is still not executable. reply() me various permutation
-        vectors until I tell you that one of them will unscramble the graphics code. When you have
-        found this permutation, you can execute the resulting unscrambled code by specifying the
-        named argument evaluate=true in fun_graphics().
+        you will see that this permutation vector swaps the first two lines of code; unfortunately,
+        the resulting code is still not executable. reply() me various permutation vectors until I
+        tell you that your permutation will unscramble the graphics code to make it executable.
+        When you have found this permutation, you can execute the resulting unscrambled code by
+        specifying the named argument evaluate=true in fun_graphics().
         
         Good luck - may the Force be with you! :)
         """,
