@@ -321,10 +321,30 @@
         a puzzle. If you call the function fun_graphics() in the module FunGraphics like this:
             fun_graphics()
 
-        you will find that it prints out 11 scrambled lines of julia graphics code. You will also
-        see that fun_graphics() returns the value false, indicating that this code is too
-        scrambled to execute properly. Your job is to find a permutation of these lines of code
-        that will execute properly. For example, if you enter this:
+        you will find that it prints out 11 scrambled lines of julia graphics code. Try this now ...
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        You will also notice that the call fun_graphics() returns the value false, indicating that
+        this code is too scrambled to be properly executable. Your job is to find a permutation of
+        these lines of code that will execute properly. To see how permutations work, first define
+        these vectors - data vector d and a permutation vector p:
+            d = [2,4,6,8,10]
+            p = [3,1,2,4,5]
+        
+        To see the permutation effect of p on d, reply() me the value of d[p]:
+        """,
+        "p selects a new ordering of the elements of d",
+        x -> x==[6,2,4,8,10]
+    ),
+    Activity(
+        """
+        As you can see, p cyclically permutes the first three elements of d. Now, we want to
+        permute the lines of code in fun_graphics(). You can do this by passing to fun_graphics()
+        a permutation vector of length 11 (for 11 lines of code). For example, if you enter this:
             fun_graphics([2,1,3,4,5,6,7,8,9,10,11])
 
         you will see that this permutation vector swaps round the first two lines of code;
