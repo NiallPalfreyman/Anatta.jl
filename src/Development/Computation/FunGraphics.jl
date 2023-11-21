@@ -14,7 +14,7 @@ module FunGraphics
 using Observables, GLMakie
 
 import Base.==
-export expression, HillTF, fun_graphics
+export animate_hill, expression, HillTF, fun_graphics
 
 #-----------------------------------------------------------------------------------------
 # Module types:
