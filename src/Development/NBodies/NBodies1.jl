@@ -90,7 +90,7 @@ function animate( nb::NBody, t, x, p)
 	lines!( ax, x, p, linewidth = 5, color = :blue)
 
 	# Insert some explanatory text:
-	text!( "This will contain time data", position=(-2.5, 2.5), textsize=30, align=(:left,:center))
+	text!( "This will contain time data", position=(-2.5, 2.5), fontsize=30, align=(:left,:center))
 
 	# Display the results:
 	display(fig)

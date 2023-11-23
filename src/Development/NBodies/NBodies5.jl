@@ -108,16 +108,16 @@ function runge_kutta_2!( nb::NBody)
 
 	# Half-step:
 	xh = nb.x + dt2 * nb.p./nb.m
-	ph = nb.p + dt2 * forceOnMasses(nb.x,nb.m)
+	ph = nb.p + dt2 * force_on_masses(nb.x,nb.m)
 	
 	# Full-step:
 	nb.x = nb.x + nb.dt * ph./nb.m
-	nb.p = nb.p + nb.dt * forceOnMasses(xh,nb.m)
+	nb.p = nb.p + nb.dt * force_on_masses(xh,nb.m)
 end
 
 #-----------------------------------------------------------------------------------------
 """
-	forceOnMasses( locations::Vector, masses::Vector)
+force_on_masses( locations::Vector, masses::Vector)
 
 Internal utility function: Calculate all gravitational forces between the N bodies with
 the given mass at the given locations.
@@ -125,19 +125,19 @@ This method is based on the following Newtonian formula:
 
 	F_ij = Force on i-th body due to j-th body = - (G m_i m_j / |r_i-r_j|^3) * vec(r_i-r_j)
 """
-function forceOnMasses( locations::Vector, masses::Vector)
-	G = 1.0												# Newton's gravitational constant
-	gmm = G * masses * masses'							# Precalculate products between the masses
+function force_on_masses( locations::Vector, masses::Vector)
+	G = 1.0													# Newton's gravitational constant
+	gmm = G * masses * masses'								# Precalculate products between masses
 
-	locnPerBody = repeat(locations,1,length(locations))	# Matrix of body locations beside each other
-	relpos = locnPerBody -								# For all bodies i and j, calculate the
-					permutedims(locnPerBody)			# relative position vector r_ij between them.
-	invCube = abs.(relpos'.*relpos) .^ (3/2)			# Calculate 1 / (r_ij)^3 between all bodies
-	for i in 1:length(locations) invCube[i,i] = 1 end	# Prevent zero-division along diagonal
+	body_locations = repeat(locations,1,length(locations))	# Matrix of locations beside each other
+	rel_pos = body_locations -								# For all bodies i and j, calculate the
+					permutedims(body_locations)				# relative displacement r_ij between them.
+	inverse_cube = abs.(rel_pos'.*rel_pos) .^ (3/2)			# Calculate 1/(r_ij)^3 between all bodies
+	for i in 1:length(locations) inverse_cube[i,i] = 1 end	# Prevent zero-division along diagonal
 
-	forceFromMasses = -gmm .* relpos ./ invCube			# Calculate force contribution FROM each source
+	force_betw_masses = -gmm .* rel_pos ./ inverse_cube		# Force contribution FROM each source
 
-	vec(sum( forceFromMasses, dims=2))					# Calculate sum of all forces ON each source.
+	vec(sum( force_betw_masses, dims=2))					# Sum of all forces ON each source.
 end
 
 #-----------------------------------------------------------------------------------------
@@ -158,7 +158,7 @@ function animate( nb::NBody, t, x)
 	ax = Axis(fig[1, 1], xlabel = "x", ylabel = "y", title = "N-body 2D Motion")
 	limits!( ax, -5, 5, -5, 5)
 	scatter!( ax, x_current, y_current, markersize=(50nb.m), color=:blue)
-	text!( timestamp, position=(-2.5, 2.5), textsize=30, align=(:left,:center))
+	text!( timestamp, position=(-2.5, 2.5), fontsize=30, align=(:left,:center))
 	display(fig)
 
 	# Run the animation:

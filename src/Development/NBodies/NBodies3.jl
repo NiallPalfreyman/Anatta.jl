@@ -112,7 +112,7 @@ function animate( nb::NBody, t, x)
 	ax = Axis(fig[1, 1], xlabel = "x", ylabel = "y", title = "N-body 2D Motion")
 	limits!( ax, -3, 3, -3, 3)
 	scatter!( ax, x_current, y_current, markersize=(50nb.m), color=:blue)
-	text!( timestamp, position=(-2.5, 2.5), textsize=30, align=(:left,:center))
+	text!( timestamp, position=(-2.5, 2.5), fontsize=30, align=(:left,:center))
 	display(fig)
 
 	# Run the animation:

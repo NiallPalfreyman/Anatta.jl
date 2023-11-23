@@ -99,7 +99,7 @@ end
 	forceOnMasses( masses)
 
 Internal utility function: Calculate the downward (-y) force on each mass by mapping each mass
-to a very weak downward gravitational force equal to 0.1 times that mass.
+to a very weak downward gravitational force equal to 3.0 times that mass.
 """
 function forceOnMasses( masses::Vector)
 	map( m->[0,-3.0m], masses)
@@ -127,7 +127,7 @@ function animate( nb::NBody, t, x)
 	end
 
 	# Insert some explanatory text:
-	text!( "This will contain time data", position=(-2.5, 2.5), textsize=30, align=(:left,:center))
+	text!( "This will contain time data", position=(-2.5, 2.5), fontsize=30, align=(:left,:center))
 
 	# Display the results:
 	display(fig)

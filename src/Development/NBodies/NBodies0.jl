@@ -10,7 +10,7 @@ Author: Niall Palfreyman, 29/05/2022.
 """
 module NBodies
 
-using GLMakie					# I don't actually use this yet, but I know I'll need it later
+#using GLMakie					# I don't actually use this yet, but I know I'll need it later
 
 #-----------------------------------------------------------------------------------------
 # Module types:
