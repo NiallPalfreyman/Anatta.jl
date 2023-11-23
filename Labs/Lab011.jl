@@ -502,8 +502,11 @@
         using THREE bodies. Notice how it does not take long for the system to throw out the small
         planet and so reduce itself to a binary star system.
 
-        Congratulate yourself on completing this lab by playing around with different starting
-        conditions for this 3-body simulation. Can you set up a stable 3-body system?
+        Congratulate yourself on completing this lab by modifying NBodies.demo() to create many
+        bodies (I've tried it with up to 30), all concentrated within a unit square around the
+        spatial origin, and all with very low speed and random masses. Convince yourself that it is
+        EXTREMELY unlikely that there could ever exist a system in the universe that contains more
+        than 2 stars orbiting each other.
         """,
         "",
         x -> true
