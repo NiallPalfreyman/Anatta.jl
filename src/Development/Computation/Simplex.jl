@@ -56,9 +56,10 @@ plot3!( axis::Axis, frequency_states::Vector{Vector{Int}}) =
 Construct a 3-simplex plot of a trajectory of 3-frequency states in a new axis.
 """
 function plot3( frequency_states::Vector{Vector{Float64}})
-	_, axis = plot3()										# Plot the simplex axes
+	fig = plot3()										# Plot the simplex axes
+	plot3!( contents(fig[1,1])[1], frequency_states)
 
-	plot3!( axis, frequency_states)
+	fig
 end
 plot3( frequency_states::Vector{Vector{Int}}) = 
 	plot3(map(stt->Float64.(stt),frequency_states))
@@ -86,9 +87,10 @@ plot3!( axis::Axis, frequency_state::Vector{Int}) = plot3!( axis, Float64.(frequ
 Construct a simplex plot of a single 3-frequency state in a new axis.
 """
 function plot3( frequency_state::Vector{Float64})
-	_, axis = plot3()										# Plot the simplex axes
+	fig = plot3()										# Plot the simplex axes
+	plot3!( contents(fig[1,1])[1], frequency_state)
 
-	plot3!( axis, frequency_state)
+	fig
 end
 plot3( frequency_state::Vector{Int}) = plot3(Float64.(frequency_state))
 
@@ -108,9 +110,9 @@ function plot3!(axis::Axis)
 		markercolor=:magenta,
 		markersize=FONT_SIZE
 	)
-	text!( "x", position=(0,-0.07), textsize=FONT_SIZE)		# Population type x: bottom-left
-	text!( "y", position=(1,-0.07), textsize=FONT_SIZE)		# Population type y: bottom-right
-	text!( "z", position=(0.49, 0.93), textsize=FONT_SIZE)	# Population type z: top-centre
+	text!( "x", position=(0,-0.07), fontsize=FONT_SIZE)		# Population type x: bottom-left
+	text!( "y", position=(1,-0.07), fontsize=FONT_SIZE)		# Population type y: bottom-right
+	text!( "z", position=(0.49, 0.93), fontsize=FONT_SIZE)	# Population type z: top-centre
 
 	axis
 end
@@ -124,8 +126,9 @@ function plot3()
 	# Plot the simplex axes:
 	fig = Figure(fontsize=FONT_SIZE)
     axis = Axis(fig[1, 1])
-
 	plot3!(axis)
+
+	fig
 end
 
 #-----------------------------------------------------------------------------------------
