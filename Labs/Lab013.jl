@@ -262,7 +262,7 @@
         constant rate. An example of superexponential growth is sexual reproduction, where two
         organisms must cooperate in order to replicate.
 
-        In our more general selection model, let’s take the simple case N = 3. Show that in this
+        In our more general selection model, let's take the simple case N = 3. Show that in this
         case, so long as the population lies inside the 3-simplex (so sum(x) = 1), the rate of
         change (sum(dx/dt)) of the entire population is equal to zero. What does this imply for
         the evolving population in relation to the 3-simplex?

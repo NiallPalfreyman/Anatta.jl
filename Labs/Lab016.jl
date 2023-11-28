@@ -293,7 +293,7 @@
     Activity(
         """
         In your unittest() method, enter this client use-case:
-        ```
+        ```julia
         d = Domestication( nStrategies)        % Create n-strategy population
         for mut in 1:nMutations
             simulate( d, nGenerations)         % Iterate replicator equation
@@ -372,14 +372,20 @@
         own choosing. First choose a research question that you wish to explore - discuss this
         question with your instructor. Then decide how you are going to answer your research
         question using your simulator. Finally, use all of the techniques you have learned in
-        this course to develop your unittest() method into a full-scale demonstration of your
-        research investigation. Your demonstration will display graphics and text to convince
-        users of the importance and correctness of your results. Good luck! :)
+        this course to develop your unittest() method into a full-scale presentation() of your
+        research investigation.
+        
+        Your presentation will use attractive Makie graphics elements and text to convince users
+        of the importance and correctness of your results. You may wish to make use of Makie's wide
+        variety of Blocks and Plots that are described here:
+            https://docs.makie.org/stable/reference/
 
-        IMPORTANT: In many activities of this course, I have written equations out in terms of
-        their matrix components, for example: sum([a[i]*b[i] for i in 1:N]). But of course in
-        julia you can write this expression much more simply as a dot product: a'*b or dot(a,b).
-        Please make sure you make full use of julia's high-level matrix notation in your project!
+        IMPORTANT: In these course labs, I have written equations out in terms of their matrix
+        components, for example: sum([a[i]*b[i] for i in 1:N]). But of course in julia you can
+        write this expression much more simply as a dot product: a'*b or dot(a,b). Please make sure
+        you make full use of julia's high-level matrix notation in your presentation code.
+        
+        Good luck! :)
         """,
         "",
         x -> true
