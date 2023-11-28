@@ -65,7 +65,7 @@ function visualise( t, x)
 
 	# Insert some explanatory text:
 	text!( "This is a simple Predator-prey system",
-		position=(20,round(0.95maxvertical)), textsize=30, align=(:left,:center)
+		position=(20,round(0.95maxvertical)), fontsize=30, align=(:left,:center)
 	)
 
 	# Display the results:
