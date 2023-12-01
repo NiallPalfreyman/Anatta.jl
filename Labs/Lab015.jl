@@ -10,22 +10,21 @@
         """
         Hi! Welcome to Anatta Lab 015: Implementing non-linear fitness
 
-        Until now, we have made a very simple, but also an over-simple assumption: We have
-        assumed that the fitness r[i] of a type i is a constant number independent of the
-        frequencies x[i] of the various types. However, we know that there are many situations
-        where this is just not so. For example, the fitness of a rabbit depends very much on the
-        frequency of lynxes in its area, and also on the frequency of other rabbits that might be
-        easier for the lynxes to catch!
+        Until now, we have made a very simple, but also an over-simple assumption: We have assumed
+        that the fitness r[i] of a type i is a constant number independent of the frequencies x[i]
+        of the various types. However, we know that there are many situations where this is just
+        not true. For example, a rabbit's fitness definitely depends on the frequency of lynxes out
+        hunting near it, and also on how many other rabbits might be smaller and easier to hunt!
         
         The important point here is that simplistic slogans like “Survival of the Fittest!” often
         rely on the unjustified assumption that you as an organism have a constant, measurable
         "fitness" number that is determined only by the genomic makeup of your type. But fitness is
-        simply the specific growth rate of a population type, and we cannot measure that in you,
-        but rather only by watching how your population type grows wthin_a_specific_context:
+        the specific growth rate of a population type, and we cannot measure it by simply inspecting
+        your body, but only by studying how your population type grows wthin_a_specific_context:
 
-        Genetics plays a role in determining fitness, but we can only ever measure fitness ecologically!
+        Genes are a determinant of fitness, but fitness also always depends upon ecology!
 
-        Please read Script015.pdf in your Docs subfolder BEFORE proceeding further with this lab...
+        Please read Script015.pdf in your Scripts subfolder BEFORE continuing with this lab...
         """,
         "",
         x -> true
@@ -40,9 +39,9 @@
         explicitly upon the frequencies x[i]:
             dx[i]/dt = x[i]*(r[i](x) - R); R = sum(x.*r(x))			(Frequency-dependent selection)
 
-        If we set N = 2 in these equations, we obtain the simple 2-type situation. In this case, we
-        immediately see that the dynamics of frequency-dependent selection is far more interesting
-        and fun than boring old constant selection:
+        To see how frequency-dependent selection leads to much more interesting dynamics than linear
+        selection, let's set N = 2 in these equations to obtain the simple 2-type situation. In this
+        case, we find the following equations:
             dx[1]/dt = x[1]*(r[1](x) - R);		dx[2]/dt = x[2]*(r[2](x) - R);		where
             R = x[1]*r[1](x) + x[2]*r[2](x);	x[1] + x[2] = 1
 
