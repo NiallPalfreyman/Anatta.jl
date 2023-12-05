@@ -296,12 +296,12 @@
         ```julia
         d = Domestication( nStrategies)        % Create n-strategy population
         for mut in 1:nMutations
-            simulate( d, nGenerations)         % Iterate replicator equation
+            simulate!( d, nGenerations)        % Iterate replicator equation
             displayStrategies( d)              % Display best strategies
-            mutate( d)                         % Replace worst with random
+            mutate!( d)                        % Replace worst with random
         end;
 
-        simulate( d, nGenerations)
+        simulate!( d, nGenerations)
         displayStrategies( d)
         ```
         """,
