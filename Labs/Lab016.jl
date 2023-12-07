@@ -273,18 +273,33 @@
     ),
     Activity(
         """
-        The following link describes cooperation between Geladas (a type of baboon) and Ethiopian
-        Wolves, in which wolves benefit from baboons via an increased hunting success rate, and
-        baboons benefit because wolves frighten away other predators. A wolf can defect and get a
-        free meal by eating a baby gelada, but then it is driven off by other baboons:
+        One behavioural accompaniment of altruism that is very familiar to all of us is Empathy.
+        This is our ability to sense the emotions of others and to convert that sensation into
+        altruistic action that helps others - even though those actions may be damaging to
+        ourselves. The following video clip demonstrates that rats possess this ability with
+        respect to each other. Notice that the helping behaviour in this video occurs not between
+        genetic relatives, where one might argue that there is a direct genetic advantage to
+        helping, but between cage-mates, or 'friends':
+            https://www.youtube.com/watch?v=TNKbDTcDsqw
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        Clearly, there is an important question in this clip: Which evolutionary pressures might
+        lead to the helping rat experiencing this empathic connection with their cage-mate? At
+        first sight, we might expect evolutionary survival to lead the helper to Defect - that is,
+        to stay safely at the edge of the apparatus and leave their mate in the cage at the centre.
+        
+        Yet somehow, evolution has instead led to the helper experiencing empathy and expressing it
+        as cooperative behaviour - EVEN THOUGH this cooperation is dangerous for the helper.
 
-            https://www.newscientist.com/article/dn27675-monkeys-cosy-alliance-with-wolves-looks-like-domestication/?linkId=57684253
-
-        Create an initial template for a julia module named Domestications. This module will
-        simulate the evolution of cooperative domestication in a population of wolves and geladas.
-        In your population frequency model, you will not distinguish geladas from wolves - instead
-        you will work with a population of N type, each characterised by its own PD strategy. You
-        will use our payoff matrix A_pd to see how to get these different types to cooperate with
+        In your course project, you will create an initial template for a julia module named
+        Cooperation. This module will simulate the evolution of cooperation between rats. In
+        particular, the Cooperation module will implement a population frequency model containing
+        n rat types, each characterised by its own PD strategy. You will use our payoff matrix
+        A_pd to discover how evolution might lead to these different types to cooperating with
         each other.
         """,
         "",
@@ -292,17 +307,17 @@
     ),
     Activity(
         """
-        In your unittest() method, enter this client use-case:
+        In the unittest() method of the Rats module, enter this client use-case:
         ```julia
-        d = Domestication( nStrategies)        % Create n-strategy population
+        rats = Rats( nStrategies)           % Create n-strategy population
         for mut in 1:nMutations
-            simulate!( d, nGenerations)        % Iterate replicator equation
-            displayStrategies( d)              % Display best strategies
-            mutate!( d)                        % Replace worst with random
+            simulate!( rats, nGenerations)  % Iterate replicator equation for nGenerations
+            displayStrategies( rats)        % Display best strategies
+            mutate!( rats)                  % Replace worst strategy with new, random strategy
         end;
 
-        simulate!( d, nGenerations)
-        displayStrategies( d)
+        simulate!( rats, nGenerations)
+        displayStrategies( rats)
         ```
         """,
         "",
@@ -310,10 +325,10 @@
     ),
     Activity(
         """
-        Initialise your datatype Domestication with the number n of strategies in this population,
-        then create a list of n randomly selected reactive strategies S(p,q), where p,q ∈ (0,1).
+        Initialise your datatype Rats with the number n of strategies in this population, then
+        create a list of n randomly selected reactive strategies S(p,q), where p,q ∈ (0,1).
         The final version of your project might use n = 100, but for early debugging versions, I
-        advise you to use n = 5.
+        recommend that you use only n = 5.
         """,
         "",
         x -> true
@@ -368,7 +383,7 @@
     ),
     Activity(
         """
-        OK, now use your Domestications module to investigate an evolutionary problem of your
+        OK, now use your Cooperation module to investigate an evolutionary problem of your
         own choosing. First choose a research question that you wish to explore - discuss this
         question with your instructor. Then decide how you are going to answer your research
         question using your simulator. Finally, use all of the techniques you have learned in
@@ -382,8 +397,9 @@
 
         IMPORTANT: In these course labs, I have written equations out in terms of their matrix
         components, for example: sum([a[i]*b[i] for i in 1:N]). But of course in julia you can
-        write this expression much more simply as a dot product: a'*b or dot(a,b). Please make sure
-        you make full use of julia's high-level matrix notation in your presentation code.
+        write this expression much more simply as a dot product: a'*b or dot(a,b). My assessment of
+        your project will depend in part upon how effectively you make full use in your
+        presentation code of julia's high-level matrix notation.
         
         Good luck! :)
         """,
