@@ -58,9 +58,9 @@
         turns a non-countable value into a countable measurement. So perhaps it would be more
         accurate to express the advantages of narrative processes like this:
         -   By modelling narrative processes structurally (i.e., on a computer), we can calculate
-            ARBITRARILY accurate answers to non-countable questions.
+            answers to non-countable questions with ARBITRARY accuracy.
             
-        We call this way of answering questions SIMULATION.
+        We call this way of answering questions Simulation.
         """,
         "",
         x -> true
@@ -76,9 +76,9 @@
         mortality, predation, migration and so on. To simplify our model, we will reduce all these
         factors down to two: births and (natural) deaths.
 
-        To explain this model to the City Council, we draw the Stock-and-Flow diagram shown in
-        Script200 in your Scripts directory. Take a look at this diagram now, and reply() me the
-        name of the Stock shown as a rectangle in the middle of the diagram:
+        To explain this model to the City Council, we draw the Structure-Process Diagram (SPD)
+        shown in Script200 in your Scripts directory. Take a look at this SPD now, and reply() me
+        the name of the Stock shown as a bubble in the centre of the diagram:
         """,
         "The rectangle contains two names: the mathematical and the text name. Either will do :)",
         x -> x == "u" || x == "Rabbits"
@@ -89,13 +89,13 @@
         of the system we are modelling. In our case, we have only one state variable, u, so I
         have left away the vector indices.
 
-        Think of a stock as a tank which water flows into and out of. The flow "births" represents
-        water flowing into the tank, and the flow "deaths" represents water flowing out of the
-        tank. The greater the flow, the faster it changes the level of water in the tank.
+        Think of a stock as a bubble which water flows into and out of. The flow "births" represents
+        water flowing into the bubble, and the flow "deaths" represents water flowing out of the
+        bubble. The greater the flow, the faster it changes the level of water in the bubble.
 
         We say that flows "cause" changes in the level of stocks. This means that a flow does not
         determine the actual value of the stock, but instead, it determines the CHANGE in value of
-        the stock. What is the mathematical name for the flow "births"?
+        the stock. What is mathematical name have I given to the flow "births"?
         """,
         "",
         x -> x=='b' || x=="b"
@@ -111,10 +111,10 @@
             du/dt = Sum of all inflows - (Sum of all outflows)
 
         In other words, the rate of change of a state variable u is given by the sum of the various
-        positive and negative causal influences on u. It is often useful to implement the
-        structural relations specifying these causal flow values as additonal methods. For example,
-        we might implement a method deaths() to calculate the total death-rate of the rabbits. This
-        method would need to divide the current number of rabbits (u) by which parameter?
+        positive and negative causal influences on u. We often implement the structural relations
+        specifying these causal flow values as additonal methods. For example, we might implement a
+        method deaths() to calculate the total death-rate of the rabbits. By which number would
+        this method need to divide the current number of rabbits (u)?
         """,
         "How long does each rabbit live?",
         x -> x=='L' || x=="L"
@@ -138,9 +138,9 @@
         """
         We have now collected all the information we need to build and run a dynamical model of
         the Watermead Country Park rabbit population. Before we build our model, it is VERY
-        important that we first construct a Reference Mode for the model. That is: How SHOULD our
-        model behave? Are there special circumstances where we already know what kind of behaviour
-        to expect from the model? If so, we can use this knowledge to verify our model's accuracy.
+        important that we first construct a Reference Narrative (RN) for the model. That is: How
+        SHOULD our model behave? Are there special circumstances where we already know what kind of
+        behaviour to expect from out model? If so, we can use this to verify our model's accuracy.
 
         For example: What kind of BOT curve would we expect from the model if there were no births,
         but only deaths?
@@ -150,8 +150,8 @@
     ),
     Activity(
         """
-        Here is another easy reference mode: What kind of BOT curve would we expect from our model
-        if there were no deaths, but only births?
+        Here is another easy reference narrative: What kind of BOT curve would we expect from our
+        model if there were no deaths, but only births?
         """,
         "What is the mathematical term for this behaviour?",
         x -> occursin("exp",lowercase(x)) && occursin("grow",lowercase(x))
@@ -178,8 +178,8 @@
     ),
     Activity(
         """
-        Now fill in all values that we have defined for our dynamical model, and then reply() me
-        the number of rabbits in Watermead Country Park after 8 years:
+        Now fill in all values that we have defined for our dynamical model, and then run the model
+        and reply() me the number of rabbits in Watermead Country Park after 8 years:
         """,
         "",
         x -> 7000 < x < 8000
@@ -204,12 +204,12 @@
     ),
     Activity(
         """
-        The behaviour of our model seems to match our expectations, but with this very simple
-        exponential model, we have the advantage that we can test the numerical output of the
+        The behaviour of the model seems to match our expectations. Of course, with this very
+        simple model, we have the advantage that we can test the numerical output of the
         model against the exact solution shown at the end of Script200. Do this now, and find a way
         of correcting any discrepancies you may find between the exact and the numerical solutions.
         """,
-        "What can we do to make DyanimicalSystem's numerical integration more accurate?",
+        "What can we do to make DynamicalSystem's numerical integration more accurate?",
         x -> true
     ),
 ]

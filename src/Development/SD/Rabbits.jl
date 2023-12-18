@@ -52,7 +52,7 @@ function demo()
 		nothing
 	end
 	duration = 1							# Duration of model run
-	Δt = 0.1								# Simulation time-step
+	Δt = 1.0								# Simulation time-step
 
 	rabbits = CoupledODEs(flows!, u0, p)
 	println("Here is the dynamical model's initial state:")
