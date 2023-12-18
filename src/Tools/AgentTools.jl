@@ -220,7 +220,7 @@ Original source code of button initialisation at GitHub: shorturl.at/biOX3
 Author: Nick Diercksen.
 """
 function abmplayground( model, initialiser; kwargs...)
-	playgrnd_fig,abmobs = abmexploration( model; kwargs...)
+	playgrnd_fig,abmobs = InteractiveDynamics.abmexploration( model; kwargs...)
 
 	# Retrieve the Reset button from fig.content[10]:
 	reset_btn = nothing
