@@ -197,7 +197,7 @@
         Here are my comment rules:
             - Never use CAPITALISED comments - they look like shouting, and distract the reader.
             - Use comments only to point out the high-level intentions or risks of your code.
-            - Place comments at the start of a code block, or aligned(!) at the right of a codeline.
+            - Place comments at the start of a code block, or aligned(!) on the right of a codeline.
             - Replace header comments by docstrings that precede functions, datatypes and modules.
 
         Now apply these rules to the comments in your eratosthenes() method.
