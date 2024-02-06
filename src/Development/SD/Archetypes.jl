@@ -66,8 +66,8 @@ const archetype = [
 		[0.4,100.0],									# Rate r, Sustainable capacity C
 		function (du,u,p,t)
 			du[1] = p[1]*u[1]*(1 - u[1]/u[2])			# A defines D-capacity
-			du[2] = p[1]*hill(u[1],10,-1) * u[2] *		# D reduces A growth-rate, and also ...
-					(1 - u[2]/(p[2]*hill(u[1],10,-1)))	# ... degrades A's ability to regrow back
+			du[2] = p[1]*hill(u[1],-10) * u[2] *		# D reduces A growth-rate, and also ...
+					(1 - u[2]/(p[2]*hill(u[1],-10)))	# ... degrades A's ability to regrow back
 			nothing
 		end
 	),
@@ -96,19 +96,25 @@ const archetype = [
 # Module methods:
 #-----------------------------------------------------------------------------------------
 """
-	hill( signal::Real, K=1.0, n=-1.0)
+	hill( s::Real, K=1.0, n=1.0)
 
-Return the Hill chemical reaction rate corresponding to a signalling factor concentration signal,
-a half-response constant K and a cooperation level n. Default signal is inhibitory.
+Return the Hill saturation function corresponding to a signal s, half-response K and cooperation n.
 """
-function hill( signal::Real, K::Real=1.0, n::Real=-1.0)
-	abs_n = abs(n)
-	if abs_n != 1
-		K = K^abs_n
-		signal = signal^abs_n
+function hill( s::Real, K::Real=1.0, n::Real=1.0)
+	if K == 0
+		return 0.5
 	end
 
-	(n >= 0) ? (signal/(K+signal)) : (K/(K+signal))
+	abs_K = abs(K)
+	if n != 1
+		n = float(n)
+		abs_K = abs_K^n
+		s = s^n
+	end
+
+	abs_hill = abs_K / (abs_K + s)
+	
+	K < 0 ? abs_hill : 1 - abs_hill
 end
 
 #-----------------------------------------------------------------------------------------
