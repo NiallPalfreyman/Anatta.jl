@@ -100,7 +100,9 @@ function create_skeleton(;
 	middle = width ÷ 2
 	r_outer = 1.5INHIBITION_RADIUS
 	r_inner = r_outer - ACTIVATION_RADIUS
-	centres = [(middle-2INHIBITION_RADIUS,middle),(middle+2INHIBITION_RADIUS,middle)]
+	r_circle = 0.5(r_inner+r_outer)
+#	centres = [(middle-2INHIBITION_RADIUS,middle),(middle+2INHIBITION_RADIUS,middle)]
+	centres = [(middle-r_circle,middle),(middle+r_circle,middle)]
 	skeleton.training_set = map(centres) do centre
 		# Return annulus around centre:
 		setdiff(
@@ -148,7 +150,7 @@ function agent_step!( ossie::Osteocyte, skeleton::ABM)
 			!osteoblast(ossie) && delta_differentiation > TOLERANCE
 		# Somersault if local activator concentration is changing against my needs:
 		turn!( ossie, 2π*rand())
-		accelerate!( ossie, ACCELERATION)
+#		accelerate!( ossie, ACCELERATION)
 	end
 
 	# Slow down in presence of at least 5 like-minded neighbours:
@@ -157,12 +159,14 @@ function agent_step!( ossie::Osteocyte, skeleton::ABM)
 	n_friends = osteoblast(ossie) ? n_osteoblasts : length(nbrs) - n_osteoblasts
 	if n_friends > 5skeleton.population_density
 		# Slow down for neighbours:
-		accelerate!(ossie,-ACCELERATION)
+		turn!( ossie, 2π*rand())
+#		accelerate!(ossie,-ACCELERATION)
 	end
 
 	# Add in some random jitter:
 	if rand() < skeleton.temperature
-		accelerate!(ossie)
+		turn!( ossie, 2π*rand())
+#		accelerate!(ossie)
 	end
 end
 
@@ -242,13 +246,13 @@ end
 
 #-----------------------------------------------------------------------------------------
 """
-	logistic( y::Real)
+	logistic( x::Real)
 
-Calculate logistic squashing function of Real value y.
+Calculate logistic squashing function of Real value x.
 """
-function logistic( y::Real)
-	expy = exp(y)
-	2expy/(1+expy) - 1
+function logistic( x::Real)
+	expx = exp(x)
+	2expx/(1+expx) - 1
 end
 
 #-----------------------------------------------------------------------------------------
@@ -318,6 +322,7 @@ end
 
 Orchestrate the training and testing regime: tick!() time forwards, advance training scenario,
 and move to testing after training has completed requisite number of EPOCHS_PER_REGIME.
+??? Do three tests: left and right half-circle, and vertical line at middle.
 """
 function orchestrate!( skeleton::ABM)
 	tick!( skeleton)
@@ -362,14 +367,19 @@ function run()
 		am = :circle,
 		ac = agent_colour,
 		as = 15,
-		heatarray = :differentiation,
+#		heatarray = :differentiation,
 		add_colorbar = false,
 		spu = 1:20,
 	)
 
-	playground, = abmplayground( skeleton, create_skeleton;
+	playground, abmobs = abmplayground( skeleton, create_skeleton;
 		agent_step!, model_step!, params, plotkwargs...
 	)
+
+	# Display inhibitor heatmap on right-hand side:
+	inhibitor = @lift($(abmobs.model).differentiation)
+	ax_heatmap, _ = heatmap(playground[1,2], inhibitor; colormap=:magma)
+	ax_heatmap.aspect = AxisAspect(1)
 
 	playground
 end
