@@ -63,11 +63,11 @@ const archetype = [
 	),
 	Archetype( "Overshoot", ["Dugong","Algae"], 30,
 		[40.0,100.0],									# Example: Grazing degradation
-		[0.4,100.0],									# Rate r, Sustainable capacity C
+		[0.4,0.4,100.0],								# Rate rD, rate rA, A capacity C
 		function (du,u,p,t)
 			du[1] = p[1]*u[1]*(1 - u[1]/u[2])			# A defines D-capacity
-			du[2] = p[1]*hill(u[1],-10) * u[2] *		# D reduces A growth-rate, and also ...
-					(1 - u[2]/(p[2]*hill(u[1],-10)))	# ... degrades A's ability to regrow back
+			du[2] = p[2]*u[2] * (1 - u[2]/(p[3]*hill(u[1],-80,2))) -	# Undercut regrowth
+						u[2]*hill(u[1],80,2)							# Reduce growth
 			nothing
 		end
 	),
