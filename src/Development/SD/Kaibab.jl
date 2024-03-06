@@ -98,7 +98,7 @@ const model_iteration = [
 		[
 			5_000,					# u[1]: Initial number of Deer
 			500,					# u[2]: Initial number of Puma
-			45_000,					# u[3]: Initial Vegetation on plateau
+			50_000,					# u[3]: Initial Vegetation on plateau
 		],
 		[
 			4_000,					# p[1]: Area of range
@@ -109,14 +109,14 @@ const model_iteration = [
 		function (du,u,p,t)
 			# Deer give birth, but are hunted by puma:
 			du[1] = deer_growth(p[2],u[3],u[1]) -
-				predation( kills( deer_density(u[1],p[1])), u[2])
+				predation( kills( deer_density(u[1],p[1])), u[2]) -
+				u[1]*hill(u[3],-30_000,9)								# Low V depletes D
 			# Puma stay constant until 1910, when they are culled to zero:
 			if u[2] > 0.0 && t >= 1910
 				u[2] = 0.0
 			end
-			# Deer graze Vegetation, but also undercut its ability to grow back:
-			du[3] = p[3]*u[3] * (1 - u[3]/(p[4]*hill(u[1],-40_000,2))) -
-				u[3]*hill(u[1],40_000,2)
+			# Vegetation grows logistically:
+			du[3] = p[3]*u[3] * (1 - u[3]/(p[4]*hill(u[1],-30_000,2)))	# High D degrades V
 			nothing
 		end
 	),
