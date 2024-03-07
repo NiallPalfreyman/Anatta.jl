@@ -26,6 +26,8 @@ jobs:
           - x64
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/cache@4d4ae6ae148a43d0fd1eda1800170683e9882738
+      - uses: pyTooling/Actions/with-post-step@adef08d3bdef092282614f3b683897cefae82ee3
       - uses: julia-actions/setup-julia@v1
         with:
           version: ${{ matrix.version }}
