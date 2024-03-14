@@ -230,49 +230,101 @@
         """
         We have two stocks in our system: Dugongs and Algae. The initial number of dugongs is 40,
         and the initial biomass of the algae is 100. Looking at the first DE for the dugongs, we
-        see it is a logistic equation with a fixed point when D=A. That is, the system can sustain
-        exactly as many dugongs as the current quantity of algae in the system. Initially, this is
-        100, but of course the dugongs eat the algae, so let's see how the algae react to this ...
+        see that the first term is a logistic term with a fixed point when D=A. That is, this term
+        can sustain exactly as many dugongs as the current quantity of algae in the system.
 
-        The DE for the algae is also a logistic equation, as you can see if you imagine setting
-        each of the two Hill functions (represented by the variable h in the script) in the second
-        DE equal to 1. Also, the sustainable capacity p[2] of the algae is indeed 100, which is also
-        their current value, so theoretically, the system should be able to sustain 100 algae and
-        100 dugongs. We can check this is correct by switching off the Hill functions for a moment.
-            
-        The inhibitory form of the Hill function is defined like this: hill(x,K,-1) ≡ K/(K+x). In
-        this definition, the saturation constant K represents the value of x that reduces the Hill
-        value to 0.5. At present, K=10, meaning that 10 dugongs will halve the growth rate of the
-        algae. Set K=1e6 in both Hill functions to effectively set them equal to 1, then check that
-        our system can actually sustain 100 dugongs and 100 mass units of algae.
+        Notice, however, that there is a second, negative, term in the dugong equation, that equals
+        the number of dugongs multiplied by a Hill function. The Hill function is always positive,
+        so this means that the growth rate of the dugongs is reduced by the presence of this Hill
+        function.
+
+        NOTE: We met Hill functions in Subject 1 Computation. You should remember that Hill
+        functions model saturated growth and decay - if the second argument (half-response) is
+        positive, the function INcreases from 0 to 1, whereas if the half-rresponse is negative,
+        the function DEcreases from 1 to 0. Refer back to lab 10 if you are unsure about this.
+
+        Which variable determines the value of this Hill function?
         """,
-        "Simply replace the number 10 by 1e6 in both calls to the hill() method",
-        x -> true
+        "Look at the arguments of the call to the Hill function",
+        x -> occursin("algae",lowercase(x)) || occursin("u[2]",x)
+    ),
+    Activity(
+        """
+        We should expect this reduction in dugong growth rate if the number of algae falls, since
+        of course the dugong eat the algae. But look carefully at the form of this Hill function:
+            hill(u[2],-60,9)
+
+        Does this Hill function rise or fall with the number of algae?
+        """,
+        "Look at the sign of the second argument",
+        x -> occursin("rise",lowercase(x))
+    ),
+    Activity(
+        """
+            hill(u[2],-60,9)
+
+        At which value of Algae does this value drop to 0.5?
+        """,
+        "Look at the magnitude of the second argument",
+        x -> x == 60
+    ),
+    Activity(
+        """
+           hill(u[2],-60,9)
+
+        Would you describe this value of cooperativity as high or low?
+        """,
+        "Look at the third argument",
+        x -> occursin("high",lowercase(x))
+    ),
+    Activity(
+        """
+        Yes, this value of cooperativity is indeed very high, and implies that the Hill curve is
+        almost a step function, staying close to 1 for algae values lower than 60, and falling
+        rapidly to zero for algae values above 60.
+            
+        So, when there are large numbers of algae in the system, the dugong thrive and stay close
+        to the sustainable capacity given by the current number of algae, however if the algae fall
+        below 60, the dugong find it so difficult to find the algae that their survival rate
+        rapidly falls towards zero due to the increased death rate represented by the Hill function.
+
+        Now look at the second differential equation for the algae growth. The entire rght-hand
+        side has a mathematical form that you should recognise easily by now. What is this form?
+        """,
+        "Imagine setting the Hill function equal to 1",
+        x -> occursin("logistic",lowercase(x))
+    ),
+    Activity(
+        """
+        The DE for the algae is also a logistic equation, as you can see if you imagine setting
+        the Hill function hill(u[1],-55,9) in the second DE equal to 1. Also, the sustainable
+        capacity p[2] of the algae is indeed 100, which is also their initial value, so
+        theoretically, the system should be able to sustain 100 algae and 100 dugongs. Check that
+        this is correct by switching off the two Hill functions by placing a 0 in front of the
+        Dugong Hill function and raising the Algae half-response value (K) to 1e6. What is stable
+        limit value of Dugong and Algae?
+        """,
+        "",
+        x -> x == 100
     ),
     Activity(
         """
         OK, so in a perfect world, our dugong-algae system is perfectly sustainable. Now we'll
-        slowly switch the Hill functions back on again. The very first Hill function (in line 69 of
-        Archetypes.jl) reduces the specific growth rate p[1]=0.4 of the algae according to how many
-        dugong (u[1]) are present, so let's change this value of K back to 10:
-            hill(u[1],10,-1)
-
-        Now run Archetypes.demo(4) with the new code. How many dugongs can the system sustain?
+        slowly switch the Hill functions back on again. We have just seen that the first Hill
+        function (in line 68 of Archetypes.jl) reduces the number of dugong drastically if the
+        number of algae falls below a threshold level that makes the dugong colony unsustainable.
+        Now remove the 0 in front of the Hill function in the first DE. How many dugongs can the
+        system sustain now?
         """,
-        "Remember, we are only changing the FIRST Hill function call back to its original form!",
+        "Remember, we are only switching the FIRST Hill function back on!",
         x -> abs(x-100)<5.0
     ),
     Activity(
         """
-        This is a surprise! :-o Setting K=10 means that 10 dugong will halve the algae growth rate,
-        and 100 dugong will reduce this growth rate by 10/(10+100)=1/11. Yet still the dugong-algae
-        system achieves stability at D=A=100!
-
-        Apparently, the dugong can happily graze on the algae, which then grow at 1/11 of their
-        original rate, but that is sufficient to sustain the entire system. To understand what is
-        happening here, it is useful to compare the causal-loop diagram (CLD) with the structure-
-        process (SPD) of the Overshoot archetype in the script. Make sure you can see these
-        diagrams now ...
+        This is a surprise! :-o Switching on the reduction in dugong growth rate has no effect on
+        their final value of 100! To understand what is happening, it is useful to compare the
+        causal-loop diagram (CLD) with the structure-process-diagram (SPD) of the Overshoot
+        archetype in the script. Make sure you can see these diagrams now ...
         """,
         "Keep the script open at the diagrams for Overshoot, while we continue chatting",
         x -> true
@@ -304,17 +356,36 @@
         to build up from the initial value of 40 dugong, but it is still capable of sustaining 100
         dugong.
 
-        However, this situation becomes very different in situations where the dugong are forced to
-        forage for algae - for example, if the algae are spread out over a very wide area. In this
-        case, the dugong may start not only to eat mature algae, but also to dig out their roots
-        for extra nourishment, and this will damage the algae's ability to replenish themselves.
+        However, this situation becomes very different in situations where the dugong population
+        grows so large that they are forced to not only to eat mature algae, but also to dig out
+        the algae roots for extra nourishment, and so damage the algae's ability to replenish
+        themselves.
 
         This is the final balancing loop in our model, in which the dugong undermine the
-        sustainable capacity of the algae. Turn on this loop now by inserting the value K=10 into
-        the second Hill function. What is the resulting sustainable level of dugong and algae?
+        sustainable capacity of the algae. Turn on this loop now by inserting the value K=55 into
+        the second Hill function, and re-running the simulation. What is the resulting sustainable
+        level of algae?
         """,
         "Your answer is only a visual approximation to the limit value",
-        x -> abs(x-27) < 3
+        x -> abs(x-74) < 4
+    ),
+    Activity(
+        """
+        This is the essence of the Overshoot archetype: By growing too large, the dugong population
+        undermines the sustainability of the algae population on which it depends. Does this story
+        sound familiar in relation to human populations?
+
+        To see how this undermining is implemented mathematically, notice how the Hill function in
+        the second equation appears multiplicatively:
+            du[2] = p[2]*u[2] * (1 - u[2]/(p[3] * hill(u[1],-55,9)))
+
+        By carefully studying the positioning of the brackets in this DE, you should see the
+        influence that the Hill function has on the carrying capacity of the algae. Do dugong
+        populations greater than 55 mean that the logistically sustainable number of algae gets
+        bigger or smaller?
+        """,
+        "Think about what happens to the value of the Hill function",
+        x -> occursin("small",lowercase(x))
     ),
     Activity(
         """
