@@ -22,8 +22,8 @@ const model = (
 	title		= "Salt formation",
 	variables	= ["Na","Cl","NaCl"],
 	duration	= 60,
-	initial		= [1.0,1.0,0.0],				# Na, Cl, NaCl
-	parameters	= [1.0],						# Reaction constant k
+	initial		= [0.0,0.0,0.0],				# Na, Cl, NaCl
+	parameters	= [0.0],						# Reaction constant k
 	flow		= function (du,u,p,t)
 		reaction_rate = p[1] * u[1] * u[2]		# Simple, one-step reaction
 		du[1] = -reaction_rate					# Na decreases
@@ -39,7 +39,9 @@ const model = (
 """
 	demo()
 
-Demonstration of the six SD behavioural archetypes.
+Demonstrate how to run the model. Notice that I have made this code generic: All details of the
+model are contained within the model itself, enabling us to reuse this demo() method in further
+projects.
 """
 function demo()
 	u,t = trajectory(

@@ -1,13 +1,13 @@
 #========================================================================================#
 """
-	ReactionKinetics
+	Populations
 
-Module ReactionKinetics: This module demonstrates a simple one-step chemical reaction in
-which Na and Cl combine to form NaCl.
+Module Populations: This module demonstrates how to simulate the interactions between different
+populations.
 
-Author: Niall Palfreyman, 07/03/2024
+Author: Niall Palfreyman, 18/03/2024
 """
-module ReactionKinetics
+module Populations
 
 using DynamicalSystems, GLMakie
 
@@ -18,17 +18,19 @@ using DynamicalSystems, GLMakie
 #-----------------------------------------------------------------------------------------
 # Module data:
 #-----------------------------------------------------------------------------------------
+"""
+	model
+
+Model of a simple logistic population.
+"""
 const model = (
-	title		= "Salt formation",
-	variables	= ["Na","Cl","NaCl"],
-	duration	= 60,
-	initial		= [0.0,0.0,0.0],				# Na, Cl, NaCl
-	parameters	= [0.0],						# Reaction constant k
+	title		= "Populations",
+	variables	= ["x"],
+	initial		= [0.01],						# Population x
+	parameters	= [0.2,50],						# r, K
+	duration	= 20,
 	flow		= function (du,u,p,t)
-		reaction_rate = p[1] * u[1] * u[2]		# Simple, one-step reaction
-		du[1] = -reaction_rate					# Na decreases
-		du[2] = -reaction_rate					# Cl decreases
-		du[3] =  reaction_rate					# NaCl increases
+		du[1] = p[1] * u[1] * (1-u[1]/p[2])		# Logistic growth equation
 		nothing
 	end
 )
@@ -39,9 +41,7 @@ const model = (
 """
 	demo()
 
-Demonstrate how to run the model. Notice that I have made this code generic: All details of the
-model are contained within the model itself, enabling us to reuse this demo() method in further
-projects.
+Demonstrate how to run the model.
 """
 function demo()
 	u,t = trajectory(
