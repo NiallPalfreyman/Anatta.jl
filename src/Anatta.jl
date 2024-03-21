@@ -110,18 +110,7 @@ function home!( dir::String=pwd())
 	cd( dir)							# Check that the directory actually exists
 	session.home_dir = dir				# Then set new home directory
 
-	# Ensure tools are set up:
-	tool_path = joinpath(session.home_dir,"Tools")
-	if !isdir(tool_path)
-		cp( joinpath( session.anatta_home, "Tools"), tool_path, force=true)
-	end
-
-	# Ensure scripts are set up:
-	scripts_path = joinpath(session.home_dir,"Scripts")
-	if !isdir(scripts_path)
-		cp( joinpath( session.anatta_home, "../Scripts"), scripts_path, force=true)
-	end
-
+	setup()								# Setup Scripts and Tools
 	save()
 	session.home_dir
 end
@@ -345,9 +334,25 @@ function setup( library::String; force=false)
 		mkdir(development_path)
 	end
 
-	# Copy the development library across:
+	# Copy the development library across, then ensure Tools and Scripts are up to date:
 	cp( frompath, topath, force=true)
+	setup()
 	library
+end
+
+#-----------------------------------------------------------------------------------------
+"""
+	setup()
+
+Set up the Tools and Scripts in the home directory.
+"""
+function setup()
+	# Ensure tools are set up:
+	tool_path = joinpath(session.home_dir,"Tools")
+	cp( joinpath( session.anatta_home, "Tools"), tool_path, force=true)
+	# Ensure scripts are set up:
+	scripts_path = joinpath(session.home_dir,"Scripts")
+	cp( joinpath( session.anatta_home, "../Scripts"), scripts_path, force=true)
 end
 
 #-----------------------------------------------------------------------------------------
