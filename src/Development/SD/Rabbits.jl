@@ -41,18 +41,18 @@ Demonstration use-case for building a DynamicalSystems model.
 function demo()
 	println("\n============ Rabbit Dynamics demo: ===============")
 	u0 = [									# Stock initial values:
-		0.0									# Number of rabbits
+		1000.0								# Number of rabbits
 	]
 	p = [									# Constant parameter values:
-		0.0									# Specific rabbit birth-rate
-		1									# Average rabbit lifespan
+		0.0417									# Specific rabbit birth-rate
+		48									# Average rabbit lifespan
 	]
 	flows! = function (du,u,p,t0)			# Dynamical update rule - sets all flows du
 		du[1] = births(u,p) - deaths(u,p)
 		nothing
 	end
-	duration = 1							# Duration of model run
-	Δt = 1.0								# Simulation time-step
+	duration = 80							# Duration of model run
+	Δt = 0.1								# Simulation time-step
 
 	rabbits = CoupledODEs(flows!, u0, p)
 	println("Here is the dynamical model's initial state:")
