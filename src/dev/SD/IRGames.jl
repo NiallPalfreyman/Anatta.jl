@@ -90,7 +90,7 @@ the parameters [Ks;abstraction].
 function euler( us, resource, Ks, abstraction, t)
 	balancing_feedback = saturation(abstraction,-1)
 	du = (balancing_feedback*phi(resource,Ks) .- ALPHA) .* us
-	d_resource = supply(t) - resource - sum(Ks.*us)
+	d_resource = supply(t,period=999,lo=0.2,hi=0.4) - resource - sum(Ks.*us)
 
 	(du,d_resource)
 end
@@ -201,7 +201,7 @@ end
 Report current status of the IRGame.
 """
 function report( irg::IRGame)
-	"Abstraction=$(irg.abstraction), Resource=$(irg.resource), Instability=$(instability(irg)):" *
+	"Abstraction=$(irg.abstraction), Resource=$(irg.resource), Stability=$(1.0-instability(irg)):" *
 		"\n$((p->p.K).(irg.players)), $((p->p.u).(irg.players))"
 end
 
@@ -266,8 +266,9 @@ end
 
 Return a square-wave resource supply rate for the given time t.
 """
-function supply( t::Real; period=177.0, lo=0.75INIT_VALUE, hi=1.25INIT_VALUE)
-	(rem(t÷(period/2),2)>0) ? hi : lo
+#function supply( t::Real; period=177.0, lo=0.75INIT_VALUE, hi=1.25INIT_VALUE)
+function supply( t::Real; period=1e99, lo=0.75, hi=1.25)
+	(rem(t÷(period/2),2)>0.5) ? hi : lo
 end
 
 #-----------------------------------------------------------------------------------------
@@ -316,12 +317,12 @@ Build and run the IRGame.
 """
 function demo()
 	println("\n============ Demonstrating an N-player IRGame ===============")
-	irgame = IRGame([IRPlayer(K_LWB+rand()*(K_UPB-K_LWB)) for _ in 1:200])
+	irgame = IRGame([IRPlayer(K_LWB+rand()*(K_UPB-K_LWB)) for _ in 1:10])
 	ustore,tstore = trajectory(irgame,RELAXATION)
 	println( report(irgame))
 	println()
 
-	for n in 1:999
+	for n in 1:9999
 		vary!(irgame)
 		u,t = trajectory(irgame,RELAXATION)
 		push!(ustore,u[2:end]...)
