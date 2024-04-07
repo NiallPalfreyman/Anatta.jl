@@ -47,7 +47,7 @@ function demo()
 		0.0416667							# Specific rabbit birth-rate
 		48									# Average rabbit lifespan
 	]
-	flows! = function (du,u,p,t0)			# Dynamical update rule - sets all flows du
+	flows! = function (du,u,p,t)			# Dynamical update rule - sets all flows du
 		du[1] = births(u,p) - deaths(u,p)
 		nothing
 	end
@@ -62,8 +62,10 @@ function demo()
 	u,t = trajectory(rabbits, duration; Δt)
 	println("Here is the time coordinate:")
 	display(t)
-	println( "... and here are the first 5 values of u:")
+	println( "Here are the first 5 values of u:")
 	display(u[1:5,1])
+	println( "... and here is the final of u:")
+	display(u[end][1])
 	println()
 
 	println("Finally, here is a BOTG of the $duration-month trajectory ...")

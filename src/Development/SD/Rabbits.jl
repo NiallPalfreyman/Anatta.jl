@@ -44,7 +44,7 @@ function demo()
 		1000.0								# Number of rabbits
 	]
 	p = [									# Constant parameter values:
-		0.0417									# Specific rabbit birth-rate
+		0.0417								# Specific rabbit birth-rate
 		48									# Average rabbit lifespan
 	]
 	flows! = function (du,u,p,t0)			# Dynamical update rule - sets all flows du

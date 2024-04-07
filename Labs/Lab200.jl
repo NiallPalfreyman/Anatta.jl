@@ -80,16 +80,16 @@
         shown in Script200 in your Scripts directory. Take a look at this SPD now, and reply() me
         the name of the Stock shown as a bubble in the centre of the diagram:
         """,
-        "The rectangle contains two names: the mathematical and the text name. Either will do :)",
+        "The bubble contains two names: the mathematical and the text name. Either will do :)",
         x -> x == "u" || x == "Rabbits"
     ),
     Activity(
         """
-        The rectangular stocks in this diagram represent the State Variables u[1], u[2], u[3], ...
+        The elliptical stocks in this diagram represent the State Variables u[1], u[2], u[3], ...
         of the system we are modelling. In our case, we have only one state variable, u, so I
         have left away the vector indices.
 
-        Think of a stock as a bubble which water flows into and out of. The flow "births" represents
+        Think of a stock as a bubble that water flows into and out of. The flow "births" represents
         water flowing into the bubble, and the flow "deaths" represents water flowing out of the
         bubble. The greater the flow, the faster it changes the level of water in the bubble.
 
