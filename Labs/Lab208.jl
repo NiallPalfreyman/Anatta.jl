@@ -8,7 +8,7 @@
 [
     Activity(
         """
-        Hi! Welcome to Anatta Lab 208: Bifurcations and catastrophes!
+        Hi! Welcome to Anatta Lab 208: Bifurcation: How systems fail!
 
         Please work through the script file Script208.pdf, referring to the file Bifurcations.jl.
         """,
