@@ -52,11 +52,53 @@ const model = [
 			nothing
 		end,
 		5												# Duration
-	)
+	),
+	KineticModel(
+		"GFP",											# Title
+		["A", "B", "C"],								# Variables
+		[1.0, 0.0, 0.0],								# Initial values
+#		[0.1, 1.0, -2.0, 3.0],							# Parameters alpha, beta, K, n
+		[0.5, 1.0, -2.0, 3.0],							# Damped oscillations
+#		[0.01, 1.0, -2.0, 3.0],							# High amplitude oscillations
+#		[0.0001, 1.0, -2.0, 3.0],						# Catastrophe
+#		[0.01, 1.0, -2.0, 1.0],							# No oscillation
+		function (du,u,p,t)								# Flow rule ...
+			a,b,c = u
+			α,β,K,n = p
+			du[1] = β*hill( c, K, n) - α*a
+			du[2] = β*hill( a, K, n) - α*b
+			du[3] = β*hill( b, K, n) - α*c
+			nothing
+		end,
+		100												# Duration
+	),
 ]
 
 #-----------------------------------------------------------------------------------------
 # Module methods:
+#-----------------------------------------------------------------------------------------
+"""
+	hill( s::Real, K=1.0, n=1.0)
+
+Return the Hill saturation function corresponding to a signal s, half-response K and cooperation n.
+"""
+function hill( s, K::Real=1.0, n::Real=1.0)
+	if K == 0
+		return 0.5
+	end
+
+	abs_K = abs(K)
+	if n != 1
+		n = float(n)
+		abs_K = abs_K^n
+		s = s.^n
+	end
+
+	abs_hill = abs_K ./ (abs_K .+ s)
+	
+	K < 0 ? abs_hill : 1 - abs_hill
+end
+
 #-----------------------------------------------------------------------------------------
 """
 	demo( n=1)
