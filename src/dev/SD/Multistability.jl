@@ -39,12 +39,12 @@ An array of models relating to multistability.
 const model = [
 	KineticModel(
 		"Griffith switch",								# Title
-		["Protein","RNA"],								# Stock names
-		[0.1,0.1],										# Example: Griffith switch (αP_c = 1/2αR)
+		["Protein","RNA"],								# Stock names (αP_c = 1/2αR)
+		[0.1,0.1],										# Initial values
 		[0.2,2.0],										# αP: P breakdown; αR: RNA breakdown rate
 		function (du,u,p,t)								# Flow rule ...
 			P,R = u
-			αP,αR = p
+			αP,αR = p									# P,R decay constants
 			injection = (abs(t-10)<1) ? 0.4 : 0.0		# Micro-inject P around t=10
 
 			du[1] = R - αP*P + injection				# RNA expresses P, which then breaks down
@@ -55,19 +55,22 @@ const model = [
 	),
 	KineticModel(
 		"Spruce-budworm dynamics",						# Title
-		["Protein","RNA"],								# Stock names
-		[0.1,0.1],										# Example: Griffith switch (αP_c = 1/2αR)
-		[0.2,2.0],										# αP: P breakdown; αR: RNA breakdown rate
+		["Budworms","Vegetation quality"],				# Stock names
+		[30,2000],										# Initial # of budworms and leaf-density
+		[0.1,0.1,4,3000,0.5,200],						# rx, rv, K_x, Kv, A_x, B
 		function (du,u,p,t)								# Flow rule ...
-			P,R = u
-			αP,αR = p
-			injection = (abs(t-10)<1) ? 0.4 : 0.0		# Micro-inject P around t=10
+			x,v = u										# #budworms, leaf-density
+			rx,rv = p[1:2]								# Specific growth rate of budworms and leaves
+			Kx = p[3]*v									# Budworm capacity depends on leaf-density
+			Kv = p[4]									# Capacity of leaves to support budworms
+			A  = p[5]*v									# Capacity of leaves to hide budworms from ...
+			B  = p[6]									# ... predation by birds
 
-			du[1] = R - αP*P + injection				# RNA expresses P, which then breaks down
-			du[2] = hill(P,1,2) - αR*R					# P up-regulates RNA, which also degrades
-			nothing
+			du[1] = rx*x*(1 - x/Kx) - B*hill(x,A,2)		# Budworms grow logistically minus predation
+			du[2] = rv*(Kv - x)							# Leaves grow linearly minus grazing
+			nothing										# Oscillation rises with rx*Kx/B: Set B=700!
 		end,
-		60												# Duration
+		900												# Duration
 	),
 ]
 
@@ -106,7 +109,7 @@ function demo( n=1)
 	u,t = trajectory(
 		CoupledODEs(model[n].flow,model[n].initial,model[n].parameters),
 		model[n].duration,
-		Δt = 0.05
+		Δt = 1.0
 	)
 
 	N = size(u,2)
