@@ -40,7 +40,7 @@ const oscillator = [
 	Oscillator(
 		"Rayleigh",							# Oscillator type
 		["x","v"],							# Phase variables
-		[1.1,0.0],							# Initial displacement and velocity
+		[1.0,0.0],							# Initial displacement and velocity
 		[1.0,1.0],							# Epsilon (ϵ), omega (ω)
 		function (du,u,p,t)					# Flow rule ...
 			x, v = u
@@ -55,7 +55,7 @@ const oscillator = [
 	Oscillator(
 		"van der Pol",						# Oscillator type
 		["x","v"],							# Phase variables
-		[1.1,0.0],							# Initial displacement and velocity
+		[1.0,0.0],							# Initial displacement and velocity
 		[1.0,1.0],							# Epsilon (ϵ), omega (ω)
 		function (du,u,p,t)					# Flow rule ...
 			x, v = u
@@ -68,9 +68,9 @@ const oscillator = [
 		20									# Duration
 	),
 	Oscillator(
-		"Rayleigh",							# Oscillator type
+		"Kelso",							# Oscillator type
 		["x","v"],							# Phase variables
-		[1.1,0.0],							# Initial displacement and velocity
+		[1.0,0.0],							# Initial displacement and velocity
 		[1.0,1.0],							# Epsilon (ϵ), omega (ω)
 		function (du,u,p,t)					# Flow rule ...
 			x, v = u
@@ -113,25 +113,38 @@ end
 """
 	demo( n=1)
 
-Run the n-th kinetic model.
+Run the n-th oscillator model.
 """
 function demo( n=1)
+	osc = oscillator[n]
 	u,t = trajectory(
-		CoupledODEs(oscillator[n].flow,oscillator[n].initial,oscillator[n].parameters),
-		oscillator[n].duration,
+		CoupledODEs(osc.flow,osc.initial,osc.parameters),
+		osc.duration,
 		Δt = 0.1
 	)
 
+	# BOTG:
 	N = size(u,2)
 	fig = Figure(fontsize=30,linewidth=5)
-	ax = Axis(fig[1,1], xlabel="time", title=oscillator[n].title)
+	ax = Axis(fig[1,1], xlabel="time", title=osc.title)
 	for i in 1:N
-		lines!( t, u[:,i], label=oscillator[n].variables[i])
+		lines!( t, u[:,i], label=osc.variables[i])
 	end
 	Legend( fig[1,2], ax)
-	display(fig)
+	# Phase plot:
+	Axis(fig[2,1], title="Phase plot", aspect=1,
+		xlabel=osc.variables[1], ylabel=osc.variables[2]
+	)
+	lines!( u[:,1], u[:,2])
+	# Fourier analysis:
+	fourier = fft(u[:,1])
+	Axis(fig[3, 1], title="Fourier components of $(osc.variables[1])")
+#	lines!( real.(fourier), color=:red)
+#	lines!( imag.(fourier), color=:blue)
+	lines!( abs.(fourier), color=:green)
 
-	abs.(fft(u[:,1]))
+	display(fig)
+	nothing
 end
 
 end
