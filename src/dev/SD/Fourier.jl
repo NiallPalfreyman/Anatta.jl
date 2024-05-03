@@ -74,71 +74,61 @@ const examples = [
 		end,
 	),
 	Example(
-		"Two superimposed signals",
-		function ()
+		"Three superimposed signals",
+		function (srate)
 			t0 = 0				# Start time
-			f1 = 5				# Signal frequency 1 (1 Hz)
-			f2 = 9				# Signal frequency 2 (2 Hz)
-			fs = 1000			# Sampling rate (frequency, Hz)
-			tmax = 10			# End time
+			t1 = 5				# End time
+			t = t0:1/srate:t1	# Sampling time domain
+			N = length(t)		# Number of sample points
+
+			c0 = 5				# Constant cosine signal (amplitude 5, frequency 0 Hz)
+			s1,f1 = (3,1)		# Sine signal (amplitude 2, frequency 1 Hz)
+			c2,f2 = (4,2)		# Cosine signal (amplitude 3, frequency 2 Hz)
 		
-			t = t0:1/fs:tmax	# Sampling times
-			signal = 3sin.(2π*f1*t) + 5cos.(2π*f2*t)
+			g0 = repeat([c0],N)
+			g1 = s1*sin.(2π*f1*t)
+			g2 = c2*cos.(2π*f2*t)
+			g = g0 + g1 + g2
 		
-			F = fftshift(fft(signal)) ./ (16π*sqrt(fs*(tmax-t0)))
-			freqs = fftshift(fftfreq(length(t), fs))
+			G = fft(g)									# Calculate transform
+			Gn = 2fft(g)./N								# Rescale coefficients
+			Gn[1] /= 2									# Only one constant term to rescale
+			Gns = fftshift(Gn)							# Shift coefficients
+			freqs = fftshift(fftfreq(length(t), srate))	# Set up frequency domain
 		
 			fig = Figure(fontsize=30,linewidth=5)
-			Axis(
-				fig[1,1], xlabel="Time", ylabel="f", title="Signal f over time",
-				xticks=t0:1:tmax
+			Axis( fig[1,1:2], title="Signal g over time",
+				xlabel="Time (t/s)", ylabel="g(t)",  xticks=t0:1:t1
 			)
-			lines!( t, signal)
-			Axis(
-				fig[2,1], xlabel="Shifted cos frequency", ylabel="real(F)", title="Cosine spectrum",
-				xticks=-20:5:20, limits = ((-20,20), nothing)
+			lines!( t, g, color=:blue)
+			if srate > 1000
+				lines!( t, g0, color=:red, linestyle=:dashdot)
+				lines!( t, g1, color=:red, linestyle=:dot)
+				lines!( t, g2, color=:red, linestyle=:dash)
+			end
+
+			Axis( fig[2,1], title="Bare Fourier transform",
+				xlabel="Sample", ylabel="abs(fft(g))"
 			)
-			lines!( freqs, real.(F))
-			Axis(
-				fig[3,1], xlabel="Shifted sin frequency", ylabel="imag(F)", title="Sine spectrum",
-				xticks=-20:5:20, limits = ((-20,20), nothing)
+			lines!( t, abs.(G))
+
+			Axis( fig[2,2], title="Rescaled Fourier transform",
+				xlabel="Unshifted frequency", ylabel="2abs(fft(g))/N"
 			)
-			lines!( freqs, imag.(F))
+			lines!( freqs, abs.(Gn))
+
+			Axis( fig[3,1], title="Cosine spectrum",
+				xlabel="Shifted frequency", ylabel="real(G)",
+				xticks=-10:10, limits = ((-10,10), nothing)
+			)
+			lines!( freqs, real.(Gns))
+
+			Axis( fig[3,2], title="Sine spectrum",
+				xlabel="Shifted frequency", ylabel="imag(G)",
+				xticks=-10:10, limits = ((-10,10), nothing)
+			)
+			lines!( freqs, imag.(Gns))
 			display(fig)
-		end,
-	),
-	Example(
-		"Artificial data",
-		function ()
-			t0 = 0				# Start time
-			f = 60				# Signal frequency
-			fs = 44100			# Sampling rate (frequency, Hz)
-			tmax = 0.1			# End time
-		
-			t = t0:1/fs:tmax
-			signal = sin.(2π*f*t)
-		
-			F = fftshift(fft(signal))
-			freqs = fftshift(fftfreq(length(t), fs))
-		
-			fig = Figure(fontsize=30,linewidth=5)
-			Axis(fig[1,1], xlabel="time", ylabel="f", title="Signal f over time")
-			lines!( t, signal)
-			Axis(fig[2,1], xlabel="shifted frequency", ylabel="abs(F)", title="Frequency spectrum")
-			lines!( freqs, abs.(F))
-			display(fig)
-		end,
-	),
-	Example(
-		"Real data",
-		function ()
-			N = 22
-			xj = (0:N-1)*2*π/N
-			f = 2*sin.(6*xj) + 0.1*rand(N)
-			Y = rfft(f)
-			f2 = irfft(Y,N)
-		
-			f ≈ f2
 		end,
 	),
 ]
@@ -147,37 +137,15 @@ const examples = [
 # Module methods:
 #-----------------------------------------------------------------------------------------
 """
-	hill( s::Real, K=1.0, n=1.0)
+	demo( srate=1)
 
-Return the Hill saturation function corresponding to a signal s, half-response K and cooperation n.
+Run the 4-th Fourier example. Sample rate starts at 1, but can be taken up to 1000. Above
+1000, the signal components are also displayed over the time domain.
 """
-function hill( s, K::Real=1.0, n::Real=1.0)
-	if K == 0
-		return 0.5
-	end
-
-	abs_K = abs(K)
-	if n != 1
-		n = float(n)
-		abs_K = abs_K^n
-		s = s.^n
-	end
-
-	abs_hill = abs_K ./ (abs_K .+ s)
-	
-	K < 0 ? abs_hill : 1 - abs_hill
-end
-
-#-----------------------------------------------------------------------------------------
-"""
-	demo( n=1)
-
-Run the n-th Fourier example.
-"""
-function demo( n=1)
+function demo( srate=1, n=4)
 	eg = examples[n]
 	println( "Running tutorial example $n: $(eg.title) ...\n")
-	eg.tutorial()
+	eg.tutorial(srate)
 	nothing
 end
 
