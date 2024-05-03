@@ -7,11 +7,11 @@ deps/deps.jl
 # client specific
 *.sol.*
 *.lnr
-*.docx
 .vscode
 .vscode/settings.json
 .DS_Store
 docs/build
+Documents
 
 # Video files
 *.mp4
