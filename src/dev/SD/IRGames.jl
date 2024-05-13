@@ -13,11 +13,11 @@ using GLMakie
 const K_DELTA = 0.1			# Upper bound on K-variation
 const K_UPB = 2.0			# Upper bound on K-magnitude
 const K_LWB = 0.1			# Lower bound on K-magnitude
-const P_UPB = 3.0			# Upper bound on Player state value
+const U_UPB = 3.0			# Upper bound on Player state value
+const U_LWB = 1e-300		# Lower bound on Player state value
 const R_UPB = 10.0			# Upper bound on Resource value
-const RELAXATION = 50		# Duration of relaxation between successive variations
-const INIT_VALUE = 0.001	# Initial value of all player states and resource
 const ALPHA = 0.1			# Depletion constant of players' state
+const RELAXATION = 50		# Duration of relaxation between successive variations
 
 #-----------------------------------------------------------------------------------------
 # Module types:
@@ -33,7 +33,7 @@ mutable struct IRPlayer
 	u::Float64
 	u0::Float64
 
-	function IRPlayer( K::Float64=4(2rand()-1), u0::Float64=INIT_VALUE)
+	function IRPlayer( K::Float64=wrap((2rand()-1)*K_UPB), u0::Float64=U_LWB)
 		new(K,u0,u0)
 	end
 end
@@ -48,11 +48,12 @@ mutable struct IRGame
 	players::Vector{IRPlayer}
 	abstraction::Float64
 	resource::Float64
+	fixpoint::Float64
 	t::Float64
 	t0::Float64
 
-	function IRGame(players::Vector{IRPlayer}=[IRPlayer(),IRPlayer()], resource=INIT_VALUE, t0=0.0)
-		new(players,sum(conservation.(players)),resource,t0,t0)
+	function IRGame(players::Vector{IRPlayer}=[IRPlayer(),IRPlayer()], resource=U_LWB, t0=0.0)
+		new(players,sum(conservation.(players)),resource,1.0,t0,t0)
 	end
 end
 
@@ -82,6 +83,16 @@ end
 
 #-----------------------------------------------------------------------------------------
 """
+	fixpoint!( irg::IRGame)
+
+Set the fixpoint of this game from which stability is determined.
+"""
+function fixpoint!( irg::IRGame, fixpt::Float64)
+	irg.fixpoint = fixpt
+end
+
+#-----------------------------------------------------------------------------------------
+"""
 	euler( us, resource, Ks, abstraction, t) → (du, d_resource)
 
 Develop the current state [us;resource] at time t through a single Euler time-step Δt, using
@@ -90,7 +101,8 @@ the parameters [Ks;abstraction].
 function euler( us, resource, Ks, abstraction, t)
 	balancing_feedback = saturation(abstraction,-1)
 	du = (balancing_feedback*phi(resource,Ks) .- ALPHA) .* us
-	d_resource = supply(t,period=999,lo=0.2,hi=0.4) - resource - sum(Ks.*us)
+	d_resource = supply(t,lo=0.2,hi=0.4) - resource - sum(Ks.*us)
+#	d_resource = supply(t,period=999,lo=0.2,hi=0.4) - resource - sum(Ks.*us)
 
 	(du,d_resource)
 end
@@ -123,7 +135,7 @@ end
 	trajectory( irg::IRGame, T; Δt=0.1) → (u, t)
 
 Develop the game forward from the current instant through given time duration T.
-(Modelled on DynamicalSystems.trajectory)
+(Adapted from DynamicalSystems.trajectory)
 """
 function trajectory( irg::IRGame, T::Real; Δt=0.1)
 	num_ts = Int(round(T/Δt))+1									# Allow for roundng errors in t
@@ -134,18 +146,23 @@ function trajectory( irg::IRGame, T::Real; Δt=0.1)
 	n_dims = length(irg.players) + 2							# Set up trajectory states to store,
 	us = [Vector{Float64}(undef,n_dims) for _ in 1:num_ts]		# including resource, conservation
 	us[1] = state( irg)
-	Ks = (p->p.K).(irg.players)
 
 	for i in 2:num_ts
 		step!(irg,Δt)											# Take next step ...
 
 		irg.resource = max(0.0,min(R_UPB,irg.resource))			# Repair values outside boundaries
-		stocks = max.( 0.0, min.( P_UPB, (p->p.u).(irg.players)))
-		setfield!.( irg.players, :u, stocks)
-		irg.abstraction = conservation(Ks,stocks)
+		for (j,p) in pairs(irg.players)
+			if p.u < U_LWB
+				p.u = U_LWB
+			elseif p.u > U_UPB
+				# u is out of bounds - replace by a random new IRPlayer:
+				irg.players[j] = IRPlayer()
+			end
+		end
+		irg.abstraction = conservation(irg)
 		irg.t = round(irg.t+Δt,digits=3)
 	
-		us[i] = [[irg.abstraction,irg.resource];stocks]			# Store new state
+		us[i] = [[irg.abstraction,irg.resource];(p->p.u).(irg.players)]			# Store new state
 	end
 
 	return (us, ts)
@@ -191,7 +208,8 @@ end
 Determine the instability of the current resource level in an IRGame.
 """
 function instability( irg::IRGame)
-	min( 1.0, abs(irg.resource-1.0)^3)
+#	min( 1.0, log(1.0+abs(irg.resource-irg.fixpoint)))
+	min( 1.0, abs(irg.resource-irg.fixpoint)^4)
 end
 
 #-----------------------------------------------------------------------------------------
@@ -201,8 +219,14 @@ end
 Report current status of the IRGame.
 """
 function report( irg::IRGame)
-	"Abstraction=$(irg.abstraction), Resource=$(irg.resource), Stability=$(1.0-instability(irg)):" *
-		"\n$((p->p.K).(irg.players)), $((p->p.u).(irg.players))"
+	println( "Abstraction=$(irg.abstraction), Resource=$(irg.resource), ",
+		"Stability=$(1.0-instability(irg)), Fixpoint=$(irg.fixpoint):"
+	)
+	for (n,p) in pairs(irg.players)
+		if p.u > 0.1
+			println( "    Player $n: K=$(p.K), u=$(p.u)")
+		end
+	end
 end
 
 #-----------------------------------------------------------------------------------------
@@ -241,7 +265,7 @@ end
 """
 	saturation( s::Real, K=1.0, n=1.0)
 
-Return the Hill saturation function of a signal s, half-saturation constant K and cooperation n.
+Return the Hill saturation value of a signal s, half-saturation constant K and cooperation n.
 """
 function saturation( s, K::Real=1.0, n::Real=1.0)
 	if K == 0
@@ -266,7 +290,7 @@ end
 
 Return a square-wave resource supply rate for the given time t.
 """
-#function supply( t::Real; period=177.0, lo=0.75INIT_VALUE, hi=1.25INIT_VALUE)
+#function supply( t::Real; period=177.0, lo=0.75U_LWB, hi=1.25U_LWB)
 function supply( t::Real; period=1e99, lo=0.75, hi=1.25)
 	(rem(t÷(period/2),2)>0.5) ? hi : lo
 end
@@ -298,41 +322,24 @@ end
 
 #-----------------------------------------------------------------------------------------
 """
-	rand_player(n::Int)
-
-Generate a Vector of n IRPlayers with random Ks within the range [-K_UPB,K_UPB].
-"""
-function rand_player( n::Int=1)
-	n = max(n,1)
-	map(rand(n)) do r
-		IRPlayer((2r-1)*K_UPB)
-	end
-end
-
-#-----------------------------------------------------------------------------------------
-"""
 	demo()
 
 Build and run the IRGame.
+??? Try to make success more stable. (Make well less easy to get out of - convex sides?)
 """
 function demo()
 	println("\n============ Demonstrating an N-player IRGame ===============")
-	irgame = IRGame([IRPlayer(K_LWB+rand()*(K_UPB-K_LWB)) for _ in 1:10])
+	irgame = IRGame([IRPlayer(K_LWB+rand()*(K_UPB-K_LWB)) for _ in 1:9])
 	ustore,tstore = trajectory(irgame,RELAXATION)
-	println( report(irgame))
-	println()
+	report(irgame)
 
-	for n in 1:9999
+	for epoch in 1:999
 		vary!(irgame)
 		u,t = trajectory(irgame,RELAXATION)
 		push!(ustore,u[2:end]...)
 		tstore = range(first(tstore),last(t),length=length(ustore))
-		if mod(n,100)<0
-			println(report(irgame))
-		end
 	end
-	println(report(irgame))
-	println()
+	report(irgame)
 
 	fig = Figure(fontsize=30,linewidth=5)
 	ax = Axis(fig[1,1], xlabel="time", title="BOTG")
@@ -340,7 +347,7 @@ function demo()
 	lines!( tstore, (u->u[2]).(ustore), label="Resource")
 	n_dims = length(ustore[1])
 	for i in 3:n_dims
-		if abs(ustore[end][i]) > 0.1
+		if abs(ustore[end][i]) > 0.0
 			lines!( tstore, (u->u[i]).(ustore), label="Player $(i-2)")
 		end
 	end
