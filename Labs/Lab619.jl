@@ -1,7 +1,7 @@
 #========================================================================================#
 #	Laboratory 7
 #
-# Encapsulation and software design.
+# Encapsulation and software design. ??? Use this as part of introduction of GAs
 #
 # Author: Niall Palfreyman, 06/02/2022
 #========================================================================================#

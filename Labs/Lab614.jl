@@ -1,5 +1,5 @@
 #========================================================================================#
-#	Laboratory 514
+#	Laboratory 614
 #
 # Reaction-diffusion systems
 #
@@ -8,9 +8,9 @@
 [
     Activity(
         """
-        Welcome to Lab 514: Flows and exploratory processes
+        Welcome to Lab 614: Flows and exploratory processes
 
-        At the end of lab 511, we set out a programme of work for the remainder of this course:
+        At the end of lab 611, we set out a programme of work for the remainder of this course:
             -	Investigate genetic structure and algorithms;
             -	Investigate ways of focusing problem-solving behaviour;
             -	Investigate exploratory developmental processes.

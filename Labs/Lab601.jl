@@ -1,5 +1,5 @@
 #========================================================================================#
-#	Laboratory 501
+#	Laboratory 601
 #
 # A first look at dynamical systems modelling with a simple Ecosystem.
 #
@@ -8,7 +8,7 @@
 [
     Activity(
         """
-        Welcome to Lab 501: Collective behaviour.
+        Welcome to Lab 601: Collective behaviour.
 
         Now we understand the general structure of ABMs, we will turn from physics to a more
         biological example: Organisms interacting with each other in an ecosystem.

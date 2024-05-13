@@ -1,5 +1,5 @@
 #========================================================================================#
-#	Laboratory 504
+#	Laboratory 604
 #
 # Flows
 #
@@ -8,7 +8,7 @@
 [
     Activity(
         """
-        Welcome to Lab 504: Flows.
+        Welcome to Lab 604: Flows.
 
         Agents do not live in isolation - they live in a world that influences them and which they
         themselves influence. In this lab, we focus on the diffusion and evaporation of a resource

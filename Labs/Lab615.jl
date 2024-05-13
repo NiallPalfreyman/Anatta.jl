@@ -1,5 +1,5 @@
 #========================================================================================#
-#	Laboratory 515
+#	Laboratory 615
 #
 # An efficient algorithmic implementation of Turing systems.
 #
@@ -8,7 +8,7 @@
 [
     Activity(
         """
-        Welcome to Lab 515: Efficient algorithmic implementation of a Turing system
+        Welcome to Lab 615: Efficient algorithmic implementation of a Turing system
 
         Nature has one enormous advantage over computers: time is continuous, and the number of
         particles is huge. This means that when proteins diffuse and react in a Turing system,

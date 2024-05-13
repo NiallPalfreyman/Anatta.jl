@@ -1,5 +1,5 @@
 #========================================================================================#
-#	Laboratory 506
+#	Laboratory 606
 #
 # Neutral drift.
 #
@@ -8,7 +8,7 @@
 [
     Activity(
         """
-        Welcome to Lab 506: Neutral Drift.
+        Welcome to Lab 606: Neutral Drift.
 
         Neutral drift is the tendency of genetic structure to mutate randomly, even in conditions
         where there is no strong selection pressure from the environment.

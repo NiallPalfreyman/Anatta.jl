@@ -1,5 +1,5 @@
 #========================================================================================#
-#	Laboratory 516
+#	Laboratory 616
 #
 # Cooperative problem-solving
 #
@@ -8,7 +8,7 @@
 [
     Activity(
         """
-        Welcome to Lab 516: Recruiting groups for cooperative problem-solving
+        Welcome to Lab 616: Recruiting groups for cooperative problem-solving
 
         Over the past 60 years there has been an important debate in evolutionary biology: are
         genes the only central structures of inheritance? Remember that ant colonies construct

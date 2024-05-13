@@ -1,5 +1,5 @@
 #========================================================================================#
-#	Laboratory 509
+#	Laboratory 609
 #
 # Suboptimisation
 #
@@ -8,7 +8,7 @@
 [	
     Activity(
         """
-        Welcome to Lab 509: Suboptimisation.
+        Welcome to Lab 609: Suboptimisation.
 
         Most major problems that we wish to solve using computers can be reformulated as
         MINIMISATION problems - that is, the problem of searching for the minimum value of

@@ -1,5 +1,5 @@
 #========================================================================================#
-#	Laboratory 511
+#	Laboratory 611
 #
 # Semiotic adaptation.
 #
@@ -8,7 +8,7 @@
 [
     Activity(
         """
-        Welcome to Lab 511: Semiotic adaptation and theory-development.
+        Welcome to Lab 611: Semiotic adaptation and theory-development.
 
         There are many indications that evolution is not driven purely by random mutation. If I
         as a politician choose to discourage some particular cultural group from having children,

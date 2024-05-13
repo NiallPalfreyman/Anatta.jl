@@ -1,5 +1,5 @@
 #========================================================================================#
-#	Laboratory 507
+#	Laboratory 607
 #
 # Differential adhesion.
 #
@@ -8,7 +8,7 @@
 [
     Activity(
         """
-        Welcome to Lab 507: Differential Adhesion.
+        Welcome to Lab 607: Differential Adhesion.
 
         In this laboratory, we implement Stuart Newman and Gerd Müller's Differential Adhesion
         Hypothesis (DAH), according to which the entire process of morphogenesis (that is, organism

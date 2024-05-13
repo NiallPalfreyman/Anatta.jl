@@ -1,5 +1,5 @@
 #========================================================================================#
-#	Laboratory 512
+#	Laboratory 612
 #
 # Genetic structure.
 #
@@ -8,7 +8,7 @@
 [
     Activity(
         """
-        Welcome to Lab 512: Selection OF recombinable genetic structure.
+        Welcome to Lab 612: Selection OF recombinable genetic structure.
 
         We wish to endow our turtles with a genetic structure that enables them to solve some kind
         of problem. The simplest such problem that occurs to me is that of guessing the contents of

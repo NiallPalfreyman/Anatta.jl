@@ -1,5 +1,5 @@
 #========================================================================================#
-#	Laboratory 518
+#	Laboratory 618
 #
 # The course project
 #
@@ -8,7 +8,7 @@
 [
     Activity(
         """
-        Welcome to Lab 518: Research and development projects
+        Welcome to Lab 618: Research and development projects
 
         By now, you have built up a good repertoire of skills in agent-based modelling. In the
         assessed project for this course, you will apply those skills to implement either a

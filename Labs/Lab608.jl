@@ -1,5 +1,5 @@
 #========================================================================================#
-#	Laboratory 508
+#	Laboratory 608
 #
 # Stabilisation
 #
@@ -8,7 +8,7 @@
 [
     Activity(
         """
-        Welcome to Lab 509: Stabilisation.
+        Welcome to Lab 608: Stabilisation.
 
         Stabilisation is quite generally the process by which almost all systems build structure
         over time. Imagine sand swirling around the bottom of the ocean: occasionally it comes to

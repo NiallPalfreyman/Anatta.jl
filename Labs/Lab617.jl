@@ -1,5 +1,5 @@
 #========================================================================================#
-#	Laboratory 517
+#	Laboratory 617
 #
 # Simulating Physarum polycephalum
 #
@@ -8,7 +8,7 @@
 [
     Activity(
         """
-        Welcome to Lab 517: Physarum polycephalum and organic problem-solving
+        Welcome to Lab 617: Physarum polycephalum and organic problem-solving
 
         This lab will be completed at a later date. :)
         """,

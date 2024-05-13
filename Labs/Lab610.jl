@@ -1,5 +1,5 @@
 #========================================================================================#
-#	Laboratory 510
+#	Laboratory 610
 #
 # Particle-Swarm Optimisation
 #
@@ -8,7 +8,7 @@
 [
     Activity(
         """
-        Welcome to Lab 510: Particle-Swarm Optimisation (PSO).
+        Welcome to Lab 610: Particle-Swarm Optimisation (PSO).
 
         In the previous lab (Suboptimisation), we saw how a collective of agents using regular
         search methods can get trapped in suboptimal solutions of a difficult optimisation problem.

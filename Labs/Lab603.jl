@@ -1,5 +1,5 @@
 #========================================================================================#
-#	Laboratory 503
+#	Laboratory 603
 #
 # Emergent patterns.
 #
@@ -8,7 +8,7 @@
 [
     Activity(
         """
-        Welcome to Lab 503: Emergent patterns.
+        Welcome to Lab 603: Emergent patterns.
 
         To summarise our discoveries so far in this course: We have reason to believe that
         biological systems are both collective and non-computable. That is, their behaviour arises

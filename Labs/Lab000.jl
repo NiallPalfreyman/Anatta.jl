@@ -58,14 +58,15 @@
         While exploring Anatta, we will investigate this question very deeply. To help us do so,
         I have divided our exploration into Subjects that build successively upon each other. Each
         Subject corresponds roughly to a 5-credit undergraduate-level lecture course:
-            Subject 0: Computation          - Using structures to explore and predict the world
-            Subject 1: Formal Logic         - Beliefs have structure, but structures ALWAYS have gaps!
-            Subject 2: System dynamics      - Dynamical stories can fill logical gaps
-            Subject 3: Quantum computing    - Small stories generate large structures
-            Subject 4: Thermodynamics       - Small structures generate large stories
-            Subject 5: Agent-based systems  - Knowledge is a property of populations, not individuals
-            Subject 6: Relativity theory    - Organisms ENACT: they abstract knowledge through action
-            Subject 7: Quantum-field theory - Knowledge combines both large and small stories
+            Subject 0: Computation            - Using structures to explore and predict the world
+            Subject 1: Formal Logic           - Beliefs have structure, but structures ALWAYS have gaps!
+            Subject 2: System dynamics        - Dynamical stories can fill logical gaps
+            Subject 3: Simulation physics     - Using structures to approximate stories efficiently
+            Subject 4: Quantum computing      - Small stories generate large structures
+            Subject 5: Quantum thermodynamics - Small structures generate large stories
+            Subject 6: Agent-based systems    - Knowledge is a property of populations, not individuals
+            Subject 7: Relativity theory      - Organisms ENACT: they abstract knowledge through action
+            Subject 8: Quantum-field theory   - Knowledge combines both large and small stories
         """,
         "reply() to move on :)",
         x -> true

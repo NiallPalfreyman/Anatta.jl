@@ -1,5 +1,5 @@
 #========================================================================================#
-#	Laboratory 505
+#	Laboratory 605
 #
 # Flow dynamics, wave sources and pedagogical simulation.
 #
@@ -8,7 +8,7 @@
 [
     Activity(
         """
-        Welcome to Lab 505: Flow dynamics and pedagogical simulation.
+        Welcome to Lab 605: Flow dynamics and pedagogical simulation.
 
         Flows are not only produced and utilised by agents; they also possess their own dynamics,
         which can be quite complex - as in this lab. In fact, ALL biological systems contain two

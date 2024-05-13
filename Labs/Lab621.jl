@@ -1,7 +1,7 @@
 #========================================================================================#
 #	Laboratory 9
 #
-# Working with noisy data.
+# Working with noisy data.  ??? Use this as part of introduction of GAs
 #
 # Author: Niall Palfreyman, 17/03/2022
 #========================================================================================#

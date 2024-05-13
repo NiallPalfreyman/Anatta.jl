@@ -1,5 +1,5 @@
 #========================================================================================#
-#	Laboratory 513
+#	Laboratory 613
 #
 # Niche-construction and ant algorithms
 #
@@ -8,7 +8,7 @@
 [
     Activity(
         """
-        Welcome to Lab 513: Construction of flows to focus problem-solving behaviour.
+        Welcome to Lab 613: Construction of flows to focus problem-solving behaviour.
 
         In the simulation AntSearch, a colony of ants forages for food. Although each ant follows
         a set of simple rules, the colony as a whole acts in an emergent, goal-oriented way. My

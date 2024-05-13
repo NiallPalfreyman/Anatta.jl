@@ -1,7 +1,7 @@
 #========================================================================================#
 #	Laboratory 8
 #
-# Genetic algorithms and refactoring.
+# Genetic algorithms and refactoring. ??? Use this as part of introduction of GAs
 #
 # Author: Niall Palfreyman, 16/03/2022
 #========================================================================================#
