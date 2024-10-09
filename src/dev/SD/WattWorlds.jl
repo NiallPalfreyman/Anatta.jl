@@ -39,7 +39,7 @@ using GLMakie, Random
 # Module constants:
 #-----------------------------------------------------------------------------------------
 "Duration of simulation"
-const DURATION = 12e6
+const DURATION = 15e6
 "Step length for RK2 simulation"
 const RK2_STEP = 2.0
 "Stride length for graphical data display compression"
@@ -73,7 +73,7 @@ const ALPHA_R = 1.0
 "Radius of stability well"
 const CAPTURE_RADIUS = 1.0
 "Monomial steepness of stability well"
-const CAPTURE_CONCAVITY = 2.0
+const CAPTURE_CONCAVITY = 2.5
 
 #-----------------------------------------------------------------------------------------
 # Module types:
@@ -347,7 +347,7 @@ end
 """
 	apply_regime!( watt::WattWorld)
 
-Provide a convenient set of feed/omega test regimes for benchmarking WattWorlds.
+Apply WattWorld's current feed/omega test regime for benchmarking.
 """
 function apply_regime!( watt::WattWorld)
 	if watt.regime <= 0
@@ -363,18 +363,39 @@ function apply_regime!( watt::WattWorld)
 		watt.omega = iseven(2watt.t÷DURATION) ? 1.0 : 2.0
 		watt.feed = 0.2
 	elseif watt.regime == 3
-		# Periodic step feed:
+		# Slow periodic feed:
 		watt.omega = 1.0
 		watt.feed = iseven(watt.t÷1e6) ? 0.2 : 1.75
 	elseif watt.regime == 4
-		# Periodic step omega:
+		# Slow periodic omega:
 		watt.omega = iseven(watt.t÷1e6) ? 1.0 : 2.0
 		watt.feed = 0.2
 	else
-		# Periodic feed and omega in antiphase:
-		phase = watt.t÷1e6
-		watt.omega = isodd(phase) ? 1.0 : 2.0
-		watt.feed = iseven(phase) ? 0.2 : 1.75
+		# Fast periodic feed with slow periodic omega:
+		watt.omega = iseven(watt.t÷8e5) ? 1.0 : 2.0
+		watt.feed = iseven(watt.t÷2e5) ? 0.2 : 1.75
+	end
+end
+
+#-----------------------------------------------------------------------------------------
+"""
+	regime_string( watt::WattWorld)
+
+Return a short string description of WattWorld's current regime.
+"""
+function regime_string( watt::WattWorld)
+	if watt.regime <= 0
+		"Constant feed and omega"
+	elseif watt.regime == 1
+		"Single step feed"
+	elseif watt.regime == 2
+		"Single step omega"
+	elseif watt.regime == 3
+		"Slow periodic feed"
+	elseif watt.regime == 4
+		"Slow periodic omega"
+	else
+		"Fast periodic feed with slow periodic omega"
 	end
 end
 
@@ -453,10 +474,11 @@ end
 Build and run WattWorld.
 """
 function demo( regime::Int=0)
-	println(
-		"\n======= Simulating a $N_PLAYERS-player WattWorld with feed/omega regime $regime ======="
-	)
 	watt = WattWorld(N_PLAYERS,regime=regime)
+	println(
+		"\n======= $N_PLAYERS-player WattWorld simulation using ",
+		"regime $regime: $(regime_string(watt)) ======="
+	)
 	report(watt)
 	snapshots = trajectory(watt,DURATION,Δt=RK2_STEP)
 	report(watt)
