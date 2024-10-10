@@ -74,6 +74,15 @@ const ALPHA_R = 1.0
 const CAPTURE_RADIUS = 1.0
 "Monomial steepness of stability well"
 const CAPTURE_CONCAVITY = 2.5
+"Descriptions of available benchmark test regimes"
+const REGIMES = [
+	"Basic stabilisation (constant feed rate and omega context)"
+	"Ontogenic stabilisation (single-step feed rate in constant omega context)"
+	"Phylogenic stabilisation (constant feed rate in single-step omega context)"
+	"Ontogenic stabilisation (slow periodic feed rate in constant omega context)"
+	"Phylogenic stabilisation (constant feed rate in slow periodic omega context)"
+	"Agency (Transfer fast periodic feed control across slow periodic omega context)"
+]
 
 #-----------------------------------------------------------------------------------------
 # Module types:
@@ -122,8 +131,9 @@ mutable struct WattWorld
 	backup_t::Float64
 
 	# Unique constructor:
-	function WattWorld( n_players=N_PLAYERS; regime=0)
+	function WattWorld( n_players=N_PLAYERS; regime=1)
 		@assert n_players > 1					# Number of Players at least 2
+		@assert 1 <= regime <= length(REGIMES)	# Valid regime number
 		GC.gc()									# Clear up garbage from previous run
 		Random.seed!(5)							# Make simulation reproducible
 
@@ -350,23 +360,23 @@ end
 Apply WattWorld's current feed/omega test regime for benchmarking.
 """
 function apply_regime!( watt::WattWorld)
-	if watt.regime <= 0
+	if watt.regime <= 1
 		# Constant feed and omega:
 		watt.omega = 1.0
 		watt.feed = 0.2
-	elseif watt.regime == 1
+	elseif watt.regime == 2
 		# Single step feed:
 		watt.omega = 1.0
 		watt.feed = iseven(2watt.t÷DURATION) ? 0.2 : 1.75
-	elseif watt.regime == 2
+	elseif watt.regime == 3
 		# Single step omega:
 		watt.omega = iseven(2watt.t÷DURATION) ? 1.0 : 2.0
 		watt.feed = 0.2
-	elseif watt.regime == 3
+	elseif watt.regime == 4
 		# Slow periodic feed:
 		watt.omega = 1.0
 		watt.feed = iseven(watt.t÷1e6) ? 0.2 : 1.75
-	elseif watt.regime == 4
+	elseif watt.regime == 5
 		# Slow periodic omega:
 		watt.omega = iseven(watt.t÷1e6) ? 1.0 : 2.0
 		watt.feed = 0.2
@@ -384,19 +394,7 @@ end
 Return a short string description of WattWorld's current regime.
 """
 function regime_string( watt::WattWorld)
-	if watt.regime <= 0
-		"Constant feed and omega"
-	elseif watt.regime == 1
-		"Single step feed"
-	elseif watt.regime == 2
-		"Single step omega"
-	elseif watt.regime == 3
-		"Slow periodic feed"
-	elseif watt.regime == 4
-		"Slow periodic omega"
-	else
-		"Fast periodic feed with slow periodic omega"
-	end
+	REGIMES[watt.regime]
 end
 
 #-----------------------------------------------------------------------------------------
@@ -473,11 +471,11 @@ end
 
 Build and run WattWorld.
 """
-function demo( regime::Int=0)
+function demo( regime::Int=1)
 	watt = WattWorld(N_PLAYERS,regime=regime)
 	println(
-		"\n======= $N_PLAYERS-player WattWorld simulation using ",
-		"regime $regime: $(regime_string(watt)) ======="
+		"\n======= Simulating a $N_PLAYERS-player WattWorld using regime $regime: ",
+		"$(regime_string(watt)) ======="
 	)
 	report(watt)
 	snapshots = trajectory(watt,DURATION,Δt=RK2_STEP)
@@ -499,7 +497,7 @@ function demo( regime::Int=0)
 
 	for i in 1:N_PLAYERS
 		acts = ((s->s.players[i].a).(snapshots))[compressed_t]
-		if any( acts[3end÷4:end] .> A_REPORT)
+		if any( acts[end÷2:end] .> A_REPORT)
 			# Display players with significant activation in the last 1/4 of the simulation:
 			lines!( ax_a, t_axis, acts, label="Player $(i)")
 			lines!( ax_K, t_axis, ((s->s.players[i].B.K).(snapshots))[compressed_t], 
