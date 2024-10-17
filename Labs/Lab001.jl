@@ -158,10 +158,12 @@
     ),
     Activity(
         """
-        Use tuples to assign values in parallel to the variables x and y:
+        Use tuples to assign values in parallel (i.e. simultaneously) to the variables x and y:
             (x,y) = (2,3)
 
-        Then give me (as a string) the code to swap the values of two variables x and y:
+        Now experiment in the julia console to discover the single line of julia code that swaps
+        In Parallel (i.e. simultaneously) the values contained in the two variables x and y. Then
+        reply() me that line of code as a string:
         """,
         "(x,y) = (y,x)",
         x -> (r=replace(x," "=>""); r == "(x,y)=(y,x)" || r == "(y,x)=(x,y)")
