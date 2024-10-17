@@ -301,7 +301,9 @@
         """
         OK! Now things are getting moving! :)
 
-        Let's test the count_seq() function a little. What value do you get if you call:
+        Let's test the count_seq() function a little. First, copy the necessary lines of code from
+        the julia console into the VSC console, in order to read the data from the file pax6_hs.dat
+        into the variable data_hs. Now, what value do you get if you call:
             Computation.count_seq("GCAT",data_hs[1])
         """,
         "",
