@@ -17,8 +17,9 @@
         activities and questions to explore the basics of programming in any computer language.
         Feel free to experiment at any time by entering your own commands at the julia prompt! :)
         
-        I will interpret anything you enter as an argument of the function reply() as an answer to
-        the current question. Try this now - at the julia prompt, enter the following code:
+        Whenever you enter some value as an argument of the function reply(), I will interpret that
+        argument as an answer to the current question. Try this now - at the julia prompt, enter
+        the following code:
             concept = "Anatta"
 
         Then enter your answer as:
@@ -36,7 +37,8 @@
             x = 5
 
         or else I will write it within the text enclosed in backticks, like this: `sin(x)`. Enter
-        each of these two lines of code now, then tell me your result like this:
+        the above line of code now, then enter the following line to tell me the result of your
+        calculation:
             reply(sin(x))
         """,
         "",
@@ -44,8 +46,8 @@
     ),
     Activity(
         """
-        Every variable has a Type that determines how julia will handle it. Find out the type of
-        your new variable x now:
+        Every variable has a Type that determines how julia will handle the variable. Find out the
+        type of your new variable x now:
             typeof(x)
 
         then reply() me the result of your inquiry:
@@ -79,7 +81,7 @@
             -   If I use a julia function whose meaning you are curious about, try pressing `?` at
                 the julia prompt, then entering the name of the function. This provides quick help.
 
-        Try this now: Enter `?sin`, then reply() me whether this statement is `true` or `false`:
+        Try this now: Enter `?sin`, then reply() me whether the following statement is `true` or `false`:
             "The function sin(x) computes the sine of x, where x is in degrees."
         """,
         "Look carefully at the units of the angle x",
@@ -125,9 +127,9 @@
     ),
     Activity(
         """
-        Functions are centrally important in julia, and the language offers us three
-        different ways of defining them. Use this format to define your own squaring
-        function, then use it to compute the square of -253:
+        Functions are Very Important in julia, and the language offers us three different ways of
+        defining them. Use the following format to define your own squaring function, then use the
+        new function sq1() to compute the square of -253:
             function sq1( x)
                 x * x
             end
@@ -146,9 +148,9 @@
     ),
     Activity(
         """
-        Finally, functions are so important in Julia that we often want to create an
-        anonymous function quickly in the middle of a calculation. Use the following
-        anonymous notation to compute the square of the complex number 1+im:
+        Finally, functions are so important in Julia that we often want to create an anonymous
+        function quickly in the middle of a calculation. Use the following anonymous notation to
+        compute the square of the complex number 1+im, then check julia's result on paper:
             (x -> x*x)(1+im)
         """,
         "2im",
@@ -159,7 +161,7 @@
         Use tuples to assign values in parallel to the variables x and y:
             (x,y) = (2,3)
 
-        Then give me (as a string) the code to swap the values of x and y:
+        Then give me (as a string) the code to swap the values of two variables x and y:
         """,
         "(x,y) = (y,x)",
         x -> (r=replace(x," "=>""); r == "(x,y)=(y,x)" || r == "(y,x)=(x,y)")
@@ -303,19 +305,23 @@
                 I choose one means of travel, I no longer have to worry about how to do the other;
             -   Iteration: If I want to read a book, I read page 1, then I read page 2, then 3, 4,
                 and so on. I apply the same skill of reading to one page after another;
-            -   Recursion: If I want to travel from here to Mullaitivu, I plan travel between the
-                two nearest airports, then I plan travel between those airports and my destination
-                and home towns, then between the two towns and my exact destinantion and home
-                addresses. I use travel-planning skills to solve smaller and smaller sub-problems.
+            -   Recursion: If I want to travel from here to Mullaitivu, I plan a flight between the
+                two nearest airports, then I plan a train journey between each airport and my
+                destination and home towns, then finally, I plan a bus journey between the train
+                station in each town and my exact home and destination addresses. That is, I use
+                recursion to bread down my travel-planning problem into solve smaller and smaller
+                sub-problems.
+
+        In the following activities, we will use the factorial problem to explore each of these
+        three problem-solving techniques. 
         """,
         "",
         x -> true
     ),
     Activity(
         """
-        We will use the factorial problem to explore these three techniques. To calculate the
-        factorial of the number 5 - factorial(5) - we multiply together all of the positive
-        integers less than or equal to 5:
+        To calculate the factorial of the number 5 - factorial(5) - we multiply together all of the
+        positive integers less than or equal to 5:
             factorial(5) == 1 * 2 * 3 * 4 * 5 == 120
         
         The factorial problem is the task of calculating this value. First, explore the julia
