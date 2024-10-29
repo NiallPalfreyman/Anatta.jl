@@ -348,7 +348,7 @@
     Activity(
         """
         However, our abstract types Organism and Animal are not yet contained in Main, but only
-        inside Organisms. So now extend the export line at the beginning of the Organisms moule
+        inside Organisms. So now extend the export line at the beginning of the Organisms module
         to look like this:
             export Weasel, greeting, Organism, Animal
 
