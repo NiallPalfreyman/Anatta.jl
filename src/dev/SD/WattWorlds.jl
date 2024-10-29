@@ -76,12 +76,12 @@ const CAPTURE_RADIUS = 1.0
 const CAPTURE_CONCAVITY = 2.5
 "Descriptions of available benchmark test regimes"
 const REGIMES = [
-	"Basic stabilisation (constant feed rate and omega context)"
-	"Ontogenic stabilisation (single-step feed rate in constant omega context)"
-	"Phylogenic stabilisation (constant feed rate in single-step omega context)"
-	"Ontogenic stabilisation (slow periodic feed rate in constant omega context)"
-	"Phylogenic stabilisation (constant feed rate in slow periodic omega context)"
-	"Agency (Transfer fast periodic feed control across slow periodic omega context)"
+	"Basic stabilisation (constant feed and context)"
+	"Ontogenic adjustment (single-step feed; constant context)"
+	"Phylogenic adjustment (constant feed; single-step context)"
+	"Ontogenic stabilisation (periodic feed; constant context)"
+	"Phylogenic stabilisation (constant feed; periodic context)"
+	"Agency (Transfer fast periodic feed control across slow periodic context)"
 ]
 
 #-----------------------------------------------------------------------------------------
@@ -511,6 +511,49 @@ function demo( regime::Int=1)
 	Legend( fig[2,2], ax_a)
 	display( fig)
 	fig
+end
+
+#-----------------------------------------------------------------------------------------
+"""
+	publish()
+
+Build and run WattWorld, and save results to publishable graphic.
+"""
+function publish( regime::Int=1)
+	watt = WattWorld(N_PLAYERS,regime=regime)
+	println(
+		"\n======= Simulating a $N_PLAYERS-player WattWorld using regime $regime: ",
+		"$(regime_string(watt)) ======="
+	)
+	report(watt)
+	snapshots = trajectory(watt,DURATION,Δt=RK2_STEP)
+	report(watt)
+
+	# Display resource, activation and behaviour parameters graphically:
+	fig = Figure( fontsize=30,linewidth=5,resolution=(1500,1200))
+	compressed_t = 1:GRAPHICS_COMPRESSION:length(snapshots)
+	t_axis = ((s->s.t).(snapshots))[compressed_t]
+	ax_R = Axis(fig[1,1], xlabel="time", title="Regime $regime: R, Ω, F(t)")
+	lines!( ax_R, t_axis, ((s->s.R).(snapshots))[compressed_t], label="Resource")
+	lines!( ax_R, t_axis, ((s->s.Ω).(snapshots))[compressed_t], label="Omega")
+	lines!( ax_R, t_axis, ((s->s.F).(snapshots))[compressed_t], label="Feed rate")
+	Legend( fig[1,2], ax_R)
+
+	ax_a = Axis(fig[2,1], xlabel="time", title="Activation (a)")
+	ax_K = Axis(fig[3,1], xlabel="time", title="Half-saturation (K)")
+
+	for i in 1:N_PLAYERS
+		acts = ((s->s.players[i].a).(snapshots))[compressed_t]
+		if any( acts[end÷10:end] .> A_REPORT)
+			# Display players with significant activation in the last 2/3 of the simulation:
+			lines!( ax_a, t_axis, acts, label="Player $(i)")
+			lines!( ax_K, t_axis, ((s->s.players[i].B.K).(snapshots))[compressed_t], 
+				label="Player $(i)"
+			)
+		end
+	end
+	Legend( fig[2,2], ax_a)
+	save( "Publish$regime.jpg", fig)
 end
 
 end
