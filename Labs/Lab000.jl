@@ -351,7 +351,7 @@
 
         However, the difficulty is this: If Strings always think the backslash indicates a special
         character, what do we type in a String if we simply want to signify the backslash character
-        itself?! Maybe you can guess by looking at the BINDIR variable. reply() me your answer as
+        itself?! Maybe you can guess by looking at the Sys.BINDIR value. reply() me your answer as
         a string containing a backslash character:
         """,
         "",
@@ -359,8 +359,8 @@
     ),
     Activity(
         """
-        I should perhaps mention that if you are working in Unix, you won't have this double-
-        backslash problem - if so, adapt the following instructions to what you see on screen ...
+        I should perhaps mention that if you are working in Unix or on a Mac, you won't have this
+        double-backslash problem - if so, adapt these instructions to what you see on screen ...
 
         We want to convert the Sys.BINDIR String variable into information for VSC, so we will
         delete one backslash in each pair. Also, we want to specify not just the location, but also
@@ -372,7 +372,7 @@
             -   Paste the contents of Sys.BINDIR into the edit window for this variable (you will
                 get a message saying the julia language server couldn't start, but don't panic!)
             -   Go through the edit window, deleting one backslash in each pair
-            -   Add "\\julia.exe" at the end of the edit window contents
+            -   Add "\\julia.exe" at the end of the edit window contents ("\\julia" on a Mac)
             -   Close the settings tab.
         """,
         "",
