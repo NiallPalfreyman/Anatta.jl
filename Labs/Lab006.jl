@@ -76,8 +76,8 @@
         the value 7. When change_paula() ends, the variables in its local scope are thrown away,
         and the LOCAL paula disappears.
 
-        If we REALLY want to change the global value of paula, we can do so by redefining the
-        function change_paula():
+        If we REALLY want to change the global value of paula, we can do so by redefining
+        the function change_paula():
             function change_paula()
                 global paula = 7
                 paula
@@ -105,7 +105,7 @@
         named linus:
         """,
         "",
-        x -> x==[5,4,7,2,1]
+        x -> x==Main.linus
     ),
     Activity(
         """
@@ -132,23 +132,12 @@
     ),
     Activity(
         """
-        OK, so putting change_paula1() inside the module MyModule means it cannot interfere
-        with the value of our global variable paula. But wait! We know that we can load
-        modules into global scope by means of the keyword "using": will that make it possible
-        for users change paula's value by accident? Load the module MyModule now:
-            using .MyModule
-
-        Repeat the previous experiment - what is the global value of paula afterwards?
-        """,
-        "You should find that change_paula1() is still safe, even when you have loaded MyModule",
-        x -> x==7
-    ),
-    Activity(
-        """
-        Great! Now that we know how to hide variables and functions inside a module, we can do
-        some real live software development! In later laboratories we will develop our own
-        software modules; however, these modules can get quite complex, so we must first learn
-        to build them up step-by-step within a file.
+        OK, so putting change_paula1() inside the module MyModule means it cannot interfere with
+        the value of our global variable paula! Now that we know how to hide variables and
+        functions inside a module, we can do some real live software development!
+        
+        In later laboratories we will develop our own software modules; however, these modules can
+        get quite complex, so we must first learn to build them up step-by-step within a file.
 
         We will start by modifying some code that I have written. In the subfolder
         `Development\\Computation` of your Anatta home folder is the julia file Replicators.jl.
