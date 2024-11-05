@@ -387,8 +387,8 @@
         """
         It's like magic, isn't it? :)
 
-        Memoisation is enormously helpful in analysing biological sequence structures that require
-        us to perform exponentially complex searches through trees of sequence combinations.
+        Memoisation is enormously helpful when we analyse biological sequence structures that
+        require us to perform exponentially complex searches through trees of sequence combinations.
         """,
         "",
         x -> true
