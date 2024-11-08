@@ -5,19 +5,26 @@
 # This Subject draws heavily upon the ideas in the following book:
 #   Gonczarowski, Y.A. & Nisan, N. (2022). Mathematical logic through Python. CUP.
 #
-# Author: Niall Palfreyman, 30/04/2023
+# Author: Niall Palfreyman, 8/11/2024.
 #========================================================================================#
-include("../src/dev/Logic/Syntax.jl")
+include("../src/dev/Logic/Propositions.jl")
+parse_tests = [
+    ("~p211","~p211",""),
+    ("((a02|a5)->~a11)","((a02 | a5) -> ~a11)",""),
+    ("((b|b5))", nothing, ""),
+    ("c&","c","&"),
+    ("~~~d~","~~~d","~")
+]
 [
     Activity(
         """
         Hi! Welcome to Anatta Subject 100:
-            Formal Logic - Beliefs have structure, but structures ALWAYS have gaps!
+            Formal Logic - Beliefs have structure, and structures ALWAYS have gaps!
         
         In Subject 0, we learned how to use julia's computational structures to describe and
-        manipulate data. Knowing how much we can do with programming languages, it would be easy to
-        believe that we can use structures to describe ANYTHING that we observe in the world around
-        us. After all, a structure is a set of things together with the relations between those
+        manipulate data. Now we know how powerful programming languages are, we might easily
+        believe that we can use structures to describe ANYTHING that we observe around us.
+        After all, a structure is just a set of things together with the relations between those
         things, so surely everything consists of things and relations, doesn't it?!
 
         In Subject 100, we shall find reasons to both believe and disbelieve this hypothesis ...
@@ -27,11 +34,12 @@ include("../src/dev/Logic/Syntax.jl")
     ),
     Activity(
         """
-        Ferdinand de Saussure (1857-1913) proposed the idea that languages consist of signs
+        Ferdinand de Saussure (1857-1913) suggested the idea that languages consist of signs
         that possess two parts: a Signifier (a linguistic structure such as a word), and a
         Signified (the meaning of that word). This idea developed during the twentieth century 
-        into Formal Linguistics, which divides the study of languages into two separate areas:
-            - Syntax is the study of structural forms;
+        into the subject of Formal Linguistics, which divides the study of languages into two
+        separate areas:
+            - Syntax is the study of the formal structure of what we believe;
             - Semantics is the study of the meanings signified by these syntactic forms.
 
         In this lab, we explore the syntax of beliefs; in later labs, we look at their semantics.
@@ -66,9 +74,10 @@ include("../src/dev/Logic/Syntax.jl")
         us prove conclusions from the sentence s1 such as:
             "If Ani doesn't walk to the bus-stop or doesn't take the 465 bus, she doesn't go to school"
 
-        To achieve this, we will use julia Strings to denote propositions. In the next activity, I
-        will show you a set of grammar rules that define the structure of a propositional Well-Formed
-        Formula (WFF) ...
+        To achieve this, we will use julia Strings to denote propositional sentences, and then we
+        will program a way to analyse these sentences into well-formed propositional formulas. In
+        the next activity, I'll show you a set of grammar rules that define the structure of a
+        Well-Formed Formula (WFF) ...
         """,
         "",
         x -> true
@@ -81,26 +90,26 @@ include("../src/dev/Logic/Syntax.jl")
             variable    : letter * number.
             constant    : "T"; "F".
             unary_wff   : "~" * wff.
-            binary_wff  : "("*wff*"&"*wff*")"; "("*wff*"|"*wff*")"; "("*wff*"->"*wff*")".
+            binary_wff  : "("*wff * "&" * wff*")"; "("*wff * "|" *wff*")"; "("*wff * "->" * wff*")".
             letter      : "a"; "b"; "c"; ...; "x"; "y"; "z".
             number      : digit; digit * number.
-            digit       : "1"; "2"; "3"; "4"; "5"; "6"; "7"; "8"; "9"; "0".
+            digit       : "0"; "1"; "2"; "3"; "4"; "5"; "6"; "7"; "8"; "9".
 
         reply() me a String containing a valid constant.
         """,
         "Enter reply(string), where string obeys the above rules for a constant (no spaces!)",
-        x -> Syntax.is_constant(x)
+        x -> Propositions.is_constant(x)
     ),
     Activity(
         """
         Now reply() me a String containing the name of a valid variable.
         """,
         "Enter reply(string), where string obeys the above rules for a variable",
-        x -> Syntax.is_variable(x)
+        x -> Propositions.is_variable(x)
     ),
     Activity(
         """
-        The single unary operator available means NOT, so
+        The single available unary operator means NOT, so
             ~p3 means: "It is NOT the case that Ani takes the 465 bus"
 
         reply() me the wff meaning "It is NOT the case that Ani goes to school":
@@ -116,19 +125,19 @@ include("../src/dev/Logic/Syntax.jl")
         reply() me ANY binary operator:
         """,
         "Remember that we are working specifically with String structures at the moment",
-        x -> Syntax.is_binary(x)
+        x -> Propositions.is_binary(x)
     ),
     Activity(
         """
         Over the last four activities, I have been checking your replies using the following
-        methods implemented in the module Syntax:
+        methods implemented in the module Propositions:
             is_constant(), is_variable(), is_unary() and is_binary()
 
-        Soon, I will ask you to implement some extra methods in the Syntax module, so please now
-        setup() the Logic library in your Anatta home folder, open the file Syntax.jl in VSC and
-        study the above four methods.
+        Soon, I will ask you to implement some extra methods in the Propositions module, so please
+        now setup() the Logic library in your Anatta home folder, open the file Propositions.jl in
+        VSC and study the above four methods.
 
-        What is the name of the function I use to check whether a variable contains a number?
+        What is the name of the method I use to check whether a variable name ends in a number?
         """,
         "Remember that a variable consists of a letter concatenated with a number",
         x -> x==Main.tryparse || occursin("tryparse",x)
@@ -136,20 +145,21 @@ include("../src/dev/Logic/Syntax.jl")
     Activity(
         """
         To prepare for the implementation activities, make sure your julia console is located
-        within your Anatta home folder, then include and load the Syntax module:
-            include("Development/Logic/Syntax.jl")
-            using .Syntax
+        within your Anatta home folder, then include and load the Propositions module:
+            include("Development/Logic/Propositions.jl")
+            using .Propositions
         """,
         "Follow all THREE instructions (home, include, using), then reply()",
-        x -> isfile("Development/Logic/Syntax.jl") && Main.Syntax.WFF isa Type
+        x -> isfile("Development/Logic/Propositions.jl") && Main.Propositions.WFF isa Type
     ),
     Activity(
         """
-        In the Syntax module, I have also defined a type WFF that stores a wff in the form of a
-        tree structure. Study this definition in VSC, then enter this line at the julia prompt:
+        In the Propositions module, I have also defined a type WFF that stores well-formed formulae
+        in a tree structure. Study that definition in VSC, then enter the following line at the
+        julia prompt, which creates the WFF with string representation "~(s271 & s465)":
             wff = WFF("~",WFF("&",WFF("s271"),WFF("s465")))
         
-        Now reply() me the value of the following expression:
+        Now first guess, and then reply() me the value of the following expression:
             wff.arg1.arg1.head
         """,
         "Make sure you understand how this value relates to the definition of wff",
@@ -157,30 +167,31 @@ include("../src/dev/Logic/Syntax.jl")
     ),
     Activity(
         """
-        Before starting on your own implementation, I want you to understand how important it is to
-        use recursion when we are analysing structures. Enter `wff` at the julia prompt now, and
-        notice what you see ...
+        Before starting on your own implementation, I want you to understand how Very Important it
+        will be for us to use Recursion when we are analysing structures. Enter `wff` at the julia
+        prompt now, and notice that the representation you see is formatted prettily as a string ...
 
         You should see the string: "~(s271 & s465)". Now, answer me this:
-            Which method in the Syntax module specifies how to convert a WFF into a String like this?
+            Which method in the Propositions module specifies how to convert a WFF into a String?
         """,
-        "Take a look in the file Syntax.jl in VSC",
-        x -> x == show || occursin("show",x)
+        "Take a look in the file Propositions.jl in VSC",
+        x -> x == Base.show || occursin("show",x)
     ),
     Activity(
         """
-        Take a look at the method Base.show() in Syntax. This method extends the show() method from
-        the julia module Base, which is usually responsible for converting variables into a String.
-        However, since Base knows nothing about our WFF type, we must extend show() to handle WFFs.
+        Take a look at the method Base.show() in Propositions. This method extends the show()
+        method from the julia module Base, which is usually responsible for converting variables
+        into a String. However, since Base knows nothing about our WFF type, we must extend show()
+        to handle WFFs.
 
-        Notice the structure of the method Syntax.Base.show(). Do you see how it uses an if-
+        Notice the structure of the method Propositions.Base.show(). Do you see how it uses an if-
         statement to choose how to handle wff? If wff were a variable or a constant, show() would
         simply print the corresponding string. However, if wff were a binary formula, show() would
         ask print() to link the individual arguments with the binary operator and place them
         between brackets. And if print() discovers that arg1 is a WFF, it simply goes back to show()
         to ask it how to print this new WFF as a string.
 
-            YOU will also need to use recursive calls to handle nested structures like WFFs!
+            YOU will also need to use recursion to handle nested WFF structures in your code!
 
         Test the show() method now by replying me the following String result:
             string(WFF("->",WFF("->",WFF("p"),WFF("q")),WFF("->",WFF("~",WFF("q")),WFF("~",WFF("p")))))
@@ -192,24 +203,26 @@ include("../src/dev/Logic/Syntax.jl")
         """
         OK, now it's your turn to write some code - and remember that you'll need to use recursion!
         
-        In the file Syntax.jl, you will find a method Syntax.variables() which at present just
-        contains dummy code. The aim of variables() is to returns the Set of all variable names
-        that appear in a given WFF. When you have completed your implementation, entering
-        `variables(wff)` at the julia prompt should return the result: Set(["s271","s465"]).
+        In the file Propositions.jl, you will find a method Propositions.variables() which at
+        present just contains skeleton code. The aim of variables() is to return the Set of all
+        variable names that appear in a given WFF. Using our previous definition of wff:
+            wff = WFF("~",WFF("&",WFF("s271"),WFF("s465"))),
 
-        When you are satisfied with your code, make sure it is included. Then enter reply(), and I
-        will perform my own check of your code and let you know whether your code passed the test.
+        entering `variables(wff)` at the julia prompt should return: Set(["s271","s465"]). As soon
+        as you are satisfied with your code, make sure you include Propositions.jl, enter reply(),
+        and I will perform my own check of your code to let you know whether it passes my tests.
         """,
         "You will need to use recursion: variables(wff) calls itself on each argument of wff",
-        x -> let MFF = Main.Syntax.WFF, wff = MFF("|",MFF("~",MFF("->",MFF("p1"),MFF("q2"))),MFF("F"))
-            varset = Main.Syntax.variables(wff)
+        x -> let MFF = Main.Propositions.WFF
+            wff = MFF("|",MFF("~",MFF("->",MFF("p1"),MFF("q2"))),MFF("F"))
+            varset = Main.Propositions.variables(wff)
             println("Testing variables in WFF ", wff, " ... ", "Returned result: ", varset)
             varset == Set(["p1","q2"])
         end
     ),
     Activity(
         """
-        Now implement the method Syntax.operators(), which returns the Set of all operators that
+        Now implement the method Propositions.operators(), which returns the Set of all operators that
         appear in a WFF. By operators, I mean the following:
             "&", "|", "~", "->", "T", "F"
         
@@ -218,112 +231,141 @@ include("../src/dev/Logic/Syntax.jl")
         perform my own test of your code and let you know how it went.
         """,
         "Again, you need recursion: operators(wff) calls itself on each argument of wff",
-        x -> let MFF = Main.Syntax.WFF, wff = MFF("|",MFF("~",MFF("->",MFF("p"),MFF("~",MFF("q")))),MFF("F"))
-            varset = Main.Syntax.operators(wff)
-            println("Testing operators in WFF ", wff, " ... ", "Returned result: ", varset)
-            varset == Set(["|","~","->","F"])
+        x -> let MFF = Main.Propositions.WFF,
+            wff = MFF("|",MFF("~",MFF("->",MFF("p"),MFF("~",MFF("q")))),MFF("F"))
+            opset = Main.Propositions.operators(wff)
+            println("Testing operators in WFF ", wff, " ... ", "Returned result: ", opset)
+            opset == Set(["|","~","->","F"])
         end
     ),
     Activity(
         """
+        Great! We know how to use recursion to analyse the structure of a WFF: Give yourself a good
+        pat on the back! :)
+        
+        Our next task is to work out how to build a WFF from a String - this is called Parsing the
+        the String's structure. Parsing is extremely important in all formal languages, and
+        particularly in string-manipulation languages such as julia. Reply me the method that
+        julia uses to parse a string containing julia code:
+        """,
+        "Rather than giving me the name of the method, give me the method itself",
+        x -> x == Meta.parse
+    ),
+    Activity(
+        """
+        Our language for propositional logic is deliberately very simple. Sentence strings in this
+        language contain characters, and these characters form meaningful Tokens of the language,
+        such as "&", "q123" or "->". A very important feature of our language is that it is
+        Context-Free - that is, the meaning of each term of a sentence is attached ONLY to that
+        term, and never depends on the surrounding sentence context in which that term appears.
+
+        For example, take a look at this part of our propositional logic grammar:
+            wff         : variable; constant; unary_expr; binary_expr.
+            unary_wff   : "~" * wff.
+            binary_wff  : "("*wff * "&" * wff*")"; "("*wff * "|" *wff*")"; "("*wff * "->" * wff*")".
+
+        Notice that a binary_wff has the structure of two wff terms combined by a binary operator,
+        enclosed between brackets. The structures of these two terms are completely independent of
+        each other, so we can parse the first term without needing to think about the second term.
         """,
         "",
         x -> true
     ),
     Activity(
         """
+        So our Propositional Logic language is entirely context-free, and this is very useful for
+        parsing sentence structures. To Parse a string means that we analyse the wff structure that
+        it describes, and simultaneously build that structure as a wff. The fact that our language
+        is context-free means that we can ALWAYS parse strings by moving strictly from left to
+        right. This is called "LL parsing": we both read the string and build its wff by starting
+        from its Left end, then moving steadily rightwards along the string.
+
+        For example, take a look now at the code for the learning activity method parse_binary().
+        You will see that the code first asks whether the string contains a leading '('. If that is
+        the case, the grammar rules tell us that the open bracket MUST be followed by a WFF,
+        followed by a binary operator ("&", "|", "->"), another WFF, and a closing bracket ')'. If
+        the string does not have precisely this structure, it does not represent a valid WFF.
+
+        What single character at the Left end of a string tells us that it describes a unary_wff?
         """,
         "",
-        x -> true
+        x -> occursin('~',x)
     ),
     Activity(
         """
+        If you study the code in Propositions.jl, you will see that I have implemented all of the
+        methods for parsing propositions apart from parse_binary(). Study all the methods that
+        I have implemented, to get a feel for how they work together to parse a string into a wff.
+        When you understand how parsing works, your next task is to use my parsing methods as
+        models to help you write your own implmentation of the method parse_binary().
+
+        Your parse_binary() implementation should do the following:
+        -   It accepts a single string as argument, and returns a Tuple containing two items;
+        =   It attempts to parse the string as a binary expression (either (wff1 & wff2),
+            (wff1 | wff2) or (wff1 -> wff2) ) at the string's Left end. If this parsing is
+            successful, the return Tuple looks like this: (wff::WFF,tail::String), where wff is the
+            parsed WFF and tail is the remainder string to the right of the parsed wff.
+        -   If parse_binary() cannot parse the string as a binary expression, it returns a Tuple
+            (nothing,"error msg"), whose first element is `nothing`, and whose second element is an
+            error string which helps users to understand what went wrong.
+        
+        Implement parse_binary() now, then load your new Propositions module and reply() me. I will
+        then perform my own tests on your code:
         """,
-        "",
-        x -> true
+        "A binary_wff looks like this: (p5 & wff). Use parse_wff() to parse the terms p5 and wff.",
+        x -> begin 
+            for (s,w,r) in parse_tests
+                ww, rr = Main.Propositions.parse_wff(s)
+                print("Testing your parsing of ", s, " ... ")
+                if (string(ww)!==string(w)) || (ww!==nothing && r!=rr)
+                    println( "Returned result ", (ww,rr), " instead of: ", (w,r))
+                    return false
+                end
+                println()
+            end
+            println( "All tests passed with flying colours! :)")
+            true
+        end
     ),
     Activity(
         """
+        Congratulations!! You have just successfully implemented an LL-parser for the entire
+        language (PL) of Propositional Logic. Well done!!
+
+        Before finishing this lab, take a moment to think a little about what your work proves ...
+        Our language PL for describing WFFs has the useful property that we can always recognise a
+        complete WFF by reading its PL description from left to right. This means that the trailing
+        tail-string at the end of a well-formed PL sentence is ALWAYS empty. For if it weren't, the
+        constructed WFF would be incomplete. Your work therefore proves the following important
+        theorem about WFFs:
+            As soon as we have recognised a WFF, it can NEVER be the first term in a longer WFF!
+
+        Use this theorem together with the method parse_wff() to implement the two methods is_wff()
+        and parse(). Their specifications and skeleton code are contained in Propositions.jl.
         """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
+        "Again, just implement the two methods, then reply() me, and I will check your code.",
+        x -> begin
+            for (s,w,r) in parse_tests
+                err = isnothing(w)
+                has_tail = !isempty(r)
+                iswff = !err && !has_tail
+                print("Testing your is_wff( \"$s\") ... ")
+                if Main.Propositions.is_wff(s) != iswff
+                    println( "Returned result ", !iswff, " instead of: ", iswff)
+                    return false
+                end
+                println()
+                if iswff
+                    print("Testing your parse( \"$s\") ... ")
+                    ww = Main.Propositions.parse(s)
+                    if string(ww) != w
+                        println( "Returned result ", ww, " instead of: ", w)
+                        return false
+                    end
+                    println()
+                end
+            end
+            true
+        end
     ),
 ]
