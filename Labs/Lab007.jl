@@ -168,7 +168,7 @@
         Great! :) Now we need to check whether this new implementation has lower complexity. Recall
         that we measured the complexity of our earlier implementation using this test code:
             for i in 1:12
-                @time i Computation.count_common(prod(data_hs[1:i]),prod(data_mm[1:i]),100)
+                @time Computation.count_common(prod(data_hs[1:i]),prod(data_mm[1:i]),100)
             end
 
         To repeat this test scenario, you'll first need to read in the datasets data_hs and
@@ -182,7 +182,7 @@
         Now that you have read in the datasets data_hs and data_mm, run the following lines
         of test code once for count_common() and once for fast_common():
             for i in 1:12
-                @time i Computation.count_common(prod(data_hs[1:i]),prod(data_mm[1:i]),100)
+                @time "\$i" Computation.count_common(prod(data_hs[1:i]),prod(data_mm[1:i]),100)
             end
             
         Finally, run each of these two tests once again, because some of the time in the first
@@ -346,10 +346,11 @@
         n, so our method has time complexity O(2^n). This makes it very difficult to calculate, for
         example, fib(99).
 
-        This is where we use Memoisation. Suppose we want to calculate fib(21) an fib(25). To
-        calculate either of these, we must first calculate fib(20), so it makes sense to remember
-        (Memoise) the the value of fib(20) from the first calculation, so that we don't have to
-        go to the trouble of calculating it again in the second calculation. Let's do this ...
+        This is where we can use Memoisation to make our calculation more efficient. Suppose we want
+        to calculate fib(21) an fib(25). To calculate either of these, we must first calculate
+        fib(20), so it makes sense to remember (Memoise) the value of fib(20) from the first
+        calculation, so that we don't have to go to the trouble of calculating it again in the
+        second calculation. Let's do this ...
 
         In Computation.jl, in the line immediately BEFORE fib(), insert this declaration:
             fib_table = Dict{Int,Int}()
