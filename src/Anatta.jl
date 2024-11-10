@@ -53,7 +53,7 @@ function go()
 	println( "Welcome to Anatta: A julian guide to understanding the world in terms of processes :)\n")
 	print( "My name is Ani! What's yours?  ")
 	session.learner = readline()
-	println( "\nHi ", session.learner, "! Just setting things up for you ...\n")
+	println( "\nHi ", session.learner, "! Just setting things up for you ...")
 
 	# Ensure session learner file exists:
 	lnr_file = joinpath(session.anatta_config,session.learner*".lnr")
@@ -277,6 +277,7 @@ function nextlab( lab_num::Int = -1, current_act::Int = 1)
 	save()
 
 	# Display welcome message to the new laboratory.
+	println()
 	println( "Great - I've set up the laboratory. Please note that if you have just completed")
 	println( "another lab in this Julia console, name conflicts may arise. You can clear these")
 	println( "by simply restarting the console and restarting Anatta.\n")
