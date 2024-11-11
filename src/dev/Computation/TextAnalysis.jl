@@ -133,7 +133,7 @@ is written in English in the style of Jane Austen (the author of Pride and Preju
 """
 function demo()
 	println("\n============ Demonstrate Nineteenth-century novel-writing: ===============")
-	println("Here are the first 100 characters of the novel Pride and Prejudice ...")
+	println("Here are the first 150 characters of the novel Pride and Prejudice ...")
 	pandp_site = "https://shorturl.ac/pandp"
 	raw_text = read(download(pandp_site),String)
 	start_index = findfirst( "It is a truth", raw_text)[1]
@@ -142,7 +142,7 @@ function demo()
 	display( pandp_text[1:150])
 	println()
 
-	ngram_order = 5
+	ngram_order = 3
 	num_words = 150
 	println("... and now here is our $num_words-word novel based on $ngram_order-grams:")
 	println()
