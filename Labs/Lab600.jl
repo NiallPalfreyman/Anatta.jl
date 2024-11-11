@@ -1,15 +1,15 @@
 #========================================================================================#
 #	Laboratory 600
 #
-# Welcome to course 600: An Introduction to Agent-Based Modelling!
+# Welcome to course 600: An Introduction to Enactive and Agent-based Modelling!
 #
-# Author:  Niall Palfreyman, 1/7/2022.
+# Author:  Niall Palfreyman, 1/1/2025.
 #========================================================================================#
 [
     Activity(
         """
         Hi! Welcome to Anatta Subject 600:
-            Agent-based systems - Knowledge is a property of populations, not of individuals
+            Enactive dynamics - Knowledge is a property of populations, not of individuals
         
         Course 600 is immediately under construction - its grass is growing under your feet as you
         watch! In this course, we use DSM to study biological organism systems that consist of many

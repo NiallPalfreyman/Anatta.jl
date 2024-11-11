@@ -64,7 +64,7 @@
             Subject 3: Simulation physics     - Using structures to approximate stories efficiently
             Subject 4: Quantum computing      - Small stories generate large structures
             Subject 5: Quantum thermodynamics - Small structures generate large stories
-            Subject 6: Agent-based systems    - Knowledge is a property of populations, not individuals
+            Subject 6: Enactive dynamics      - Knowledge is a property of populations, not individuals
             Subject 7: Relativity theory      - Organisms ENACT: they abstract knowledge through action
             Subject 8: Quantum-field theory   - Knowledge combines both large and small stories
         """,
