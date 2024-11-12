@@ -236,7 +236,7 @@
         Right, now let's eliminate duplicate entries from our sample_text. First, ensure that the
         module TextAnalysis contains the following method:
             function entry_counts(list::Vector)
-                counts = Dict{String,Int}()
+                counts = Dict()
                 for entry in list
                     if haskey(counts,entry)
                         counts[entry] += 1
