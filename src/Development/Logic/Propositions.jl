@@ -1,15 +1,13 @@
 #========================================================================================#
-"""
-	Propositions
-
-Module Propositions encapsulates the syntactic structure of Propositional Logic.
-	
-Author: Niall Palfreyman (November 2024).
-"""
+#		Semantics
+#
+# Propositions
+#
+# Module Propositions encapsulates the syntactic structure of Propositional Logic.
+#========================================================================================#
 module Propositions
 
-export WFF, parse, is_wff, is_variable, is_constant, is_unary, is_binary,
-		show, variables, operators
+export WFF, is_wff, operators, proposition, show, variables
 
 #-----------------------------------------------------------------------------------------
 # Module types:
@@ -17,18 +15,15 @@ export WFF, parse, is_wff, is_variable, is_constant, is_unary, is_binary,
 """
 	WFF
 
-A WFF is a Well-Formed propositional Formula, e.g., "~(a13 | (b5 -> T))"
+A WFF is a Well-Formed propositional Formula, e.g., "~(a13 | (b5 -> T))". It possesses a head,
+representing either a constant (T/F), a variable name ("a91") or an operator that combines the
+next two argument fields.
 """
 struct WFF
-	head::String
-	arg1::Union{WFF,Nothing}
-	arg2::Union{WFF,Nothing}
+	head::String				# Operator
+	arg1::Union{WFF,Nothing}	# Argument 1
+	arg2::Union{WFF,Nothing}	# Argument 2
 
-	"""
-		WFF( head::String, arg1=nothing, arg2=nothing)
-
-	Construct a WFF from the given head (var, num or op), arg1 (WFF) and arg2 (WFF).
-	"""
 	function WFF( head::String, arg1=nothing, arg2=nothing)
 		if is_variable(head) || is_constant(head)
     		new(head,nothing,nothing)
@@ -126,11 +121,10 @@ function variables(wff::WFF)
 	if  is_constant(wff.head)
 		Set{String}([])
 	elseif is_variable(wff.head)
-		Set(["Ani :)"])
+		Set(["a91"])
 	elseif is_unary(wff.head)
-		Set(["Ani :)"])
-	else
-		# is_binary:
+		Set(["a91"])
+	else # is_binary:
 		union(variables(wff.arg1),variables(wff.arg2))
 	end
 end
@@ -146,12 +140,11 @@ function operators(wff::WFF)
 	if  is_variable(wff.head)
 		Set{String}([])
 	elseif is_constant(wff.head)
-		Set(["Ani :)"])
+		Set(["~"])
 	elseif is_unary(wff.head)
-		Set(["Ani :)"])
-	else
-		# is_binary:
-		Set(["Ani :)"])
+		Set(["~"])
+	else # is_binary:
+		Set(["~"])
 	end
 end
 
@@ -159,14 +152,14 @@ end
 # Parsing methods:
 #-----------------------------------------------------------------------------------------
 """
-	parse( sentence::String) :: WFF
+	Base.parse( Type{T}, sentence::AbstractString) :: WFF where T<:WFF
 
-parse() assumes that its argument is a valid sentence of the language PL, and returns the WFF
+Assume the argument sentence is a valid sentence of the language PL, parse it as a WFF
 described by that sentence.
 """
-function parse( sentence::String) :: WFF
+function Base.parse( ::Type{T}, sentence::AbstractString) :: WFF where T<:WFF
 	# Learning activity:
-	WFF("a41")
+	WFF("a91")
 end
 
 #-----------------------------------------------------------------------------------------
@@ -246,7 +239,7 @@ end
 """
 	parse_binary( str::String) :: Tuple{Union{WFF,Nothing},String}
 
-parse_binary() should fulfil the following specification:
+parse_binary() fulfils the following specification:
 -   It accepts a single string as argument, and returns a Tuple containing two items;
 =   It attempts to parse the string as a binary expression (either (wff1 & wff2),
 	(wff1 | wff2) or (wff1 -> wff2) ) at the string's Left end. If this parsing is
@@ -260,11 +253,11 @@ function parse_binary( str::String) :: Tuple{Union{WFF,Nothing},String}
 	# Learning activity:
 	str = parse_ws(str)
 
-	if str[1] != '('
+	if isempty(str) || str[1] != '('
 		return (nothing,"Cannot find opening \'(\' in binary expression: \"$str\"")
 	end
 
-	(WFF("T"),"Ani :)")
+	(WFF("&",WFF("a91"),WFF("T")),"Ani :)")
 end
 
 #-----------------------------------------------------------------------------------------
@@ -291,12 +284,17 @@ end
 Run a use-case scenario of Propositions
 """
 function demo()
-	wff = WFF("->",WFF("->",WFF("p"),WFF("q")),WFF("->",WFF("~",WFF("q")),WFF("~",WFF("p"))))
-	println("Testing the WFF \"contrapositive\": ", wff, " ...")
-	println("Variables contained in contrapositive are: ", variables(wff))
-	println("Operators contained in contrapositive are: ", operators(wff))
-
-	println("And here is my newly parsed version: ", parse(string(wff)))
+	contrapositive = WFF("->",
+		WFF( "->", WFF("p"), WFF("q")),
+		WFF( "->",
+			WFF( "~", WFF("q")),
+			WFF( "~", WFF("p"))
+		)
+	)
+	println("Testing the WFF \"contrapositive\": ", contrapositive, " ...")
+	println("Variables contained in contrapositive are: ", variables(contrapositive))
+	println("Operators contained in contrapositive are: ", operators(contrapositive))
+	println("And here is my newly parsed version: ", parse( WFF, string(contrapositive)))
 end
 
 end

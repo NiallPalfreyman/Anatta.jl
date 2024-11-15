@@ -63,22 +63,7 @@ function evaluate( wff::WFF, model::Model) :: Bool
 	@assert issubset( Propositions.variables(wff), variables(model))
 
 	# Learning activity:
-#	true
-	if  Propositions.is_constant(wff.head)
-		wff.head == "T"
-	elseif Propositions.is_variable(wff.head)
-		model[wff.head]
-	elseif Propositions.is_unary(wff.head)
-		!evaluate(wff.arg1,model)
-	elseif wff.head=="&"
-		evaluate(wff.arg1,model) && evaluate(wff.arg2,model)
-	elseif wff.head=="|"
-		evaluate(wff.arg1,model) || evaluate(wff.arg2,model)
-	elseif wff.head=="->"
-		!evaluate(wff.arg1,model) || evaluate(wff.arg2,model)
-	else # Something's gone wrong:
-		error( "Non-permissible operator $(wff.head)")
-	end
+	true
 end
 
 #-----------------------------------------------------------------------------------------
@@ -98,11 +83,7 @@ function all_models( vars::Union{Set{String},Vector{String}})
 	@assert all( Propositions.is_variable.(vars))
 
 	# Learning activity:
-#	map( Model, ((("a91",false),),(("a91",true),)))
-	Iterators.map( Model, (
-		zip(vars,reverse(truthtable_row)) for
-			truthtable_row in Base.product(((false,true) for _ in vars)...)
-	))
+	map( Model, ((("a91",false),),(("a91",true),)))
 end
 
 #-----------------------------------------------------------------------------------------
@@ -114,7 +95,7 @@ end
 Run a use-case scenario of Propositions
 """
 function demo()
-	wff = parse( WFF, "~((p&q5)|(p&~q3))")
+	wff = parse( WFF, "~(p&q5)")
 	models = all_models(Propositions.variables(wff))
 	for model in models
 		println("$model: ", evaluate(wff,model))

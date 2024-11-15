@@ -358,7 +358,7 @@ const parse_tests = [
                 println()
                 if iswff
                     print("Testing your parse( \"$s\") ... ")
-                    ww = Main.Propositions.parse(s)
+                    ww = Main.Propositions.parse(Main.Propositions.WFF,s)
                     if string(ww) != w
                         println( "Returned result ", ww, " instead of: ", w)
                         return false
