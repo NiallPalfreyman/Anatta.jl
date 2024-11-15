@@ -10,7 +10,7 @@ module Semantics
 
 using ..Propositions
 
-export Model, all_models, evaluate, is_model, variables
+export Model, evaluate
 
 #-----------------------------------------------------------------------------------------
 # Module types:

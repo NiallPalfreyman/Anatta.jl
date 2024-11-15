@@ -7,7 +7,7 @@
 #========================================================================================#
 module Propositions
 
-export WFF, is_wff, operators, proposition, show, variables
+export WFF, iswff, show
 
 #-----------------------------------------------------------------------------------------
 # Module types:
@@ -44,12 +44,12 @@ end
 # Expression methods:
 #-----------------------------------------------------------------------------------------
 """
-	is_wff(str::String) :: Bool
+	iswff(str::String) :: Bool
 
-is_wff checks whether its String argument is a valid WFF (e.g., "~(a13 | (b5 -> T))"). If so, it
+iswff checks whether its String argument is a valid WFF (e.g., "~(a13 | (b5 -> T))"). If so, it
 returns true; otherwise, it returns false.
 """
-function is_wff(str::String)
+function iswff(str::String)
 	# Learning activity:
 #	true
 	wff, remainder = parse_wff(str)

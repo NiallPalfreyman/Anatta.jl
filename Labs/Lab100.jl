@@ -341,7 +341,7 @@ const parse_tests = [
         theorem about WFFs:
             As soon as we have recognised a WFF, it can NEVER be the first term in a longer WFF!
 
-        Use this theorem together with the method parse_wff() to implement the two methods is_wff()
+        Use this theorem together with the method parse_wff() to implement the two methods iswff()
         and parse(). Their specifications and skeleton code are contained in Propositions.jl.
         """,
         "Again, just implement the two methods, then reply() me, and I will check your code.",
@@ -349,15 +349,15 @@ const parse_tests = [
             for (s,w,r) in parse_tests
                 err = isnothing(w)
                 has_tail = !isempty(r)
-                iswff = !err && !has_tail
-                print("Testing your is_wff( \"$s\") ... ")
-                if Main.Propositions.is_wff(s) != iswff
-                    println( "Returned result ", !iswff, " instead of: ", iswff)
+                is_wff = !err && !has_tail
+                print("Testing your iswff( \"$s\") ... ")
+                if Main.Propositions.iswff(s) != is_wff
+                    println( "Returned result ", !is_wff, " instead of: ", is_wff)
                     return false
                 end
                 println()
-                if iswff
-                    print("Testing your parse( \"$s\") ... ")
+                if is_wff
+                    print("Testing your parse( WFF, \"$s\") ... ")
                     ww = Main.Propositions.parse(Main.Propositions.WFF,s)
                     if string(ww) != w
                         println( "Returned result ", ww, " instead of: ", w)
