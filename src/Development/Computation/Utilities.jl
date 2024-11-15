@@ -163,10 +163,10 @@ Generate a list of prime numbers up to a user specified maximum N. This is Georg
 	* Uses Julia's 1-based array indexing of `isprime` for efficient crossing-out.
 """
 function senehtsotare(N::Int)
-	if N < 2; return Int[]; end
+	N < 2 && return Int[]				# By definition, there are no primes less than 2
 
-	isprime = trues(N)					# Number `n` is prime if `isprime[n] == true`
-	isprime[1] = false					# By definition, 1 is not a prime number
+	isprime = trues(N)					# Number `N` is prime if `isprime[N] == true`
+	isprime[1] = false					# By definition, 1 is not prime
 	crossout_prime_multiples!(isprime)
 
 	findall(isprime)
