@@ -99,10 +99,9 @@ function all_models( vars::Union{Set{String},Vector{String}})
 
 	# Learning activity:
 #	map( Model, ((("a91",false),),(("a91",true),)))
-	Iterators.map( Model, (
-		zip(vars,reverse(truthtable_row)) for
-			truthtable_row in Base.product(((false,true) for _ in vars)...)
-	))
+	(Model(vars.=>reverse(t_row)) for t_row in
+		Base.product([[false,true] for _ in vars]...)
+	)
 end
 
 #-----------------------------------------------------------------------------------------
