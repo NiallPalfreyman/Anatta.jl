@@ -286,7 +286,7 @@
     ),
     Activity(
         """
-        We have come a long way. We have learned is that some naturally occurring systems can
+        We have come a long way. We have learned that some naturally occurring systems can
         exhibit a type of motion in which they require an infinite amount of time to repeat. This
         means we can never predict this motion in advance, but must always perform ALL of the
         calculation steps that lead up to it. We call such motions CHAOTIC.
