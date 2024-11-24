@@ -38,6 +38,8 @@ struct WFF
 	end
 end
 
+Base.convert(::Type{WFF}, x) = WFF(x)
+
 #-----------------------------------------------------------------------------------------
 # Module methods:
 #-----------------------------------------------------------------------------------------
@@ -123,10 +125,10 @@ function variables(wff::WFF)
 	if  is_constant(wff.head)
 		Set{String}([])
 	elseif is_variable(wff.head)
-#		Set(["a91"])
+#		Set(["p","q"])
 		Set([wff.head])
 	elseif is_unary(wff.head)
-#		Set(["a91"])
+#		Set(["p"])
 		variables(wff.arg1)
 	else # is_binary:
 		union(variables(wff.arg1),variables(wff.arg2))
@@ -166,7 +168,7 @@ described by that sentence.
 """
 function Base.parse( ::Type{T}, sentence::AbstractString) :: WFF where T<:WFF
 	# Learning activity:
-#	WFF("a91")
+#	WFF( "->", WFF("p"), WFF("q"))
 	wff, msg = parse_wff(sentence)
 
 	if (isnothing(wff) || !isempty(msg))
@@ -271,7 +273,7 @@ function parse_binary( str::String) :: Tuple{Union{WFF,Nothing},String}
 		return (nothing,"Cannot find opening \'(\' in binary expression: \"$str\"")
 	end
 
-#	(WFF("&",WFF("a91"),WFF("T")),"Ani :)")
+#	(WFF("&",WFF("p"),WFF("T")),"Ani :)")
 	tuple1 = parse_wff(str[2:end])
 	if tuple1[1] === nothing
 		return (nothing, tuple1[2])

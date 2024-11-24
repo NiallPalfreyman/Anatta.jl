@@ -38,6 +38,8 @@ struct WFF
 	end
 end
 
+Base.convert(::Type{WFF}, x) = WFF(x)
+
 #-----------------------------------------------------------------------------------------
 # Module methods:
 #-----------------------------------------------------------------------------------------
@@ -121,9 +123,9 @@ function variables(wff::WFF)
 	if  is_constant(wff.head)
 		Set{String}([])
 	elseif is_variable(wff.head)
-		Set(["a91"])
+		Set(["p","q"])
 	elseif is_unary(wff.head)
-		Set(["a91"])
+		Set(["p"])
 	else # is_binary:
 		union(variables(wff.arg1),variables(wff.arg2))
 	end
@@ -154,12 +156,12 @@ end
 """
 	Base.parse( Type{T}, sentence::AbstractString) :: WFF where T<:WFF
 
-Assume the argument sentence is a valid sentence of the language PL, parse it as a WFF
+Assume the argument sentence is a valid sentence of the language PL, and return the WFF
 described by that sentence.
 """
 function Base.parse( ::Type{T}, sentence::AbstractString) :: WFF where T<:WFF
 	# Learning activity:
-	WFF("a91")
+	WFF( "->", WFF("p"), WFF("q"))
 end
 
 #-----------------------------------------------------------------------------------------
@@ -257,7 +259,7 @@ function parse_binary( str::String) :: Tuple{Union{WFF,Nothing},String}
 		return (nothing,"Cannot find opening \'(\' in binary expression: \"$str\"")
 	end
 
-	(WFF("&",WFF("a91"),WFF("T")),"Ani :)")
+	(WFF("&",WFF("p"),WFF("T")),"Ani :)")
 end
 
 #-----------------------------------------------------------------------------------------

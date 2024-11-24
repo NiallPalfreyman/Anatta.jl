@@ -202,16 +202,35 @@ const parse_tests = [
     ),
     Activity(
         """
-        OK, now it's your turn to write some code - and remember that you'll need to use recursion!
+        All of your coding exercises in these julia modules are marked with the following comment:
+            # Learning activity:
+            Stub code ...
+
+        "Stub code" is placeholder code that I have written to satisfy four conditions:
+        -   You can call the (unimplemented) method without raising any internal errors;
+        -   It does NOT implement the method's execution requirements: that's your job! :)
+        -   It gives you some implementation hints - like the control structure in the first activity;
+        -   When you call the module's demo() method, the screen output is still informative.
         
-        In the file Propositions.jl, you will find a method Propositions.variables() which at
-        present just contains skeleton code. The aim of variables() is to return the Set of all
-        variable names that appear in a given WFF. Using our previous definition of wff:
+        reply() me now the method that contains the very first Learning activity in the file
+        Propositions.jl:
+        """,
+        "",
+        x -> x==Main.variables
+    ),
+    Activity(
+        """
+        OK, so now it's your turn to write some code - and remember that you'll need to use recursion!
+        
+        In the file Propositions.jl is the method Propositions.variables() which at present just
+        contains stub code. The aim of variables() is to return the Set of all variable names that
+        appear in a given WFF. Using our previous definition of wff:
             wff = WFF("~",WFF("&",WFF("s271"),WFF("s465"))),
 
-        entering `variables(wff)` at the julia prompt should return: Set(["s271","s465"]). As soon
-        as you are satisfied with your code, make sure you include Propositions.jl, enter reply(),
-        and I will perform my own check of your code to let you know whether it passes my tests.
+        entering `variables(wff)` at the julia prompt should return: Set(["s271","s465"]). Write
+        your own implementation of `variables`, and when you are satisfied with your code, include
+        Propositions.jl, enter reply(), then I will perform my own check of your code to let you
+        know whether it passes my tests.
         """,
         "You will need to use recursion: variables(wff) calls itself on each argument of wff",
         x -> let MFF = Main.Propositions.WFF
