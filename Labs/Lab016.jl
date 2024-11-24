@@ -21,7 +21,7 @@
         increases the replicative fitness of the gang and its entire DS, and it is this DS, rather
         than individual birds, that stably survives or fails.
 
-        Please read Script016.pdf in your Docs subfolder BEFORE proceeding further with this lab...
+        Please skim Script016.pdf in your Scripts subfolder BEFORE proceeding further with this lab...
         """,
         "",
         x -> true

@@ -16,7 +16,7 @@
         but mutagens can also induce changes in the genetic material of a single cell. We shall
         study here a simple model of mutation that can be applied in both situations.
 
-        Please read Script014.pdf in your Docs subfolder BEFORE proceeding further with this lab...
+        Please skim Script014.pdf in your Scripts subfolder BEFORE proceeding further with this lab...
         """,
         "",
         x -> true

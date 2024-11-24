@@ -24,7 +24,7 @@
 
         Genes are a determinant of fitness, but fitness also always depends upon ecology!
 
-        Please read Script015.pdf in your Scripts subfolder BEFORE continuing with this lab...
+        Please skim Script015.pdf in your Scripts subfolder BEFORE continuing with this lab...
         """,
         "",
         x -> true
