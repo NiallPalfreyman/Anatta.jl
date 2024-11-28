@@ -282,7 +282,7 @@ function nextlab( lab_num::Int = -1, current_act::Int = 1)
 	println( "another lab in this Julia console, name conflicts may arise. You can clear these")
 	println( "by simply restarting the console and restarting Anatta.\n")
 	println( "Remember: your two most important commands are ...")
-	println( "    Enter askme() whenever you want to see the next learning activity")
+	println( "    Enter askme() whenever you want to see the current learning activity")
 	println( "    Enter ani() at any time to ask me about your available options.")
 	println( "Have fun! :)\n")
 
