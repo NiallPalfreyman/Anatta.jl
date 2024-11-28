@@ -111,7 +111,7 @@
         greatest standard deviation?
         """,
         "describe(iris,:std)",
-        x -> x=="PetalLength"
+        x -> x=="PetalLength" || x==:PetalLength
     ),
     Activity(
         """
