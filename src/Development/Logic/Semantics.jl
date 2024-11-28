@@ -32,7 +32,7 @@ is_model() checks whether its argument is a valid model.
 """
 function is_model( model::Model) :: Bool
 	for var in keys(model)
-		if !Propositions.is_variable(var)
+		if !Propositions.isvariable(var)
 			return false
 		end
 	end
@@ -83,7 +83,7 @@ Example: truth_table( ["q","p"]) -> [
 ]
 """
 function truth_table( vars::Union{Set{String},Vector{String}})
-	@assert all( Propositions.is_variable.(vars))
+	@assert all( Propositions.isvariable.(vars))
 
 	# Learning activity:
 	map( Model, [

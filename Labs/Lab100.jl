@@ -99,14 +99,14 @@ const parse_tests = [
         reply() me a String containing a valid constant.
         """,
         "Enter reply(string), where string obeys the above rules for a constant (no spaces!)",
-        x -> Propositions.is_constant(x)
+        x -> Propositions.isconstant(x)
     ),
     Activity(
         """
         Now reply() me a String containing the name of a valid variable.
         """,
         "Enter reply(string), where string obeys the above rules for a variable",
-        x -> Propositions.is_variable(x)
+        x -> Propositions.isvariable(x)
     ),
     Activity(
         """
@@ -126,13 +126,13 @@ const parse_tests = [
         reply() me ANY binary operator:
         """,
         "Remember that we are working specifically with String structures at the moment",
-        x -> Propositions.is_binary(x)
+        x -> Propositions.isbinary(x)
     ),
     Activity(
         """
         Over the last four activities, I have been checking your replies using the following
         methods implemented in the module Propositions:
-            is_constant(), is_variable(), is_unary() and is_binary()
+            isconstant(), isvariable(), isunary() and isbinary()
 
         Soon, I will ask you to implement some extra methods in the Propositions module, so please
         now setup() the Logic library in your Anatta home folder, open the file Propositions.jl in

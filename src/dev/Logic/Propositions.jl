@@ -25,13 +25,13 @@ struct WFF
 	arg2::Union{WFF,Nothing}	# Argument 2
 
 	function WFF( head::String, arg1=nothing, arg2=nothing)
-		if is_variable(head) || is_constant(head)
+		if isvariable(head) || isconstant(head)
     		new(head,nothing,nothing)
-		elseif is_unary(head)
+		elseif isunary(head)
 			@assert !isnothing(arg1)&&isnothing(arg2) "Unary arguments invalid!"
 			new(head,arg1,nothing)
 		else
-			@assert is_binary(head) "Invalid operator!"
+			@assert isbinary(head) "Invalid operator!"
 			@assert !isnothing(arg1)&&!isnothing(arg2) "Binary arguments invalid!"
 			new(head,arg1,arg2)
 		end
@@ -60,42 +60,42 @@ end
 
 #-----------------------------------------------------------------------------------------
 """
-	is_variable(var::String)
+	isvariable(var::String)
 
 Check whether var is a valid variable name (e.g., p45, x5342)
 """
-function is_variable(var::String)
+function isvariable(var::String)
 	'a' <= var[1] <= 'z' && (length(var)==1 || tryparse(Int,var[2:end]) !== nothing)
 end
 
 #-----------------------------------------------------------------------------------------
 """
-	is_constant(c::String)
+	isconstant(c::String)
 
 Check whether c is a valid boolean constant ("T" or "F")
 """
-function is_constant(c::String)
+function isconstant(c::String)
 	c=="T" || c=="F"
 end
 
 #-----------------------------------------------------------------------------------------
 """
-	is_unary(op1::String)
+	isunary(op1::String)
 
 Check whether op1 is a unary operator ("~")
 """
-function is_unary(op1::String)
+function isunary(op1::String)
 	op1=="~"
 end
 
 #-----------------------------------------------------------------------------------------
 """
-	is_binary(op2::String)
+	isbinary(op2::String)
 
-Check whether op2 is a binary operator ("&", "|" or "->")
+Check whether op2 is a binary operator ("&", "|", "->", "+", "<->", "-&" or "-|").
 """
-function is_binary(op2::String)
-	op2=="&" || op2=="|" || op2=="->"
+function isbinary(op2::String)
+	op2 in ["&", "|", "->", "+", "<->", "-&", "-|"]
 end
 
 #-----------------------------------------------------------------------------------------
@@ -105,9 +105,9 @@ end
 Show a String representation of the wff (Well-Formed Formula) to the iostream.
 """
 function Base.show( io::IO, wff::WFF)
-	if is_variable(wff.head) || is_constant(wff.head)
+	if isvariable(wff.head) || isconstant(wff.head)
 		print( io, wff.head)
-	elseif is_unary(wff.head)
+	elseif isunary(wff.head)
 		print( io, wff.head, wff.arg1)
 	else
 		print( io, "(", wff.arg1, " ", wff.head, " ", wff.arg2, ")")
@@ -122,15 +122,15 @@ Return the Set of all variable names in the wff.
 """
 function variables(wff::WFF)
 	# Learning activity:
-	if  is_constant(wff.head)
+	if  isconstant(wff.head)
 		Set{String}([])
-	elseif is_variable(wff.head)
+	elseif isvariable(wff.head)
 #		Set(["p","q"])
 		Set([wff.head])
-	elseif is_unary(wff.head)
+	elseif isunary(wff.head)
 #		Set(["p"])
 		variables(wff.arg1)
-	else # is_binary:
+	else # isbinary:
 		union(variables(wff.arg1),variables(wff.arg2))
 	end
 end
@@ -143,15 +143,15 @@ Return the Set of all operator names in the wff.
 """
 function operators(wff::WFF)
 	# Learning activity:
-	if  is_variable(wff.head)
+	if  isvariable(wff.head)
 		Set{String}([])
-	elseif is_constant(wff.head)
+	elseif isconstant(wff.head)
 #		Set(["~"])
 		Set([wff.head])
-	elseif is_unary(wff.head)
+	elseif isunary(wff.head)
 #		Set(["~"])
 		union(Set([wff.head]), operators(wff.arg1))
-	else # is_binary:
+	else # isbinary:
 #		Set(["~"])
 		union(Set([wff.head]),operators(wff.arg1),operators(wff.arg2))
 	end
@@ -228,7 +228,7 @@ Parse a constant (T/F) at start of statement string, then return remainder strin
 """
 function parse_const( str::String) :: Tuple{Union{WFF,Nothing},String}
 	str = parse_ws(str)
-	if length(str)>0 && is_constant(str[1:1])
+	if length(str)>0 && isconstant(str[1:1])
 		return (WFF(str[1:1]), str[2:end])
 	end
 
@@ -244,7 +244,7 @@ Parse a unary expression (~wff) at start of statement string, then return remain
 function parse_unary( str::String) :: Tuple{Union{WFF,Nothing},String}
 	str = parse_ws(str)
 
-	if length(str)>0 && is_unary(str[1:1]) && (tuple=parse_wff(str[2:end]))[1]!==nothing
+	if length(str)>0 && isunary(str[1:1]) && (tuple=parse_wff(str[2:end]))[1]!==nothing
 		return (WFF("~",tuple[1]),tuple[2])
 	end
 
@@ -280,10 +280,10 @@ function parse_binary( str::String) :: Tuple{Union{WFF,Nothing},String}
 	end
 
 	str = parse_ws(tuple1[2])
-	if length(str)>0 && is_binary(str[1:1])
+	if length(str)>0 && isbinary(str[1:1])
 		op = str[1:1]
 		str = parse_ws(str[2:end])
-	elseif length(str)>1 && is_binary(str[1:2])
+	elseif length(str)>1 && isbinary(str[1:2])
 		op = str[1:2]
 		str = parse_ws(str[3:end])
 	else

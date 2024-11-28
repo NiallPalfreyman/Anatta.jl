@@ -32,7 +32,7 @@ is_model() checks whether its argument is a valid model.
 """
 function is_model( model::Model) :: Bool
 	for var in keys(model)
-		if !Propositions.is_variable(var)
+		if !Propositions.isvariable(var)
 			return false
 		end
 	end
@@ -64,11 +64,11 @@ function evaluate( wff::WFF, model::Model) :: Bool
 
 	# Learning activity:
 #	false
-	if  Propositions.is_constant(wff.head)
+	if  Propositions.isconstant(wff.head)
 		wff.head == "T"
-	elseif Propositions.is_variable(wff.head)
+	elseif Propositions.isvariable(wff.head)
 		model[wff.head]
-	elseif Propositions.is_unary(wff.head)
+	elseif Propositions.isunary(wff.head)
 		!evaluate(wff.arg1,model)
 	elseif wff.head=="&"
 		evaluate(wff.arg1,model) && evaluate(wff.arg2,model)
@@ -98,7 +98,7 @@ Example: truth_table( ["q","p"]) -> [
 ]
 """
 function truth_table( vars::Union{Set{String},Vector{String}})
-	@assert all( Propositions.is_variable.(vars))
+	@assert all( Propositions.isvariable.(vars))
 
 	# Learning activity:
 #	map( Model, [
