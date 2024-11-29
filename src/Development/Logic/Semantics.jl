@@ -242,9 +242,9 @@ function demo()
 	wff = parse( WFF, "(p->q)")
 #	wff = parse( WFF, "(q->p)")
 #	wff = parse( WFF, "((p->q) -> (~q->~p))")
-#	wff = parse( WFF, "~(p&q7)")
+#	wff = parse( WFF, "~(p&q)")
 #	wff = parse( WFF, "~~~p")
-#	wff = parse( WFF, "(x&(~z|y))")
+#	wff = parse( WFF, "(p&(~q|p))")
 	print_ttable(wff)
 	println( "$wff is $(~istautology(wff) ? "not " : "")a tautology, ",
 		"is $(~iscontradiction(wff) ? "not " : "")a contradiction, ",
