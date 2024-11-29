@@ -22,13 +22,21 @@ const parse_tests = [
         Hi! Welcome to Anatta Subject 100:
             Formal Logic - Beliefs have structure, and structures ALWAYS have gaps!
         
-        In Subject 0, we learned how to use julia's computational structures to describe and
-        manipulate data. Now we know how powerful programming languages are, we might easily
-        believe that we can use structures to describe ANYTHING that we observe around us.
-        After all, a structure is just a set of things together with the relations between those
-        things, so surely everything consists of things and relations, doesn't it?!
+        Before continuing, I want to stop and think for a moment about what we have so far achieved
+        in Anatta. In Subject 000, we learned to use the Julia computer language to solve many
+        different kinds of problems, yet we also found that there are some problems that we cannot
+        solve with a computer - for example, predicting the outcome of a chaotic process. So it
+        seems that computational structures may not be powerful enough to describe all the dynamical
+        possibilities that we biological organisms must cope with. Is this a problem?
+        
+        In Subject 100, we study an important tension that faces all organisms: In order to survive
+        and to communicate with each other, we divide our experience into convenient structures
+        such as tables, chairs and tigers, yet we can never be quite sure whether these structures
+        accurately describe the survival-relevant processes that we might have to face tomorrow.
 
-        In Subject 100, we shall find reasons to both believe and disbelieve this hypothesis ...
+        To do this, we shall define very precisely the language of mathematical Logic. We shall
+        define its structural sentences and the meaning of those sentences, and then analyse these
+        to discover whether there is an essential gap between sentence and meaning ...
         """,
         "",
         x -> true
