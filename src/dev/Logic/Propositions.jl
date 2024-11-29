@@ -280,13 +280,16 @@ function parse_binary( str::String) :: Tuple{Union{WFF,Nothing},String}
 	end
 
 	str = parse_ws(tuple1[2])
-	if length(str)>0 && isbinary(str[1:1])
-		op = str[1:1]
-		str = parse_ws(str[2:end])
-	elseif length(str)>1 && isbinary(str[1:2])
-		op = str[1:2]
-		str = parse_ws(str[3:end])
-	else
+	op = ""
+	for len in 1:3						# Maximum length of a binary operator is 3 characters
+		if length(str) >= len && isbinary(str[1:len])
+			op = str[1:len]
+			str = parse_ws(str[len+1:end])
+			break
+		end
+	end
+	if isempty(op)
+		# No binary operator was found:
 		return (nothing,"Cannot parse operator in binary expression: \"$str\"")
 	end
 
