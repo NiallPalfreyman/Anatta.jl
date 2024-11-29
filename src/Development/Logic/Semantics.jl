@@ -75,12 +75,11 @@ this Iterable corresponds to the order of variables in the vars list, with false
 and the counting of truth-assignments is in binary counting order (i.e., rightmost value changes
 most rapidly).
 
-Example: truth_table( ["q","p"]) -> [
+Example: truth_table( ["q","p"]) returns an Iterable through Models in the following order:
 	Model("q"=>false, "p"=>false),
 	Model("q"=>true,  "p"=>false),
 	Model("q"=>false, "p"=>true ),
 	Model("q"=>true,  "p"=>true )
-]
 """
 function truth_table( vars::Union{Set{String},Vector{String}})
 	@assert all( Propositions.isvariable.(vars))
@@ -107,15 +106,15 @@ end
 """
 	print_tt( wff) :: nothing
 
-Print a pretty version of the complete truth-table for the given wff, for example
-print_tt( parse(WFF,"p->q")) prints:
+Print a pretty version of the complete truth-table for the given wff in terms of truth-values
+0 (false) and 1 (true). For example, print_tt( parse(WFF,"p->q")) prints:
 
 	| p | q | (p -> q) |
 	|---|---|----------|
-	| F | F | T        |
-	| F | T | T        |
-	| T | F | F        |
-	| T | T | T        |
+	| 0 | 0 | 1        |
+	| 0 | 1 | 1        |
+	| 1 | 0 | 0        |
+	| 1 | 1 | 1        |
 """
 function print_ttable( wff::WFF)
 	vars = sort([Propositions.variables(wff)...])
@@ -144,7 +143,7 @@ function print_ttable( wff::WFF)
 		for c in tt_row
 			if c=='?'
 				current_tval = ivar<=length(vars) ? model[vars[ivar]] : t_consequent
-				current_row *= current_tval ? 'T' : 'F'
+				current_row *= current_tval ? '1' : '0'
 				ivar += 1
 			else
 				current_row *= c
