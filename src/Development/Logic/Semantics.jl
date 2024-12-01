@@ -52,15 +52,15 @@ end
 
 #-----------------------------------------------------------------------------------------
 """
-	evaluate( wff::WFF, model::Model) :: Bool
+	evaluate( woof::WFF, model::Model) :: Bool
 
-evaluate() computes the truth-value of this wff in this model.
+evaluate() computes the truth-value of this woof in this model.
 
 Example: evaluate( parse("~(p&q5)"), Model("p"=>true,"q5"=>false)) -> true
 """
-function evaluate( wff::WFF, model::Model) :: Bool
+function evaluate( woof::WFF, model::Model) :: Bool
 	@assert is_model(model)
-	@assert issubset( Propositions.variables(wff), variables(model))
+	@assert issubset( Propositions.variables(woof), variables(model))
 
 	# Learning activity:
 	false
@@ -93,20 +93,20 @@ end
 
 #-----------------------------------------------------------------------------------------
 """
-	truth_values( wff, t_table) :: Vector{Bool}
+	truth_values( woof, t_table) :: Vector{Bool}
 
-Compute an iterable over all truth-values of the given wff in each model of the given truth-table.
+Compute an iterable over all truth-values of the given woof in each model of the given truth-table.
 """
-function truth_values( wff::WFF, t_table)
+function truth_values( woof::WFF, t_table)
 	# Learning activity:
 	[true,true,false,true]
 end
 
 #-----------------------------------------------------------------------------------------
 """
-	print_tt( wff) :: nothing
+	print_tt( woof) :: nothing
 
-Print a pretty version of the complete truth-table for the given wff in terms of truth-values
+Print a pretty version of the complete truth-table for the given woof in terms of truth-values
 0 (false) and 1 (true). For example, print_tt( parse(WFF,"p->q")) prints:
 
 	| p | q | (p -> q) |
@@ -116,12 +116,12 @@ Print a pretty version of the complete truth-table for the given wff in terms of
 	| 1 | 0 | 0        |
 	| 1 | 1 | 1        |
 """
-function print_ttable( wff::WFF)
-	vars = sort([Propositions.variables(wff)...])
+function print_ttable( woof::WFF)
+	vars = sort([Propositions.variables(woof)...])
 	tt = truth_table(vars)
-	t_consequents = truth_values( wff, tt)
+	t_consequents = truth_values( woof, tt)
 
-	header_row = "| " * *(map( v->(string(v)*" | "),vars)...) * string(wff) * " |"
+	header_row = "| " * *(map( v->(string(v)*" | "),vars)...) * string(woof) * " |"
 	println(header_row)
 
 	bars = findall('|',header_row)							# Find column separator bars
@@ -156,33 +156,33 @@ end
 
 #-----------------------------------------------------------------------------------------
 """
-	istautology( wff::WFF) :: Bool
+	istautology( woof::WFF) :: Bool
 
-Compute whether the given wff is true in every possible model
+Compute whether the given woof is true in every possible model
 """
-function istautology( wff::WFF) :: Bool
+function istautology( woof::WFF) :: Bool
 	# Learning activity:
 	false
 end
 
 #-----------------------------------------------------------------------------------------
 """
-	iscontradiction( wff::WFF) :: Bool
+	iscontradiction( woof::WFF) :: Bool
 
-Compute whether the given wff is false in every possible model
+Compute whether the given woof is false in every possible model
 """
-function iscontradiction( wff::WFF) :: Bool
+function iscontradiction( woof::WFF) :: Bool
 	# Learning activity:
 	false
 end
 
 #-----------------------------------------------------------------------------------------
 """
-	issatisfiable( wff::WFF) :: Bool
+	issatisfiable( woof::WFF) :: Bool
 
-Compute whether the given wff is true in somee possible model
+Compute whether the given woof is true in somee possible model
 """
-function issatisfiable( wff::WFF) :: Bool
+function issatisfiable( woof::WFF) :: Bool
 	# Learning activity:
 	true
 end
@@ -192,7 +192,7 @@ end
 	conjunctive_wff( model::Model) :: WFF
 
 Compute a conjunctive proposition (i.e., a chain of conditions that are linked by the &-operator)
-that uniquely specifies the given model. That is, the conjunctive wff is true for this model, and
+that uniquely specifies the given model. That is, the conjunctive woof is true for this model, and
 false for EVERY other model over the same set of names.
 
 For example, the model Model("p" => 1, "q" => 1, "r" => 0) is completely specified by the
@@ -210,7 +210,7 @@ end
 """
 	dnf( vars::Vector{String}, AbstractArray{Bool}) :: WFF
 
-Compute a wff in disjunctive normal form (DNF) that uniquely describes a complete truth-table
+Compute a woof in disjunctive normal form (DNF) that uniquely describes a complete truth-table
 consisting of the given variable names, and yields the given collection of resulting truth-values.
 """
 function dnf( vars::Vector{String}, tvalues::AbstractArray{Bool}) :: WFF
@@ -219,15 +219,15 @@ function dnf( vars::Vector{String}, tvalues::AbstractArray{Bool}) :: WFF
 
 	rows = zip( truth_table(vars), tvalues)
 	((model,tvalue), i) = iterate(rows)
-	wff = tvalue ? conjunctive_wff(model) : WFF("~",conjunctive_wff(model))
+	woof = tvalue ? conjunctive_wff(model) : WFF("~",conjunctive_wff(model))
 
 	next = iterate(rows,i)
 	while !isnothing(next)
 		((model,tvalue), i) = next
-		wff = WFF("|", wff, (tvalue ? conjunctive_wff(model) : WFF("~",conjunctive_wff(model))))
+		woof = WFF("|", woof, (tvalue ? conjunctive_wff(model) : WFF("~",conjunctive_wff(model))))
 		next = iterate( rows, i)
 	end
-	wff
+	woof
 end
 
 #-----------------------------------------------------------------------------------------
@@ -239,22 +239,23 @@ end
 Run a use-case scenario of Propositions
 """
 function demo()
-	wff = parse( WFF, "(p->q)")
-#	wff = parse( WFF, "(q->p)")
-#	wff = parse( WFF, "((p->q) -> (~q->~p))")
-#	wff = parse( WFF, "~(p&q)")
-#	wff = parse( WFF, "~~~p")
-#	wff = parse( WFF, "(p&(~q|p))")
-	print_ttable(wff)
-	println( "$wff is $(~istautology(wff) ? "not " : "")a tautology, ",
-		"is $(~iscontradiction(wff) ? "not " : "")a contradiction, ",
-		"and is $(~issatisfiable(wff) ? "not " : "")satisfiable!"
+	woof = wff( "(p->q)")
+#	woof = wff( "(q->p)")
+#	woof = wff( "((p->q) -> (~q->~p))")
+#	woof = wff( "~(p&q)")
+#	woof = wff( "~~~p")
+#	woof = wff( "(p&(~p|q))")
+#	woof = wff( "((p-&q)<->(~q|~p))")			# Only used in lab 102
+	print_ttable(woof)
+	println( "$woof is $(~istautology(woof) ? "not " : "")a tautology, ",
+		"is $(~iscontradiction(woof) ? "not " : "")a contradiction, ",
+		"and is $(~issatisfiable(woof) ? "not " : "")satisfiable!"
 	)
 	println()
 
 	model = Model("p"=>true,"q"=>false)
-	println( "In the model $model, the wff $wff evaluates to: $(evaluate(wff,model)).")
-	println( "This model is described by the conjunctive wff: ", conjunctive_wff(model))
+	println( "In the model $model, the woof $woof evaluates to: $(evaluate(woof,model)).")
+	println( "This model is described by the conjunctive woof: ", conjunctive_wff(model))
 	println()
 
 	tvalues = [true,true,false,true]

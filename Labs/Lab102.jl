@@ -116,8 +116,8 @@ include("../src/dev/Logic/Semantics.jl")
         your code, then reply(), and I will test your parsing code.
         """,
         "",
-        x -> string(Main.Base.parse(Main.Propositions.WFF,"(a <-> (b + (c -& (d -| a))))")) ==
-                string(Base.parse(Propositions.WFF,"(a <-> (b + (c -& (d -| a))))"))
+        x -> string(Main.Propositions.wff("(a <-> (b + (c -& (d -| a))))")) ==
+                string(wff("(a <-> (b + (c -& (d -| a))))"))
     ),
     Activity(
         """
@@ -128,9 +128,309 @@ include("../src/dev/Logic/Semantics.jl")
         ritual by now! :)
         """,
         "",
-        x -> Main.Semantics.istautology(Main.Base.parse(Main.Propositions.WFF,
-            "~((a-|b)+(~a&~b))"
-        ))
+        x -> Main.Semantics.istautology(Main.Propositions.wff("~((a-|b)+(~a&~b))"))
+    ),
+    Activity(
+        """
+        Earlier, we asked whether the syntax of PL would become more expressive if we add new
+        operators. To answer this question, first use your code to check that the following four
+        sentences are tautologies:
+            ((a+b)   <-> ((a|b) & ~(a&b)))
+            ((a<->b) <-> ((a->b) & (b->a)))
+            ((a-&b)  <-> ~(a & b))
+            ((a-|b)  <-> ~(a | b))
+
+        Are they all tautologies?
+        """,
+        "Use the call istautology(wff(\"((a-|b)  <-> ~(a | b))\"))",
+        x -> 'y' in lowercase(x)
+    ),
+    Activity(
+        """
+        To see how this proves that the new operators have not increased PL's expressivity, focus
+        as an example on the third of these sentences, containing the well-known operator NAND:
+            ((a-&b)  <-> ~(a & b))
+
+        Notice that the wff standing to the left of the iff-operator is "a nand b", while the wff
+        to the right of the iff-operator is the definition of nand: "not (a and b)". The name "iff"
+        is short for "if, and ONLY if", so the fact that this iff-sentence is a tautology means it
+        is true in ALL models that the left- and right-hand wffs have exactly the same truth-value!
+        
+        So (a-&b) is TRUE in precisely those situations where ~(a & b) is TRUE, and is FALSE in
+        precisely those situations where ~(a & b) is FALSE. This means that if we ever find the
+        expression (a-&b) in a sentence, we can always replace it by the expression ~(a & b)
+        without changing the truth-value of the sentence. Can you think of another name for iff?
+        """,
+        "",
+        x -> occursin("equiv",lowercase(x))
+    ),
+    Activity(
+        """
+        Iff is also called the Equivalence operator (≡). The fact that the following four sentences
+        are tautologies means we can always substitute the left-hand side of the equivalence by the
+        right-hand side in any sentence:
+            ((a+b)   <-> ((a|b) & ~(a&b)))
+            ((a<->b) <-> ((a->b) & (b->a)))
+            ((a-&b)  <-> ~(a & b))
+            ((a-|b)  <-> ~(a | b))
+
+        This idea of Substitution is enormously important. It means that these four new operators
+        do not make PL more expressive, because we can substitute them by particular arrangements
+        of the previously existing operators ["T","F","&","|","~","->"]. reply() me the WFF
+        equivalent of (a<->b):
+        """,
+        "",
+        x -> string(x) == "((a -> b) & (b -> a))"
+    ),
+    Activity(
+        """
+        This brings us to our second question from earlier:
+            Would PL still be complete if we removed "&" and "|" from its definition?
+
+        We shall answer this question by implementing Substitution in PL. Removing AND and OR from
+        the definition of PL will certainly lower PL's expressivity (and so make it incomplete)
+        unless we can always substitute (a & b) and (a | b) by some other expressions in sentences
+        Without changing their semantics. So let's look at a few useful substitutions ...
+
+        Is the following sentence true under all circumstances: ((p & q) <-> ~(~p | ~q)) ?
+        """,
+        "Use istautology()",
+        x -> 'y' in lowercase(x)
+    ),
+    Activity(
+        """
+        So this substitution is truth-preserving; it is one of the two De Morgan rules of Logic:
+        -   (~(p & q) <-> (~p | ~q))
+        -   (~(p | q) <-> (~p & ~q))
+
+        And of course we all know this truth-preserving substitution:
+        -   (~~p <-> p)
+
+        To perform one of these substitutions, we must do two things: recognise the operators that
+        characterise the substitution, then substitute the variables that are linked together by
+        those operators. We will implement this in two stages, starting with substituting the
+        variables. Locate the stub method Propositions.substitute_vars(); What argument type are we
+        using to model a substitution?
+        """,
+        "",
+        x -> x <: Dict
+    ),
+    Activity(
+        """
+        Now write the missing code in substitute_vars(). This code should implement the
+        specification given in the accompanying docstring, and should NOT proliferate the number
+        of wffs unnecessarily. In other words, if the variable p occurs twice in the original
+        sentence, and is to be substituted by the wff (r & s), this wff should only be created
+        once, and each occurrence of p should be replaced by a pointer to the single WFF instance.
+
+        reply() me when your code is ready! :)
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
     ),
     Activity(
         """

@@ -7,7 +7,7 @@
 #========================================================================================#
 module Propositions
 
-export WFF, iswff, show
+export WFF, wff, iswff, show
 
 #-----------------------------------------------------------------------------------------
 # Module types:
@@ -38,12 +38,13 @@ struct WFF
 	end
 end
 
+"Base.convert(WFF,x): Make WFF constructor available for type conversions"
 Base.convert(::Type{WFF}, x) = WFF(x)
 
 #-----------------------------------------------------------------------------------------
 # Module methods:
 #-----------------------------------------------------------------------------------------
-# Expression methods:
+# Structural methods:
 #-----------------------------------------------------------------------------------------
 """
 	iswff(str::String) :: Bool
@@ -54,8 +55,8 @@ returns true; otherwise, it returns false.
 function iswff(str::String)
 	# Learning activity:
 #	true
-	wff, remainder = parse_wff(str)
-	!isnothing(wff) && isempty(remainder)
+	woof, remainder = parse_wff(str)
+	!isnothing(woof) && isempty(remainder)
 end
 
 #-----------------------------------------------------------------------------------------
@@ -100,60 +101,60 @@ end
 
 #-----------------------------------------------------------------------------------------
 """
-	Base.show( io::IO, wff::WFF)
+	Base.show( io::IO, woof::WFF)
 
-Show a String representation of the wff (Well-Formed Formula) to the iostream.
+Show a String representation of the woof (Well-Formed Formula) to the iostream.
 """
-function Base.show( io::IO, wff::WFF)
-	if isvariable(wff.head) || isconstant(wff.head)
-		print( io, wff.head)
-	elseif isunary(wff.head)
-		print( io, wff.head, wff.arg1)
+function Base.show( io::IO, woof::WFF)
+	if isvariable(woof.head) || isconstant(woof.head)
+		print( io, woof.head)
+	elseif isunary(woof.head)
+		print( io, woof.head, woof.arg1)
 	else
-		print( io, "(", wff.arg1, " ", wff.head, " ", wff.arg2, ")")
+		print( io, "(", woof.arg1, " ", woof.head, " ", woof.arg2, ")")
 	end
 end
 
 #-----------------------------------------------------------------------------------------
 """
-	variables(wff::WFF)
+	variables(woof::WFF)
 
-Return the Set of all variable names in the wff.
+Return the Set of all variable names in the woof.
 """
-function variables(wff::WFF)
+function variables(woof::WFF)
 	# Learning activity:
-	if  isconstant(wff.head)
+	if  isconstant(woof.head)
 		Set{String}([])
-	elseif isvariable(wff.head)
+	elseif isvariable(woof.head)
 #		Set(["p","q"])
-		Set([wff.head])
-	elseif isunary(wff.head)
+		Set([woof.head])
+	elseif isunary(woof.head)
 #		Set(["p"])
-		variables(wff.arg1)
+		variables(woof.arg1)
 	else # isbinary:
-		union(variables(wff.arg1),variables(wff.arg2))
+		union(variables(woof.arg1),variables(woof.arg2))
 	end
 end
 
 #-----------------------------------------------------------------------------------------
 """
-	operators(wff::WFF)
+	operators(woof::WFF)
 
-Return the Set of all operator names in the wff.
+Return the Set of all operator names in the woof.
 """
-function operators(wff::WFF)
+function operators(woof::WFF)
 	# Learning activity:
-	if  isvariable(wff.head)
+	if  isvariable(woof.head)
 		Set{String}([])
-	elseif isconstant(wff.head)
+	elseif isconstant(woof.head)
 #		Set(["~"])
-		Set([wff.head])
-	elseif isunary(wff.head)
+		Set([woof.head])
+	elseif isunary(woof.head)
 #		Set(["~"])
-		union(Set([wff.head]), operators(wff.arg1))
+		union(Set([woof.head]), operators(woof.arg1))
 	else # isbinary:
 #		Set(["~"])
-		union(Set([wff.head]),operators(wff.arg1),operators(wff.arg2))
+		union(Set([woof.head]),operators(woof.arg1),operators(woof.arg2))
 	end
 end
 
@@ -169,14 +170,17 @@ described by that sentence.
 function Base.parse( ::Type{T}, sentence::AbstractString) :: WFF where T<:WFF
 	# Learning activity:
 #	WFF( "->", WFF("p"), WFF("q"))
-	wff, msg = parse_wff(sentence)
+	woof, msg = parse_wff(sentence)
 
-	if (isnothing(wff) || !isempty(msg))
+	if (isnothing(woof) || !isempty(msg))
 		error("ArgumentError: Invalid character \'$(msg[1])\' in \"$sentence\"")
 	end
 
-	wff
+	woof
 end
+
+"wff(sentence): Provide simple interface to Base.parse(WFF,sentence)"
+wff( sentence::AbstractString) = Base.parse(WFF,sentence)
 
 #-----------------------------------------------------------------------------------------
 """
@@ -239,7 +243,7 @@ end
 """
 	parse_unary( str::String) :: Tuple{Union{WFF,Nothing},String}
 
-Parse a unary expression (~wff) at start of statement string, then return remainder string.
+Parse a unary expression (~woof) at start of statement string, then return remainder string.
 """
 function parse_unary( str::String) :: Tuple{Union{WFF,Nothing},String}
 	str = parse_ws(str)
@@ -259,8 +263,8 @@ parse_binary() fulfils the following specification:
 -   It accepts a single string as argument, and returns a Tuple containing two items;
 =   It attempts to parse the string as a binary expression (either (wff1 & wff2),
 	(wff1 | wff2) or (wff1 -> wff2) ) at the string's Left end. If this parsing is
-	successful, the return Tuple looks like this: (wff::WFF,tail::String), where wff is the
-	parsed WFF and tail is the remainder string to the right of the parsed wff.
+	successful, the return Tuple looks like this: (woof::WFF,tail::String), where woof is the
+	parsed WFF and tail is the remainder string to the right of the parsed woof.
 -   If parse_binary() cannot parse the string as a binary expression, it returns a Tuple
 	(nothing,"error msg"), whose first element is `nothing`, and whose second element is an
 	error string which helps users to understand what went wrong.
@@ -268,7 +272,6 @@ parse_binary() fulfils the following specification:
 function parse_binary( str::String) :: Tuple{Union{WFF,Nothing},String}
 	# Learning activity:
 	str = parse_ws(str)
-
 	if isempty(str) || str[1] != '('
 		return (nothing,"Cannot find opening \'(\' in binary expression: \"$str\"")
 	end
@@ -322,6 +325,27 @@ function parse_ws( str::String) :: String
 end
 
 #-----------------------------------------------------------------------------------------
+# Structure manipulation methods:
+#-----------------------------------------------------------------------------------------
+"""
+	substitute_vars( woof::WFF, substitution::Dict{String,WFF}) :: WFF
+
+Replace each variable "p" in the given woof by the new expression substitution["p"]. Variables
+that arise through performing this substitution are NOT further substituted.
+
+Example:
+	substitute_vars( wff("(p->(p&q))"), Dict("p"=>wff("(q|r)"),"q"=>woof("r"),"r"=>wff("(p&r)")))
+		-> ((q|r)->((q|r)&r))
+"""
+function substitute_vars( woof::WFF, substitution::Dict{String,WFF}) :: WFF
+	# Learning activity:
+#	woof
+	@assert all(isvariable.(keys(substitution)))
+
+	#???
+end
+
+#-----------------------------------------------------------------------------------------
 # Demonstration methods:
 #-----------------------------------------------------------------------------------------
 """
@@ -340,7 +364,7 @@ function demo()
 	println("Testing the WFF \"contrapositive\": ", contrapositive, " ...")
 	println("Variables contained in contrapositive are: ", variables(contrapositive))
 	println("Operators contained in contrapositive are: ", operators(contrapositive))
-	println("And here is my newly parsed version: ", parse( WFF, string(contrapositive)))
+	println("And here is my newly parsed version: ", wff( string(contrapositive)))
 end
 
 end
