@@ -190,15 +190,9 @@ Compute whether the given woof is true in every possible model
 function istautology( woof::WFF) :: Bool
 	# Learning activity:
 #	false
-	t_consequents = truth_values( woof,
-		truth_table(Propositions.variables(woof))
+	all(
+		truth_values( woof, truth_table(Propositions.variables(woof)))
 	)
-	for consequent in t_consequents
-		if ~consequent
-			return false
-		end
-	end
-	true
 end
 
 #-----------------------------------------------------------------------------------------
@@ -210,15 +204,9 @@ Compute whether the given woof is false in every possible model
 function iscontradiction( woof::WFF) :: Bool
 	# Learning activity:
 #	false
-	t_consequents = truth_values( woof,
-		truth_table(Propositions.variables(woof))
+	~any(
+		truth_values( woof, truth_table(Propositions.variables(woof)))
 	)
-	for consequent in t_consequents
-		if consequent
-			return false
-		end
-	end
-	true
 end
 
 #-----------------------------------------------------------------------------------------
@@ -230,15 +218,9 @@ Compute whether the given woof is true in somee possible model
 function issatisfiable( woof::WFF) :: Bool
 	# Learning activity:
 #	true
-	t_consequents = truth_values( woof,
-		truth_table(Propositions.variables(woof))
+	any(
+		truth_values( woof, truth_table(Propositions.variables(woof)))
 	)
-	for consequent in t_consequents
-		if consequent
-			return true
-		end
-	end
-	false
 end
 
 #-----------------------------------------------------------------------------------------
@@ -302,7 +284,7 @@ function demo()
 #	woof = wff( "(q->p)")
 #	woof = wff( "((p->q) -> (~q->~p))")
 #	woof = wff( "~(p&q)")
-#	woof = wff( "~~~p")
+#	woof = wff( "(~~~p&p)")
 #	woof = wff( "(p&(~p|q))")
 #	woof = wff( "((p-&q)<->(~q|~p))")			# Only used in lab 102
 print_ttable(woof)

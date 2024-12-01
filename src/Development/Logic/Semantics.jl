@@ -243,7 +243,7 @@ function demo()
 #	woof = wff( "(q->p)")
 #	woof = wff( "((p->q) -> (~q->~p))")
 #	woof = wff( "~(p&q)")
-#	woof = wff( "~~~p")
+#	woof = wff( "(~~~p&p)")
 #	woof = wff( "(p&(~p|q))")
 #	woof = wff( "((p-&q)<->(~q|~p))")			# Only used in lab 102
 	print_ttable(woof)
