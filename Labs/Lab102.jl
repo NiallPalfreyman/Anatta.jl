@@ -199,40 +199,121 @@ include("../src/dev/Logic/Semantics.jl")
     ),
     Activity(
         """
-        So this substitution is truth-preserving; it is one of the two De Morgan rules of Logic:
+        So this substitution is truth-preserving; it is one of the two De Morgan equivalences:
         -   (~(p & q) <-> (~p | ~q))
         -   (~(p | q) <-> (~p & ~q))
 
-        And of course we all know this truth-preserving substitution:
+        And of course we all know this truth-preserving equivalence:
         -   (~~p <-> p)
 
-        To perform one of these substitutions, we must do two things: recognise the operators that
-        characterise the substitution, then substitute the variables that are linked together by
-        those operators. We will implement this in two stages, starting with substituting the
-        variables. Locate the stub method Propositions.substitute_vars(); What argument type are we
-        using to model a substitution?
+        To use an equivalence to perform a substitution, we must do two things: recognise the
+        operator that characterises the substitution, then substitute the variables that are linked
+        together by that operator. Let's make this easier to understand by looking at a concrete
+        example. Suppose we rewrite De Morgan's second equivalence in the following way. What would
+        then be the wff on the right-hand side of the equivalence?
+            ((p | q) <-> wff)
         """,
         "",
-        x -> x <: Dict
+        x -> string(x) == "~(~p & ~q)"
     ),
     Activity(
         """
-        Now write the missing code in substitute_vars(). This code should implement the
-        specification given in the accompanying docstring, and should NOT proliferate the number
-        of wffs unnecessarily. In other words, if the variable p occurs twice in the original
-        sentence, and is to be substituted by the wff (r & s), this wff should only be created
-        once, and each occurrence of p should be replaced by a pointer to the single WFF instance.
+        Right, so suppose we want to apply De Morgan's secoond equivalence to the following wff:
+            Apply ((p | q) <-> ~(~p & ~q)) to the wff: (~x | (z & y))
+        
+        We must first scan the wff to recognise the operator | that characterises the left-hand
+        side of De Morgan's second equivalence, then locate its two operands (p and q). In the wff,
+        the operand p corresponds to the sub-wff ~x. Having recognised this, we must then
+        substitute this sub-wff into the right-hand side of De Morgan's second equivalence, by
+        replacing p by ~x in the structure ~(~p & ~q). By what must we replace q in the structure
+        ~(~p & ~q)?
+        """,
+        "",
+        x -> string(x) == "(z & y)"
+    ),
+    Activity(
+        """
+        Great! Now we are ready to implement substitution for ourselves! Locate now the method
+        Propositions.substitute_ops() that I have already implemented. This method takes as
+        arguments a WFF named woof and a substitution map that replaces the binary structure of an
+        operator such as "|" by a new structure such as ~(~p&~q). What type does substitute_ops()
+        use to implement such a substitution map?
+        """,
+        "",
+        x -> x <: Dict || x <: Pair
+    ),
+    Activity(
+        """
+        So substitute_ops() implements substitution maps using a Dict containing pairs such as
+        "|"=>~(~p&~q). In this substitution map, p stands for whatever wff is the first argument of
+        the | operator, and q stands for whatever wff is the second argument of the | operator.
 
-        reply() me when your code is ready! :)
+        Study the code in method substitute_ops(). First, it recognises that it can simply return
+        constants and variables unchanged. Next, it recognises that if the operator in woof is not
+        mentioned in the substitution map, it need only substitute the operations in woof's
+        arguments. It achieves this by calling substitute_ops() recursively on each argument, then
+        reassembling the results and returning them as a new WFF containing the original, unchanged
+        operator.
+
+        After checking each of these special situations, the only remaining possibility is that the
+        operator in woof.head appears in the substitution map, and so requires substitution. This
+        is performed by the code in the second half of substitute_ops() ...
         """,
         "",
         x -> true
     ),
     Activity(
         """
+        To perform the actual substitution, substitute_ops() first assembles a new substitution map
+        for the variables p and q:
+            var_substitution = Dict("p"=>~x,"q"=>(z & y))
+
+        Then it calls the method substitute_vars to apply this map to the right-hand side ~(~p&~q)
+        of De Morgan's second equivalence and actually create the new, substituted structure.
+        
+        OK, so let's test all that we've been discussing. In the julia console, include and use
+        Propositions.jl, then experiment with the substitution we've just been studying by entering
+        the following command at the julia console. Then reply() me whether your result is correct:
+            substitute_ops( wff("(~x|(z&y))"), Dict("|"=>wff("~(~p&~q)")))
         """,
         "",
-        x -> true
+        x -> occursin('n',lowercase(x))
+    ),
+    Activity(
+        """
+        If you look at the method substitute_vars(), you will see why your result was incorrect:
+        substitute_vars() still only implements stub functionality that simply returns the
+        unchanged woof. Now it's your turn...
+
+        It is your task to implement the missing code in substitute_vars(). Your code should
+        implement the specification in the accompanying docstring, and should NOT create WFFs
+        unnecessarily. In other words, if the variable p occurs twice in the original woof, and is
+        to be substituted by the wff ~x, the wff ~x should only be created Once, and each
+        identifier p should be a reference to that single WFF instance. You can test your code
+        using this call at the julia prompt:
+            substitute_vars( wff("(p->(p&q))"), Dict( "p"=>wff("(q|r)"), "q"=>wff("r"), "r"=>wff("(p&r)")))
+
+        The result should look like this: ((q|r)->((q|r)&r)). reply() me when your code is ready ...
+        """,
+        "Copy the code from show(), then replace the print() calls " *
+            "to return recursively substituted WFFs",
+        x -> string(Main.Propositions.substitute_vars( Main.wff("(p->(p&q))"),
+            Dict("p"=>Main.wff("(q|r)"),"q"=>Main.wff("r"),"r"=>Main.wff("(p&r)"))
+        )) == "((q | r) -> ((q | r) & r))"
+    ),
+    Activity(
+        """
+        My unit test of your method substitute_vars() seems to run properly. Now I'll test your
+        implementation by calling substitute_vars from within substitute_ops():
+            substitute_ops( wff("((x|y)&~x)"), Dict( "&"=>wff("~(~p|~q)"), "|"=>wff("~(~p&~q)")) )
+
+        Try this for yourself, if you like. The result should look like this: ~(~~(~x & ~y) | ~~x).
+        Then reply() me when you're ready ...
+        """,
+        "",
+        x -> string(Main.Propositions.substitute_ops( Main.wff("((x|y)&~x)"),
+            Dict("&"=>Main.wff("~(~p|~q)"),"|"=>Main.wff("~(~p&~q)"))
+        )) == "~(~~(~x & ~y) | ~~x)"
     ),
     Activity(
         """

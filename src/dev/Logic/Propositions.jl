@@ -7,7 +7,7 @@
 #========================================================================================#
 module Propositions
 
-export WFF, wff, iswff, show
+export WFF, wff, iswff, show, substitute_ops
 
 #-----------------------------------------------------------------------------------------
 # Module types:
@@ -44,7 +44,7 @@ Base.convert(::Type{WFF}, x) = WFF(x)
 #-----------------------------------------------------------------------------------------
 # Module methods:
 #-----------------------------------------------------------------------------------------
-# Structural methods:
+# Accessor methods:
 #-----------------------------------------------------------------------------------------
 """
 	iswff(str::String) :: Bool
@@ -123,7 +123,7 @@ Return the Set of all variable names in the woof.
 """
 function variables(woof::WFF)
 	# Learning activity:
-	if  isconstant(woof.head)
+	if isconstant(woof.head)
 		Set{String}([])
 	elseif isvariable(woof.head)
 #		Set(["p","q"])
@@ -144,7 +144,7 @@ Return the Set of all operator names in the woof.
 """
 function operators(woof::WFF)
 	# Learning activity:
-	if  isvariable(woof.head)
+	if isvariable(woof.head)
 		Set{String}([])
 	elseif isconstant(woof.head)
 #		Set(["~"])
@@ -325,24 +325,91 @@ function parse_ws( str::String) :: String
 end
 
 #-----------------------------------------------------------------------------------------
-# Structure manipulation methods:
+# Substitution methods:
 #-----------------------------------------------------------------------------------------
 """
-	substitute_vars( woof::WFF, substitution::Dict{String,WFF}) :: WFF
+	substitute_vars( woof::WFF, var_subst_map::Dict{String,WFF}) :: WFF
 
-Replace each variable "p" in the given woof by the new expression substitution["p"]. Variables
-that arise through performing this substitution are NOT further substituted.
+Replace each variable - say, "p" - in the given woof by the new expression var_subst_map["p"].
+Variables that arise through performing this var_subst_map are NOT further substituted.
 
 Example:
-	substitute_vars( wff("(p->(p&q))"), Dict("p"=>wff("(q|r)"),"q"=>woof("r"),"r"=>wff("(p&r)")))
-		-> ((q|r)->((q|r)&r))
+	substitute_vars(
+		wff("(p->(p&q))"), Dict( "p"=>wff("(q|r)"), "q"=>wff("r"), "r"=>wff("(p&r)"))
+	) == ((q|r)->((q|r)&r))
 """
-function substitute_vars( woof::WFF, substitution::Dict{String,WFF}) :: WFF
+function substitute_vars( woof::WFF, var_subst_map::Dict{String,WFF}) :: WFF
+	@assert all(isvariable.(keys(var_subst_map)))
+
 	# Learning activity:
 #	woof
-	@assert all(isvariable.(keys(substitution)))
+	if isconstant(woof.head)
+		woof
+	elseif isvariable(woof.head)
+		haskey(var_subst_map,woof.head) ? var_subst_map[woof.head] : woof
+	elseif isunary(woof.head)
+		WFF(woof.head,substitute_vars(woof.arg1,var_subst_map))
+	else
+		WFF( woof.head,
+			substitute_vars(woof.arg1,var_subst_map),
+			substitute_vars(woof.arg2,var_subst_map)
+		)
+	end
+end
 
-	#???
+#-----------------------------------------------------------------------------------------
+"""
+	substitute_ops( woof::WFF, op_subst_map::Dict{String,WFF}) :: WFF
+
+Return a wff obtained from the given woof by replacing, for each constant or operator - say, "*" -
+in the op_subst_map dictionary, each occurrence of this operator by the wff op_subst_map["*"] to
+which it is mapped by the subst_map. In this wff, each occurrence of p is replaced by the first
+operand of "*" in woof, and every occurrence of q is replaced by the second operand of "*" in woof.
+Operators that arise through performing this operator substitution are NOT further substituted.
+
+Example:
+	substitute_ops(
+		wff("((x|y)&~x)"), Dict( "&"=>wff("~(~p|~q)"), "|"=>wff("~(~p&~q)"))
+	) == ~(~~(~x&~y)|~~x)
+"""
+function substitute_ops( woof::WFF, op_subst_map::Dict{String,WFF}) :: WFF
+	for sub in op_subst_map
+		@assert isconstant(first(sub)) || isunary(first(sub)) || isbinary(first(sub))
+		@assert issubset(variables(last(sub)),Set(["p","q"]))
+	end
+
+	if isconstant(woof.head) || isvariable(woof.head)
+		# No substitution needed:
+		return woof
+	elseif !haskey(op_subst_map,woof.head)
+		# Substitution needed only in arguments:
+		if isunary(woof.head)
+			return WFF( woof.head, substitute_ops(woof.arg1,op_subst_map))
+		else
+			return WFF( woof.head,
+				substitute_ops(woof.arg1,op_subst_map),
+				substitute_ops(woof.arg2,op_subst_map)
+			)
+		end
+	end
+
+	# woof.head definitely requires substitution; set up var substitution map:
+	var_subst_map = Dict("p"=>substitute_ops(woof.arg1,op_subst_map))
+	if isbinary(woof.head)
+		var_subst_map["q"] = substitute_ops(woof.arg2,op_subst_map)
+	end
+
+	# Perform this var substitution for each arg (p and q) in the op subst_map:
+	sub = op_subst_map[woof.head]
+	if isunary(sub.head)
+		return WFF( sub.head, substitute_vars( sub.arg1, var_subst_map))
+	end
+
+	# Substitution uses a binary operator:
+	WFF( sub.head,
+		substitute_vars(sub.arg1,var_subst_map),
+		substitute_vars(sub.arg2,var_subst_map)
+	)
 end
 
 #-----------------------------------------------------------------------------------------
@@ -361,10 +428,12 @@ function demo()
 			WFF( "~", WFF("p"))
 		)
 	)
-	println("Testing the WFF \"contrapositive\": ", contrapositive, " ...")
+	println("Testing the WFF \"contrapositive\": $contrapositive ...")
 	println("Variables contained in contrapositive are: ", variables(contrapositive))
 	println("Operators contained in contrapositive are: ", operators(contrapositive))
 	println("And here is my newly parsed version: ", wff( string(contrapositive)))
+
+	substitute_vars( wff("(p->(p&q))"), Dict("p"=>wff("(q|r)"),"q"=>wff("r"),"r"=>wff("(p&r)")))
 end
 
 end
