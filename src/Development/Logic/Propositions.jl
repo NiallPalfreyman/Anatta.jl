@@ -7,7 +7,7 @@
 #========================================================================================#
 module Propositions
 
-export WFF, wff, iswff, show
+export WFF, wff, show, to_not_implies
 
 #-----------------------------------------------------------------------------------------
 # Module types:
@@ -38,7 +38,7 @@ struct WFF
 	end
 end
 
-"Make WFF constructor available for type conversions"
+"Base.convert(WFF,x): Make WFF constructor available for type conversions"
 Base.convert(::Type{WFF}, x) = WFF(x)
 
 #-----------------------------------------------------------------------------------------
@@ -91,9 +91,10 @@ end
 """
 	isbinary(op2::String)
 
-Check whether op2 is a binary operator ("&", "|" or "->")
+Check whether op2 is a binary operator ("&", "|", "->", "+", "<->", "-&" or "-|").
 """
 function isbinary(op2::String)
+	# Learning activity:
 	op2=="&" || op2=="|" || op2=="->"
 end
 
@@ -165,7 +166,7 @@ function Base.parse( ::Type{T}, sentence::AbstractString) :: WFF where T<:WFF
 	WFF( "->", WFF("p"), WFF("q"))
 end
 
-"Provide simple interface to Base.parse(WFF,sentence)"
+"wff(sentence): Provide simple interface to Base.parse(WFF,sentence)"
 wff( sentence::AbstractString) = Base.parse(WFF,sentence)
 
 #-----------------------------------------------------------------------------------------
@@ -281,7 +282,7 @@ function parse_ws( str::String) :: String
 end
 
 #-----------------------------------------------------------------------------------------
-# Substitution methods:
+# Structural transformation methods:
 #-----------------------------------------------------------------------------------------
 """
 	substitute_vars( woof::WFF, var_subst_map::Dict{String,WFF}) :: WFF
@@ -357,6 +358,48 @@ function substitute_ops( woof::WFF, op_subst_map::Dict{String,WFF}) :: WFF
 end
 
 #-----------------------------------------------------------------------------------------
+"""
+	to_not_and_or( woof::WFF) :: WFF
+
+Structurally transform woof into a wff that contains only the operators "~", "&" and "|".
+"""
+function to_not_and_or( woof::WFF) :: WFF
+	# Learning activity:
+	# {"->", "+", "<->", "-&", "-|"} => {"~", "&", "|"}
+	woof
+end
+
+#-----------------------------------------------------------------------------------------
+"""
+	to_not_and( woof::WFF) :: WFF
+
+Structurally transform woof into a wff that contains only the operators "~" and "&".
+"""
+function to_not_and( woof::WFF) :: WFF
+	# Learning activity:
+	# {"|", "->", "+", "<->", "-&", "-|"} => {"~", "&"}
+	woof
+end
+
+#-----------------------------------------------------------------------------------------
+"""
+	to_not_implies( woof::WFF) :: WFF
+
+Structurally transform woof into a wff that contains only the operators "~" and "->".
+"""
+function to_not_implies( woof::WFF) :: WFF
+	# {"&", "|", "+", "<->", "-&", "-|"} => {"~", "->"}:
+	substitute_ops( woof, Dict(
+		"-&"	=> wff("(p->~q)"),
+		"&"		=> wff("~(p->~q)"),
+		"|"		=> wff("((p->q)->q)"),
+		"-|"	=> wff("~((p->q)->q)"),
+		"<->"	=> wff("((~(p->~q)->~(~p->q))->~(~p->q))"),
+		"+"		=> wff("~((~(p->~q)->~(~p->q))->~(~p->q))")
+	))
+end
+
+#-----------------------------------------------------------------------------------------
 # Demonstration methods:
 #-----------------------------------------------------------------------------------------
 """
@@ -365,17 +408,30 @@ end
 Run a use-case scenario of Propositions
 """
 function demo()
-	contrapositive = WFF("->",
-		WFF( "->", WFF("p"), WFF("q")),
-		WFF( "->",
-			WFF( "~", WFF("q")),
-			WFF( "~", WFF("p"))
+	# Make Absolutely Sure you understand the tree-structure of wffs like this `contrapositive`:
+	contrapositive =
+		WFF("->",						# Top-level binary operator
+			WFF( "->",					# 2nd-level binary operator (arg1)
+				WFF("p"),				# 3rd-level variable (arg1)
+				WFF("q")				# 3rd-level variable (arg2)
+			),
+			WFF( "->",					# 2nd-level binary operator (arg2)
+				WFF( "~",				# 3rd-level unary operator (arg1)
+					WFF("q")			# 4th-level variable (arg1)
+				),
+				WFF( "~",				# 3rd-level unary operator (arg1)
+					WFF("p")			# 4th-level variable (arg1)
+				)
+			)
 		)
-	)
 	println("Testing the WFF \"contrapositive\": $contrapositive ...")
 	println("Variables contained in contrapositive are: ", variables(contrapositive))
 	println("Operators contained in contrapositive are: ", operators(contrapositive))
-	println("And here is my newly parsed version: ", parse( WFF, string(contrapositive)))
+	println("Here is my newly parsed version: ", wff( string(contrapositive)))
+	println("Here is the [~,&] version: ", to_not_and(contrapositive))
+
+	# Learning activity:
+#	println("... and finally, the [~,->] version: ", to_not_implies(contrapositive))
 end
 
 end

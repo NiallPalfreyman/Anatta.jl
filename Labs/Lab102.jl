@@ -1,22 +1,22 @@
 #========================================================================================#
-#	Laboratory 101
+#	Laboratory 102
 #
-# Semantics.
+# Incompleteness.
 #
-# Author: Niall Palfreyman, 8/11/2024
+# Author: Niall Palfreyman, 23/11/2024
 #========================================================================================#
 include("../src/dev/Logic/Semantics.jl")
 [
     Activity(
         """
-        Hi! Welcome to Anatta Lab 102: Syntactic Structure and Incompleteness
+        Hi! Welcome to Anatta Lab 102: Incompleteness and Structural Manipulation
 
         What have we achieved so far in this Subject? In labs 100 and 101, we constructed a
         language named PL (Propositional Logic) that consisted of sentences (wffs) and their
-        meanings (truth-table columns). Syntax defines the structure of sentences, for example:
+        meanings (truth-table columns). Syntax defines the Structure of sentences, for example:
             (a -> (a | ~b))
 
-        and Semantics define this sentence's meaning as the rightmost column of this truth-table:
+        and Semantics define this sentence's Meaning as the rightmost column of this truth-table:
             | a | b | ~b | (a | ~b) | (a -> (a | ~b)) |
             -------------------------------------------
             | 0 | 0 | 1  | 1        | 1               |
@@ -29,11 +29,11 @@ include("../src/dev/Logic/Semantics.jl")
     ),
     Activity(
         """
-        We also proved that there is no gap between the wff sentences and their truth-table
-        meaning, in the sense that our definition of PL is both Sound and Complete:
+        We also proved that there is no gap between wffs and their truth-table meaning, in the
+        sense that our definition of PL is both Sound and Complete:
         -   Soundness: Every sentence (wff) has a unique meaning (truth-table column);
-        -   Completeness: Every meaning is expressed by some sentence of variables linked by
-                            the operators ["T","F","&","|","~","->"]
+        -   Completeness: Every meaning (truth-table column) can be expressed by some wff that
+                        contains variables linked by the operators ["T","F","&","|","~","->"].
         """,
         "",
         x -> true
@@ -76,9 +76,9 @@ include("../src/dev/Logic/Semantics.jl")
 
         This idea of incompleteness raises many interesting questions about syntactic structures:
         -   If we add new operators to PL, does the syntax become more expressive?
-        -   Would PL still be complete if we removed, say, "&" and "|" from its definition?
+        -   Is PL still be complete if we base its definition on the operators ["&","|","~"]?
         -   Could it be (Oh! Horror!) that mathematics itself is incomplete?! That is, are there
-            mathematical facts that we will never be able to express in the language of mathematics?
+            mathematical truths that we will never be able to express in the language of mathematics?
 
         We shall answer ALL of these questions in this Anatta Subject! Hooray!
         """,
@@ -185,16 +185,40 @@ include("../src/dev/Logic/Semantics.jl")
     Activity(
         """
         This brings us to our second question from earlier:
-            Would PL still be complete if we removed "&" and "|" from its definition?
+            Is PL still be complete if we base its definition on the operators ["&","|","~"]?
 
-        We shall answer this question by implementing Substitution in PL. Removing AND and OR from
-        the definition of PL will certainly lower PL's expressivity (and so make it incomplete)
-        unless we can always substitute (a & b) and (a | b) by some other expressions in sentences
-        Without changing their semantics. So let's look at a few useful substitutions ...
-
-        Is the following sentence true under all circumstances: ((p & q) <-> ~(~p | ~q)) ?
+        We already know from lab 101 that it is possible to build the truth-table of any wff in PL,
+        then use this table to translate the wff into a disjunctive normal form (DNF) that contains
+        only "&", "|" and "~". So it is definitely possible to reduce the operators in PL to this
+        smaller set without damaging its completeness.
+        
+        Yet this DNF method has a practical problem: it requires us to scan the entire semantics of
+        the wff by building a truth-table. If n is the number of variables in the wff, how much
+        time and memory resources would we need to build the entire truth-table?
+        1.  Linear resources: O(n)
+        2.  Polynomial resources: O(n^2), O(n^3), ...
+        3.  Exponential resources: O(2^n)
         """,
-        "Use istautology()",
+        "",
+        x -> x==3
+    ),
+    Activity(
+        """
+        Yes, building truth-tables is Very expensive in time and other resources! For this reason,
+        it is more efficient to find a way of eliminating operators syntactically. This is, indeed,
+        the entire reason for doing mathematics: it helps us calculate answers structurally, that
+        would otherwise take too long to answer. But of course this is only useful if we can be
+        CERTAIN that our syntactic structures are complete and cover ALL possible meanings!
+
+        We shall therefore try to use syntactic Substitution to eliminate operators syntactically
+        from PL. For, removing "->" from the definition of PL will certainly lower PL's expressivity
+        (by making it incomplete) unless we can always substitute (a -> b) in any wff by some other
+        structure that leaves the wff's semantics unchanged. Let's look at some substitutions ...
+
+        Use istautology() to find out whether the following sentence is true under ALL
+        circumstances: ((p & q) <-> ~(~p | ~q)). Is this a tautology?
+        """,
+        "Use istautology(wff(\"((p&q) <-> ~(~p|~q))\"))",
         x -> 'y' in lowercase(x)
     ),
     Activity(
@@ -255,15 +279,18 @@ include("../src/dev/Logic/Semantics.jl")
         reassembling the results and returning them as a new WFF containing the original, unchanged
         operator.
 
-        After checking each of these special situations, the only remaining possibility is that the
-        operator in woof.head appears in the substitution map, and so requires substitution. This
-        is performed by the code in the second half of substitute_ops() ...
+        reply() me when you have studied this first half of substitute_ops() up to the end of the
+        first, long if-statement.
         """,
         "",
         x -> true
     ),
     Activity(
         """
+        After checking each of these special situations, the only remaining possibility is that the
+        operator in woof.head appears in the substitution map, and so requires substitution. This
+        is performed by the code in the second half of substitute_ops() ...
+
         To perform the actual substitution, substitute_ops() first assembles a new substitution map
         for the variables p and q:
             var_substitution = Dict("p"=>~x,"q"=>(z & y))
@@ -303,8 +330,9 @@ include("../src/dev/Logic/Semantics.jl")
     ),
     Activity(
         """
-        My unit test of your method substitute_vars() seems to run properly. Now I'll test your
-        implementation by calling substitute_vars from within substitute_ops():
+        If my unit testing of your method substitute_vars() ran correctly, it's now time to perform
+        integration testing of your implementation by calling substitute_vars from within
+        substitute_ops():
             substitute_ops( wff("((x|y)&~x)"), Dict( "&"=>wff("~(~p|~q)"), "|"=>wff("~(~p&~q)")) )
 
         Try this for yourself, if you like. The result should look like this: ~(~~(~x & ~y) | ~~x).
@@ -317,210 +345,82 @@ include("../src/dev/Logic/Semantics.jl")
     ),
     Activity(
         """
+        Now that we have implemented substitution computationally, recall that we are trying to
+        answer the second of our questions from the beginning of this lab:
+            Is PL still be complete if we base its definition on the operators ["&","|","~"]?
+
+        The answer to this question is True iff we can prove that it is possible to transform
+        syntactically (i.e., structurally) EVERY other operator expression into one involving only
+        ["~","&","|"]. The easiest way to prove this is to write a computational method for
+        performing this structural transformation, and that is your next task....
+        
+        Implement the stub functionality in the method Propositions.to_not_and_or() by using your
+        freshly implemented method substitute_ops() to convert any wff into one containing only
+        ["~","&","|"]. You can then check the method's correctness by using it to find the
+        ["~","&","|"] form of the contrapositive wff in Propositions.demo(), which is:
+            (~(~p | q) | (~~q | ~p))
+
+        reply() me when your code is working correctly ...
+        """,
+        "You may get some hints by looking at my implementation of the method to_not_implies()",
+        x -> true
+    ),
+    Activity(
+        """
+        Now implement the method to_not_and(), which converts any wff into one containing only
+        ["~","&"]. You can then check the method's correctness by using it to find the ["~","&"]
+        form of the contrapositive wff in Propositions.demo(), which is:
+            ~(~~~(~~p & ~q) & ~~(~~~q & ~~p))
+
+        reply() me when your code is working correctly ...
         """,
         "",
         x -> true
     ),
     Activity(
         """
+        OK, we have achieved our goals for this lab! We discovered that adding new operators such
+        as ["<->","+","-&","-|"] to PL does NOT increase its expressiveness (i.e., the set of all
+        meanings expressible in the language). We also discovered that it is possible to reduce the
+        number of operators in the definition of PL without destroying its completenes (i.e., the
+        language's ability to express ALL possible truth-table meanings).
+        
+        So we are free (within limits) to choose for ourselves which operators we will use to define PL!
+
+        The advantage of using many operators is that it makes it easier for us to express certain
+        things. For example, in its full form, the contrapositive rule is not just an implication,
+        but also an equivalence with this form:
+            ((p->q) <-> (~q->~p))
+
+        The only change I have made here is to modify the topmost-level implication into an iff
+        operator. Make this change at the topmost level of the wff `contrapositive` in
+        Propositions.demo(), then remove the comment marker lower down, so that demo() calls the
+        method to_not_implies() to translate this equivalence into a language that only uses
+        ["~","->"]. Just notice how much more difficult it is to understand this ["~","->"] form!
         """,
         "",
         x -> true
     ),
     Activity(
         """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
+        Wow! You can see why people prefer to use straightforward operators such as "&" and "<->"!
+
+        Yet there is also an advantage to using a language that is defined minimally. For example,
+        in this course we will base our definition of PL on precisely these two operators: ["~","->"].
+        
+        You might ask: Why would we do such a strange thing? Why tie one hand behind our backs, so
+        to speak? The reason is that this will makes proving theorems about the language Much
+        easier! Imagine what it would be like if we had to prove some exciting new property of PL
+        using all of the operators ["T","F","&","|","~","->","<->","+","-&","-|"]. We would have to
+        prove our new property for Every sentence that uses even just one of these operators!
+        
+        But with the reduced set of operators ["~","->"], life is much easier, because we know that
+        all other operators can be substitutes by some combination of "~" and "->". As a result, we
+        only need to prove our property for sentences that use these two. Laziness is Cool! ;)
+        
+        To finish this lab, please use the method to_not_implies() to translate a few simple wffs
+        of your choice into this new ["~","->"] version of PL, then use a truth-table to check that
+        my substitution is correct. Then we will see each other again in the next lab. Have fun! :)
         """,
         "",
         x -> true

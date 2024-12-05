@@ -1,7 +1,7 @@
 #========================================================================================#
 #	Laboratory 100
 #
-# Welcome to Subject 100: Formal Logic
+# Welcome to Subject 100: Formal structures
 # This Subject draws heavily upon the ideas in the following book:
 #   Gonczarowski, Y.A. & Nisan, N. (2022). Mathematical logic through Python. CUP.
 #
@@ -20,23 +20,35 @@ const parse_tests = [
     Activity(
         """
         Hi! Welcome to Anatta Subject 100:
-            Formal Logic - Beliefs have structure, and structures ALWAYS have gaps!
+            Formal Structures - Beliefs have structure, and structures ALWAYS have gaps!
         
         Before continuing, I want to stop and think for a moment about what we have so far achieved
         in Anatta. In Subject 000, we learned to use the Julia computer language to solve many
         different kinds of problems, yet we also found that there are some problems that we cannot
         solve with a computer - for example, predicting the outcome of a chaotic process. So it
-        seems that computational structures may not be powerful enough to describe all the dynamical
-        possibilities that we biological organisms must cope with. Is this a problem?
+        seems that computational structures may not be powerful enough to describe all the possible
+        dynamical situations that we biological organisms must cope with.
         
+        What do you think: might this be a problem for us as living organisms?
+        """,
+        "There's no right or wrong answer here - I just want you thinking about the issues involved.",
+        x -> true
+    ),
+    Activity(
+        """
         In Subject 100, we study an important tension that faces all organisms: In order to survive
         and to communicate with each other, we divide our experience into convenient structures
         such as tables, chairs and tigers, yet we can never be quite sure whether these structures
-        accurately describe the survival-relevant processes that we might have to face tomorrow.
+        describe "what is out there" accurately enough to cope with the survival-relevant processes
+        that we might have to face tomorrow.
 
-        To do this, we shall define very precisely the language of mathematical Logic. We shall
-        define its structural sentences and the meaning of those sentences, and then analyse these
-        to discover whether there is an essential gap between sentence and meaning ...
+        To investigate this tension, we shall define very precisely in lab 100 the language of
+        mathematical Logic. This language is of course not the language that bacteria, squirrels
+        or even humans use to communicate; however, it has all the basic components of all
+        languages: nouns, verbs and adjectives. Also, it is simple enough for us to be able to
+        define very precisely its sentence structure and the meaning of those sentences. We can
+        therefore use it as a test case for language structures to discover whether there is any
+        essential gap between structures and their meaning ...
         """,
         "",
         x -> true
