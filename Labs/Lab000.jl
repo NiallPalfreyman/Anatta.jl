@@ -58,15 +58,15 @@
         While exploring Anatta, we will investigate this question very deeply. To help us do so,
         I have divided our exploration into Subjects that build successively upon each other. Each
         Subject corresponds roughly to a 5-credit undergraduate-level lecture course:
-            Subject 0: Computation            - Using structures to explore and predict the world
-            Subject 1: Formal structures      - Beliefs have structure, but structures ALWAYS have gaps!
-            Subject 2: System dynamics        - Dynamical stories can fill logical gaps
-            Subject 3: Simulation physics     - Using structures to approximate stories efficiently
-            Subject 4: Quantum computing      - Small stories generate large structures
-            Subject 5: Quantum thermodynamics - Small structures generate large stories
-            Subject 6: Enactive dynamics      - Knowledge is a property of populations, not individuals
-            Subject 7: Relativity theory      - Organisms ENACT: they abstract knowledge through action
-            Subject 8: Quantum-field theory   - Knowledge combines both large and small stories
+            Subject 0: Computation            - We use belief structures to explore and predict experience
+            Subject 1: Formal structures      - There is Always a gap between structure and experience
+            Subject 2: System dynamics        - Dynamical stories can fill structural gaps
+            Subject 3: Simulation physics     - Structures can approximate stories efficiently
+            Subject 4: Quantum computing      - Simple stories can generate complex structures
+            Subject 5: Quantum thermodynamics - Simple structures can generate complex stories
+            Subject 6: Enactive dynamics      - Belief is a activity of populations, not individuals
+            Subject 7: Relativity theory      - Organisms ENACT: they abstract belief through action
+            Subject 8: Quantum-field theory   - Belief combines simple structures and complex stories
         """,
         "reply() to move on :)",
         x -> true
