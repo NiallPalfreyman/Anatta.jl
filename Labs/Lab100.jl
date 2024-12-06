@@ -2,7 +2,7 @@
 #	Laboratory 100
 #
 # Welcome to Subject 100: Formal structures
-# This Subject draws heavily upon the ideas in the following book:
+# This Subject draws heavily upon the ideas in the following excellent book:
 #   Gonczarowski, Y.A. & Nisan, N. (2022). Mathematical logic through Python. CUP.
 #
 # Author: Niall Palfreyman, 8/11/2024.
@@ -20,7 +20,7 @@ const parse_tests = [
     Activity(
         """
         Hi! Welcome to Anatta Subject 100:
-            Formal Structures - Beliefs have structure, and structures ALWAYS have gaps!
+            Formal structures - There is Always a gap between structure and experience
         
         Before continuing, I want to stop and think for a moment about what we have so far achieved
         in Anatta. In Subject 000, we learned to use the Julia computer language to solve many

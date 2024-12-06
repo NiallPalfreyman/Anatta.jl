@@ -9,7 +9,7 @@
     Activity(
         """
         Hi! Welcome to Anatta Subject 001:
-            Computation - Using structures to explore and predict the world
+            Computation - We use belief structures to explore and predict experience
 
         Anatta is a course in thinking about the complex issues around Wholeness, Life, biological
         Autonomy and Learning. This first 0-level Anatta Subject introduces you to the computer
