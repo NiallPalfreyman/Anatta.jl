@@ -8,6 +8,7 @@
 module Roulette
 
 using Statistics: mean, std
+export sample
 
 #-----------------------------------------------------------------------------------------
 # Module methods:
@@ -72,7 +73,10 @@ function demo( temperature=0.0)
 	println( "Sampling the frequencies")
 	println( "    $(round.(x,digits=2))")
 	println( "generates the following sampled types:")
-	println( "    $(sample(x,T=temperature))")
+	println( "    ", sample(x,T=temperature))
+	println()
+	println( "Sampling only 7 types generates:")
+	println( "    ", sample(x,7,T=temperature))
 end
 
 end		# ... of module Roulette
