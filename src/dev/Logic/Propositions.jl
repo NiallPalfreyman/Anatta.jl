@@ -7,7 +7,7 @@
 #========================================================================================#
 module Propositions
 
-export WFF, wff, show, to_not_implies
+export WFF, to_not_implies, isvariable, isconstant, isunary, isbinary
 
 #-----------------------------------------------------------------------------------------
 # Module types:
@@ -25,8 +25,8 @@ struct WFF
 	arg2::Union{WFF,Nothing}	# Argument 2
 
 	function WFF( head::String, arg1=nothing, arg2=nothing)
-		if isvariable(head) || isconstant(head)
-    		new(head,nothing,nothing)
+		if isnothing(arg1) && isnothing(arg2)
+			(isvariable(head) || isconstant(head)) ? new(head,nothing,nothing) : wff(head)
 		elseif isunary(head)
 			@assert !isnothing(arg1)&&isnothing(arg2) "Unary arguments invalid!"
 			new(head,arg1,nothing)
@@ -38,8 +38,9 @@ struct WFF
 	end
 end
 
-"Base.convert(WFF,x): Make WFF constructor available for type conversions"
-Base.convert(::Type{WFF}, x) = WFF(x)
+#-----------------------------------------------------------------------------------------
+"Base.convert(WFF,x): Implement WFF type conversions"
+Base.convert(::Type{WFF}, x::String) = WFF(x)
 
 #-----------------------------------------------------------------------------------------
 # Module methods:
@@ -164,12 +165,12 @@ end
 # Parsing methods:
 #-----------------------------------------------------------------------------------------
 """
-	Base.parse( Type{T}, sentence::AbstractString) :: WFF where T<:WFF
+	wff( sentence::String) :: WFF
 
 Assume the argument sentence is a valid sentence of the language PL, and return the WFF
 described by that sentence.
 """
-function Base.parse( ::Type{T}, sentence::AbstractString) :: WFF where T<:WFF
+function wff( sentence::String) :: WFF
 	# Learning activity:
 #	WFF( "->", WFF("p"), WFF("q"))
 	woof, msg = parse_wff(sentence)
@@ -180,9 +181,6 @@ function Base.parse( ::Type{T}, sentence::AbstractString) :: WFF where T<:WFF
 
 	woof
 end
-
-"wff(sentence): Provide simple interface to Base.parse(WFF,sentence)"
-wff( sentence::AbstractString) = Base.parse(WFF,sentence)
 
 #-----------------------------------------------------------------------------------------
 """
@@ -335,7 +333,7 @@ end
 Replace each variable - say, "p" - in the given woof by the new expression var_subst_map["p"].
 Variables that arise through performing this var_subst_map are NOT further substituted.
 
-Example:
+Use-case:
 	substitute_vars(
 		wff("(p->(p&q))"), Dict( "p"=>wff("(q|r)"), "q"=>wff("r"), "r"=>wff("(p&r)"))
 	) == ((q|r)->((q|r)&r))
@@ -369,7 +367,7 @@ which it is mapped by the subst_map. In this wff, each occurrence of p is replac
 operand of "*" in woof, and every occurrence of q is replaced by the second operand of "*" in woof.
 Operators that arise through performing this operator substitution are NOT further substituted.
 
-Example:
+Use-case:
 	substitute_ops(
 		wff("((x|y)&~x)"), Dict( "&"=>wff("~(~p|~q)"), "|"=>wff("~(~p&~q)"))
 	) == ~(~~(~x&~y)|~~x)
@@ -492,7 +490,7 @@ function demo()
 	println("Testing the WFF \"contrapositive\": $contrapositive ...")
 	println("Variables contained in contrapositive are: ", variables(contrapositive))
 	println("Operators contained in contrapositive are: ", operators(contrapositive))
-	println("Here is my newly parsed version: ", wff( string(contrapositive)))
+	println("Here is my newly parsed version: ", WFF( string(contrapositive)))
 	println("Here is the [~,&] version: ", to_not_and(contrapositive))
 
 	# Learning activity:

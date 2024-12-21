@@ -1,7 +1,7 @@
 #========================================================================================#
 #	Laboratory 102
 #
-# Incompleteness.
+# Incompleteness and substitution.
 #
 # Author: Niall Palfreyman, 23/11/2024
 #========================================================================================#
@@ -9,7 +9,7 @@ include("../src/dev/Logic/Semantics.jl")
 [
     Activity(
         """
-        Hi! Welcome to Anatta Lab 102: Incompleteness and Structural Manipulation
+        Hi! Welcome to Anatta Lab 102: How does Incompleteness arise?
 
         What have we achieved so far in this Subject? In labs 100 and 101, we constructed a
         language named PL (Propositional Logic) that consisted of sentences (wffs) and their
@@ -30,7 +30,7 @@ include("../src/dev/Logic/Semantics.jl")
     Activity(
         """
         We also proved that there is no gap between wffs and their truth-table meaning, in the
-        sense that our definition of PL is both Sound and Complete:
+        sense that our syntax for wffs is both Sound and Complete:
         -   Soundness: Every sentence (wff) has a unique meaning (truth-table column);
         -   Completeness: Every meaning (truth-table column) can be expressed by some wff that
                         contains variables linked by the operators ["T","F","&","|","~","->"].
@@ -122,10 +122,10 @@ include("../src/dev/Logic/Semantics.jl")
     Activity(
         """
         Next, we must implement the semantics of our new operators. Extend your code in the method
-        Semantics.evaluate() to handle the new operators, then check that the methods truth_values(),
-        pretty_tt(), istautology(), iscontradiction(), issatisfiable() and dnf() from the Semantics
-        module all work correctly. When you are satisfied, include() and reply() - you know the
-        ritual by now! :)
+        Semantics.evaluate(WFF,Model) to handle the new operators, then check that the methods
+        truth_values(), pretty_tt(), istautology(), iscontradiction(), issatisfiable() and dnf()
+        from the Semantics module all work correctly. When you are satisfied, include() and
+        reply() - you know the ritual by now! :)
         """,
         "",
         x -> Main.Semantics.istautology(Main.Propositions.wff("~((a-|b)+(~a&~b))"))
@@ -211,7 +211,7 @@ include("../src/dev/Logic/Semantics.jl")
         CERTAIN that our syntactic structures are complete and cover ALL possible meanings!
 
         We shall therefore try to use syntactic Substitution to eliminate operators syntactically
-        from PL. For, removing "->" from the definition of PL will certainly lower PL's expressivity
+        from PL. For, removing "->" from the syntax of wffs will certainly lower their expressivity
         (by making it incomplete) unless we can always substitute (a -> b) in any wff by some other
         structure that leaves the wff's semantics unchanged. Let's look at some substitutions ...
 
@@ -347,7 +347,7 @@ include("../src/dev/Logic/Semantics.jl")
         """
         Now that we have implemented substitution computationally, recall that we are trying to
         answer the second of our questions from the beginning of this lab:
-            Is PL still be complete if we base its definition on the operators ["&","|","~"]?
+            Are PL wffs complete if we base their syntax on the operators ["&","|","~"]?
 
         The answer to this question is True iff we can prove that it is possible to transform
         syntactically (i.e., structurally) EVERY other operator expression into one involving only
@@ -382,10 +382,10 @@ include("../src/dev/Logic/Semantics.jl")
         OK, we have achieved our goals for this lab! We discovered that adding new operators such
         as ["<->","+","-&","-|"] to PL does NOT increase its expressiveness (i.e., the set of all
         meanings expressible in the language). We also discovered that it is possible to reduce the
-        number of operators in the definition of PL without destroying its completenes (i.e., the
-        language's ability to express ALL possible truth-table meanings).
+        number of operators in the definition of wff syntax without making their expressivity
+        incomplete (i.e., their ability to express ALL possible truth-table meanings).
         
-        So we are free (within limits) to choose for ourselves which operators we will use to define PL!
+        So we are free (within limits) to choose for ourselves which operators we use to define PL!
 
         The advantage of using many operators is that it makes it easier for us to express certain
         things. For example, in its full form, the contrapositive rule is not just an implication,
@@ -418,7 +418,7 @@ include("../src/dev/Logic/Semantics.jl")
         all other operators can be substitutes by some combination of "~" and "->". As a result, we
         only need to prove our property for sentences that use these two. Laziness is Cool! ;)
         
-        To finish this lab, please use the method to_not_implies() to translate a few simple wffs
+        To close this lab, please use the method to_not_implies() to translate a few simple wffs
         of your choice into this new ["~","->"] version of PL, then use a truth-table to check that
         my substitution is correct. Then we will see each other again in the next lab. Have fun! :)
         """,

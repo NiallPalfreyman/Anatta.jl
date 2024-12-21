@@ -5,12 +5,13 @@
 #	
 # Author: Niall Palfreyman, November 2024.
 #========================================================================================#
-include( "Propositions.jl")
+include( "Proofs.jl")
+using .Propositions, .Proofs
+
 module Semantics
 
-using ..Propositions
-
-export Model, evaluate
+using ..Propositions, ..Proofs
+export Model, evaluate, issound
 
 #-----------------------------------------------------------------------------------------
 # Module types:
@@ -26,11 +27,11 @@ Model = Dict{String,Bool}
 # Module methods:
 #-----------------------------------------------------------------------------------------
 """
-	is_model( model::Model) :: Bool
+	ismodel( model::Model) :: Bool
 
-is_model() checks whether its argument is a valid model.
+ismodel() checks whether its argument is a valid model.
 """
-function is_model( model::Model) :: Bool
+function ismodel( model::Model) :: Bool
 	for var in keys(model)
 		if !Propositions.isvariable(var)
 			return false
@@ -46,7 +47,7 @@ end
 variables() finds all variables over which the model is defined.
 """
 function variables( model::Model) :: Set{String}
-	@assert is_model(model)
+	@assert ismodel(model)
 	Set(keys(model))
 end
 
@@ -56,10 +57,10 @@ end
 
 evaluate() computes the truth-value of this woof in this model.
 
-Example: evaluate( parse("~(p&q5)"), Model("p"=>true,"q5"=>false)) -> true
+Use-case: evaluate( parse("~(p&q5)"), Model("p"=>true,"q5"=>false)) -> true
 """
 function evaluate( woof::WFF, model::Model) :: Bool
-	@assert is_model(model)
+	@assert ismodel(model)
 	@assert issubset( Propositions.variables(woof), variables(model))
 
 	# Learning activity:
@@ -98,7 +99,7 @@ this Iterable corresponds to the order of variables in the vars list, with false
 and the counting of truth-assignments is in binary counting order (i.e., rightmost value changes
 most rapidly).
 
-Example: truth_table( ["q","p"]) returns an Iterable through Models in the following order:
+Use-case: truth_table( ["q","p"]) returns an Iterable through Models in the following order:
 	Model("q"=>false, "p"=>false),
 	Model("q"=>true,  "p"=>false),
 	Model("q"=>false, "p"=>true ),
@@ -190,9 +191,7 @@ Compute whether the given woof is true in every possible model
 function istautology( woof::WFF) :: Bool
 	# Learning activity:
 #	false
-	all(
-		truth_values( woof, truth_table(Propositions.variables(woof)))
-	)
+	all( truth_values( woof, truth_table(Propositions.variables(woof))))
 end
 
 #-----------------------------------------------------------------------------------------
@@ -204,9 +203,7 @@ Compute whether the given woof is false in every possible model
 function iscontradiction( woof::WFF) :: Bool
 	# Learning activity:
 #	false
-	~any(
-		truth_values( woof, truth_table(Propositions.variables(woof)))
-	)
+	!any( truth_values( woof, truth_table(Propositions.variables(woof))))
 end
 
 #-----------------------------------------------------------------------------------------
@@ -218,9 +215,7 @@ Compute whether the given woof is true in somee possible model
 function issatisfiable( woof::WFF) :: Bool
 	# Learning activity:
 #	true
-	any(
-		truth_values( woof, truth_table(Propositions.variables(woof)))
-	)
+	any( truth_values( woof, truth_table(Propositions.variables(woof))))
 end
 
 #-----------------------------------------------------------------------------------------
@@ -235,7 +230,7 @@ For example, the model Model("p" => 1, "q" => 1, "r" => 0) is completely specifi
 conjunctive proposition: ((p & q) & ~r).
 """
 function conjunctive_wff( model::Model) :: WFF
-	@assert is_model(model)
+	@assert ismodel(model)
 	@assert length(model) > 0
 
 	# Learning activity:
@@ -272,6 +267,54 @@ function dnf( vars::Vector{String}, tvalues::AbstractArray{Bool}) :: WFF
 end
 
 #-----------------------------------------------------------------------------------------
+# Inference methods:
+#-----------------------------------------------------------------------------------------
+"""
+	evaluate( ir::InferenceRule, model::Model) :: Bool
+
+Compute whether the given InferenceRule is valid within the given Model. That is, whether the
+model satisfies the conclusion whenever that model satisfies ALL of the assumptions.
+
+Use-cases:
+	evaluate( InferenceRule([wff("p")],wff("q")), Model("p"=>true,"q"=>false)) -> false
+	evaluate( InferenceRule([wff("p")],wff("q")), Model("p"=>false,"q"=>true)) -> true
+"""
+function evaluate( ir::InferenceRule, model::Model) :: Bool
+	@assert ismodel(model)
+
+	# Learning activity:
+#	false
+	for assumption in ir.assumptions
+		if !evaluate(assumption,model)
+			return true
+		end
+	end
+
+	evaluate(ir.conclusion,model)
+end
+
+#-----------------------------------------------------------------------------------------
+"""
+	issound( ir::InferenceRule) :: Bool
+
+Compute whether the given InferenceRule is sound. That is, whether its conclusion is true
+within Every model that satisfies all of its assumptions.
+"""
+function issound( ir::InferenceRule) :: Bool
+	# Learning activity:
+#	false
+	vars = Proofs.variables(ir)
+	tt = truth_table(vars)
+	for model in tt
+		if !evaluate(ir,model)
+			return false
+		end
+	end
+
+	true
+end
+
+#-----------------------------------------------------------------------------------------
 # Demonstration methods:
 #-----------------------------------------------------------------------------------------
 """
@@ -287,7 +330,7 @@ function demo()
 #	woof = wff( "(~~~p&p)")
 #	woof = wff( "(p&(~p|q))")
 #	woof = wff( "((p-&q)<->(~q|~p))")			# Only used in lab 102
-print_ttable(woof)
+	print_ttable(woof)
 	println( "$woof is $(~istautology(woof) ? "not " : "")a tautology, ",
 		"is $(~iscontradiction(woof) ? "not " : "")a contradiction, ",
 		"and is $(~issatisfiable(woof) ? "not " : "")satisfiable!"
