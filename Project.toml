@@ -1,7 +1,7 @@
 name = "Anatta"
 uuid = "6ea38b10-3220-4105-9032-02c82e619cdd"
 authors = ["Niall Palfreyman"]
-version = "0.0.16"
+version = "0.0.17"
 
 [deps]
 Agents = "46ada45e-f475-11e8-01d0-f70cc89e6671"
@@ -9,24 +9,11 @@ CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 DynamicalSystems = "61744808-ddfa-5f27-97ff-6e42cc95d634"
 GLMakie = "e9467ef8-e4e7-5192-8a1a-b1aee30e663a"
-InteractiveDynamics = "ec714cd0-5f51-11eb-0b6e-452e7367ff84"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 Makie = "ee78f7c6-11fb-53f2-987a-cfe4a2b5a57a"
 Observables = "510215fc-4207-5dde-b226-833fc4488ee2"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
-
-[compat]
-Agents = "5.8.0, 6"
-CSV = "0.10"
-DataFrames = "1.5.0"
-DynamicalSystems = "3.0.0"
-GLMakie = "0.8.2, 0.9, 0.10"
-InteractiveDynamics = "0.22, 0.24"
-Makie = "0.19.2, 0.20, 0.21"
-Observables = "0.5.4"
-Statistics = "1"
-julia = "1.6"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
