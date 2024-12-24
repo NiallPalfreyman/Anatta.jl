@@ -8,7 +8,7 @@ Author: Niall Palfreyman (November 2024)
 """
 module Schelling
 
-using Agents, GLMakie
+using Agents
 using Statistics: mean
 
 #-----------------------------------------------------------------------------------------
@@ -40,7 +40,7 @@ function schelling(;
         :min_to_be_happy => 3
     )
 
-    schell = StandardABM( Scheller, ContinuousSpace((worldsize, worldsize)); properties)
+    schell = StandardABM( Scheller, GridSpace((worldsize, worldsize)); agent_step!, properties)
 
     n_agents = round(0.75(worldsize^2))
     for n in 1:n_agents
@@ -57,12 +57,12 @@ end
 
 Define the evolution rule: a function that acts once per step on each activated Scheller agent.
 """
-function agent_step!( scheller, context)
-    minhappy = context.min_to_be_happy
+function agent_step!( scheller::Scheller, model)
+    minhappy = model.min_to_be_happy
     count_group_nbrs = 0
 
     # Count number of neighbours in my group:
-    for nbr in nearby_agents( scheller, context)
+    for nbr in nearby_agents( scheller, model)
         if scheller.group == nbr.group
             count_group_nbrs += 1
         end
@@ -72,7 +72,7 @@ function agent_step!( scheller, context)
         scheller.happy = true                       # Happy! Stick around!
     else
         scheller.happy = false                      # Sad! Move on!
-        move_agent_single!( scheller, context)
+        move_agent_single!( scheller, model)
     end
     return
 end
