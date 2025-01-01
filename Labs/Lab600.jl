@@ -1,7 +1,7 @@
 #========================================================================================#
 #	Laboratory 600
 #
-# Welcome to course 600: An Introduction to Enactive and Agent-based Modelling!
+# Welcome to course 600: An Introduction to Enactive Dynamics and Generative Science.
 #
 # Author:  Niall Palfreyman, 1/1/2025.
 #========================================================================================#
@@ -9,324 +9,336 @@
     Activity(
         """
         Hi! Welcome to Anatta Subject 600:
-            Enactive dynamics - Knowledge is a property of populations, not of individuals
-        
-        Course 600 is immediately under construction - its grass is growing under your feet as you
-        watch! In this course, we use DSM to study biological organism systems that consist of many
-        interacting, NON-LIVING components. Organisms generate behaviour that is emergent, complex
-        and autonomous:
-            - EMERGENT behaviour is COLLECTIVE (arises from the interactions of many individual
-                components) and UNPREDICTABLE (is not computable from the component behaviours).
-            - COMPLEX behaviour is emergent, and is also easy to describe at the system level.
-            - AUTONOMOUS behaviour is complex behaviour that we can describe at the system level as
-                maintaining the existence of the system that generates that autonomous behaviour.
-
-        The tremendous advantage of autonomous systems in both Nature and Industry is that they
-        DEGRADE GRACEFULLY. That is, if the working conditions are not ideal, an autonomous systems
-        will typically not crash, but will instead continue to perform its function, although less
-        efficiently than under ideal conditions. Autonomous system achieve this by having a very
-        special structure that we will investigate in this course.
+            Enactive dynamics - Knowledge is a property of Collectives, not of individuals!
         """,
         "",
         x -> true
     ),
     Activity(
         """
-        DSM uses two important tools: Agent-Based Modelling (ABM) and System Dynamics (SD). In ABM,
-        we call the components AGENTS; in SD we call them STOCKS. For our experimental work, we
-        will use the two julia packages Agents and DynamicalSystems; to display this work, we will
-        use the packages GLMakie and InteractiveDynamics. Make sure you have loaded the Agents
-        package, then go and read this introduction to its functionality:
-            juliadynamics.github.io/Agents.jl/stable/tutorial
+        In this Subject, I present an important argument about how we acquire knowledge. In
+        particular, these concepts describe how Biology seeks to understand living systems ...
+        - Embodiment: Each living organism is embodied as a collective of relational structures
+            (e.g., genes, proteins) and dynamical processes (e.g., diffusion, osmosis).
+
+        - Autonomy: Organisms maintain their stable systemic identity against the destabilising
+            influence of external dynamical processes and internal structural operations.
+
+        - Computability: Autonomous systems Compute, using operations on their internal structure.
+
+        - Complexity: Autonomous systems Act on their environment, using Non-Computable processes.
+
+        - Enactive Dynamics: Organisms implement complexity using Downward Selection. That is,
+            their structure Computes a dynamical response to external destabilising processes, and
+            this response non-computably Selects structural operations that avoid internal
+            destabilisation.
+
+        THEREFORE: Organisms' actions are non-computable, so biological understanding CANNOT involve
+        computing/deducing them. Rather, Biology employs Generative Science (GS). GS understands
+        organisms by Generating their behaviour from the Enactive Dynamics of Agent-Based collectives.
         """,
         "",
-        x -> x == "using"
+        x -> true
     ),
     Activity(
         """
+        OK, so having sketched the aims of this Subject, let's take it slowly, piece by piece ...
+
         In object-oriented software development, we think of processes as belonging to software
         agents - after all, it is YOU who performs the processes of breathing and speaking, isn't
         it? So it makes sense to think of these processes as belonging to you.
 
-        However, a major emphasis of the julia language is that PROCESSES are the primary actors
-        of a system, whereas agents are only the localised nodes that store (or STOCK) the
-        properties created and manipulated by these processes. We therefore think of an Agent as a
-        struct - a collection of local properties that can influence, or CONDITION, the processes,
-        which in turn are able to change those same properties at that agent's location.
+        However, a major emphasis of the julia language is that PROCESSES are the primary movers of
+        a system, while agents are only the localised nodes that store (or Stock) the properties
+        created and manipulated by these processes. We therefore think of an Agent as a struct - a
+        collection of local properties that can influence, or CONDITION, the processes, which in
+        turn are able to change those same properties at that agent's location.
 
-        OK, so let's try making use of all this information. First, derive a new concrete type
-        `Beetle` from the abstract type AbstractAgent. Your Beetles should be mutable and
-        contain two fields: first an integer field `id` to uniquely identify the Beetle, and
-        second a float field `speed` ...
+        Let's use this information: setup() the Generative library and open Schelling.jl in VSC.
         """,
-        "You will need to load the Agents package and recall how to use the `<:` operator.",
-        x -> Main.Beetle <: Main.AbstractAgent && fieldnames(Main.Beetle) == (:id,:speed)
+        "Enter setup(\"Generative\") within your Anatta home directory, then open Schelling.jl",
+        x -> isfile("Development/Generative/Schelling.jl")
     ),
     Activity(
         """
-        Now create a vector `beetles` of six Beetles with id's from 0:5 and random speeds between
-        0 and 1. Use comprehension to do this, then give me the expression beetles[3].speed
-        """,
-        "agents = [Beetle(i,rand()) for i in 0:5]",
-        x -> (0.0<x<1.0)
-    ),
-    Activity(
-        """
-        Execute the following code:
-            beetles[3].speed = 0.5
+        In 1969, Thomas Schelling wanted to understand why city-planners' attempts to create
+        ethnically mixed neighbourhoods in American cities always tended to develop over time into
+        single-ethnicity neighbourhoods. In an attempt to understand this spontaneous segregation,
+        Schelling constructed an Agent-Based Model (ABM) to generate its dynamics. The file
+        Schelling.jl contains the basic form of Schelling's Segregation Model. Scroll through
+        this file now and notice the following basic elements of any ABM:
+        -   The Schelling module uses the Agents package
+        -   It decleares an agent type Person, derived from the abstract type GridAgent{2}
+        -   Person agents inherit the fields id::Int and pos::Tuple{2} from GridAgent{2}
+        -   We define Persons to possess the additional fields comfort::Bool (how comfortable the
+            Person feels) and tribe::Int (to which tribe the Person belongs)
+        -   The method schelling() initialises a Schelling world in which Persons live
+        -   The method agent_step!() defines how Persons act within their world
+        -   The method demo() organises, runs and presents the results of the ABM
 
-        Check the resulting effect on your beetles Vector, then give me the expression beetles[3]:
+        Compile and load the module Schelling, then use the methods fieldnames() and fieldtypes()
+        to reply() me the julia type of a Person's position.
         """,
-        "This code should have changed the speed of Beetle number 3 to 0.5",
-        x -> x isa Main.AbstractAgent && x.id == 2 && x.speed == 0.5
+        "You'll need to specify the type fully: Schelling.Person. The name of the field is `pos`",
+        x -> x <: Tuple
     ),
     Activity(
         """
-        We now know how to create agents using a constructor, but there is a problem with using
-        constructors to create agents. In an AgentBasedModel (ABM), agents are not just free-
-        floating nodes: they live within a space that defines how near they are to each other, so
-        they can decide with whom they will interact. This means we must always create our agents
-        with a unique id, a valid location within the space, plus various other constraints that
-        agents must fulfill. All this book-keeping is quite boring to do, so in practice, we
-        hand over the job of agent-construction to a very useful macro: @agent().
+        Use comprehension to create a vector `agents` of six Persons with id's from 0:5, pos=(0,0),
+        comfort=false and a random tribe between 1 and 2.
+        """,
+        "agents = [Schelling.Person(i,(0,0),false,rand(1:2)) for i in 0:5]",
+        x -> Main.agents[5].id == 4
+    ),
+    Activity(
+        """
+        Execute the following code at the julia prompt:
+            agents[3].pos = (3,4)
+
+        Check the resulting effect on your agents Vector, then give me the expression agents[3]:
+        """,
+        "This code should have changed the position of the Person with id=2 to (3,4)",
+        x -> x isa Main.Schelling.Person && x.id == 2 && x.pos == (3,4)
+    ),
+    Activity(
+        """
+        Now we know how to create agents using a constructor, but there is a problem with creating
+        agents this way. In an ABM, agents are not just free-floating nodes: they sit within a
+        space that defines whether they are close enough to interact with each other. This means we
+        must always create agents with a unique id, a valid position within the space, plus various
+        other constraints that agents must fulfill. All this book-keeping is reeeally boring, so we
+        usually just hand over the job of agent-construction to the functions add_agent!() (place
+        the new agent anywhere) and add_agent_single!() (place only one agent per grid position).
         
-        OK, so let's start again and do things properly. We will use @agent() to create and display
-        a small ABM of gas particles flying around in a 2-dimensional space. First, we create the
-        agent type Particle:
-            @agent Particle ContinuousAgent{2} begin
-                speed::Float64
-            end
-    
-        Execute this code at the julia prompt, then show me the list of fieldnames of a Particle:
-        """,
-        "Use the method fieldnames()",
-        x -> x == (:id, :pos, :vel, :speed)
-    ),
-    Activity(
-        """
-        Notice that @agents() has added several book-keeping fields to your Particle agents that
-        match the specification of a continuous, 2-dimensional space:
-            id::Int64							# Particle's unique identifier
-            pos::Tuple{Float64, Float64}		# Particle's position in 2-dimensional space
-            vel::Tuple{Float64, Float64}		# Particle's bearing (facing direction)
-            speed::Float64						# Particle's speed property (that we added)
-
-        The Agents package offers us several useful spaces that our Particles can move in. For now,
-        we will represent the space in which our Particles move as a ContinuousSpace in two
-        dimensions with coordinate extent (100,40):
-            space = ContinuousSpace( (100,40))
-
-        Define this coordinate space, then show it to me please:
-        """,
-        "Use the above code to create a continuous space of the correct size",
-        x -> x isa Main.ContinuousSpace && x.extent == (100.0, 40.0)
-    ),
-    Activity(
-        """
-        Now we put our Particle agent type together with our coordinate space to build a container
-        in which our Particles can move around:
-            box = ABM(Particle,space)
-
-        Let's have a look at your box:
+        So let's start again, and do things properly in the Schelling model. First, locate the
+        initialisation method schelling() in Schelling.jl. The method first creates an empty Dict
+        of properties that we will later use to define the model; next, it creates a Schelling
+        model and returns it. To study this model, enter at the julia prompt:
+            abm = Schelling.schelling()
         """,
         "",
-        x -> x isa Main.AgentBasedModel
+        x -> Main.abm isa Any
     ),
     Activity(
         """
-        Let's get this straight: So far, you have created a box 100 units long and 40 units high,
-        which can contain Particles, but currently doesn't contain any. So let's now place three
-        Particles into the box with random direction and respective speeds 0.5, 1.0 and 1.5:
-            add_agent!( box, Tuple(2rand(2).-1), 0.5)
-            add_agent!( box, Tuple(2rand(2).-1), 1.0)
-            add_agent!( box, Tuple(2rand(2).-1), 1.5)
+        If you display the object abm at the julia prompt, you see that it currently contains no
+        agents. Enter:
+            Schelling.add_agent!(abm; tribe=1)
 
-        You can inspect the Particles in your container by entering:
-            box.agents
+        You immediately see that a Person agent has been created belonging to the tribe 1 and with
+        the default value comfort=false. If you now display abm again, you see that it does indeed
+        contain 1 Person. We can add more Persons, but in the Schelling model we want to be sure
+        that each grid-point contains only one Person, so we prefer to use add_agent_single!(). Do
+        this now and confirm that the new Person is at a new position, and that abm now contains
+        2 agents.
 
-        May I see your container again, please?
+        Use fieldnames() and fieldtypes() to investigate the fields of abm, then reply() me the
+        width of the abm space.
         """,
-        "Make sure you have 3 Particles with appropriate parameters vel and speed",
-        x -> -1 < x.agents[3].vel[2] < 1
+        "fieldnames() requires a type; you can obtain this by entering fieldnames(typeof(abm))",
+        x -> x==60
     ),
     Activity(
         """
-        OK, so we now have three Particles in our container. Let's get them moving! You can move
-        a single agent 5 units within its model like this:
-            move_agent!( box.agents[3], box, 5)
-
-        Do this now, and check that the third agent really has moved about 5 units:
+        Now that we know how to add agents to our model, we'll do it properly within the
+        initialisation method schelling(). Within this method, find the Learning activity for
+        setting n_agents to 80% of the number of grid points. Change this code so that n_agents
+        will contain the correct number for any worldsize. What is this number for the current
+        worldsize?
         """,
-        "Again, inspect the :agents field of your box",
-        x -> true
+        "0.8 * worldsize^2",
+        x -> x==2880
     ),
     Activity(
         """
-        But it is hard work to have to move each agent by hand. Instead, we want to tell all agents
-        in the model to move at once with their own respective speed. To make this happen, we need
-        to define what it means for an agent to step:
-            function agent_step!( particle, model)
-                move_agent!( particle, model, particle.speed)
-            end
+        Recompile and run the method Schelling.demo(), and study the resulting dataframe. You
+        should see the correct number of agents in the right-hand column. However, this column
+        displays the number of agents who are comfortable, so at present, all of the agents are
+        apparently comfortable. This is because they currently all belong to the same tribe (0).
+        We must change this.
 
-        Now enter:
-            step!( box, agent_step!)
-
-        and again inspect the agents to check that they have all moved appropriately. Now go on to
-        the next activity.
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        Now we would like to create an animation of our set of Particles. Do you remember
-        Observables from Lab06? Since the GLMakie plotting framework is based on Observables, we
-        can use GLMakie together with InteractiveDynamics to create dynamic and interactive plots
-        of our agent-based models. To do this, use the following function call:
-            abmvideo( "Particles.mp4", box, agent_step!)
-
-        This will take a while to compile, but when it is finished, open the movie-file that it
-        has created and enjoy the show! :)
-
-        While watching the video, notice what is happening when the Particles reach the edge of
-        the space in the box. This behaviour is called "wrapping". It is very common in ABMs,
-        and is a way of avoiding the problem of particles drifting outside the ABM's space.
-
-        What is the correct topological name for the shape of the space in our box?
-        """,
-        "Think about the fact that the left- and right-edges (and top and bottom) are linked!",
-        x -> contains(lowercase(x),"tor") || contains(lowercase(x),"nut")
-    ),
-    Activity(
-        """
-        Congratulations - now you know how to design and run an ABM! :)
-
-        Now let's make our ABM a little more useful: We will turn it into a model of particles
-        flying around and bounce off each other within an ideal gas. The above code that
-        you have entered in the Julia console is also contained in the file SimpleParticles.jl.
-        Fetch the Dynamical Systems Modelling code now:
-            setup("DSM")
-
-        Now study and run the file Development\\DSM\\SimpleParticles.jl to be sure you understand
-        the extra code I have added there. Don't expect the particles to bounce off each other yet -
-        that will be our next job! :)
+        Find the Learning activity for placing Persons of random tribe, and change the appropriate
+        argument of add_agent_single!() to alternately assign half of the agents to tribe 0 and
+        half to tribe 1. Compile Schelling.jl, run the method Schelling.demo(), and reply() me the
+        number in the sum_comfort column of the resulting output table - it should normally lie
+        within the range 30-80.
         """,
         "",
-        x -> true
+        x -> 30 < x < 80
     ),
     Activity(
         """
-        Next, look for the TODO tag in the file SimpleParticles.jl. I have written the skeleton
-        code for making the particles bounce off each other in the method agent_step!(). However,
-        I have left out the code that calculates the displacement direction from one particle
-        position (.pos) to another. It is your task to add this code (it's only a couple of lines)
-        starting from the TODO line. When you have done this, run SimpleParticles.demo() again
-        to make sure the particles are behaving properly (that is, that they are bouncing away
-        from each other in the correct directions).
+        Let's find out what is happening in our model. The world consists of 60*60 grid points, of
+        which we fill 80% with Person agents - that makes a total of 0.8*60*60 = 2880 agents. If
+        you look at the Schelling.demo() method, you see that the second line specifies the data
+        we wish to collect from our simulation run:
+            adata = [(:comfort, sum)]
 
-        Only move on from this activity when your particles successfully bounce off each other.
+        That is, the final column of our output table measures the sum of all comfort values of all
+        agents in the world. After initialisation, all agents have the default value comfort=false,
+        so the sum of all comfort values at time t=0 in our output table is zero (0). All agents
+        are feeling uncomfortable, but only because we initialised them that way.
+
+        Continuing, our table tells us that from time t=1 onwards, about 50 agents are feeling
+        comfortable: their comfort value is true (1). What causes this to happen? The run!() call in
+        the third line of demo() causes our model to take 9 steps into the future. Locate the
+        agent_step!() method; this method tells each agent what to do on each step. reply() me the
+        name of the argument representing the Person that is performing the current agent_step!().
         """,
-        """
-        I suggest that you open a separate julia console and use it to create two Tuples of your
-        own, and investigate how to calculate the vector difference between them.
-        """,
-        x -> true
+        "",
+        x -> x=="me"
     ),
     Activity(
         """
-        Our simulation certainly looks good, doesn't it? But is it a physically accurate model
-        of an ideal gas? The whole point of ABMs is to test our theories on systems that are too
-        complex for us to manage without a computer, and we can only test a theory if our model is
-        a physically accurate model of an N-particle ideal gas. This means that our model should
-        satisfy conservation of both momentum and kinetic energy.
+        Remember: the method agent_step!() describes what Every agent does on Every simulation step,
+        so this method gets called 2880 times within each simulation step! What exactly does it do?
 
-        We call such rules REFERENCE MODES: A reference mode is any behaviour of our model that
-        will reassure us that we have implemented the model correctly. A model is only valid if
-        it satisfies all reference modes that ensure its faithfulness to the "real system" we wish
-        to model. So let's test our reference mode right now. First write in the SimpleParticles
-        module two new methods that calculate the momentum and kinetic energy of a particle, for
-        example:
-            momentum(particle) = particle.speed * collect(particle.vel)
+        The first loop of agent_step!() looks at the 8 agents in its 3*3 neighbourhood and counts
+        how many of them belong to the same tribe as `me`. The proportion of those neighbours that
+        belong to the same tribe as `me` is then calculated and stored in proportion_mytribe. If
+        this proportion is greater than or equal to 1.0, the final assignment specifies that `me`
+        feels comfortable.
+        
+        To understand the sum_comfort value between 30 and 80 in our output table, let's think about
+        the value of proportion_mytribe for a typical agent. This value will equal 1.0 Only if all
+        of me's neighbours belong to the same tribe, and in addition, NO members of the other tribe
+        may sit in this neighbourhood. The probability of an agent of the same tribe being on any
+        particular grid point is 0.8/2=0.4, and the probability of one of the other 7 points in a
+        neighbourhood being empty is 1-0.8=0.2. So what is the probability that an agent has one
+        member of her own tribe on a particular neighbouring grid point and the rest are empty?
         """,
-        "Don't worry about the mass of the particles for now - just assume it is equal to 1.0",
-        x -> true
+        "The conjunction of independent probabilities is their product!",
+        x -> 1e-6 < x < 1e-5
     ),
     Activity(
         """
-        Now use the following function call to run the SimpleParticles model for 50 iterations,
-        while collecting the required agent data (adata) on the sum of all momenta and
-        kinetic_energy of the particles in the box:
-            run!( model, agent_step!, 50; adata=[(momentum,sum),(kinetic_energy,sum)])
+        Since it doesn't matter which of the 8 neighbouring grid points contains the tribe member,
+        the probability that Any one neighbouring point contains this member is 8 times your
+        answer, which is about 4.1e-5. This means that on average, the number of agents with
+        precisely one neighbour of the same tribe is 2880*4.1e-5=0.118.
 
-        You can call this either in the demo() method or from the Julia command prompt. In either
-        case, you will need to look up run!() in the juliadynamics documentation and find out how
-        to capture and display the returned Dataframe for the total momentum and kinetic_energy of
-        the particles in the box. Is the particles' total kinetic energy constant?
+        However, this is not the only way an agent can achieve proportion_mytribe=1.0 and so feel
+        comfortable. Another possibility is that the agent has precisely 2 neighbours of the same
+        tribe - or 3 or 4 or ... If we add up all these possibilities for all 2880 agents, we find
+        that the average number of agents that will feel comfortable is about 50, which is close to
+        the repeated value in the final column sum_comfort of your simulation output!
+
+        This is the basic idea behind Schelling's Segregation model: agents feel comfortable when a
+        certain minimum proportion of their neighbours belong to the same tribe as themselves. Of
+        course, our agents are currently Very conservative! They feel comfortable only if All of
+        their neighbours belong to their own tribe, so it is not surprising that so few feel
+        comfortable. Before we continue, reply() me Your personal tribal tolerance: How low would
+        the proportion of culturally/ethnically similar families in your neighbourhood need to be,
+        for you to start feeling uncomfortable? Keep a note of this proportion for later use!
+        """,
+        "Be honest: Very few people want to live in a completely unfamiliar culture!",
+        x -> 0.0 <= x <= 1.0
+    ),
+    Activity(
+        """
+        At present, our agents feel uncomfortable, but do nothing to change this - that is why the
+        sum_comfort values stay constant throughout our simulation. Generative Science shows us how
+        to develop our model further by generating collective behaviour from agent interactions:
+        1.  We start from a Research Question about the causes of some collective behaviour;
+        2.  Our existing theories suggest a Research Hypothesis (HR) about how simple, local agent
+            interactions might generate that collective behaviour;
+        3.  We develop our HR into an Alternative Hypothesis (H1) that describes how we think
+            Changes in agent interaction should influence Changes in collective behaviour;
+        4.  We formulate a Null Hypothesis (H0) that Denies the influence proposed by H1;
+        5.  We construct and perform an experiment to Disprove H0;
+        6.  If the experiment successfully disproves H0, this justifies our belief in H1 and HR.
+
+        What is the collective behaviour that we wish to understand in the Schelling ABM?
+        """,
+        "Which social behaviour did Thomas Schelling want to understand?",
+        x -> occursin("segregat",lowercase(x))
+    ),
+    Activity(
+        """
+        GS plans out our schedule of work on Schelling's model:
+        1.  Research question: How does segregation arise in human communities?
+        2.  HR: Agents generate segregation by relocating to reduce cultural discomfort;
+        3.  H1: If HR is correct (that is, if discomfort-reduction causes segregation), then
+            increasing agents' level of comfort should Decrease the level of segregation.
+        4.  H0: Increasing agents' comfort level makes segregation increase or stay constant.
+        5.  Our model must allow agents to relocate on the basis of a comfort threshold, and
+            we must be able to change and measure both this threshold and segregation.
+
+        Item 2 specifies that agents can relocate on the basis of discomfort. Which field of Person
+        will be the precondition for this relocation?
+        """,
+        "",
+        x -> occursin("comfort",lowercase(string(x)))
+    ),
+    Activity(
+        """
+        Find the Learning activity in Schelling.agent_step!() where agents will decide whether to
+        relocate. Enable agents to relocate if they are uncomfortable, by inserting here a suitable
+        if-clause containing the following function call:
+            move_agent_single!( me, model)
+
+        Before you recompile and re-run the demo() method, think for a moment: Do you expect that
+        your code change will cause the sum_comfort values to increase over time?
+
+        Now recompile and re-run the demo() method. Do your sum_comfort values increase over time?
+        """,
+        "",
+        x -> occursin("no",lowercase(string(x)))
+    ),
+    Activity(
+        """
+        You can see that your relocation code is executing successfully, because the values of
+        sum_comfort now change over time. However, they are not yet growing bigger - why not?!
+
+        In agent_step!(), how many neighbours of the opposite tribe is the Person me prepared to
+        accept, while still feeling comfortable?
+        """,
+        "",
+        x -> x==0 || occursin("none",lowercase(string(x))) || occursin("zero",lowercase(string(x)))
+    ),
+    Activity(
+        """
+        Our GS-analysis showed that we need to be able to vary the comfort_threshold below which
+        agents feel uncomfortable. At present, our agents require All their neighbours to be of the
+        same tribe. If you study the code, you will see that demo() and schelling() both allow
+        users of our simulation to set the value of comfort_threshold - it's just that we do not
+        yet pass this value through to agent_step!(). To achieve this, we must insert
+        comfort_threshold into our Schelling model as a Model Property...
+
+        In schelling(), find the learning activity "define comfort_threshold as a model property",
+        and insert the following pair into properties::Dict:
+            :comfort_threshold => comfort_threshold
+
+        This defines :comfort_threshold as a field in our model that stores the numerical value in
+        the argument comfort_threshold of schelling(). Next, in the learning activity "decide how
+        to react", replace the value 1.0 by the field model.comfort_threshold. Now recompile and
+        run demo(). Has anything changed in your output?
+        """,
+        "Don't worry if nothing has changed - I'm just checking!",
+        x -> occursin("no",lowercase(string(x)))
+    ),
+    Activity(
+        """
+        Congratulations - your code changes have left your output unchanged! Yay! This is one of
+        those cases where it is a Good Thing that nothing changes - it shows that you are
+        successfully passing the default value 1.0 from the user through to the agents. Now comes
+        the ultimate test: Do the values of comfort_threshold grow over time if you enter this
+        call at the julia prompt?
+            Schelling.demo(0.5)
         """,
         "",
         x -> occursin('y',lowercase(x))
     ),
     Activity(
         """
-        What about the momentum? Is the total momentum of the particles in the model constant?
-        """,
-        "",
-        x -> occursin('n',lowercase(x))
-    ),
-    Activity(
-        """
-        Oops! We have a problem, Houston! Our little universe violates the conservation of momentum!
+        Lowering the value of comfort_threshold makes it easier for agents to satisfy their
+        comfort requirements by relocating, since they are now comfortable with having a few
+        neighbours of the opposite tribe. In our model, we see that agents are successfully raising
+        their comfort level by relocating. However, we do not yet know whether this relocation isa
+        leading to segregation. Our task in the next laboratory will be to find ways of visualising
+        segregation and so testing our research hypothesis.
 
-        So, we need to re-implement our ideal gas model so that the collisions between particles
-        satisfy momentum conservation. You will see that I have done this in the file IdealGas.jl.
-        To create this file, I simply did the following:
-            1. I copied SimpleParticles.jl to IdealGas.jl and renamed its internals accordingly;
-            2. I added some nice-to-haves like putting mass and radius into Particle;
-            3. I ensured strict normalisation of Agent.vel into a unit vector;
-            4. I stripped out agent_step!() and reimplemented it.
-
-        Study my implementation of IdealGas now and test whether it solves the problem of
-        conserving momentum in the system. This will be of absolute importance if we wish to write
-        ABMs that will deliver understanding and insights into real-life thermodynamical systems!
-
-        So: Does my implementation of IdealGas obey strict conservation of momentum?
-        """,
-        "",
-        x -> occursin("n",lowercase(x))
-    ),
-    Activity(
-        """
-        Ok, I have to confess that I purposely built one small bug into the IdealGas model. If you
-        correct this bug now, you will find that IdealGas works properly. In which line of code
-        is my bug?
-        """,
-        "",
-        x -> x==93
-    ),
-    Activity(
-        """
-        Now you have one last job to do. It is of ultimate importance to satisfy the reference
-        modes of our simulations. If I advise the Berlin City Services to invest in one kind of
-        sewage system or bridge design rather than another, I am putting my reputation, career and
-        the lives of others on the line: I need to KNOW that my advice is based on sound reasoning.
-
-        Here is the point: My model is not reality, but an approximation. If lives depend on that
-        approximation, I need to ensure that fufils all essential laws of physics, chemistry and
-        biology! Think back to your Altruism project in Subject 1 (Computation): Suppose a child
-        died as a result of relying on your conclusions from that project. Could you SWEAR before a
-        court of law that your implmentation was an absolutely accurate model of context-dependent
-        selection in social systems?!
-
-        So now: Analyse my implementation of agent_step!() carefully, discussing with others the
-        following issues that might make this implementation unreliable:
-            1. Did I do it right?
-            2. Which simplifying assumptions did I make? Do these invalidate my model?
-            3. Did I exclude any cases that might occur in reality?
-            4. Which mathematical tricks did I use?
-            5. Which physical laws did I make use of?
-            6. Which of these considerations might make you worry about relying on my implementation
-                for the success of your assessed project for this course???!!
+        See you in the next lab! :)
         """,
         "",
         x -> true

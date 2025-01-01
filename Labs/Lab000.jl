@@ -64,7 +64,7 @@
             Subject 3: Simulation physics     - Structures can approximate stories efficiently
             Subject 4: Quantum computing      - Simple stories can generate complex structures
             Subject 5: Quantum thermodynamics - Simple structures can generate complex stories
-            Subject 6: Enactive dynamics      - Belief is a activity of populations, not individuals
+            Subject 6: Enactive dynamics      - Belief is a property of collectives, not individuals
             Subject 7: Relativity theory      - Organisms ENACT: they abstract belief through action
             Subject 8: Quantum-field theory   - Belief combines simple structures and complex stories
         """,
