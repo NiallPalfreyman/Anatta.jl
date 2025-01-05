@@ -8,9 +8,8 @@ Author: Niall Palfreyman (December 2024)
 """
 module Schelling
 
+# Learning activity - Add graphics backend package:
 using Agents
-
-# Learning activity - use Statistics.mean()
 
 #-----------------------------------------------------------------------------------------
 # Module types:
@@ -31,26 +30,26 @@ end
 # Module methods:
 #-----------------------------------------------------------------------------------------
 """
-    schelling( comfort_threshold=1.0, worldsize=60)
+    schelling( preference=1.0; worldsize=(60,60))
 
 Initialise the size, stepping function, properties and initial population of a Schelling model.
 """
-function schelling( comfort_threshold=1.0, worldsize=60)
-    # Learning activity - define comfort_threshold as a model property:
+function schelling( preference=1.0; worldsize=(60,60))
+    # Learning activity - Define preference as a model property:
     properties = Dict(
     )
 
     schelling_model = StandardABM(
         Person,
-        GridSpace((worldsize, worldsize));
+        GridSpace(worldsize);
         agent_step!,
         properties
     )
 
-    # Learning activity - set n_agents to 80% of the total number of grid points:
+    # Learning activity - Set n_agents to 80% of the total number of grid points:
     n_agents = 0
     for n in 1:n_agents
-        # Learning activity - place Persons of random tribe:
+        # Learning activity - Place Persons of random tribe:
         add_agent_single!( schelling_model; tribe=0)
     end
 
@@ -66,7 +65,7 @@ Define the evolution rule acting once per step on each activated Person agent:
     I feel comfortable; otherwise, I feel uncomfortable and react accordingly.
 """
 function agent_step!( me::Person, model)
-    # Count the proportion of neighbours belonging to my tribe:
+    # Calculate the proportion of neighbours belonging to my tribe:
     n_nbrs = n_mytribe = 0
     for nbr in nearby_agents(me,model)
         n_nbrs += 1
@@ -76,12 +75,52 @@ function agent_step!( me::Person, model)
     end
     proportion_mytribe = (n_nbrs > 0) ? n_mytribe/n_nbrs : 0.0
 
-    # Learning activity - decide how to react:
+    # Learning activity - Decide how to react:
     me.comfort = proportion_mytribe ≥ 1.0
 
-    # Learning activity - if uncomfortable, relocate to a random grid point:
+    # Learning activity - If uncomfortable, jump to a random empty grid location:
 
     return
+end
+
+#-----------------------------------------------------------------------------------------
+"""
+    present_insight()
+
+Calculate the average results of several trials of the Schelling model for each value of
+`preference` in the range 0.0:0.2:1.0. For efficiency, halt each trial when all agents are happy.
+Present these results as a graph demonstrating that rising individual preference for tribally
+similar neighbours drives community segregation. This graph plots preference along the horizontal
+axis and segregation along the vertical axis. We define the level of segregation of a community as
+the proportion of agents that possess a maximal number (8 in the Chebyshev metric) of tribally
+similar neighbours.
+"""
+function present_insight()
+    preferences = 0.0:0.02:1.0
+    segregation = zeros(length(preferences))
+    ntrials = 5
+    halt_condition(abm,t) = all(map(agent->agent.comfort,allagents(abm))) || t>99
+
+    for (i,preference) in enumerate(preferences)
+        for _ in 1:ntrials
+            abm = schelling(preference)
+            step!( abm, halt_condition)
+            for agent in allagents(abm)
+                nbrs = nearby_agents(agent,abm)
+                n_tribal_nbrs = 0
+                # Learning activity - Count tribally similar neighbours:
+
+                if n_tribal_nbrs == 8
+                    segregation[i] += 1             # This agent is fully surrounded by own tribe
+                end
+            end
+        end
+    end
+    segregation = segregation ./ (ntrials*nagents(schelling()))
+    lines( preferences, segregation, axis = (
+        title="Individual preference drives community segregation",
+        xlabel="Preference", ylabel="Segregation"
+    ))
 end
 
 #-----------------------------------------------------------------------------------------
@@ -90,14 +129,20 @@ end
 
 Demonstrate the Schelling model.
 """
-function demo(comfort_threshold=1.0)
-    abm = schelling(comfort_threshold)
+function demo(preference=1.0)
+    # Cap preference values above and below:
+    preference = max(0.0,min(1.0,preference))
+    abm = schelling(preference)
 
-    # Learning activity - define xpos as collectible data:
+    # Learning activity - Define tribe position data:
     adata = [(:comfort, sum)]
+    agent_df, model_df = run!( abm, 9; adata)
+    agent_df
 
-    dataframe, _ = run!( abm, 9; adata)
-    dataframe
+    # Learning activity - Generate video output:
+
+    # Learning activity - Create an exploratory playground:
+
 end
 
 end # ... of module Schelling

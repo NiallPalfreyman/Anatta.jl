@@ -146,7 +146,7 @@
         will contain the correct number for any worldsize. What is this number for the current
         worldsize?
         """,
-        "0.8 * worldsize^2",
+        "You may like to use the julia function prod()",
         x -> x==2880
     ),
     Activity(
@@ -224,12 +224,12 @@
         the repeated value in the final column sum_comfort of your simulation output!
 
         This is the basic idea behind Schelling's Segregation model: agents feel comfortable when a
-        certain minimum proportion of their neighbours belong to the same tribe as themselves. Of
-        course, our agents are currently Very conservative! They feel comfortable only if All of
-        their neighbours belong to their own tribe, so it is not surprising that so few feel
-        comfortable. Before we continue, reply() me Your personal tribal tolerance: How low would
-        the proportion of culturally/ethnically similar families in your neighbourhood need to be,
-        for you to start feeling uncomfortable? Keep a note of this proportion for later use!
+        certain preferred minimum proportion of their neighbours belong to the same tribe as
+        themselves. Of course, our agents are currently Very conservative! They feel comfortable
+        only if All of their neighbours belong to their own tribe, so it is not surprising that so
+        few feel comfortable. Before we continue, reply() me Your personal preference: How low
+        would the proportion of culturally/ethnically similar families in your neighbourhood need to
+        be, before you started feeling uncomfortable? Keep a note of this proportion for later use!
         """,
         "Be honest: Very few people want to live in a completely unfamiliar culture!",
         x -> 0.0 <= x <= 1.0
@@ -255,14 +255,15 @@
     ),
     Activity(
         """
-        GS plans out our schedule of work on Schelling's model:
-        1.  Research question: How does segregation arise in human communities?
+        GS plans out the schedule of Schelling's ABM work:
+        1.  His research question: To what extent does cultural discomfort drive segregation?
         2.  HR: Agents generate segregation by relocating to reduce cultural discomfort;
         3.  H1: If HR is correct (that is, if discomfort-reduction causes segregation), then
-            increasing agents' level of comfort should Decrease the level of segregation.
-        4.  H0: Increasing agents' comfort level makes segregation increase or stay constant.
-        5.  Our model must allow agents to relocate on the basis of a comfort threshold, and
-            we must be able to change and measure both this threshold and segregation.
+            Decreasing agents' level of comfort should Increase their level of segregation.
+        4.  H0: Decreasing agents' comfort level makes segregation decrease or stay constant.
+        5.  Our model must allow agents to relocate on the basis of their preference for tribally
+            similar neighbours, and we must be able to vary this individual preference and
+            measure the corresponding level of segregation in the community.
 
         Item 2 specifies that agents can relocate on the basis of discomfort. Which field of Person
         will be the precondition for this relocation?
@@ -272,9 +273,9 @@
     ),
     Activity(
         """
-        Find the Learning activity in Schelling.agent_step!() where agents will decide whether to
-        relocate. Enable agents to relocate if they are uncomfortable, by inserting here a suitable
-        if-clause containing the following function call:
+        Find the Learning activity in Schelling.agent_step!() where agents decide whether to
+        relocate by jumping to a random empty grid location. Enable agents to jump if they are
+        uncomfortable, by inserting a suitable if-clause containing the following function call:
             move_agent_single!( me, model)
 
         Before you recompile and re-run the demo() method, think for a moment: Do you expect that
@@ -298,21 +299,21 @@
     ),
     Activity(
         """
-        Our GS-analysis showed that we need to be able to vary the comfort_threshold below which
+        Our GS-analysis showed that we need to be able to vary the preference level below which
         agents feel uncomfortable. At present, our agents require All their neighbours to be of the
         same tribe. If you study the code, you will see that demo() and schelling() both allow
-        users of our simulation to set the value of comfort_threshold - it's just that we do not
-        yet pass this value through to agent_step!(). To achieve this, we must insert
-        comfort_threshold into our Schelling model as a Model Property...
+        users of our simulation to set the value of preference - it's just that we do not yet pass
+        this value through to agent_step!(). To achieve this, we must insert preference into
+        our Schelling model as a Model Property...
 
-        In schelling(), find the learning activity "define comfort_threshold as a model property",
-        and insert the following pair into properties::Dict:
-            :comfort_threshold => comfort_threshold
+        In schelling(), find the learning activity "define preference as a model property", and
+        insert the following pair into properties::Dict:
+            :preference => preference
 
-        This defines :comfort_threshold as a field in our model that stores the numerical value in
-        the argument comfort_threshold of schelling(). Next, in the learning activity "decide how
-        to react", replace the value 1.0 by the field model.comfort_threshold. Now recompile and
-        run demo(). Has anything changed in your output?
+        This defines :preference as a field in our model that stores the numerical value in the
+        the argument preference of schelling(). Next, in the learning activity "decide how to
+        react", replace the value 1.0 by the field model.preference. Now recompile and run
+        demo(). Has anything changed in your output?
         """,
         "Don't worry if nothing has changed - I'm just checking!",
         x -> occursin("no",lowercase(string(x)))
@@ -322,7 +323,7 @@
         Congratulations - your code changes have left your output unchanged! Yay! This is one of
         those cases where it is a Good Thing that nothing changes - it shows that you are
         successfully passing the default value 1.0 from the user through to the agents. Now comes
-        the ultimate test: Do the values of comfort_threshold grow over time if you enter this
+        the ultimate test: Do the values of sum_comfort grow over time if you enter the following
         call at the julia prompt?
             Schelling.demo(0.5)
         """,
@@ -331,12 +332,12 @@
     ),
     Activity(
         """
-        Lowering the value of comfort_threshold makes it easier for agents to satisfy their
-        comfort requirements by relocating, since they are now comfortable with having a few
-        neighbours of the opposite tribe. In our model, we see that agents are successfully raising
-        their comfort level by relocating. However, we do not yet know whether this relocation isa
-        leading to segregation. Our task in the next laboratory will be to find ways of visualising
-        segregation and so testing our research hypothesis.
+        Raising the value of preference makes it harder for agents to satisfy their preferred
+        number of similar neighbours by relocating, since they become less comfortable with having
+        several neighbours of the opposite tribe. In our model, we see that agents are successfully
+        raising their comfort level by jumping. However, we do not yet know whether this relocation
+        is leading to community segregation. Our task in the next laboratory will be to find ways
+        of visualising segregation and so testing our research hypothesis.
 
         See you in the next lab! :)
         """,
