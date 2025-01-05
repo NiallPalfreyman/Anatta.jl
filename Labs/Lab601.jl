@@ -245,34 +245,37 @@
         """
         Your rising curve from present_insight() contains occasional flat plateaus, where the rise
         in community segregation with individual preference gets 'stuck' because agents are unable
-        to move freely enough to increase their segregation. The biological world has found a
-        powerful way of escaping from such Suboptimal plateaus: it uses randomness. For instance,
-        random DNA mutation is the way that evolution escapes from suboptimal organism development
-        processes.
+        to move freely enough to increase their segregation. Biological evolution has found a
+        powerful way of escaping from Suboptimal plateaus of organism development: random mutation.
+        Random mutations of DNA cause the developmental processes of organisms to drift randomly
+        over time - occasionally discover more effective ways of coping with their environment.
         
-        Apply randomness to escape from the plateaus in your segregation/preference curve. In the
-        method agent_step!(), under the learning activity "jump to a random empty grid location",
-        extend the condition in the if-statement to include a probability of 0.01 that an agent
-        will occasionally jump to a random location, even if it is already comfortable.
+        Apply randomness to the Schelling model to escape from the plateaus in your segregation-
+        preference curve. In the method agent_step!(), under the learning activity "jump to a
+        random empty grid location", extend the if-condition to include a probability of 0.01 that
+        an agent will occasionally spontaneously jump to a random location, even though it is
+        already comfortable.
         
-        Looking at your new, improved segregation/preference graph, by which level of individual
-        preference does the community segregation level first exceed 1/20 of the population?
+        When you have implemented and run this idea, study your new, improved segregation-
+        preference graph, and tell me at which level of individual preference the community
+        segregation level first exceeds 1/20 of the population?
         """,
         "",
         x -> x < 0.3
     ),
     Activity(
         """
-        To complete this lab, let us think about what your answer from the previous activity means.
-        Individuals who prefer 30% of their neighbours to belong to the same tribe drive a
-        community segregation level of 1/20! 30% is not very extreme; it corresponds to black
-        citizens preferring just 3 out of every 10 neighbours to also be black. It corresponds to
-        women preferring just 3 out of every 10 co-workers at their workplace to be women. And this
-        preference (not requirement!) drives communities to a point where 1 in 20 women citizens
-        live entirely surrounded by citizens of similar skin-colour.
+        Your answer from the previous activity is actually quite shocking. Individuals who prefer
+        just 30% of their neighbours to belong to their own tribe drive a community segregation
+        level of 1/20! Now, 30% is not very extreme; it corresponds to black or white citizens
+        preferring just 3 out of every 10 of their neighbours to come from the same ethnic
+        background. It corresponds to women preferring just 3 out of every 10 people at their
+        workplace to be women. Yet this preference (not requirement!) drives communities to a
+        point where 1 in 20 citizens live or work entirely surrounded by citizens of similar
+        skin-colour, ethnicity or gender.
 
         This was the big surprise of Schelling's work in the early 1970's: it showed that promoting
-        multi-culturality is not only an urban-planning issue, but also an issue of educating
+        multi-culturality is not simply an issue of urban-planning, but also an issue of educating
         people's preferences. This lesson is just as relevant today as it was then!
         """,
         "",
