@@ -267,16 +267,16 @@
         """
         Your answer from the previous activity is actually quite shocking. Individuals who prefer
         just 30% of their neighbours to belong to their own tribe drive a community segregation
-        level of 1/20! Now, 30% is not very extreme; it corresponds to black or white citizens
-        preferring just 3 out of every 10 of their neighbours to come from the same ethnic
+        level of 1/20! Now, 30% is not very extreme; it corresponds to black, white or asian
+        citizens preferring just 3 out of every 10 of their neighbours to come from the same ethnic
         background. It corresponds to women preferring just 3 out of every 10 people at their
-        workplace to be women. Yet this preference (not requirement!) drives communities to a
-        point where 1 in 20 citizens live or work entirely surrounded by citizens of similar
-        skin-colour, ethnicity or gender.
+        workplace to be female. Yet this preference (not requirement!) drives communities to a
+        point where 1 in 20 citizens spend their lives in a social or work context Entirely
+        surrounded by citizens of similar skin-colour, ethnicity or gender.
 
         This was the big surprise of Schelling's work in the early 1970's: it showed that promoting
-        multi-culturality is not simply an issue of urban-planning, but also an issue of educating
-        people's preferences. This lesson is just as relevant today as it was then!
+        cultural plurality is not simply an issue of urban planning, but also an issue of educating
+        people's personal preferences. This lesson is just as relevant today as it was then!
         """,
         "",
         x -> x <= 0.3
