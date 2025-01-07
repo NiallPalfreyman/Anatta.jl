@@ -141,7 +141,7 @@
     Activity(
         """
         Now that we know how to add agents to our model, we'll do it properly within the
-        initialisation method schelling(). Within this method, find the Learning activity for
+        initialisation method schelling(). Within this method, find the "To do" activity for
         setting n_agents to 80% of the number of grid points. Change this code so that n_agents
         will contain the correct number for any worldsize. What is this number for the current
         worldsize?
@@ -157,7 +157,7 @@
         apparently comfortable. This is because they currently all belong to the same tribe (0).
         We must change this.
 
-        Find the Learning activity for placing Persons of random tribe, and change the appropriate
+        Find the "To do" activity for placing Persons of random tribe, and change the appropriate
         argument of add_agent_single!() to alternately assign half of the agents to tribe 0 and
         half to tribe 1. Compile Schelling.jl, run the method Schelling.demo(), and reply() me the
         number in the sum_comfort column of the resulting output table - it should normally lie
@@ -273,7 +273,7 @@
     ),
     Activity(
         """
-        Find the Learning activity in Schelling.agent_step!() where agents decide whether to
+        Find the "To do" activity in Schelling.agent_step!() where agents decide whether to
         relocate by jumping to a random empty grid location. Enable agents to jump if they are
         uncomfortable, by inserting a suitable if-clause containing the following function call:
             move_agent_single!( me, model)
@@ -306,12 +306,12 @@
         this value through to agent_step!(). To achieve this, we must insert preference into
         our Schelling model as a Model Property...
 
-        In schelling(), find the learning activity "define preference as a model property", and
+        In schelling(), find the "To do" activity "define preference as a model property", and
         insert the following pair into properties::Dict:
             :preference => preference
 
         This defines :preference as a field in our model that stores the numerical value in the
-        the argument preference of schelling(). Next, in the learning activity "decide how to
+        the argument preference of schelling(). Next, in the "To do" activity "decide how to
         react", replace the value 1.0 by the field model.preference. Now recompile and run
         demo(). Has anything changed in your output?
         """,

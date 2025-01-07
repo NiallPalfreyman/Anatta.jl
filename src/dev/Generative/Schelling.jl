@@ -8,7 +8,7 @@ Author: Niall Palfreyman (December 2024)
 """
 module Schelling
 
-# Learning activity - Add graphics backend package:
+# To do: Add graphics backend package
 using Agents, GLMakie
 
 #-----------------------------------------------------------------------------------------
@@ -30,28 +30,28 @@ end
 # Module methods:
 #-----------------------------------------------------------------------------------------
 """
-    schelling( preference=1.0; worldsize=(60,60))
+    schelling( preference=1.0; extent=(60,60))
 
 Initialise the size, stepping function, properties and initial population of a Schelling model.
 """
-function schelling( preference=1.0; worldsize=(60,60))
-    # Learning activity - Define preference as a model property:
+function schelling( preference=1.0; extent=(60,60))
+    # To do: Define preference as a model property
     properties = Dict(
         :preference => preference
     )
 
     schelling_model = StandardABM(
         Person,
-        GridSpace(worldsize);
+        GridSpace(extent);
         agent_step!,
         properties
     )
 
-    # Learning activity - Set n_agents to 80% of the total number of grid points:
+    # To do: Set n_agents to 80% of the total number of grid points
 #    n_agents = 0
     n_agents = round(0.8prod(worldsize))
     for n in 1:n_agents
-        # Learning activity - Place Persons of random tribe:
+        # To do: Place Persons of random tribe
 #        add_agent_single!( schelling_model; tribe=0)
         add_agent_single!( schelling_model; tribe=n%2)
     end
@@ -78,11 +78,11 @@ function agent_step!( me::Person, model)
     end
     proportion_mytribe = (n_nbrs > 0) ? n_mytribe/n_nbrs : 0.0
 
-    # Learning activity - Decide how to react:
+    # To do: Decide how to react
 #    me.comfort = proportion_mytribe ≥ 1.0
     me.comfort = proportion_mytribe ≥ model.preference
 
-    # Learning activity - If uncomfortable, jump to a random empty grid location:
+    # To do: If uncomfortable, jump to a random empty grid location
     if !me.comfort || rand() < 0.01
         move_agent_single!( me, model)
     end
@@ -115,7 +115,7 @@ function present_insight()
             for agent in allagents(abm)
                 nbrs = nearby_agents(agent,abm)
                 n_tribal_nbrs = 0
-                # Learning activity - Count tribally similar neighbours:
+                # To do: Count tribally similar neighbours
                 for nbr in nbrs
                     if nbr.tribe != agent.tribe
                         continue
@@ -146,7 +146,7 @@ function demo(preference=1.0)
     preference = max(0.0,min(1.0,preference))
     abm = schelling(preference)
 
-    # Learning activity - Define tribe position data:
+    # To do: Define tribe position data
 #    adata = [(:comfort, sum)]
     tribe_0_x(agent)    = (agent.tribe==0 && agent.pos[1])
     tribe_1_x(agent)    = (agent.tribe==1 && agent.pos[1])
@@ -160,7 +160,7 @@ function demo(preference=1.0)
     agent_df, model_df = run!( abm, 9; adata)
     agent_df
 
-    # Learning activity - Generate video output:
+    # To do: Generate video output
     tribecolor(agent) = agent.tribe == 1 ? :blue : :orange
     tribemarker(agent) = agent.tribe == 1 ? :circle : :rect
     abmvideo( "schelling.mp4", schelling(preference);
@@ -169,7 +169,7 @@ function demo(preference=1.0)
         framerate = 4, frames = 50
     )
 
-    # Learning activity - Create an exploratory playground:
+    # To do: Create an exploratory playground
     playground, _ = abmexploration( schelling();
         agent_size = 10, agent_color = tribecolor, agent_marker = tribemarker,
         params = Dict( :preference => 0.0:0.01:1.0)
