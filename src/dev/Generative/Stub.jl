@@ -20,13 +20,14 @@ To-do: Define the Turtle Agent type.
 """
 @agent struct Turtle(ContinuousAgent{2,Float64})
     speed::Float64						# My current speed
+    energy::Float64						# My current energy
 end
 
 #-----------------------------------------------------------------------------------------
 # Module methods:
 #-----------------------------------------------------------------------------------------
 """
-    ecosystem( max_speed=5; extent=(60,60))
+    ecosystem( extent=(60,60))
 
 To-do: Initialise the Ecosystem model.
 """
@@ -37,7 +38,12 @@ function ecosystem(;
     # To-do: Define the ecosystem properties
     properties = Dict(
         :dt             => 0.1,         # Time-step interval for the model
+        :n_turtles      => 5,           # Initial number of turtles
         :max_speed      => max_speed,   # Turtles' maximum speed
+        :prob_regrowth  => 0.01,        # Probability of algae regrowth
+        :E0             => 100.0,       # Maximum initial energy of a turtle
+        :Δliving        => 1.0,         # Energy cost of living
+        :Δeating        => 7.0          # Energy benefit of eating one alga
     )
 
     ecosys = StandardABM(
@@ -48,11 +54,11 @@ function ecosystem(;
     )
 
     # To-do: Initialise the agents
-    n_agents = 1
-    for _ in 1:n_agents
+    for _ in 1:ecosys.n_turtles
         vel = (1,1)
-        speed = ecosys.max_speed
-        add_agent!( ecosys; vel, speed)
+        speed = ecosys.max_speed * rand()
+        energy = ecosys.E0
+        add_agent!( ecosys; vel, speed, energy)
     end
 
     ecosys

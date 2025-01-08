@@ -80,7 +80,7 @@
         simple way for us to get a feel for the segration level in our simulation is to inspect the
         mean x-position of each of the two tribes.
 
-        Find the "To do" activity "tribe position" in demo(). The vector `adata` in the next line
+        Find the "To-do" activity "tribe position" in demo(). The vector `adata` in the next line
         specifies the agent-data that we want to collect and return from the call to run!() lower
         down. At present, we collect only one column of data: the sum of comfort values for all
         agents. Now we will add two more columns to our output!
@@ -169,8 +169,8 @@
         using the abmvideo() method. Make the following code changes, then compile, run and enjoy
         the mp4 file that will be saved into your current directory!
         
-        Append GLMakie to the using statement under the "To do" activity "graphics backend", then
-        insert the following code under the "To do" activity "generate video":
+        Append GLMakie to the using statement under the "To-do" activity "graphics backend", then
+        insert the following code under the "To-do" activity "generate video":
             tribecolor(agent) = agent.tribe==1 ? :blue : :orange
             tribemarker(agent) = agent.tribe==1 ? :circle : :rect
             abmvideo( "schelling.mp4", schelling(preference);
@@ -192,7 +192,7 @@
         This video makes it clear that if we wish to analyse the generation of segregation under
         various values of comfort threshold, then we really need to explore a Visual representation
         of the Schelling model. Fortunately, the method abmexploration() offers us exactly this
-        possibility. Insert the following lines of code under the "To do" activity "create an
+        possibility. Insert the following lines of code under the "To-do" activity "create an
         exploratory playground", then reply() to move on to the next activity:
             playground, _ = abmexploration( schelling();
                 agent_size = 10, agent_color = tribecolor, agent_marker = tribemarker,
@@ -233,7 +233,7 @@
         The method present_insight() presents Schelling's insight in a simple graph. In this
         method, we define an agent as segregated if all of its neighbours belong to the same tribe
         as the agent itself. We then define the segregation of a community as the proportion of its
-        agents that are segregated. Under the "To do" activity counting "tribally similar
+        agents that are segregated. Under the "To-do" activity counting "tribally similar
         neighbours", implement the counting algorithm that defines this segregation value.
 
         Does the segregation level rise uniformly from zero to its maximum with rising preference?
@@ -251,7 +251,7 @@
         over time - occasionally discover more effective ways of coping with their environment.
         
         Apply randomness to the Schelling model to escape from the plateaus in your segregation-
-        preference curve. In the method agent_step!(), under the "To do" activity "jump to a
+        preference curve. In the method agent_step!(), under the "To-do" activity "jump to a
         random empty grid location", extend the if-condition to include a probability of 0.01 that
         an agent will occasionally spontaneously jump to a random location, even though it is
         already comfortable.
