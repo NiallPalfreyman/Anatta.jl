@@ -2,20 +2,29 @@
 """
 	AgentTools
 
-This module provides a collection of utility functions for agent-based models that extendi
+This module provides a collection of utility functions for agent-based models that extend
 the Agents package towards conformity with NetLogo.
 
-Authors:  Emilio Borelli, Nick Diercksen, Stefan Hausner, Niall Palfreyman, Dominik Pfister, Maximilian Meyer
-Date: July 2022
+Author:  Niall Palfreyman, February 2025.
 """
 module AgentTools
 
-using Agents, GLMakie, InteractiveDynamics, LinearAlgebra, Observables
+using Agents, GLMakie, GeometryBasics, Observables
 
 import InteractiveUtils:@which
 
 export abmplayground, multicoloured, dejong2, diffuse4, diffuse4!, diffuse8, diffuse8!,
-		gradient, size, spectrum, turn!, valleys, wedge, diffuse4_parallel!
+		gradient, size, spectrum, turn!, left!, right!, valleys, wedge
+
+#-----------------------------------------------------------------------------------------
+# Module data:
+#-----------------------------------------------------------------------------------------
+"""
+	wejj
+
+Basic wedge shape for use in wedge() function.
+"""
+const wejj = [[1,0],[-0.5,0.5],[-0.5,-0.5]]
 
 #-----------------------------------------------------------------------------------------
 # Module methods:
@@ -33,7 +42,7 @@ Base.size(cs::Agents.ContinuousSpace) = cs.dims
 
 Return different colours depending on the id of the agent.
 """
-const spectrum = [:black,:darkblue,:blue,:green,:violet,:crimson,:red,:orange,:yellow]
+const spectrum = [:darkblue,:blue,:green,:violet,:crimson,:red,:orange,:yellow,:white]
 function multicoloured( agent::AbstractAgent)
 	spectrum[1+agent.id%length(spectrum)]
 end
@@ -44,14 +53,10 @@ end
 
 Draw a wedge-shaped marker pointing in the agent's facing (vel) direction.
 """
-function wedge( agent::AbstractAgent; as=1)
-	scale(
-		rotate2D(
-			Polygon(Point2f[(1, 0), (-0.5, 0.5), (-0.5, -0.5)]),
-			atan(agent.vel[2], agent.vel[1])
-		),
-		as
-	)
+function wedge( agent::AbstractAgent)
+	θ = atan(agent.vel[2],agent.vel[1])
+	cs, sn = (cos(θ), sin(θ))
+	Polygon( Point2f.(map(x->[cs -sn; sn cs]*x, wejj)))
 end
 
 #-----------------------------------------------------------------------------------------
@@ -60,10 +65,16 @@ end
 	
 Rotates agent's facing direction (vel).
 """
-function turn!(agent::AbstractAgent, θ=pi/2)
-	cosθ = cos(θ); sinθ = sin(θ)
-	agent.vel = Tuple([cosθ -sinθ;sinθ cosθ]*collect(agent.vel))
+function turn!(agent::AbstractAgent, θ=pi)
+	cs = cos(θ); sn = sin(θ)
+	agent.vel = Tuple([cs -sn;sn cs]*collect(agent.vel))
 end
+
+"Rotate agent's facing direction (vel) through a positive angle θ."
+left!(agent::AbstractAgent, θ=pi/2) = turn!(agent, θ)
+
+"Rotate agent's facing direction (vel) through a negative angle θ."
+right!(agent::AbstractAgent, θ=pi/2) = turn!(agent, -θ)
 
 #-----------------------------------------------------------------------------------------
 """
@@ -81,12 +92,12 @@ end
 
 #-----------------------------------------------------------------------------------------
 """
-	valleys( width)
+	valleys( extent::Tuple{Int,Int})
 
-Return a 2D map of a multimodal valleys landscape with dimensions (width, width).
+Return a 2D map of a multimodal valleys landscape with given extent.
 """
-function valleys( width::Int)
-	xs = repeat( range(-3,3,width), 1, width)
+function valleys( extent::Tuple{Int,Int})
+	xs = repeat( range(-3,3,extent[1]), 1, extent[2])
 
 	map(
 		(x,y) -> (1/3)*exp(-((x + 1)^2) - (y^2)) +
@@ -98,12 +109,12 @@ end
 
 #-----------------------------------------------------------------------------------------
 """
-	dejong2( width)
+	dejong2( extent::Tuple{Int,Int})
 
-Return a 2D map of a De Jong 2 landscape with dimensions (width, width).
+Return a 2D map of a De Jong 2 landscape with given extent.
 """
-function dejong2( width::Int)
-	xs = repeat( range(-10,10,width), 1, width)
+function dejong2( extent::Tuple{Int,Int})
+	xs = repeat( range(-10,10,extent[1]), 1, extent[2])
 
 	map(
 		(x,y) -> sin(2x) / (abs(x)+1) + sin(2y) / (abs(y)+1),
@@ -124,42 +135,6 @@ function diffuse4( heatarray::Matrix{Float64}, diffrate=1.0)
 		circshift(heatarray,(-1,0)) + circshift(heatarray,(0,-1))
 		- 4heatarray
 	)
-end
-
-"""
-	diffuse4_parallel!( heatarray::Matrix{Float64}, diffrate::Float64)
-
-Diffuse heatarray in place via 4-neighbourhoods with periodic boundary conditions and the given
-diffusion rate. Multithreaded
-"""
-function diffuse4_parallel!(heatarray::Matrix{Float64}, diffrate=1.0)
-    n, m = size(heatarray)
-    temp = similar(heatarray)
-    Threads.@threads for i in 1:n
-        for j in 1:m
-            temp[i, j] = heatarray[i, j] + 0.25diffrate * (heatarray[mod1(i+1,n), j] + heatarray[i, mod1(j+1,m)] + heatarray[mod1(i-1,n), j] + heatarray[i, mod1(j-1,m)] - 4heatarray[i, j])
-        end
-    end
-    heatarray[:] = temp[:]
-    return heatarray
-end
-
-"""
-	diffuse4_parallel!( heatarray::Matrix{Real}, diffrate::Float64)
-
-Diffuse heatarray in place via 4-neighbourhoods with periodic boundary conditions and the given
-diffusion rate. Multithreaded
-"""
-function diffuse4_parallel!(heatarray::Matrix{Real}, diffrate=1.0)
-    n, m = size(heatarray)
-    temp = similar(heatarray)
-    Threads.@threads for i in 1:n
-        for j in 1:m
-            temp[i, j] = heatarray[i, j] + 0.25diffrate * (heatarray[mod1(i+1,n), j] + heatarray[i, mod1(j+1,m)] + heatarray[mod1(i-1,n), j] + heatarray[i, mod1(j-1,m)] - 4heatarray[i, j])
-        end
-    end
-    heatarray[:] = temp[:]
-    return heatarray
 end
 
 #-----------------------------------------------------------------------------------------
@@ -214,13 +189,10 @@ end
 
 Extends abmexploration to replace the model of the ABMObservable abmobs when user clicks the
 "reset model"-Button. This reproduces the behaviour of a NetLogo interface, in which resetting
-leads to full reinitialisation of slider settings and agent population.
-Original source code of button initialisation at GitHub: shorturl.at/biOX3
-
-Author: Nick Diercksen.
+leads to full reinitialisation of slider settings and agent population. (Nick Diercksen)
 """
 function abmplayground( model, initialiser; kwargs...)
-	playgrnd_fig,abmobs = InteractiveDynamics.abmexploration( model; kwargs...)
+	playgrnd_fig,abmobs = Agents.abmexploration( model; kwargs...)
 
 	# Retrieve the Reset button from fig.content[10]:
 	reset_btn = nothing

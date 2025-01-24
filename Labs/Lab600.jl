@@ -10,32 +10,40 @@
         """
         Hi! Welcome to Anatta Subject 600:
             Enactive dynamics - Knowledge is a property of Collectives, not of individuals!
+
+        In this Subject, we will study an important argument about how we (and other biological
+        organisms) acquire knowledge. In particular, these concepts (Enactive, Knowledge,
+        Collective) help us to talk about how the subject of Biology investigates the nature of
+        living systems. We will also use the julia programming language to build Agent-Based Models
+        (ABMs) that can help us to understand the enactive dynamics of living systems.
+
+        The following basic concepts of Enactive Dynamics are merely definitions - we will explore
+        whether we believe them to be true or not in the course of this Subject ...
         """,
         "",
         x -> true
     ),
     Activity(
         """
-        In this Subject, I present an important argument about how we acquire knowledge. In
-        particular, these concepts describe how Biology seeks to understand living systems ...
-        - Embodiment: Each living organism is embodied as a collective of relational structures
-            (e.g., genes, proteins) and dynamical processes (e.g., diffusion, osmosis).
+        - Embodiment: Living organisms are embodied as collectives of relational Structures
+            (e.g., genes, proteins) and dynamical Processes (e.g., diffusion, osmosis).
 
-        - Autonomy: Organisms maintain their stable systemic identity against the destabilising
-            influence of external dynamical processes and internal structural operations.
+        - Autonomy: Organisms maintain the stability of their systemic identity against the
+            destabilising effects of external dynamical processes and internal structural operations.
 
-        - Computability: Autonomous systems Compute, using operations on their internal structure.
+        - Computability: Organisms use operations on their internal structure to Compute Decisions.
 
-        - Complexity: Autonomous systems Act on their environment, using Non-Computable processes.
+        - Complexity: Organisms use dynamical processes to Non-Computably Choose how to Act.
 
-        - Enactive Dynamics: Organisms implement complexity using Downward Selection. That is,
-            their structure Computes a dynamical response to external destabilising processes, and
-            this response non-computably Selects structural operations that avoid internal
-            destabilisation.
+        - Enactive Dynamics: Organisms use Downward Selection to implement complexity. Their structure
+            Computes a dynamical response to some destabilising processes, and this response non-
+            computably Selects those structural operations that avoid internal destabilisation.
 
-        THEREFORE: Organisms' actions are non-computable, so biological understanding CANNOT involve
-        computing/deducing them. Rather, Biology employs Generative Science (GS). GS understands
-        organisms by Generating their behaviour from the Enactive Dynamics of Agent-Based collectives.
+        We sometimes say that Enactive Dynamics are Emergent. By this we mean organisms survive
+        using complex actions that are not predictable from the structure of the organism alone.
+        Therefore Biology CANNOT be a purely computational/deductive subject, but must use Generative
+        Science (GS) to understand living systems by Generating their behaviour from the Enactive
+        Dynamics of Agent-Based collectives.
         """,
         "",
         x -> true

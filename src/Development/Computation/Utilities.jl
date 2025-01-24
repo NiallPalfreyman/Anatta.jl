@@ -213,7 +213,7 @@ mean( v::Vector{Float64}) = sum(v)/length(v)
 
 Return the standard deviation of the elements of the input vector v.
 """
-std( v::Vector{Float64}) = sqrt(sum((v.-mean(v)).^2)/length(v))
+std( v::Vector{Float64}) = sqrt(sum((v.-mean(v)).^2)/max(1,length(v)-1))
 
 #-----------------------------------------------------------------------------------------
 """

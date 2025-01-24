@@ -19,7 +19,7 @@ using Agents, GLMakie
 To-do: Define the Turtle Agent type.
 """
 @agent struct Turtle(ContinuousAgent{2,Float64})
-    speed::Float64						# My current speed
+    energy::Float64				# My current energy
 end
 
 #-----------------------------------------------------------------------------------------
@@ -31,15 +31,17 @@ end
 To-do: Initialise the Ecosystem model.
 """
 function ecosystem(;
-    max_speed   = 5.0,
-    extent      = (60,60)
+    dt          = 0.1,          # Time-step interval for the model
+    v0          = 5.0,          # Maximum initial speed of Turtles
+    E0          = 20,           # Maximum initial energy of Turtles
+    extent      = (60,60)       # Spatial extent of the model
 )
-    # To-do: Define the ecosystem properties
+    # To-do: Initialise the model properties
     properties = Dict(
-        :dt             => 0.1,         # Time-step interval for the model
-        :max_speed      => max_speed,   # Turtles' maximum speed
+        :dt     => dt,
+        :v0     => v0,
+        :E0     => E0,
     )
-
     ecosys = StandardABM(
         Turtle,
         ContinuousSpace(extent);
@@ -50,9 +52,9 @@ function ecosystem(;
     # To-do: Initialise the agents
     n_agents = 1
     for _ in 1:n_agents
-        vel = (1,1)
-        speed = ecosys.max_speed
-        add_agent!( ecosys; vel, speed)
+        vel = ecosys.v0 * [1,1]
+        energy = ecosys.E0
+        add_agent!( ecosys; vel, energy)
     end
 
     ecosys
@@ -65,6 +67,8 @@ end
 To-do: Define the Turtles' behaviour.
 """
 function agent_step!( me::Turtle, model)
+    # To-do: Set state
+
     # To-do: Perceive
 
     # To-do: Decide
@@ -72,7 +76,7 @@ function agent_step!( me::Turtle, model)
     # To-do: Act
 
     # To-do: Move
-    move_agent!( me, model, me.speed*model.dt)
+    move_agent!( me, model, model.dt)
 
     return
 end
@@ -86,17 +90,19 @@ Demonstrate the Ecosystem model.
 function demo()
     params = Dict(
         # To-do: Specify model exploration parameters
-        :max_speed      => 0.0:10.0,
+        :v0             => 0:0.1:10,
+        :E0             => 1:50,
     )
-    kwargs = (
-        # To-do: Specify plotting and data keyword arguments
+    plotkwargs = (
+        # To-do: Specify plotting keyword arguments
         agent_size      = 10,
         agent_color     = :red,
         agent_marker    = :circle,
-        adata           = [(:speed, sum)],
-        mdata           = [:dt],
+        adata           = [(:energy, sum)],
+        mdata           = [nagents],
     )
-    playground, _ = abmexploration( ecosystem(); params, kwargs...)
+    model = ecosystem()
+    playground, _ = abmexploration( model; params, plotkwargs...)
     display(playground)
 end
 

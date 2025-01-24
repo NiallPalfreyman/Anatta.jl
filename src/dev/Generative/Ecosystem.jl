@@ -1,104 +1,107 @@
 #========================================================================================#
 """
-	Ecosystem
+    Ecosystem
 
-In this model, Turtles move around a world, eating algae to gain energy. They reproduce if they
-have enough energy and die if their energy falls to zero. Overall it implements a general
-situation in which organisms interact with each other both directly and indirectly.
+To-do: Specify the Ecosystem module.
 
-Author: Niall Palfreyman & Dominik Pfister, 26/1/2023.
+Author: Niall Palfreyman (January 2025)
 """
 module Ecosystem
 
-include( "../../Tools/AgentTools.jl")
-
-using Agents, GLMakie, InteractiveDynamics, LinearAlgebra, .AgentTools
+include( "../../Development/Generative/AgentTools.jl")
+using Agents, GLMakie, .AgentTools
 
 #-----------------------------------------------------------------------------------------
-# Module data:
+# Module types:
 #-----------------------------------------------------------------------------------------
 """
-	Turtle
+    Turtle
 
-A Turtle possesses, in addition to the standard id, pos and vel of all agents, the three
-additional attributes speed, energy and Δenergy.
+To-do: Define the Turtle Agent type.
 """
-@agent Turtle ContinuousAgent{2} begin
-	speed::Float64						# My speed when moving
-	energy::Float64						# My current energy
-	Δenergy::Float64					# Energy-gain when I eat
+@agent struct Turtle(ContinuousAgent{2,Float64})
+    energy::Float64						# My current energy
 end
 
 #-----------------------------------------------------------------------------------------
 # Module methods:
 #-----------------------------------------------------------------------------------------
 """
-	ecosystem()
+    ecosystem( extent=(60,60))
 
-Create the world model.
+To-do: Initialise the Ecosystem model.
 """
 function ecosystem(;
-	n_turtles=5,									# Initial number of turtles
-	dims=(40, 40),									# Dimensions of model world
-	turtle_speed=1.0,								# Turtles' speed
-	prob_regrowth=0.01,								# Probability of algae regrowth
-	initial_energy=100.0,							# Turtles' maximum initial energy
-	Δenergy=7.0										# Energy benefit of one alga
+    dt          = 0.1,          # Time-step interval for the model
+    n_turtles   = 5,            # Initial number of turtles
+    v0          = 5.0,          # Maximum initial speed of Turtles
+    E0          = 20,           # Maximum initial energy of Turtles
+    Δliving     = 1.0,          # Energy cost of living
+    Δeating     = 10.0,         # Energy benefit of eating one alga
+    extent      = (60,60)       # Spatial extent of the model
 )
-	world = ContinuousSpace( dims, spacing=1.0)		# Generate Turtles' world
+    # To-do: Initialise the model properties
+    properties = Dict(
+        :dt             => dt,
+        :n_turtles      => n_turtles,
+        :v0             => v0,
+        :E0             => E0,
+        :Δliving        => Δliving,
+        :Δeating        => Δeating,
+        :algae          => falses(extent),
+        :prob_regrowth  => 0.0001,
+    )
+    ecosys = StandardABM(
+        Turtle,
+        ContinuousSpace(extent);
+        agent_step!,
+        model_step!,
+        properties
+    )
 
-	# Set model properties:
-	properties = Dict(
-		:algae => trues(dims), 						# Grid representing presence of algae
-		:prob_regrowth => prob_regrowth,
-		:initial_energy => initial_energy,
-		:n_turtles => n_turtles,
-		:Δenergy => Δenergy,
-		:turtle_speed => turtle_speed,
-	)
+    # To-do: Initialise the agents
+    for _ in 1:ecosys.n_turtles
+        vel = ecosys.v0 * rand() * (x->[cos(x),sin(x)])(2π*rand())
+        energy = rand(1:ecosys.E0)
+        add_agent!( ecosys; vel, energy)
+    end
 
-	model = ABM( Turtle, world; properties, scheduler=Schedulers.randomly)
-
-	# Populate model with Turtles: ??? This is the changed bit
-	for _ in 1:n_turtles
-		energy = rand(1:model.initial_energy)
-		vel = (x->(cos(x),sin(x)))(2π*rand())
-		add_agent!( model, vel, turtle_speed, energy, Δenergy)
-	end
-
-	model
+    ecosys
 end
 
 #-----------------------------------------------------------------------------------------
 """
-	agent_step!(turtle, model)
+    agent_step!( Turtle, model)
 
 One step in the life of a Turtle:
 	- Move forward,
 	- Eat algae if there is one here,
 	- Die if my energy is below zero and reproduce if my energy is above model's initial_energy.
 """
-function agent_step!( turtle, model)
-	turtle.energy -= 1									# Living costs energy!
+function agent_step!( me::Turtle, model)
+    # To-do: Set state
+    if nagents(model) > 1
+        me.energy -= model.Δliving * model.dt
+        if me.energy < 0
+            remove_agent!( me, model)
+            return
+        end
+    end
 
-	if rand() < 0.3
-		# 30% of Turtles rotate slightly and move forward:
-		cs,sn = (x->(cos(x),sin(x)))((2rand()-1)*pi/15)
-		turtle.vel = Tuple([cs sn;-sn cs]*collect(turtle.vel))
-		move_agent!( turtle, model, turtle.speed)
-	end
+    # To-do: Perceive
 
-	eat!( turtle, model)								# Turtle eats
+    # To-do: Decide
 
-	if turtle.energy < 0
-		kill_agent!(turtle, model)						# Turtle dies
-		return
-	end
+    # To-do: Act
+    reproduce!( me, model)
+    eat!( me, model)
 
-	# Turtle reproduces if it has enough energy:
-	if turtle.energy >= model.initial_energy
-		reproduce!(turtle, model)
-	end
+    # To-do: Move
+    cs,sn = (x->(cos(x),sin(x)))((2rand()-1)*pi/15)
+    me.vel = [cs -sn;sn cs]*collect(me.vel)
+    move_agent!( me, model, model.dt)
+
+    return
 end
 
 #-----------------------------------------------------------------------------------------
@@ -109,11 +112,11 @@ Eat the algae at turtle's current position if there are any, and receive a feedi
 my own energy. Remove algae from current location.
 """
 function eat!( turtle, model)
-	indices = get_spatial_index( turtle.pos, model.algae, model)
-	if model.algae[indices]
-		turtle.energy += turtle.Δenergy
-		model.algae[indices] = false
-	end
+    indices = get_spatial_index( turtle.pos, model.algae, model)
+    if model.algae[indices]
+        turtle.energy += model.Δeating
+        model.algae[indices] = false
+    end
 end
 
 #-----------------------------------------------------------------------------------------
@@ -124,61 +127,51 @@ Create a child with the same properties as the parent. Reproduction costs the pa
 model's initial_energy, which is then given to the child.
 """
 function reproduce!( parent::Turtle, model)
-	parent.energy -= model.initial_energy
-	add_agent!( parent.pos, model,
-		parent.vel, parent.speed, model.initial_energy, parent.Δenergy
-	)
+    if parent.energy > model.E0 && rand() < 0.01
+        parent.energy -= model.E0
+        add_agent!( parent.pos, model, parent.vel, model.E0)
+    end
 end
 
 #-----------------------------------------------------------------------------------------
 """
 	model_step!( model)
 
-At each currently empty algae location, allow an alga to grow with the model-dependent
-probability of regrowth.
+At each currently empty algae location, allow an alga to regrow with a certain probability.
 """
 function model_step!( model)
-	empties = .!model.algae
-	model.algae[empties] .= (rand(count(empties)).<model.prob_regrowth)
+    empties = .!model.algae
+    model.algae[empties] .= (rand(count(empties)).<model.prob_regrowth)
 end
 
 #-----------------------------------------------------------------------------------------
 """
-	demo()
+    demo()
 
-Record an abmvideo to visualise the Ecosystem module.
+Demonstrate the Ecosystem model.
 """
 function demo()
-	ecosys = ecosystem()
-
-	# Set up plotting parameters for the Turtle Ecosystem:
-	plotkwargs = (
-		ac=:red, 													# Turtles' colour
-		as=10,														# Turtles' size
-		am=AgentTools.wedge,										# Turtles' marker
-		title = "Turtles in an ecosystem",							# Title of presentation
-		heatarray=(model->model.algae), 							# Background map of algae
-		heatkwargs=(colormap=[:black,:lime],colorrange=(0,1)),		# Algae's colours
-		add_colorbar=false,											# No need for algae colour bar
-		adata=[(a->isa(a,Turtle),count)], alabels=["Turtles"],		# Agent data and labels
-		mdata=[(m->sum(m.algae))], mlabels=["Algae"],				# Model data and labels
-	)
-
-	# Create an exploratory playground for the Ecosystem:
-	params = Dict(
-		:n_turtles		=> 1:200,
-		:turtle_speed	=> 0.1:0.1:3.0,
-		:prob_regrowth	=> 0:0.0001:0.01,
-		:initial_energy	=> 10.0:200.0,
-		:Δenergy		=> 0:0.1:5.0,
-	)
-
-	playground, = abmplayground( ecosys, ecosystem;
-		agent_step!, model_step!,
-		params, plotkwargs...
-	)
-
-	playground
+    params = Dict(
+        # To-do: Specify model exploration parameters
+        :prob_regrowth	=> 0:0.0001:0.01,
+        :E0	            => 10.0:200.0,
+        :Δeating        => 0:0.1:10.0,
+        :Δliving        => 0:0.1:10.0,
+    )
+    plotkwargs = (
+        # To-do: Specify plotting keyword arguments
+        agent_size      = 10,
+        agent_color     = :red,
+        agent_marker    = wedge,
+		heatarray       = (model->+model.algae),
+		heatkwargs      = (colormap=[:black,:lime],colorrange=(0,1)),
+        add_colorbar    = false,
+        adata=[(a->isa(a,Turtle),count)], alabels=["Turtles"],
+        mdata=[(m->sum(m.algae))], mlabels=["Algae"],
+    )
+    model = ecosystem()
+    playground, _ = abmexploration( model; params, plotkwargs...)
+    display(playground)
 end
 
-end # ... end of module Ecosystem
+end # ... of module Ecosystem
