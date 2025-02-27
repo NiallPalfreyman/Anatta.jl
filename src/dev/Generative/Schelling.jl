@@ -7,9 +7,9 @@ This module reproduces Schelling's model of segregation in social communities.
 Author: Niall Palfreyman (December 2024)
 """
 module Schelling
-
-# To-do: Add graphics backend package
-using Agents, GLMakie
+# To-do: Add Agent tools and graphics backend package
+include( "../../Development/Generative/AgentTools.jl")
+using Agents, GLMakie, .AgentTools
 
 #-----------------------------------------------------------------------------------------
 # Module types:
@@ -49,7 +49,7 @@ function schelling( preference=1.0; extent=(60,60))
 
     # To-do: Set n_agents to 80% of the total number of grid points
 #    n_agents = 0
-    n_agents = round(0.8prod(worldsize))
+    n_agents = round(0.8prod(extent))
     for n in 1:n_agents
         # To-do: Place Persons of random tribe
 #        add_agent_single!( schelling_model; tribe=0)
@@ -170,7 +170,7 @@ function demo(preference=1.0)
     )
 
     # To-do: Create an exploratory playground
-    playground, _ = abmexploration( schelling();
+    playground, _ = abmplayground( schelling;
         agent_size = 10, agent_color = tribecolor, agent_marker = tribemarker,
         params = Dict( :preference => 0.0:0.01:1.0)
     )

@@ -7,8 +7,8 @@ To-do: Specify the Ecosystem module.
 Author: Niall Palfreyman (January 2025)
 """
 module Ecosystem
-
-using Agents, GLMakie
+include( "AgentTools.jl")
+using Agents, GLMakie, .AgentTools
 
 #-----------------------------------------------------------------------------------------
 # Module types:
@@ -101,8 +101,7 @@ function demo()
         adata           = [(:energy, sum)],
         mdata           = [nagents],
     )
-    model = ecosystem()
-    playground, _ = abmexploration( model; params, plotkwargs...)
+    playground, _ = abmplayground( ecosystem; params, plotkwargs...)
     display(playground)
 end
 

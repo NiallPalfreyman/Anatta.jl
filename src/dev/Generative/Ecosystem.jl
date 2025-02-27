@@ -7,7 +7,6 @@ To-do: Specify the Ecosystem module.
 Author: Niall Palfreyman (January 2025)
 """
 module Ecosystem
-
 include( "../../Development/Generative/AgentTools.jl")
 using Agents, GLMakie, .AgentTools
 
@@ -169,8 +168,7 @@ function demo()
         adata=[(a->isa(a,Turtle),count)], alabels=["Turtles"],
         mdata=[(m->sum(m.algae))], mlabels=["Algae"],
     )
-    model = ecosystem()
-    playground, _ = abmexploration( model; params, plotkwargs...)
+    playground, _ = abmplayground( ecosystem; params, plotkwargs...)
     display(playground)
 end
 

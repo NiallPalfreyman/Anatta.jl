@@ -8,7 +8,8 @@
 [
     Activity(
         """
-        Hi! Welcome to Anatta Lab 602: What is Collective behaviour?
+        Hi - Welcome to Anatta Lab 602!
+            Collectivity: How interactions between individuals generate surprising behaviour.
 
         In the previous lab, we saw that the collective behaviour of a large community of agents in
         Schelling's model can be surprising. By this, we mean that it can be difficult to predict
@@ -395,12 +396,12 @@
     ),
     Activity(
         """
-        Now that we fulfill the reference mode, we can use the model to experiment. We will install
-        our own slider bars for the model parameters that we wish to experiment with. Under the
-        To-do activity "Specify model exploration parameters" in the demo() method, make the
+        Now that we have satisfied the reference mode, we can use the model to experiment. We will
+        install our own slider bars for the model parameters that we wish to experiment with. Under
+        the To-do activity "Specify model exploration parameters" in the demo() method, make the
         following changes, then run the method again to make sure your new sliders are working
-        correctly. It is important that your Dict is named 'params', since this is the correct name
-        of the abmexploration() keyword argument:
+        correctly. It is important that your Dict is named 'params', since this is the correct
+        keyword for the corresponding abmplayground() argument:
             params = Dict(
                 :prob_regrowth	=> 0:0.0001:0.01,
                 :E0	            => 10.0:200.0,

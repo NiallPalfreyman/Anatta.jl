@@ -8,8 +8,8 @@
 [
     Activity(
         """
-        Hi! Welcome to Anatta Subject 600:
-            Enactive dynamics - Knowledge is a property of Collectives, not of individuals!
+        Hi - Welcome to Anatta Subject 600!
+            Enaction: Knowledge is an property of Collectives, not of individuals.
 
         In this Subject, we will study an important argument about how we (and other biological
         organisms) acquire knowledge. In particular, these concepts (Enactive, Knowledge,

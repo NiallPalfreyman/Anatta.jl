@@ -2,10 +2,9 @@
 """
 	AgentTools
 
-This module provides a collection of utility functions for agent-based models that extend
-the Agents package towards conformity with NetLogo.
+This module provides a collection of convenient utility functions to supplement the Agents package.
 
-Author:  Niall Palfreyman, February 2025.
+Author:  Niall Palfreyman, January 2025.
 """
 module AgentTools
 
@@ -191,34 +190,30 @@ Extends abmexploration to replace the model of the ABMObservable abmobs when use
 "reset model"-Button. This reproduces the behaviour of a NetLogo interface, in which resetting
 leads to full reinitialisation of slider settings and agent population. (Nick Diercksen)
 """
-function abmplayground( model, initialiser; kwargs...)
-	playgrnd_fig,abmobs = Agents.abmexploration( model; kwargs...)
+function abmplayground( abm_constructor; kwargs...)
+	playground, playobserver = Agents.abmexploration( abm_constructor(); kwargs...)
 
-	# Retrieve the Reset button from fig.content[10]:
+	# Locate Reset button from playground:
 	reset_btn = nothing
-	for element ∈ playgrnd_fig.content
-		if element isa Button && element.label[] == "reset\nmodel"
+	for element ∈ playground.content
+		if element isa Button && occursin("reset", lowercase(element.label[]))
 			reset_btn = element
 			break
 		end
 	end
-	@assert !isnothing(reset_btn) "Couldn't find the 'Reset-model-button'!"
+	@assert !isnothing(reset_btn) "Couldn't find the button 'Reset-model'!"
 
+	# Retrieve initialisation keyword arguments from the abm_constructor function:
+	init_kwargs = Base.kwarg_decl(@which abm_constructor())
+
+	# Replace model with newly initialised one when reset button is clicked:
 	on(reset_btn.clicks) do _
-		# Retrieve all keyword agruments from the initialiser function
-		# (https://discourse.julialang.org/t/get-the-argument-names-of-an-function/32902/4):
-		init_kwargs = Base.kwarg_decl(@which initialiser())
-
-		# Retrieve current model properties
-		# (https://stackoverflow.com/questions/38625663/subset-of-dictionary-with-aliases):
-		props = abmobs.model.val.properties
+		props = abmproperties(playobserver.model.val)			# Retrieve current model properties
 		kws = (; Dict([Pair(k, props[k]) for k in (keys(props) ∩ init_kwargs)])...)
-
-		# Replace old model with newly initialised model:
-		abmobs.model[] = initialiser(; kws...)
+		playobserver.model[] = abm_constructor(; kws...)		# Replace old model with new one
 	end
 
-	(playgrnd_fig,abmobs)
+	(playground,playobserver)
 end
 
 end # ... of module AgentTools

@@ -1,117 +1,126 @@
 #========================================================================================#
 """
-	Leafy
+    Leafy
 
 This module generates an approximation to a noncomputable fern.
 
-Author: Niall Palfreyman (February 2023)
+Author: Niall Palfreyman, February 2025.
 """
 module Leafy
+include( "../../Development/Generative/AgentTools.jl")
 
-include( "../../Tools/AgentTools.jl")
-
-using Agents, GLMakie, InteractiveDynamics, .AgentTools
+using Agents, GLMakie, .AgentTools
 
 #-----------------------------------------------------------------------------------------
 # Module types:
 #-----------------------------------------------------------------------------------------
 """
-	Particle
+    Builder
 
-A Particle is a very simple Agent with no internal state other than the default properties id,
-pos, vel. The only thing we really need from a Particle here is that we know its position.
+A Builder is a very simple Agent with no internal state other than the default properties id,
+pos, vel. The only thing we really need from a Builder in this simulation is its position.
 """
-@agent Particle ContinuousAgent{2} begin end
+@agent struct Builder(ContinuousAgent{2,Float64})
+end
 
 #-----------------------------------------------------------------------------------------
 # Module methods:
 #-----------------------------------------------------------------------------------------
 """
-	leafy()
+    leafy()
 
-Initialise a Leafy model.
+Initialise the Leafy model.
 """
 function leafy(;
-	n_particles=1,
-	base_point=[5.0,0.0],
-	worldsize=10
+    extent		    = (15,15),      # Spatial extent of the model
+    A1L22           = 0.16,         # 1st Linear transformation: element (2,2)
+    A2L11           = 0.85,
+    A2L12           = 0.04,
+    A2T2            = 1.6,
+    A3T2            = 1.6,
+    A4T2            = 0.44,
 )
-	properties = Dict(
-		:n_particles => n_particles,
-		:base_point => base_point,
-		:spu => 30,
-		:footprints => Vector{Point2f}(undef,0)
-	)
+    properties = Dict(
+        :base_point		=> [extent[1]/2,0],
+        :A1L22          => A1L22,
+        :A2L11          => A2L11,
+        :A2L12          => A2L12,
+        :footprints		=> Vector{Point2f}(undef,0),
+        :affine         => [
+            (P -> [0.00 0.00;  0.00 A1L22]*P + [0.0,0.0]),
+            (P -> [A2L11 A2L12; -A2L12 A2L11]*P + [0.0,A2T2]),
+            (P -> [0.20 -0.26; 0.23 0.22]*P + [0.0,A3T2]),
+            (P -> [-0.15 0.28; 0.26 0.24]*P + [0.0,A4T2]),
+        ],
+    )
 
-	leaf = ABM(Particle, ContinuousSpace((worldsize, worldsize)); properties)
+    fern = StandardABM( Builder,
+        ContinuousSpace(extent);
+        agent_step!, model_step!,
+        properties
+    )
 
-	for _ in 1:n_particles
-		# Create a particle at leaf's base_point:
-		add_agent!( Tuple(leaf.base_point), leaf, (0.0,0.0))
-	end
-	
-	return leaf
+    # To-do: Initialise the agents
+    add_agent!( Tuple(fern.base_point), fern, vel=[0.0,0.0])
+    
+    fern
 end
 
 #-----------------------------------------------------------------------------------------
 """
-	agent_step!( particle, leaf)
+    agent_step!( builder, model)
 
 Move particle towards a random vertex position.
 """
-function agent_step!( particle, leaf)
-	pos = collect(particle.pos) - leaf.base_point
-	dice = rand()
-
-	rule1 = [0.85 0.04;-0.04 0.85]
-	rule2 = [0.20 -0.26; 0.23 0.22]
-	rule3 = [-0.15 0.28; 0.26 0.24]
-	rule4 = [0 0;0 0.16]
-
-	if dice < 0.85
-		pos = rule1*pos + [0,1.6]
-	elseif dice < 0.92
-		pos = rule2*pos + [0,1.6]
-	elseif dice < 0.99
-		pos = rule3*pos + [0,0.44]
+function agent_step!( builder, model)
+	p = collect(builder.pos) - model.base_point
+    dice = rand()
+	if dice < 0.01
+		p = model.affine[1](p)
+	elseif dice < 0.86
+		p = model.affine[2](p)
+	elseif dice < 0.93
+		p = model.affine[3](p)
 	else
-		pos = rule4*pos
+		p = model.affine[4](p)
 	end
-
-	move_agent!( particle, Tuple(pos+leaf.base_point), leaf)
+    
+	move_agent!( builder, Tuple(p+model.base_point), model)
 end
 
 #-----------------------------------------------------------------------------------------
 """
-	model_step!(leaf)
+    model_step!(model)
 
 After all agents have moved one step, record their current position as a footprint.
 """
-function model_step!(leaf)
-	append!( leaf.footprints, [Point2f(p.pos) for p in allagents(leaf)])
+function model_step!(model)
+    append!( model.footprints, [Point2f(p.pos) for p in allagents(model)])
 end
 
 #-----------------------------------------------------------------------------------------
 """
-	demo()
+    demo()
 
-Create an interactive playground for the Computability model.
+Create an interactive playground for the Leafy model.
 """
 function demo()
-	params = Dict(	# Playground slider values:
-		:n_particles => 1:10,
-	)
+    params = Dict(
+        # To do: Playground slider values:
+        :A1L22      => 0.1:0.01:0.3,
+        :A2L11      => 0.7:0.01:0.9,
+        :A2L12      => -0.1:0.01:0.1,
+    )
 
-	# Create playground displaying particles:
-	playground, abmplt = abmplayground( leafy(), leafy;
-		agent_step!, model_step!,
-		params,
-		ac=:blue, as=30, am=:circle
-	)
-	# Add footprints to abmplot:
-	scatter!( lift( (m->m.footprints), abmplt.model), color=:black, markersize=1)
+    # Create playground displaying all builders and sources:
+    playground, abmobs = abmplayground( leafy; params,
+        agent_color=:darkgreen, agent_size=20, agent_marker=:circle
+    )
 
-	playground
+    # Add footprints to abmobs:
+    scatter!( lift( (m->m.footprints), abmobs.model), color=:green, markersize=1)
+
+    display(playground)
 end
 
 end # ... of module Leafy
