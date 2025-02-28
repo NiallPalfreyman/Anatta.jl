@@ -13,7 +13,7 @@ using Agents, GLMakie, GeometryBasics, Observables
 import InteractiveUtils:@which
 
 export abmplayground, multicoloured, dejong2, diffuse4, diffuse4!, diffuse8, diffuse8!,
-		gradient, size, spectrum, turn!, left!, right!, valleys, wedge
+		gradient, norm, size, spectrum, turn!, left!, right!, valleys, wedge
 
 #-----------------------------------------------------------------------------------------
 # Module data:
@@ -48,13 +48,23 @@ end
 
 #-----------------------------------------------------------------------------------------
 """
+	norm(v)
+
+Calculate the norm of the vector or tuple v.
+"""
+function norm( v)
+	sum(abs.(v).^2)^0.5
+end
+
+#-----------------------------------------------------------------------------------------
+"""
 	wedge(p)
 
 Draw a wedge-shaped marker pointing in the agent's facing (vel) direction.
 """
-function wedge( agent::AbstractAgent)
+function wedge( agent::AbstractAgent, siz=1.0)
 	θ = atan(agent.vel[2],agent.vel[1])
-	cs, sn = (cos(θ), sin(θ))
+	cs, sn = siz.*(cos(θ), sin(θ))
 	Polygon( Point2f.(map(x->[cs -sn; sn cs]*x, wejj)))
 end
 

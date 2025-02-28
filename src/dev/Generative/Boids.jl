@@ -44,6 +44,7 @@ function boids(;
 	separation_weight = 0.25,		# Priority of separation between Boids
 	extent = (100, 100),			# Extent of model space
 )
+#	min_separation, cohesion_weight, alignment_weight, separation_weight = 8.0, 1.0, 0.05, 0.05
 	model = StandardABM( Boid, ContinuousSpace(extent; spacing=visual_range/2);
         agent_step!,
 		properties = Dict(		# Model properties applying to all Boids:
