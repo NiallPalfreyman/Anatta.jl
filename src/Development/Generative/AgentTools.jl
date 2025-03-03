@@ -13,7 +13,7 @@ using Agents, GLMakie, GeometryBasics, Observables
 import InteractiveUtils:@which
 
 export abmplayground, multicoloured, dejong2, diffuse4, diffuse4!, diffuse8, diffuse8!,
-		gradient, norm, size, spectrum, turn!, left!, right!, valleys, wedge
+		gradient, mean, norm, size, spectrum, turn!, left!, right!, valleys, wedge
 
 #-----------------------------------------------------------------------------------------
 # Module data:
@@ -48,17 +48,27 @@ end
 
 #-----------------------------------------------------------------------------------------
 """
-	norm(v)
+	norm( arr)
 
-Calculate the norm of the vector or tuple v.
+Calculate the norm of the array or tuple arr.
 """
-function norm( v)
-	sum(abs.(v).^2)^0.5
+function norm( arr)
+	sum(abs.(arr).^2)^0.5
 end
 
 #-----------------------------------------------------------------------------------------
 """
-	wedge(p)
+	mean(arr)
+
+Calculate the mean value contained in the array or tuple arr.
+"""
+function mean( arr)
+	sum(arr)/length(arr)
+end
+
+#-----------------------------------------------------------------------------------------
+"""
+	wedge(agent::AbstractAgent, siz=1.0)
 
 Draw a wedge-shaped marker pointing in the agent's facing (vel) direction.
 """
@@ -72,18 +82,21 @@ end
 """
 	turn!( agent::AbstractAgent, angle)
 	
-Rotates agent's facing direction (vel).
+Rotate agent's facing direction (vel) through the given angle.
 """
 function turn!(agent::AbstractAgent, θ=pi)
 	cs = cos(θ); sn = sin(θ)
 	agent.vel = Tuple([cs -sn;sn cs]*collect(agent.vel))
 end
 
-"Rotate agent's facing direction (vel) through a positive angle θ."
+"left!: Rotate agent's facing direction (vel) through a positive angle θ."
 left!(agent::AbstractAgent, θ=pi/2) = turn!(agent, θ)
 
-"Rotate agent's facing direction (vel) through a negative angle θ."
+"right!: Rotate agent's facing direction (vel) through a negative angle θ."
 right!(agent::AbstractAgent, θ=pi/2) = turn!(agent, -θ)
+
+"wiggle!: Rotate agent's facing direction (vel) through a random angle of magnitude ≤ θ."
+wiggle!(agent::AbstractAgent, θ=pi/4) = turn!(agent, (2rand()-1)*θ)
 
 #-----------------------------------------------------------------------------------------
 """
