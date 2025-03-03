@@ -13,7 +13,7 @@ using Agents, GLMakie, GeometryBasics, Observables
 import InteractiveUtils:@which
 
 export abmplayground, multicoloured, dejong2, diffuse4, diffuse4!, diffuse8, diffuse8!,
-		gradient, mean, norm, size, spectrum, turn!, left!, right!, valleys, wedge
+		gradient, mean, norm, size, spectrum, turn!, left!, right!, wiggle!, valleys, wedge
 
 #-----------------------------------------------------------------------------------------
 # Module data:
