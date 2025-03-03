@@ -56,9 +56,9 @@ function boids(;
 		)
     )
 
-	velocities = [Tuple(2rand(2) .- 1) for _ in 1:n_boids]
-	map( velocities) do vel
-		add_agent!( model, vel./norm(vel), speed)
+	for _ in 1:n_boids
+		theta = 2π*rand()								# Random angle
+		add_agent!( model, (cos(theta), sin(theta)), speed)
 	end
 
 	return model
