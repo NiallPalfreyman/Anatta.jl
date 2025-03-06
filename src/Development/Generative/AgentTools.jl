@@ -146,68 +146,67 @@ end
 
 #-----------------------------------------------------------------------------------------
 """
-	diffuse4( heatarray::Matrix{Float64}, diffrate::Float64)
+	diffuse4( F::Matrix{R}, Λ=1.0) where R <: Real
 
-Diffuse heatarray via 4-neighbourhoods with periodic boundary conditions and the given
-diffusion rate.
+Diffuse the field F via 4-neighbourhoods with periodic boundary conditions and the given
+diffusion rate Λ.
 """
-function diffuse4( heatarray::Matrix{Float64}, diffrate=1.0)
-	heatarray + 0.25diffrate * (
-		circshift(heatarray,( 1,0)) + circshift(heatarray,(0, 1)) +
-		circshift(heatarray,(-1,0)) + circshift(heatarray,(0,-1))
-		- 4heatarray
+function diffuse4( F::Matrix{R}, Λ=1.0) where R <: Real
+	F + 0.25Λ * (
+		circshift(F,( 1,0)) + circshift(F,(0, 1)) +
+		circshift(F,(-1,0)) + circshift(F,(0,-1)) - 4F
 	)
 end
 
 #-----------------------------------------------------------------------------------------
 """
-	diffuse4!( heatarray::Matrix{Float64}, diffrate::Float64)
+	diffuse4!( F::Matrix{R}, Λ=1.0) where R <: Real
 
-Diffuse heatarray in place via 4-neighbourhoods with periodic boundary conditions and the given
-diffusion rate.
+Diffuse the field F in place via 4-neighbourhoods with periodic boundary conditions and the given
+diffusion rate Λ.
 """
-function diffuse4!( heatarray::Matrix{Float64}, diffrate=1.0)
-	heatarray[:] = diffuse4(heatarray,diffrate)[:]
-	heatarray
+function diffuse4!( F::Matrix{R}, Λ=1.0) where R <: Real
+	F[:] = diffuse4(F,Λ)[:]
+	F
 end
 
 #-----------------------------------------------------------------------------------------
 """
-	diffuse8( heatarray::Matrix{Float64}, diffrate::Float64)
+	diffuse8( F::Matrix{R}, Λ=1.0) where R <: Real
 
-Diffuse heatarray via 8-neighbourhoods with periodic boundary conditions and the given
-diffusion rate.
+Diffuse the field F via 8-neighbourhoods with periodic boundary conditions and the given
+diffusion rate Λ.
 """
-function diffuse8( heatarray::Matrix{Float64}, diffrate=1.0)
+function diffuse8( F::Matrix{R}, Λ=1.0) where R <: Real
 	sqrt2 = sqrt(2)						# Some preliminary calculations ...
-	oneoveraqrt2 = 1/sqrt2
+	oneoversqrt2 = 0.5sqrt2
 	sum_contributions = 4 + 2sqrt2
 
-	heatarray + (diffrate/sum_contributions) * (
-		circshift(heatarray,( 1,0)) + circshift(heatarray,( 0, 1)) +
-		circshift(heatarray,(-1,0)) + circshift(heatarray,( 0,-1)) +
-		oneoveraqrt2*(
-			circshift(heatarray,( 1,1)) + circshift(heatarray,( 1,-1)) +
-			circshift(heatarray,(-1,1)) + circshift(heatarray,(-1,-1))
-		) - (sum_contributions*heatarray)
+	F + (Λ/sum_contributions) * (
+		circshift(F,( 1,0)) + circshift(F,( 0, 1)) +
+		circshift(F,(-1,0)) + circshift(F,( 0,-1)) +
+		oneoversqrt2*(
+			circshift(F,( 1,1)) + circshift(F,( 1,-1)) +
+			circshift(F,(-1,1)) + circshift(F,(-1,-1))
+		) - (sum_contributions*F)
 	)
 end
 
 #-----------------------------------------------------------------------------------------
 """
-	diffuse8!( heatarray::Matrix{Float64}, diffrate::Float64)
+	diffuse8!( F::Matrix{R}, Λ=1.0) where R <: Real
 
-Diffuse heatarray in place via 8-neighbourhoods with periodic boundary conditions and the given
-diffusion rate.
+Diffuse the field F in place via 8-neighbourhoods with periodic boundary conditions and the given
+diffusion rate Λ.
 """
-function diffuse8!( heatarray::Matrix{Float64}, diffrate=1.0)
-	heatarray[:] = diffuse8(heatarray,diffrate)[:]
-	heatarray
+function diffuse8!( F::Matrix{R}, Λ=1.0) where R <: Real
+	F[:] = diffuse8(F,Λ)[:]
+	F
 end
 
 #-----------------------------------------------------------------------------------------
 """
-	abmplayground( model; alabels, mlabels, kwargs...)
+	abmplayground( abm_constructor, kwargs...)
 
 Extends abmexploration to replace the model of the ABMObservable abmobs when user clicks the
 "reset model"-Button. This reproduces the behaviour of a NetLogo interface, in which resetting

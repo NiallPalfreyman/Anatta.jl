@@ -205,7 +205,7 @@
         Before we complete this lab, I want to draw your attention to two important points:
             1. Although we can describe the flocking patterns in the Boids model by relations such
                 as 'tight', 'fluid' or 'open', these patterns are Not static structures. Rather,
-                they are reliable features of the dynamical organisation between boids' motion.
+                they are reliable aspects of the dynamical organisation between boids' motion.
             2. This reliable dynamical organisation emerges from what is called Self-Organisation:
                 the emergence of collective order from the interactions of many individual agents.
                 I want you to notice that this  self-organisation is only made possible by the fact
@@ -227,7 +227,7 @@
               would change if they could only see neighbours in front of them;
             - Formulate a null hypothesis that predicts no change in the flocking behaviour of boids
               if they could only see neighbours in front of them;
-            - Implement this hypothesis by filter the collection neighbour_ids in agent_step!().
+            - Implement this hypothesis by filtering the collection neighbour_ids in agent_step!().
         """,
         "",
         x -> true
