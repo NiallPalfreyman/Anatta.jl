@@ -11,12 +11,13 @@
         Hi! Welcome to Anatta Subject 606:
             Fields as independent dynamical entities.
 
-        Fields are not only produced and consumed by agents; they also possess their own dynamics,
-        which can be highly complex - as we shall see in this lab. In fact, ALL biological systems
-        contain two essential features: An agent structure that generates and utilises fields
-        LOCALLY, and a set of dynamical fields that interact NONLOCALLY, which and influence
-        variations in the agent structures. These structures may be organisms, cells, neurons or
-        genomes, and the fields may be food resources, messenger proteins, or transcription factors.
+        Fields are not only produced and consumed by agents; they are also entities in their own
+        right, possessing their own highly complex dynamics, as we shall see in this lab. In fact,
+        ALL biological systems contain two essential components: An agent structure that generates
+        and utilises fields LOCALLY, and a set of dynamical fields that interact NONLOCALLY, which
+        govern the extent of variation in the agent structures. These structures may be organisms,
+        cells, neurons or genomes, and the fields may be food resources, messenger proteins, or
+        transcription factors.
 
         In this lab we discover that fields are not just passive media that convey signals between
         agents, but are active entities in their own right that generate and transform themselves.

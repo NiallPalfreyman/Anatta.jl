@@ -1,16 +1,16 @@
 #========================================================================================#
 """
-	DifferentialAdhesion
+	DAH
 
 Implement a demonstration of Newman and Müller's Differential Adhesion Hypothesis (DAH).
 
-Author: Niall Palfreyman (March 2023).
+Author: Niall Palfreyman, March 2025.
 """
-module DifferentialAdhesion
+module DAH
 
-include( "../../Tools/AgentTools.jl")
+include( "../../Development/Generative/AgentTools.jl")
 
-using Agents, GLMakie, InteractiveDynamics, .AgentTools
+using Agents, GLMakie, .AgentTools
 
 #-----------------------------------------------------------------------------------------
 # Module types:
@@ -21,7 +21,7 @@ using Agents, GLMakie, InteractiveDynamics, .AgentTools
 A Cell is an Agent possessing the property `cadherin`, which specifies the stickiness of the cell
 to other cells in its neighbourhood.
 """
-@agent Cell ContinuousAgent{2} begin
+@agent struct Cell(ContinuousAgent{2,Float64})
 	cadherin::Float64
 end
 
@@ -29,14 +29,14 @@ end
 # Module methods:
 #-----------------------------------------------------------------------------------------
 """
-	differential_adhesion(kwargs)
+	dah( kwargs)
 
-Initialise the DifferentialAdhesion model.
+Initialise the DAH model.
 """
-function differential_adhesion(;
-	adhesion_range=4.0,		# Max separation from which two Cells can adhere
-	adhesion=0.8,			# Base adhesion level between interacting Cells
-	radius=1,				# Incompressibility radius of Cells
+function dah(;
+	adhesion_range=4.0,		# Max separation within which two Cells can adhere
+	adhesion=0.5,			# Base adhesion level between interacting Cells
+	radius=1.2,				# Incompressibility radius of Cells
 	repulsion=0.5,			# Repulsive force between incompressible Cells
 	thermal=0.01,			# Thermal force on Cells
 	gravity=0.0,			# Gravitational force on Cells (very small, e.g. 0.01)
@@ -52,14 +52,15 @@ function differential_adhesion(;
 		:adherins => adherins,
 	)
 
-	width = 20					# Width of world
+	extent = (20,20)			# Extent of world
 	agents_per_square = 3		# Number of agents per unit square in the world
 
-	dah = ABM( Cell, ContinuousSpace((width,width));
-		properties, scheduler=Schedulers.randomly
+	dah = StandardABM( Cell, ContinuousSpace(extent;spacing=1.0);
+		agent_step!,
+		properties,
 	)
 
-	for _ in 1:width*width*agents_per_square
+	for _ in 1:agents_per_square*prod(extent)
 		add_agent!( dah, (0,0), rand(1:adherins))
 	end
 
@@ -102,7 +103,7 @@ end
 	stickiness(cad1,cad2,nadherins)
 
 Calculate the cadherin stickiness between two cadherin classes, assuming the given total number
-of possible adherin classes. This formula is provisional and VERY suspect!
+of possible adherin classes. This formula is provisional and VERY suspicious!
 """
 function  stickiness( cad1, cad2, nadherins)
 	1 - (2abs(cad1 - cad2) + cad1 + cad2) / 2nadherins
@@ -137,11 +138,13 @@ end
 """
 	fall!(cell,dah)
 
-Gravitational motion: Gravitate towards the world's centre (dah.space.extent./2).
+Gravitational motion: Gravitate towards the world's centre: abmspace(dah).extent./2).
+??? Make this stronger!
 """
-function  fall!( cell::Cell, dah::ABM)
+function fall!( cell::Cell, dah::ABM)
 	if dah.gravity > 0.0
-		cell.vel = get_direction( cell.pos, dah.space.extent./2, dah)
+#		cell.vel = get_direction( cell.pos, abmspace(dah).extent./2, dah)
+		cell.vel = (0, abmspace(dah).extent[2]/2-cell.pos[2])
 		move_agent!( cell, dah, dah.gravity)
 	end
 end
@@ -153,24 +156,21 @@ end
 Set up a playground for differential adhesion.
 """
 function demo()
-	dah = differential_adhesion()
 	params = Dict(
 		:adhesion_range => 1:7,
 		:adhesion => 0:0.1:1,
 		:radius => 0.5:0.1:2,
 		:repulsion => 0:0.1:1,
 		:thermal => 0:0.001:0.1,
-		:gravity => 0:0.001:0.01,
+		:gravity => 0:0.01:1,
 		:adherins => 1:length(spectrum),
 	)
 	plotkwargs = (
-		ac = (ag->spectrum[Int(ag.cadherin)]),
-		as = 30,
+		agent_color = (ag->spectrum[Int(ag.cadherin)]),
+		agent_size = 25,
 	)
 
-	playground, = abmplayground( dah, differential_adhesion;
-		agent_step!, params, plotkwargs...
-	)
+	playground, = abmplayground( dah; params, plotkwargs...)
 
 	playground
 end

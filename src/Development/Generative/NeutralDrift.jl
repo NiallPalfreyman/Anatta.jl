@@ -5,13 +5,13 @@
 This model runs a very simple simulation called a Moran process. At each step, individuals change
 their state to that of a random neighbour. 
 
-Author: Niall Palfreyman (March 2023), Nick Diercksen (May 2022).
+Author: Niall Palfreyman, March 2025.
 """
 module NeutralDrift
 
-include( "../../Tools/AgentTools.jl")
+include( "../../Development/Generative/AgentTools.jl")
 
-using Agents, GLMakie, InteractiveDynamics, .AgentTools
+using Agents, GLMakie, .AgentTools
 
 #-----------------------------------------------------------------------------------------
 # Module types:
@@ -22,7 +22,7 @@ using Agents, GLMakie, InteractiveDynamics, .AgentTools
 A Moran agent has an attribute (in this case `altruist`) that is determined at each step by the
 distribution of attributes of its neighbours.
 """
-@agent Moran ContinuousAgent{2} begin
+@agent struct Moran(ContinuousAgent{2,Float64})
 	altruist::Bool							# Type of the agent
 end
 
@@ -37,40 +37,42 @@ Create and initialise the NeutralDrift model.
 function neutraldrift(;
 	altruism_cost = 0.0,					# Individual cost of acting altruistically
 )
-	width = 30
-	space = ContinuousSpace((width,width); spacing = 1.0)
+	extent = (30,30)
 	properties = Dict(
 		:altruism_cost => altruism_cost,
 	)
 
-	world = ABM( Moran, space; properties, scheduler = Schedulers.Randomly())
+	moranworld = StandardABM( Moran, ContinuousSpace(extent; spacing = 1.0);
+		agent_step!,
+		properties
+	)
 
-	for _ in 1:width*width
-		add_agent!( world, (0,0), rand(Bool))
+	for idx in CartesianIndices(extent)
+		add_agent!( idx, moranworld, (0,0), rand(Bool))
 	end
 
-	return world
+	return moranworld
 end
 
 #-----------------------------------------------------------------------------------------
 """
-	agent_step!( me, box)
+	agent_step!( moran, world)
 
-On each step, each agent replaces its altruistic attribute by that of a random neighbour.
+On each step, each Moran agent replaces its altruistic attribute by that of a random neighbour.
 """
-function agent_step!( me::Moran, world::ABM)
-	nbr = random_nearby_agent( me, world, 1.5)
-	me.altruist =
+function agent_step!( moran::Moran, world::ABM)
+	nbr = random_nearby_agent( moran, world, 1.5)
+	moran.altruist =
 		(nbr.altruist && rand() < 1 - world.altruism_cost) ? true : false
 end
 
 #-----------------------------------------------------------------------------------------
 """
-	acolour( mn::Moran)
+	acolour( moran::Moran)
 
 Select the agent's colour on the basis of their altruism.
 """
-acolour( mn::Moran) = mn.altruist ? :lime : :blue
+agcolour( moran::Moran) = moran.altruist ? :lime : :blue
 
 #-----------------------------------------------------------------------------------------
 """
@@ -79,18 +81,16 @@ acolour( mn::Moran) = mn.altruist ? :lime : :blue
 Run a simulation of the NeutralDrift model.
 """
 function demo()
-	nd = neutraldrift()
 	params = Dict(
 		:altruism_cost => 0:1e-5:1e-3
 	)
 	plotkwargs = (
-		ac = acolour,
-		as = 20,
+        # To-do: Specify plotting keyword arguments
+		agent_color = agcolour,
+		agent_size = 20,
 	)
 
-	playground, = abmplayground( nd, neutraldrift;
-		agent_step!, params, plotkwargs...
-	)
+	playground, = abmplayground( neutraldrift; params, plotkwargs...)
 
 	playground
 end

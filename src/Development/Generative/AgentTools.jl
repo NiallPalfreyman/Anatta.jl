@@ -19,6 +19,14 @@ export abmplayground, multicoloured, dejong2, diffuse4, diffuse4!, diffuse8, dif
 # Module data:
 #-----------------------------------------------------------------------------------------
 """
+	spectrum
+
+Spectrum of colours for displaying the id of agents.
+"""
+const spectrum = [:darkblue,:blue,:green,:violet,:crimson,:red,:orange,:yellow,:white]
+
+#-----------------------------------------------------------------------------------------
+"""
 	wejj
 
 Basic wedge shape for use in wedge() function.
@@ -34,17 +42,6 @@ const wejj = [[1,0],[-0.5,0.5],[-0.5,-0.5]]
 Extend Base.size to ContinuousSpaces to allow heatmaps to work in abmplot.
 """
 Base.size(cs::Agents.ContinuousSpace) = cs.dims
-
-#-----------------------------------------------------------------------------------------
-"""
-	multicoloured(agent)
-
-Return different colours depending on the id of the agent.
-"""
-const spectrum = [:darkblue,:blue,:green,:violet,:crimson,:red,:orange,:yellow,:white]
-function multicoloured( agent::AbstractAgent)
-	spectrum[1+agent.id%length(spectrum)]
-end
 
 #-----------------------------------------------------------------------------------------
 """
@@ -64,6 +61,16 @@ Calculate the mean value contained in the array or tuple arr.
 """
 function mean( arr)
 	sum(arr)/length(arr)
+end
+
+#-----------------------------------------------------------------------------------------
+"""
+	multicoloured(agent)
+
+Return different colours depending on the id of the agent.
+"""
+function multicoloured( agent::AbstractAgent)
+	spectrum[1+agent.id%length(spectrum)]
 end
 
 #-----------------------------------------------------------------------------------------
