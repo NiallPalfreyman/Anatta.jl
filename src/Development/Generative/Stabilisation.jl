@@ -4,13 +4,13 @@
 
 Demonstrate the stabilisation of movement within a dynamical system.
 
-Author: Niall Palfreyman (January 2020), Dominik Pfister (July 2022).
+Author: Niall Palfreyman, March 2025.
 """
 module Stabilisation
 
-include( "../../Tools/AgentTools.jl")
+include( "../../Development/Generative/AgentTools.jl")
 
-using Agents, GLMakie, InteractiveDynamics, .AgentTools
+using Agents, GLMakie, .AgentTools
 
 #-----------------------------------------------------------------------------------------
 # Module types:
@@ -21,8 +21,7 @@ using Agents, GLMakie, InteractiveDynamics, .AgentTools
 A Particle simply moves around with a speed, however this speed is influenced by the presence of
 other nearby Particles.
 """
-@agent Particle ContinuousAgent{2} begin
-	speed::Float64
+@agent struct Particle(ContinuousAgent{2,Float64})
 end
 
 #-----------------------------------------------------------------------------------------
@@ -36,18 +35,19 @@ Create the stabilisation model.
 function stabilisation(;
 	binding_radius = 0.2,			# Radius of attraction between Particles
 )
-	width = 20
-	space = ContinuousSpace((width,width), spacing=0.5)
-
+	extent = (20,20)
 	properties = Dict(
 		:binding_radius => binding_radius,
 	)
 
-	world = ABM( Particle, space; properties, scheduler=Schedulers.randomly)
+	world = StandardABM( Particle, ContinuousSpace(extent, spacing=0.5);
+		agent_step!, properties
+	)
 	
-	for _ in 1:round(Int,width*width)
+	for _ in 1:prod(extent)
 		# Random facing direction:
-		add_agent!( world, Tuple(2rand(2).-1), 1.0)
+		theta = 2pi*rand()
+		add_agent!( world, (cos(theta),sin(theta)), 1.0)
 	end
 
 	return world
@@ -58,14 +58,14 @@ end
 	agent_step!( particle, world)
 
 The particle moves in its facing direction with a speed that adjusts according to the number of
-nearby particles, and then turns to face in a new random direction.
+nearby particles, and then wiggles to face in a new random direction.
 """
 function agent_step!( particle, world)
 	# Chance of moving is lower if other particles are nearby:
 	if rand() < (1 / (1 + length(collect(nearby_agents(particle,world,world.binding_radius)))^2))
-		move_agent!(particle, world, particle.speed)
+		move_agent!(particle, world)
 	end
-	turn!(particle,2π*rand())
+	wiggle!(particle,pi/9)
 end
 
 #-----------------------------------------------------------------------------------------
@@ -80,15 +80,11 @@ function demo()
 	)
 
 	plotkwargs = (
-		ac=:green,
-		am=(ag->wedge(ag,as=0.5)),
+		agent_color=:green,
+		agent_marker=(ag->wedge(ag,0.5)),
 	)
 
-	world = stabilisation()
-
-	playground, = abmplayground( world, stabilisation;
-		agent_step!, params, plotkwargs...
-	)
+	playground, = abmplayground( stabilisation; params, plotkwargs...)
 
 	playground
 end
