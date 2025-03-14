@@ -107,16 +107,16 @@ wiggle!(agent::AbstractAgent, θ=pi/4) = turn!(agent, (2rand()-1)*θ)
 
 #-----------------------------------------------------------------------------------------
 """
-	gradient( pos, flow::AbstractArray, model::ABM)
+	gradient( pos, F::AbstractArray, model::ABM)
 	
-Return the gradient vector for the given flow at this position in the model.
+Return the gradient vector for the given field F at this position in the model space.
 """
-function gradient( pos, flow::AbstractArray, model::ABM; h::Float64=1.0)
-	nbhdflow = map([(-h,0),(h,0),(0,-h),(0,h)]) do step
-		flow[ get_spatial_index( normalize_position(pos.+step,model), flow, model) ]
+function gradient( pos, F::AbstractArray, model::ABM; h::Float64=1.0)
+	nbhdfield = map([(-h,0),(h,0),(0,-h),(0,h)]) do step
+		F[ get_spatial_index( normalize_position(pos.+step,model), F, model) ]
 	end
 
-	((nbhdflow[2]-nbhdflow[1]), (nbhdflow[4]-nbhdflow[3])) ./ 2h
+	((nbhdfield[2]-nbhdfield[1]), (nbhdfield[4]-nbhdfield[3])) ./ 2h
 end
 
 #-----------------------------------------------------------------------------------------
@@ -127,12 +127,13 @@ Return a 2D map of a multimodal valleys landscape with given extent.
 """
 function valleys( extent::Tuple{Int,Int})
 	xs = repeat( range(-3,3,extent[1]), 1, extent[2])
+	ys = repeat( range(-3,3,extent[2])', extent[1], 1)
 
 	map(
 		(x,y) -> (1/3)*exp(-((x + 1)^2) - (y^2)) +
 			10*(x/5 - (x^3) - (y^5)) * exp(-(x^2) - (y^2)) -
 			(3*((1 - x)^2)) * exp(-(x^2) - ((y + 1)^2)),
-		xs, xs'
+		xs, ys
 	)
 end
 
@@ -144,10 +145,11 @@ Return a 2D map of a De Jong 2 landscape with given extent.
 """
 function dejong2( extent::Tuple{Int,Int})
 	xs = repeat( range(-10,10,extent[1]), 1, extent[2])
+	ys = repeat( range(-10,10,extent[2])', extent[1], 1)
 
 	map(
 		(x,y) -> sin(2x) / (abs(x)+1) + sin(2y) / (abs(y)+1),
-		xs, xs'
+		xs, ys
 	)
 end
 

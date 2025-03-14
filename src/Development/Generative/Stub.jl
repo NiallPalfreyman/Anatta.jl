@@ -7,7 +7,7 @@ To-do: Specify the Ecosystem module.
 Author: Niall Palfreyman (January 2025)
 """
 module Ecosystem
-include( "AgentTools.jl")
+include( "../../Development/Generative/AgentTools.jl")
 using Agents, GLMakie, .AgentTools
 
 #-----------------------------------------------------------------------------------------

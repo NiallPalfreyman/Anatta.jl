@@ -12,7 +12,7 @@ individual behaviours. Nevertheless, ???
 Author: Niall Palfreyman, February 2025.
 """
 module NonComputability
-include( "AgentTools.jl")
+include( "../../Development/Generative/AgentTools.jl")
 
 using Agents, GLMakie, .AgentTools
 

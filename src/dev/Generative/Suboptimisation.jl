@@ -66,6 +66,7 @@ at the Scout's own location.
 """
 function agent_step!( scout, world)
 	scout.vel = .-gradient(scout.pos,world.objective,world)
+	scout.vel = scout.vel ./ norm(scout.vel)
 	move_agent!(scout,world,world.speed)
 end
 
@@ -83,7 +84,7 @@ function demo()
 	plotkwargs = (
 		agent_marker = wedge,
 		agent_color = :red,
-		add_colorbar=false,
+		add_colorbar=true,
 		heatarray=:objective,
 	)
 
