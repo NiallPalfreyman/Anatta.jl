@@ -5,13 +5,13 @@
 This model demonstrates how a Particle Swarm can solve a minimisation problem - and also the major
 difficulty of minimisation: suboptimisation.
 	
-Author: Niall Palfreyman (March 2023), Nick Diercksen (May 2022).
+Author: Niall Palfreyman, March 2025.
 """
 module PSO
 
-include( "../../Tools/AgentTools.jl")
+include( "../../Development/Generative/AgentTools.jl")
 
-using Agents, GLMakie, InteractiveDynamics, .AgentTools
+using Agents, GLMakie, .AgentTools
 
 #-----------------------------------------------------------------------------------------
 # Module types:
@@ -19,12 +19,12 @@ using Agents, GLMakie, InteractiveDynamics, .AgentTools
 """
 	Ant
 
-Ants run around the world seeking to minimise the value of an objective function, but unlike the
-Scouts of the Suboptimisation model, they have a memory of their best-yet objective value.
+Ants run around the world seeking to minimise the value of some objective function u, but unlike
+the Scouts of the Suboptimisation model, each Ant has a memory of their best-yet objective value.
 """
-@agent Ant ContinuousAgent{2} begin
+@agent struct Ant( ContinuousAgent{2,Float64})
 	speed::Float64
-	memory::Float64					# Lowest value of u that I have yet found in my travels
+	memory::Float64					# Current lowest value of u yet found in my travels
 end
 
 #-----------------------------------------------------------------------------------------
@@ -39,21 +39,21 @@ function pso(;
 	difficult=false,
 	temperature=0.002,
 )
-	width = 90
-	extent = (width,width)
-	pPop = 0.1			# Proportion of populated locations
-	space = ContinuousSpace( extent; spacing=1.0)
+	extent = (99,99)
+	pPop = 0.01			# Proportion of populated locations
 
 	properties = Dict(
-		:objective => (difficult ? dejong2(width) : valleys(width)),
+		:objective => (difficult ? dejong2(extent) : valleys(extent)),
 		:pPop => pPop,
 		:difficult => difficult,
 		:temperature => temperature,
-		:tolerance => 0.4,
-		:mass_centre => extent ./ 2
+		:tolerance => 0.2,
+		:mass_centre => 0.5 .* extent
 	)
 
-	world = ABM( Ant, space; properties)
+	world = StandardABM( Ant, ContinuousSpace( extent; spacing=1.0);
+		model_step!, agent_step!, properties
+	)
 	
 	for _ in 1:pPop*prod(extent)
 		# Baby Ant has unit speed and ridiculously inflated memory of objective function:
@@ -70,59 +70,60 @@ end
 
 Recalculate mass_centre of all Ants in the world.
 """
-function model_step!(world)
-	mc = (0.0, 0.0)
-	for (_, ant) in world.agents
+function model_step!(model)
+	mc = (0.0,0.0)
+	for ant in allagents(model)
 		mc = mc .+ ant.pos
 	end
-	world.mass_centre = mc ./ length(world.agents)
+	model.mass_centre = mc ./ nagents(model)
 
-	return world
+	return model
 end
 
 #-----------------------------------------------------------------------------------------
 """
 	agent_step!( ant, world)
 
-This is the stabilising procedure for Ants: Somersault away if objective value is rising, but stay
-on track if it is decreasing. Also, slow down if other agents are around. Finally, add some random
-jitter - especially if you remember there is somewhere with a lower objective value than this.
+This is the stabilising procedure for Ants: Wiggle randomly if objective value u is rising, but
+maintain direction of travel if u is decreasing. Also, slow down if other agents are around.
+Finally, add some random motion - especially if you remember you have previously encountered a
+lower objective value than the current one.
 """
 function agent_step!( ant, world)
-	tactic_range = 1.5
-	flow = world.objective
-	prev_obj = flow[get_spatial_index( ant.pos, flow, world)]
+	nbr_range = 1.2
+	u = world.objective
+	prev_u = u[get_spatial_index( ant.pos, u, world)]
 
 	if rand() < ant.speed
-		move_agent!( ant, world, tactic_range)
+		move_agent!( ant, world, nbr_range)
 	end
-#	move_agent!( ant, world, ant.speed)
-	curr_obj = flow[get_spatial_index( ant.pos, flow, world)]
-	nbrs = collect(nearby_agents( ant, world, tactic_range))
+	curr_u = u[get_spatial_index( ant.pos, u, world)]
+	nbrs = collect(nearby_agents( ant, world, nbr_range))
 
-	# Remember lower values of objective function - otherwise spread dissatisfaction:
-	if curr_obj < ant.memory
-		ant.memory = curr_obj
-	elseif curr_obj > ant.memory + world.tolerance
-		accelerate!(ant)
+	# Remember lower values of u - otherwise spread dissatisfaction:
+	if curr_u <= ant.memory + world.tolerance
+		# Decelerate if objective is decreasing:
+		accelerate!(ant,false)
+		if curr_u < ant.memory
+			ant.memory = curr_u
+		end
+	else
 		for aunty in nbrs
 			accelerate!(aunty)
 		end
 	end
 
-	# Somersault if objective is increasing:
-	if curr_obj > prev_obj
-		turn!(ant,2π*rand())
+	# Wiggle if objective is increasing:
+	if curr_u > prev_u
+		wiggle!(ant,pi)
 	end
 
-	# Slow down for neighbours - otherwise speed up:
+	# Slow down for neighbours:
 	if length(nbrs) != 0
 		accelerate!(ant,false)
-	else
-		accelerate!(ant)
 	end
 
-	# Add in some random jitter:
+	# Add in some random motion:
 	if rand() < world.temperature
 		accelerate!(ant)
 	end
@@ -130,15 +131,16 @@ end
 
 #-----------------------------------------------------------------------------------------
 """
-	accelerate!( ant::Ant, really::Bool=true)
+	accelerate!( ant::Ant, positively::Bool=true)
 
-If ant is Really accelerating, increase speed; otherwise slow down.
+If ant is positively accelerating, increase speed; otherwise slow down.
 """
-function accelerate!( ant::Ant, really::Bool=true)
-	if really
-		ant.speed = 0.5(ant.speed+1.0)
+function accelerate!( ant::Ant, positively::Bool=true)
+	inertia = 0.5
+	if positively
+		ant.speed = inertia*ant.speed + (1-inertia)
 	else
-		ant.speed *= 0.5
+		ant.speed *= inertia
 	end
 end
 
@@ -149,26 +151,24 @@ end
 Demonstrate the PSO model.
 """
 function demo()
-	world = pso()
 	params = Dict(
 		:difficult => false:true,
 		:temperature => 0.0:0.002:1.0
 	)
 
 	plotkwargs = (
-		ac=:lime,
-		as=15,
+		agent_colour=:lime,
+		agent_size=15,
 		add_colorbar=false,
 		heatarray=:objective,
 	)
 
-	playground,obs = abmplayground( world, pso;
-		agent_step!, model_step!, params, plotkwargs...
-	)
+	playground,obs = abmplayground( pso; params, plotkwargs...)
 
 	# Whenever mass_centre is changed, update its representation on the heatmap:
-	mc = lift( (wld->wld.mass_centre), obs.model)
-	scatter!( mc, color=:darkgreen, markersize=30)
+	mcx = lift( (wld->wld.mass_centre[1]), obs.model)
+	mcy = lift( (wld->wld.mass_centre[2]), obs.model)
+	scatter!( mcx, mcy, color=:darkgreen, markersize=30)
 
 	playground
 end

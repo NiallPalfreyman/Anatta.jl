@@ -3,35 +3,35 @@
 #
 # Particle-Swarm Optimisation
 #
-# Author: Niall Palfreyman (March 2023), Nick Diercksen (July 2022).
+# Author: Niall Palfreyman, March 2025.
 #========================================================================================#
 [
     Activity(
         """
-        Welcome to Lab 610: Particle-Swarm Optimisation (PSO).
+        Hi! Welcome to Anatta Subject 610: Particle-Swarm Optimisation (PSO).
 
         In the previous lab (Suboptimisation), we saw how a collective of agents using regular
         search methods can get trapped in suboptimal solutions of a difficult optimisation problem.
         In this lab, we look at how stabilisation and particle-swarm optimisation (PSO) offer a
         solution to this problem by endowing the swarming particles with a memory. For this reason,
-        we will call our agents "Ants" to acknowledge that they are acquiring the first components
-        of cognition.
+        we will call our agents "Ants" to acknowledge that individuals are endowed with the first
+        primitive components of cognition.
         
         While wandering around, each ant in the swarm remembers the best solution it has yet
         discovered, and if its current solution is worse than this remembered value, it communicates
-        its dissatisfaction to other ants in the form of random motion (jitter). This memory and
-        the spreading random jitter make the behaviour of the entire swarm emergent.
+        its dissatisfaction to other ants in the form of accelerated motion. This memory and
+        the spreading random motion make the behaviour of the entire swarm emergent.
 
         First run and observe the PSO model as it comes - using the valleys objective function.
-        Whereabouts do the ants first gather?
+        Where do the ants gather at first?
         """,
         "",
         x -> occursin("minim",lowercase(x))
     ),
     Activity(
         """
-        At first, the groupings within the three minima are fairly stable, but notice how suddenly,
-        the two non-global minima start to 'boil', as the ants' random motion becomes affected by
+        At first, the groupings within the three minima are fairly stable, but notice how the two
+        non-global minima suddenly start to 'boil', as the ants' random motion becomes affected by
         the dissatisfaction of ants that have already visited the global minimum. At this point,
         the large green dot representing the centre of mass of all ants starts to move more
         rapidly. Toward which minimum does the centre of mass start to move?
@@ -41,24 +41,18 @@
     ),
     Activity(
         """
-        Communication is crucial to swarm optimisation. Demonstrate this now by locating the three
-        code lines in which the current ant communicates its dissatisfaction to others by telling
-        them to accelerate. What is the line-number of the first of these code lines?
-        """,
-        "Find the lines in PSO.jl",
-        x -> x==109
-    ),
-    Activity(
-        """
-        Now comment out these three code lines and notice how stabilisation on its own is capable
-        of locating the minima, but NOT of choosing which minimum is the global one.
+        Communication is crucial to swarm optimisation. Demonstrate this now by locating the line
+        of code in PSO.jl, in which the current ant communicates its dissatisfaction to its
+        neighbours by telling them to accelerate. Comment out this line of code and notice how
+        stabilisation on its own is capable of locating the minima, but how many minima does the
+        swarm end up choosing?
         """,
         "",
-        x -> true
+        x -> x==3
     ),
     Activity(
         """
-        Now restore the three code lines you had previously commented out, so that the non-global
+        Now restore the code line that you previously commented out, so that the non-global
         maxima boil away towards the global maximum. Experiment with the Temperature control - this
         raises and lowers the probability that ants will spontaneously accelerate. First set the
         temperature to 0.0. Does this speed up or slow down the search process?
@@ -129,7 +123,7 @@
         """
         As you can see, the upper-right quadrant contains deeper minima, and so traps many ants
         where they cannot cross to - or even become aware of - the global minimum. I suspect that
-        it is possible to fix this problem with "simulated annealing".
+        it is possible to fix this problem using Simulated Annealing.
 
         In practice, artificial intelligence systems often use Annealing to find solutions. That
         is, they start off the search with a high temperature in order to accelerate the search,
@@ -139,7 +133,7 @@
 
         But be careful! You may find that it is very difficult to find an annealing schedule
         which is a perfect fit for both the valleys() AND the dejong2() objective functions.
-        This difficulty is a consequence of the so-called No-Free-Lunch Theorem!
+        This difficulty is a consequence of the so-called No-Free-Lunch Theorem! (Look this up!)
         """,
         "",
         x -> true
