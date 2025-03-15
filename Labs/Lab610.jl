@@ -89,12 +89,24 @@
         There is something else that we can do to accelerate the PSO search: improve the
         communication between the ants. What if each ant informed others of its own best-so-far
         remembered value of the objective function? Try this now. Find an ELEGANT and EFFICIENT
-        place in the method agent_step!() to insert a for-loop in which the ant informs others
+        place in the method agent_step!() to insert a for-loop in which the ant informs neighbours
         of its memory value - but ONLY if this information is useful. Then run the PSO simulation
         again to check that the ant-swarm can now locate the global minimum faster.
         """,
         "",
         x -> true
+    ),
+    Activity(
+        """
+        Before we move on, I want to emphasise the basic idea of stabilisation in relation to PSO.
+        The ants are not aware of the global minimum, but they do respond to their circumstances by
+        speeding up or slowing down: they slow down when they are close to other ants, and when they
+        find a minimum that is better than their current best-so-far. In this way, they locate the
+        global minimum without any one ant having to know where it is. This is an example of the
+        principle of emergence in action.
+        """,
+        "",
+        x -> occursin("right",lowercase(x)) && occursin("up",lowercase(x))
     ),
     Activity(
         """

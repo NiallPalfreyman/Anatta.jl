@@ -47,7 +47,7 @@ function pso(;
 		:pPop => pPop,
 		:difficult => difficult,
 		:temperature => temperature,
-		:tolerance => 0.2,
+		:tolerance => 0.1,
 		:mass_centre => 0.5 .* extent
 	)
 
@@ -56,7 +56,7 @@ function pso(;
 	)
 	
 	for _ in 1:pPop*prod(extent)
-		# Baby Ant has unit speed and ridiculously inflated memory of objective function:
+		# Baby Ant has unit speed and ridiculously high memory of objective function:
 		θ = 2π * rand()
 		add_agent!( world, (cos(θ),sin(θ)), 1.0, 1e301)
 	end
@@ -90,7 +90,7 @@ Finally, add some random motion - especially if you remember you have previously
 lower objective value than the current one.
 """
 function agent_step!( ant, world)
-	nbr_range = 1.2
+	nbr_range = 1.1
 	u = world.objective
 	prev_u = u[get_spatial_index( ant.pos, u, world)]
 
@@ -101,15 +101,12 @@ function agent_step!( ant, world)
 	nbrs = collect(nearby_agents( ant, world, nbr_range))
 
 	# Remember lower values of u - otherwise spread dissatisfaction:
-	if curr_u <= ant.memory + world.tolerance
-		# Decelerate if objective is decreasing:
+	if curr_u < ant.memory + world.tolerance
+		ant.memory = curr_u
 		accelerate!(ant,false)
-		if curr_u < ant.memory
-			ant.memory = curr_u
-		end
 	else
-		for aunty in nbrs
-			accelerate!(aunty)
+		if length(nbrs) != 0
+			accelerate!(rand(nbrs))
 		end
 	end
 
@@ -118,7 +115,7 @@ function agent_step!( ant, world)
 		wiggle!(ant,pi)
 	end
 
-	# Slow down for neighbours:
+	# Be sociable - slow down for neighbours:
 	if length(nbrs) != 0
 		accelerate!(ant,false)
 	end
