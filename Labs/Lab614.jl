@@ -3,12 +3,12 @@
 #
 # Reaction-diffusion systems
 #
-# Author: Niall Palfreyman (April 2023).
+# Author: Niall Palfreyman, March 2025.
 #========================================================================================#
 [
     Activity(
         """
-        Welcome to Lab 614: Flows and exploratory processes
+        Hi! Welcome to Anatta Subject 614: Fields and exploratory processes
 
         At the end of lab 611, we set out a programme of work for the remainder of this course:
             -	Investigate genetic structure and algorithms;
@@ -17,22 +17,22 @@
 
         In the module GeneticStructure, we investigated how to use genetic structure as a way of
         puzzling out new solutions from past solutions; in the module AntSearch, we saw how
-        niche-construction focuses ants' behaviour on the problem they are solving by using flows
+        niche-construction focuses ants' behaviour on the problem they are solving by using fields
         as a means of communication between the ants. Notice that the ants do not DEFINE the
-        dynamics of the flows - they merely influence them. Indeed, these flow dynamics are
+        dynamics of the fields - they merely influence them. Indeed, these field dynamics are
         exploratory in the sense that they have a life of their own, independet of the ants'
         behaviour.
 
-        In this lab, we investigate the surprising properties of exploratory flow processes.
+        In this lab, we investigate the surprising properties of exploratory field processes.
         """,
         "",
         x -> true
     ),
     Activity(
         """
-        In the module WaveDynamics, we saw how flows can generate their own dynamics; however, the
+        In the module Maxwell, we saw how fields can generate their own dynamics; however, the
         waves we saw there were very predictable. I implemented the module Turing in the usual way
-        of software developers: I simply took the module WaveDynamics - which was already close to
+        of software developers: I simply took the module Maxwell - which was already close to
         what I wanted - then stripped out the code I didn't need and modified the rest to implement
         the reaction-diffusion dynamics discovered by the mathematician Alan Turing shortly before
         his death in 1954.
@@ -53,10 +53,10 @@
         on the surface.
 
         In addition, these two chemicals also diffuse across the surface and evaporate over time.
-        Turing showed (WITHOUT using a computer!) that the dynamics of this system of chemical
-        reactions between Activator and Inhibitor can generate very interesting patterns of the
-        kind you have just observed. What is the name of the method in the Turing module that
-        implements the chemical reaction, evaporation and diffusion of the two substances?
+        Turing showed (WITHOUT using a computer - amazing man!) that the dynamics of this system of
+        chemical reactions between Activator and Inhibitor can generate very interesting patterns
+        of the kind you have just observed. What is the name of the method in the Turing module
+        that implements the chemical reaction, evaporation and diffusion of the two substances?
         """,
         "",
         x -> x=="model_step!"
@@ -107,12 +107,12 @@
     ),
     Activity(
         """
-        As you see, changing these parameters give us some control over the pattern-formation
+        As you see, changing these parameters gives us some control over the pattern-formation
         process. In the biological world, organisms determine these parameters genetically, and so
         influence the patterns that form. Note that the pattern-formation process is NOT controlled
         by the organism - all the organism does is modify a parameter that influences this process.
-        Rather, the pattern-formation process constitutes an EXPLORATORY mechanism that relieves the
-        organism of a lot of work and also a lot of organisational activity.
+        Rather, the pattern-formation process constitutes an EXPLORATORY mechanism that relieves
+        the organism of a lot of work and also a lot of organisational activity.
 
         In principle, the slime-moulds could influence the diffusion or evaporation rates of the
         chemicals they work with, but here we shall only work with the secretion rate. Raise the
@@ -129,9 +129,10 @@
         that are being formed. They can also stabilise these shapes. As a final exercise in this
         lab, implement tumbling in the slime-moulds:
 
-        Copy the tumbling code from AntSearch and include a slider for the model attribute :speed.
-        If the slime-moulds detect a lower concentration of Activator ahead of them, they reverse
-        direction, and then perform a wiggle before moving forward with the model-defined speed.
+        Refer to the module PSO to find the tumbling code that the Particles used there to search
+        for minima. Copy that code into Turing.agent_step!() and include a slider for the model
+        attribute :speed. Now program that method so that if slime-moulds detect a decreasing
+        concentration of Activator, they wiggle before moving forward with the model-defined speed.
         Now investigate the effects of the following factors on the patterns generated:
             -	Change the speed slowly upwards from 0.0 to 1.0
             -	Change the secretion rate upwards from 0.0

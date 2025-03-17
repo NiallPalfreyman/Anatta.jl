@@ -189,7 +189,7 @@ function look_for_food!( ant::Ant, asearch)
 	if foodsrc !== nothing
 		# We've found food:
 		ant.carrying = foodsrc.capacity
-		turn!(ant,pi)
+		wiggle!(ant)
 	else
 		# Still looking for food ...
 		idx_here = get_spatial_index( ant.pos, asearch.carry_phero, asearch)
@@ -200,7 +200,7 @@ function look_for_food!( ant::Ant, asearch)
 				asearch.carry_phero, asearch
 			)
 			if asearch.carry_phero[idx_fwd] < asearch.carry_phero[idx_here]
-				turn!(ant,pi)
+				wiggle!(ant)
 			end
 		end
 	end

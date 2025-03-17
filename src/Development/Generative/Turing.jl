@@ -5,13 +5,13 @@
 This simulation demonstrates the emergence of complex activity in reaction-diffusion
 (i.e., Turing) systems.
 
-Author: Niall Palfreyman (April 2023)
+Author: Niall Palfreyman, March 2025
 """
 module Turing
 
-include( "../../Tools/AgentTools.jl")
+include( "../../Development/Generative/AgentTools.jl")
 
-using Agents, GLMakie, InteractiveDynamics, Random, .AgentTools
+using Agents, GLMakie, Random, .AgentTools
 
 #-----------------------------------------------------------------------------------------
 # Module types:
@@ -21,7 +21,7 @@ using Agents, GLMakie, InteractiveDynamics, Random, .AgentTools
 
 A SlimeMould can in principle move, and secretes the chemical A(ctivator).
 """
-@agent SlimeMould ContinuousAgent{2} begin
+@agent struct SlimeMould(ContinuousAgent{2,Float64})
 end
 
 #-----------------------------------------------------------------------------------------
@@ -40,10 +40,10 @@ function turing(;
 	i_evap_rate = 3e-2,
 	pPop = 0.1,
 )
-	width = 50
+	extent = (50,50)
 	properties = Dict(
-		:activator => 1e-4rand(width,width),
-		:inhibitor => 1e-4rand(width,width),
+		:activator => 1e-4rand(extent...),
+		:inhibitor => 1e-4rand(extent...),
 		:a_secr_rate => a_secr_rate,
 		:a_diff_rate => a_diff_rate,
 		:i_diff_rate => i_diff_rate,
@@ -53,9 +53,11 @@ function turing(;
 		:dt => 0.5,
 	)
 
-	tur = ABM( SlimeMould, ContinuousSpace((width,width),spacing=1.0); properties)
+	tur = StandardABM( SlimeMould, ContinuousSpace(extent,spacing=1.0);
+		agent_step!, model_step!, properties
+	)
 
-	for _ in 1:pPop*width*width
+	for _ in 1:pPop*prod(extent)
 		add_agent!( SlimeMould, tur, (0,0))
 	end
 
@@ -104,7 +106,6 @@ end
 Create playground with two wave sources.
 """
 function demo()
-	tur = turing()
 	params = Dict(
 		:pPop => 0:0.01:1,
 		:a_secr_rate => 0:0.001:0.01,
@@ -114,16 +115,14 @@ function demo()
 		:i_evap_rate => 0:0.001:0.1,
 	)
 	plotkwargs = (
-		am = :circle,
-		ac = :red,
-		as = 15,
+		agent_marker = :circle,
+		agent_color = :red,
+		agent_size = 15,
 		heatarray = :activator,
 		add_colorbar = false,
 	)
 
-	playground, = abmplayground( tur, turing;
-		agent_step!, model_step!, params, plotkwargs...
-	)
+	playground, = abmplayground( turing; params, plotkwargs...)
 
 	playground
 end
