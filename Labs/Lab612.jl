@@ -3,12 +3,12 @@
 #
 # Genetic structure.
 #
-# Author: Niall Palfreyman (April 2023).
+# Author: Niall Palfreyman, March 2025.
 #========================================================================================#
 [
     Activity(
         """
-        Welcome to Lab 612: Selection OF recombinable genetic structure.
+        Hi! Welcome to Anatta Subject 612: Selection of recombinable genetic structure.
 
         We wish to endow our turtles with a genetic structure that enables them to solve some kind
         of problem. The simplest such problem that occurs to me is that of guessing the contents of
@@ -43,7 +43,7 @@
     Activity(
         """
         Notice how the colour of the turtles changes to match the quality of their candidate
-        solution: :black is way off, :blue, :red and :orange are better, and :yellow is very close.
+        solution: :black is terrible, :blue, :red and :orange are better, and :yellow is very close.
         What is the name of the method where these colours are set?
         """,
         "",
@@ -108,15 +108,15 @@
         will be called on those turtles as soon as they take their first `agent_step!()`? :-o
         """,
         "",
-        x -> occursin( "kill_agent!", lowercase(x))
+        x -> occursin( "remove_agent!", lowercase(x))
     ),
     Activity(
         """
         OK, now we understand how the Grim Reaper of selection works. It is time for us to
         understand three important processes associated with genetic algorithms: mutation,
         recombination and elitism. First, set all three sliders mu_rate, crossover and elitism
-        to the left - so, to the values 0.0, false and -3. Now reset the model, clear the data
-        and perform a run. To which value does the mean dissonance converge?
+        to the left (i.e., to the values 0.0, false and -3). Now reset the model, clear
+        the data and perform a run. To which value does the mean dissonance converge?
         """,
         "",
         x -> (25<x<35)

@@ -13,7 +13,7 @@ using Agents, GLMakie, GeometryBasics, Observables
 import InteractiveUtils:@which
 
 export abmplayground, multicoloured, dejong2, diffuse4, diffuse4!, diffuse8, diffuse8!,
-		gradient, mean, norm, size, spectrum, turn!, left!, right!, wiggle!, valleys, wedge
+		gradient, mean, norm, size, spectrum, std, turn!, left!, right!, wiggle!, valleys, wedge
 
 #-----------------------------------------------------------------------------------------
 # Module data:
@@ -61,6 +61,17 @@ Calculate the mean value contained in the array or tuple arr.
 """
 function mean( arr)
 	sum(arr)/length(arr)
+end
+
+#-----------------------------------------------------------------------------------------
+"""
+	std(arr)
+
+Calculate the standard deviation of the values contained in the array or tuple arr.
+"""
+function std( arr)
+	avg = mean(arr)
+	sqrt(mean((arr.-avg).^2))
 end
 
 #-----------------------------------------------------------------------------------------

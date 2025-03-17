@@ -4,15 +4,13 @@
 
 A simulation to investigate the use of genetic structure in agents to help them solve problems.
 	
-Author: Niall Palfreyman (March 2023).
+Author: Niall Palfreyman, March 2025.
 """
 module GeneticStructure
 
-include( "../../Tools/AgentTools.jl")
+include( "../../Development/Generative/AgentTools.jl")
 
-using Agents, GLMakie, InteractiveDynamics, .AgentTools
-using Statistics:mean
-using Statistics:std
+using Agents, GLMakie, .AgentTools
 
 #-----------------------------------------------------------------------------------------
 # Module types:
@@ -24,7 +22,7 @@ Turtles chase around the world looking for a partner to reproduce with. They onl
 as they have positive energy, and their initial energy depends on how well they solve a particular
 objective function.
 """
-@agent Turtle ContinuousAgent{2} begin
+@agent struct Turtle(ContinuousAgent{2,Float64})
 	genome::Vector{Char}			# Turtle's character genome
 	energy::Float64					# Current energy of the Turtle
 	dissonance::Float64				# Dissonance of the Turtle with its environment
@@ -45,7 +43,7 @@ function genetic_structure(;
 	elitism = -1,
 )
 	pPop = 0.2										# Probability of a cell becoming populated
-	width = 40										# Width of the world
+	extent = (40,40)								# Extent of the world
 	properties = Dict(
 		:crossover		=> crossover,				# Are we using crossover?
 		:mu_rate		=> mu_rate,					# Probability of mutating a locus
@@ -54,19 +52,21 @@ function genetic_structure(;
 		:living_cost	=> 0.1,						# How much of life energy does living cost?
 		:search_speed	=> 1.0,						# How fast should turtles move?
 		:target			=> Char.([
-			39, 84, 119, 97, 115, 32, 98, 114, 105, 108, 108, 105, 103, 32, 97, 110, 100, 32, 116,
-			104, 101, 32, 115, 108, 105, 116, 104, 121, 32, 116, 111, 118, 101, 115, 32, 100, 105,
-			100, 32, 103, 121, 114, 101, 32, 97, 110, 100, 32, 103, 105, 109, 98, 108, 101, 32,
-			105, 110, 32, 116, 104, 101, 32, 119, 97, 98, 101, 33,
+			80, 108, 97, 116, 111, 44, 32, 116, 104, 101, 121, 32, 115, 97, 121, 44, 32, 99, 111,
+			117, 108, 100, 32, 112, 117, 116, 32, 105, 116, 32, 97, 119, 97, 121, 58, 32, 104, 97,
+			108, 102, 32, 97, 32, 99, 114, 97, 116, 101, 32, 111, 102, 32, 119, 104, 105, 115, 107,
+			101, 121, 32, 101, 118, 101, 114, 121, 32, 100, 97, 121, 33
 		]),
 		:alphabet		=> Char.(32:122),			# Collection of available alleles
-		:max_pop 		=> pPop*width*width,		# Maximum (approx) allowed population
+		:max_pop 		=> pPop*prod(extent),		# Maximum (approx) allowed population
 		:mean			=> 1.0,						# Mean dissonance of population
 		:sigma			=> 0.0,						# Standard deviation of dissonance
 		:minID			=> 1,						# ID of turtle with minimum dissonance
 	)
 
-	gs = ABM( Turtle, ContinuousSpace((width,width)); properties)
+	gs = StandardABM( Turtle, ContinuousSpace(extent);
+		model_step!, agent_step!, properties
+	)
 	genome_length = length(gs.target)
 	for _ in 1:gs.max_pop/2
 		θ = 2π * rand()
@@ -104,10 +104,10 @@ One step in the life of a Turtle with genetic structure.
 function agent_step!( turtle::Turtle, gs)
 	walk!( turtle, gs)
 	if turtle.energy < 0
-		kill_agent!(turtle, gs)
+		remove_agent!(turtle, gs)
 		return
 	end
-	give_birth( turtle, gs)
+	reproduce( turtle, gs)
 end
 
 #-----------------------------------------------------------------------------------------
@@ -117,19 +117,19 @@ end
 Walk approximately forwards with speed up to the maximum, and age by one cost of living unit.
 """
 function walk!( turtle::Turtle, gs)
-	turn!(turtle,(rand()-0.5))
+	wiggle!(turtle)
 	move_agent!(turtle,gs,rand()*gs.search_speed)
 	turtle.energy -= gs.living_cost * gs.life_energy
 end
 
 #-----------------------------------------------------------------------------------------
 """
-	give_birth( turtle, kull)
+	reproduce( turtle, kull)
 
-Have a baby with similar attributes to self, but possibly genetically mutated with probability
-kull.mu_rate. NOTE: This is the core of the genetic algorithm!
+Give birth a baby with similar attributes to self, but possibly genetically mutated with
+probability kull.mu_rate. NOTE: This is the core of the genetic algorithm!
 """
-function give_birth( mummy::Turtle, gs)
+function reproduce( mummy::Turtle, gs)
 	birth_cost = gs.living_cost * gs.life_energy
 	if nagents(gs) < gs.max_pop && mummy.energy > birth_cost
 		# I've got enough energy and there's sufficient space to have kids:
@@ -226,25 +226,22 @@ end
 Demonstrate a simple genetic algorithm.
 """
 function demo()
-	gs = genetic_structure()
 	params = Dict(
 		:crossover => false:true,
 		:mu_rate => 0:0.001:0.1,
 		:elitism => -3:3,
 	)
 	plotkwargs = (
-		ac=(turtle->turtle.colour),
-		as=30,
+		agent_color=(turtle->turtle.colour),
+		agent_size=20,
 		mdata = [(m->m.mean), (m->m[m.minID].dissonance)],
 		mlabels = ["Mean dissonance", "Minimum dissonance"],
 	)
 
-	playground,abmplt = abmplayground( gs, genetic_structure;
-		agent_step!, model_step!, params, plotkwargs...
-	)
+	playground,abmplt = abmplayground( genetic_structure; params, plotkwargs...)
 
 	best_string = lift( (wld->String(wld[wld.minID].genome)), abmplt.model)
-	text!( 40,30, text=best_string, color=:red, fontsize=30, align=(:left,:top))
+	text!( 40,30, text=best_string, color=:red, fontsize=16, align=(:left,:top))
 
 	playground
 end

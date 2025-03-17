@@ -216,7 +216,7 @@
 
         Important: This is not an easy activity. Experiment with various slider settings, think
         about your results and discuss this thinking with friends, but do NOT take longer than
-        30 minutes over the activity!
+        20 minutes over this activity!
         """,
         "",
         x -> true
@@ -292,18 +292,20 @@
     Activity(
         """
         Here are my thoughts contrasting our Turtle simulation with Hinton and Nowlan's model:
-            -	Their individuals have a genotypic structure that is mutated and recombined;
-            -	Their phenotypes are selected ONLY on their ability to guess the secret
-                    number, whereas our turtles are also selected on a behaviour over which
-                    they have no control: whether they happen to land on a food disc.
-            -	Their genotype encodes an exploratory process that generates the phenotype;
+        -	Their individuals have a genotypic structure that is mutated and recombined;
+        -	Their phenotypes are selected ONLY on their ability to guess the secret number, whereas
+                our turtles are also selected on environmental factors over which they have only
+                very limited control, such as whether they happen to land on a food disc;
+        -	Their genotype encodes an exploratory developmental process that can Only develop the
+                phenotype In Collaboration With These Environmental Factors.
 
-        These thoughts offer us a way forward. If we want to reproduce the accelerated search of
-        Hinton and Nowlan, we might need to give our turtles three additional features:
-            -	Selection OF recombinable genetic structure;
-            -	Selection OF structure-field niches that focus problem-solving behaviour on ONE
-                    SPECIFIC objective.
-            -	Selection ON exploratory developmental processes;
+        These thoughts offer us a way forward. If we wish to accelerate the search for problem
+        solutions using the work of Hinton and Nowlan, we might need to model three further
+        characteristics of our turtles:
+        -	Selection OF recombinable genetic structure;
+        -	Selection OF structure-field niches that focus problem-solving behaviour on very
+                Specific objectives;
+        -	Selection ON exploratory developmental processes.
 
         That's a lot to do - maybe we'd better get started! :)
         """,
