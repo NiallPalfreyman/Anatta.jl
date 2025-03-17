@@ -3,16 +3,16 @@
 #
 # Niche-construction and ant algorithms
 #
-# Author: Niall Palfreyman (April 2023).
+# Author: Niall Palfreyman, March 2025.
 #========================================================================================#
 [
     Activity(
         """
-        Welcome to Lab 613: Construction of flows to focus problem-solving behaviour.
+        Hi! Welcome to Anatta Subject 613: Constructing fields to focus problem-solving behaviour.
 
         In the simulation AntSearch, a colony of ants forages for food. Although each ant follows
-        a set of simple rules, the colony as a whole acts in an emergent, goal-oriented way. My
-        implementation is derived from this source:
+        a set of simple rules, the colony as a whole acts in an emergent, goal-oriented way. I
+        derived my implementation from this source:
             Uri Wilensky (1997). http://ccl.northwestern.edu/netlogo/models/Ants
 
         When an ant finds a food source, it carries food, following a nest_pheromone back to the
@@ -105,8 +105,8 @@
         This simulation is a good example of how to include several different types of agent
         within one model. Julia offers multiple dispatch as a particularly useful way of handling
         these various agent types. Find the place in the simulation where I make heavy use of
-        multiple dispatch for this purpose. What is the name of the first method in this sequence
-        of polymorphic functions?
+        multiple dispatch for this purpose. What is the name of the first method in this set of
+        polymorphic functions?
         """,
         "",
         x -> occursin("ashape",lowercase(x))

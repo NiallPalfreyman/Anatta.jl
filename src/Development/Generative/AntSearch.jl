@@ -4,13 +4,13 @@
 
 A simulation to investigate manipulation of the environment to enable problem-solving.
 	
-Author: Niall Palfreyman (March 2023).
+Author: Niall Palfreyman, March 2025.
 """
 module AntSearch
 
-include( "../../Tools/AgentTools.jl")
+include( "../../Development/Generative/AgentTools.jl")
 
-using Agents, GLMakie, InteractiveDynamics, .AgentTools
+using Agents, GLMakie, .AgentTools
 
 #-----------------------------------------------------------------------------------------
 # Module types:
@@ -21,7 +21,7 @@ using Agents, GLMakie, InteractiveDynamics, .AgentTools
 Ants forage for food, which they bring back to the nest. Their state is defined by how much
 they are carrying.
 """
-@agent Ant ContinuousAgent{2} begin
+@agent struct Ant(ContinuousAgent{2,Float64})
 	carrying::Float64										# How much food am I carrying?
 end
 
@@ -31,7 +31,7 @@ end
 
 FoodSources do nothing in this model other than provide food at a certain constant capacity.
 """
-@agent FoodSource ContinuousAgent{2} begin
+@agent struct FoodSource(ContinuousAgent{2,Float64})
 	capacity::Float64
 end
 
@@ -41,7 +41,7 @@ end
 
 Nests are pretty boring: they just sit there as a receptacle for foraged food.
 """
-@agent Nest ContinuousAgent{2} begin
+@agent struct Nest(ContinuousAgent{2,Float64})
 end
 
 #-----------------------------------------------------------------------------------------
@@ -59,15 +59,14 @@ function ant_search(;
 	lwb_tolerance = 0.05,
 	upb_tolerance = 1.0,
 )
-	width = 70
-	extent = (width,width)
+	extent = (70,70)
 	pPop = 0.02
-	population = round(Int,pPop*width*width)
-	nest_x = width/2
+	population = round(Int,pPop*prod(extent))
+	nest_x = extent[1]/2
 
 	# Calculate nest_pheromone concentration centred on nest_pos:
-	y_distance = (1:width) .- nest_x
-	squ_y_distance = repeat(y_distance.^2, 1, width)
+	y_distance = (1:minimum(extent)) .- nest_x
+	squ_y_distance = repeat(y_distance.^2, 1, minimum(extent))
 	nest_distance = sqrt.(squ_y_distance + squ_y_distance')
 	max_distance = findmax(nest_distance)[1]
 	nest_phero = max_distance .- nest_distance
@@ -86,18 +85,19 @@ function ant_search(;
 		:upb_tolerance => upb_tolerance,				# Ant ignores carry_phero above this
 	)
 
-	asearch = ABM(
+	asearch = StandardABM(
 		Union{Ant,FoodSource,Nest},
 		ContinuousSpace(extent,spacing=1.0);
-		properties, warn=false
+		properties, warn=false,
+		model_step!, agent_step!
 	)
 
 	# Create the nest:
 	add_agent!( asearch.nest_pos, Nest, asearch, (0,0))
 	
 	# Create food sources:
-	asearch.food_source[1] = add_agent!( (0.1width,0.7width), FoodSource, asearch, (0,0), 1.0)
-	asearch.food_source[2] = add_agent!( (0.6width,0.1width), FoodSource, asearch, (0,0), 2.0)
+	asearch.food_source[1] = add_agent!( (0.1extent[1],0.7extent[2]), FoodSource, asearch, (0,0), 1.0)
+	asearch.food_source[2] = add_agent!( (0.6extent[1],0.1extent[2]), FoodSource, asearch, (0,0), 2.0)
 	asearch.food_source[3] = add_agent!( 0.9.*extent, FoodSource, asearch, (0,0), upper_right_capacity)
 
 	# Scatter the Ants in search mode (i.e., carrying nothing):
@@ -215,7 +215,7 @@ ashape(nest::AbstractAgent) = :circle
 acolour(ant::Ant) = ant.carrying>0 ? :orange : :red
 acolour(nest::Nest) = :black
 acolour(fs::FoodSource) = :lime
-asize(ant::Ant) = 30
+asize(ant::Ant) = 20
 asize(nest::Nest) = 50
 asize(fs::FoodSource) = 50
 
@@ -226,7 +226,6 @@ asize(fs::FoodSource) = 50
 Demonstrate an ant search algorithm.
 """
 function demo()
-	asearch = ant_search()
 	params = Dict(
 		:diff_rate => 0:0.01:1,
 		:evap_rate => 0:0.01:0.2,
@@ -235,16 +234,14 @@ function demo()
 		:upb_tolerance => 0:0.1:5,
 	)
 	plotkwargs = (
-		am = ashape,
-		ac = acolour,
-		as = asize,
+		agent_marker = ashape,
+		agent_color = acolour,
+		agent_size = asize,
 		heatarray = :carry_phero,
 		add_colorbar = false,
 	)
 
-	playground, = abmplayground( asearch, ant_search;
-		agent_step!, model_step!, params, plotkwargs...
-	)
+	playground, = abmplayground( ant_search; params, plotkwargs...)
 
 	playground
 end
