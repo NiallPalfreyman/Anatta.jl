@@ -3,12 +3,12 @@
 #
 # Cooperative problem-solving
 #
-# Author: Niall Palfreyman (April 2023).
+# Author: Niall Palfreyman, March 2025.
 #========================================================================================#
 [
     Activity(
         """
-        Welcome to Lab 616: Recruiting groups for cooperative problem-solving
+        Hi! Welcome to Anatta Subject 616: Recruiting groups for cooperative problem-solving
 
         Over the past 60 years there has been an important debate in evolutionary biology: are
         genes the only central structures of inheritance? Remember that ant colonies construct

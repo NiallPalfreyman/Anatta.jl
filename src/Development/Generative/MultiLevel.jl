@@ -9,13 +9,13 @@ Multi-Level Selection; in studying behaviour, we call it Cooperation.
 This model is adapted from Wilensky's EACH model of cooperation at:
 	http://ccl.northwestern.edu/netlogo/models/Altruism
 
-Author: Niall Palfreyman (April 2023).
+Author: Niall Palfreyman, March 2025.
 """
 module MultiLevel
 
-include( "../../Tools/AgentTools.jl")
+include( "../../Development/Generative/AgentTools.jl")
 
-using Agents, GLMakie, InteractiveDynamics, .AgentTools
+using Agents, GLMakie, .AgentTools
 
 #-----------------------------------------------------------------------------------------
 # Module types:
@@ -26,7 +26,7 @@ using Agents, GLMakie, InteractiveDynamics, .AgentTools
 An Individual agent has the trait `cooperative`, whose Bool value is genetically inherited, and
 the trait `fitness`, which is calculated from its interaction with neighbours.
 """
-@agent Individual ContinuousAgent{2} begin
+@agent struct Individual(ContinuousAgent{2,Float64})
 	cooperative::Bool									# Is the Individual cooperative?
 	fitness::Float64									# Individual's fitness
 end
@@ -45,8 +45,7 @@ function multi_level(;
 	prob_dying = 0.1,							# What is the probability of an individual dying?
 	prob_birth = 1.0,							# Probability of being able to give birth
 )
-	width = 51
-	space = ContinuousSpace((width,width); spacing = 1.0)
+	extent = (51,51)
 	prob_populated = 0.5
 	prob_cooperativity = 0.5
 
@@ -55,12 +54,14 @@ function multi_level(;
 		:bene_cooperativity => bene_cooperativity,
 		:prob_dying => prob_dying,
 		:prob_birth => prob_birth,
-		:resource => zeros(Float64,width,width),
+		:resource => zeros(Float64,extent),
 	)
 
-	ml = ABM( Individual, space; properties, scheduler = Schedulers.Randomly())
+	ml = StandardABM( Individual, ContinuousSpace(extent; spacing = 1.0);
+		properties, model_step!, agent_step!
+	)
 
-	individuals = rand(round(Int,prob_populated*width*width)) .< prob_cooperativity
+	individuals = rand(round(Int,prob_populated*prod(extent))) .< prob_cooperativity
 	map(individuals) do cooperative
 		add_agent!( ml, (0,0), cooperative, 0.0)
 	end
@@ -95,7 +96,7 @@ function model_step!( ml::ABM)
 		end
 
 		if rand() < ml.prob_dying || rand() > agent.fitness						# Fitness reduces
-			kill_agent!(agent,ml)												# death rate
+			remove_agent!(agent,ml)												# death rate
 		end
 	end
 end
@@ -132,7 +133,6 @@ acolour( individual::Individual) = individual.cooperative ? :lime : :blue
 Run a simulation of the MultiLevel model.
 """
 function demo()
-	ml = multi_level()
 	params = Dict(
 		:cost_cooperativity => 0:0.01:1,
 		:bene_cooperativity => 0:0.01:1,
@@ -140,15 +140,13 @@ function demo()
 		:prob_birth => 0.8:0.01:1,
 	)
 	plotkwargs = (
-		ac = acolour,
-		as = 20,
+		agent_color = acolour,
+		agent_size = 20,
 		adata=[(ag->ag.cooperative,count),(ag->!ag.cooperative,count)],
 		alabels=["Cooperators","Defectors"],
 	)
 
-	playground, = abmplayground( ml, multi_level;
-		agent_step!, model_step!, params, plotkwargs...
-	)
+	playground, = abmplayground( multi_level; params, plotkwargs...)
 
 	playground
 end
