@@ -3,25 +3,25 @@
 #
 # Semiotic adaptation.
 #
-# Author: Niall Palfreyman (March 2023).
+# Author: Niall Palfreyman, March 2025.
 #========================================================================================#
 [
     Activity(
         """
-        Welcome to Lab 611: Semiotic adaptation and theory-development.
+        Hi! Welcome to Anatta Subject 611: Semiotic adaptation and theory-development.
 
-        There are many indications that evolution is not driven purely by random mutation. If I
-        as a politician choose to discourage some particular cultural group from having children,
-        this will clearly have evolutionary effects. It is also well-known that the choice of some
-        cultures to farm cattle has influenced the evolution of genes involved in lactose
-        digestion. But do these effects have any importance in evolution?
+        There are many indications that evolution is not primarily driven by random mutation. If I
+        as a politician discourage some particular cultural group from having children, this will
+        clearly have evolutionary effects. It is also well-known that the choice of some cultures
+        to farm cattle has influenced the evolution of genes involved in lactose digestion. But do
+        these effects have any importance in evolution?
 
         In the late 1890's, the biologists Baldwin, Morgan and Osborne proposed a theory in which
         an organism's choices may influence evolution. If male ostriches brood their eggs on hot
-        sand, it is helpful to have calluses on their rumps. Calluses are a 'plastic' feature of
+        sand, it is helpful to have calluses on their rump. Calluses are a 'plastic' feature of
         an organism's development, caused not by genes, but by irritation of the organism's skin,
         yet male ostriches already have these calluses on their rump when they are born! How might
-        this congenital trait evolve in ostriches?
+        this congenital trait have evolved in ostriches?
         
         Think about and discuss carefully the following question with a friend. You have heard
         people mock Lamarke's (early 19th century) idea that 'wanting' to reach higher leaves might
@@ -39,14 +39,14 @@
         purely random changes would require far longer than the current age of the Earth to produce
         organisms as complex as ourselves. Is there some other evolutionary mechanism at work here?
 
-        Mary-Jane West-Eberhard (2005) suggested that the major driver of evolutionary change is
-        not genetic mutation, but Developmental Plasticity. Kalevi Kull (2014) formalised West-
-        Eberhard's idea under the title of Semiotic Adaptation: If the development of organisms in
-        a population is influenced beneficially by an external circumstance that persists over
-        many generations, genetic drift will shape their evolution in ways that make that benefit
-        essential for their survival. If we then take away this external influence, either neutral
-        drift will have made the organism capable of compensating for the lacking influence, or the
-        population will die.
+        Mary-Jane West-Eberhard (2005) suggested that the chief driver of evolutionary change is
+        not genetic mutation, but Developmental Plasticity. Kalevi Kull (2014) formalised this idea
+        under the title of Semiotic Adaptation: Organisms make meaningful choices that affect their
+        development; if some particular choice has a beneficial effect on the development that
+        persists over many generations, genetic drift will shape their evolution in ways that make
+        that benefit essential for their survival. If we then remove this external influence,
+        either neutral drift will have made the organism capable of compensating for the now
+        missing influence, or the population will die.
 
         Can you use Kull's argument to explain why we humans need to eat fruit to obtain the
         essential vitamin C, while many other animals are able to manufacture it in their bodies?
@@ -63,8 +63,9 @@
 
         Geoffrey Hinton and Steven Nowlan (1987) used a computer simulation to show that semiotic
         adaptation can accelerate genetic search and help it out of suboptima. They designed a
-        genetic algorithm based on three allele-values (0, 1 and 2) to find a secret 30-bit
-        number. How many different numbers would the algorithm need to search through?
+        genetic algorithm based on three allele-values (0, 1 and 2) to discover a specific,
+        secret 30-bit number. How many different numbers would the algorithm need to search
+        through in order to guess their specific secret number?
         """,
         "Each bit can have 2 values - 0 or 1. How many different 30-bit permutations are there?",
         x -> (x>1e10)
@@ -131,7 +132,7 @@
         successful search radius. Now stop the simulation and use the mouse cursor to find out
         how many generations were needed to locate the solution purely genetically.
         """,
-        "You may want to raise the steps-per-unit (spu) slider to speed things up!",
+        "You may want to raise the dt slider to speed things up!",
         x -> 1e4<x<1e5
     ),
     Activity(
@@ -150,12 +151,12 @@
     Activity(
         """
         Since we set reaction_norm=0.0, there is no difference between the turtles' genetic and
-        developmental radii. For this reason, you will not yet see any orange turtles (study
-        set_exploration!() to see why this is so). Now study the give_birth() method to find out
+        developmental radius. For this reason, you will not yet see any orange turtles (study
+        set_exploration!() to see why this is so). Now study the reproduce() method to find out
         how the develop_radius of a new-born turtle is calculated from its genetic_radius.
 
         A turtle stops moving when it is feeding, and it stops to feed when it is within its own
-        develop_radius of an integer-valued feeding point. Give me the method that sets the
+        develop_radius of an integer-valued feeding point. reply() me the method that sets the
         turtle's status to 'feeding'?
         """,
         "",
@@ -198,19 +199,20 @@
     ),
     Activity(
         """
-        That's right - just because a turtle has a successful radius doesn't mean that it actually
-        lands on a food disc. However, if you look at the graph of successful develop_radius
+        That's right - just because a turtle has the necessary radius doesn't mean that it will
+        really land on a food disc. However, if you look at the graph of successful develop_radius
         values, you can see that the number of successful develop_radius values builds up
-        immediately BEFORE the first successful genetic_radius values appear. This means our idea
-        is working: turtles are getting rewarded for good developmental values when their genetic
-        values are approaching the target value of 1e-5. Hurray! :)
+        immediately BEFORE the first successful genetic_radius values appear. This means that
+        West-Eberhard, Kull, Hinton and Nowlan's idea of semiotic adaptation (or developmental
+        plasticity) really is working! Turtles are getting rewarded for good developmental values
+        when their genetic values are approaching the target value of 1e-5. Hurray! :)
 
         OK, now it's you turn. I have provided you with three sliders for the values of
         feeding_radius, reaction_norm and food_benefit. Play with these values now to test our
         theory that plasticity can accelerate genetic search. First change feeding_radius up to
         1e-3 and explain what happens. Then change feeding_radius back, and explain the results
         of setting food_benefit down to 1.0. Finally, conduct a set of simulation runs to check
-        whether our theory works: Is search accelerated when reaction_norm>0.0?
+        whether our theory works: Is search accelerated when reaction_norm > 0.0?
 
         Important: This is not an easy activity. Experiment with various slider settings, think
         about your results and discuss this thinking with friends, but do NOT take longer than
@@ -247,8 +249,8 @@
     Activity(
         """
         As scientists, we constantly come up against this problem: Our own beautiful theory gets
-        torn apart by a few irritating facts that we cannot deny. What makes us true scientists is
-        that we accept this disappointment as reality, and USE it as a way to move forward ...
+        torn apart by a few irritating facts that we cannot ignore. What makes us true scientists
+        is that we accept this disappointment as reality, and USE it as a way to move forward ...
 
         First, notice how much you learned by testing the effect of sliders on the simulation.
         This learning is not a waste of time: it is a very important part of this course!
@@ -258,12 +260,13 @@
             1.	We construct a believable story to explain some scientific observation.
             2.	We construct a Null Hypothesis which, if true, would destroy our lovely story.
             3.	We construct an experiment to prove the null hypothesis (and destroy our story).
-            4.	If the experiment fails to prove the null hypothesis, our story is well-aligned
-                    with our observations. After enjoying this, loop back to step 2.
-            5.	If the experiment proves the null hypothesis, our story is incomplete. In this
-                    case, we make a list of the prior assumptions of our story and decide which
-                    assumption is probably wrong and needs changing.
-            6. Loop back to stage 1.
+            4.	If the experiment Fails to prove the null hypothesis, our story is well-aligned
+                    with our observations. After enjoying this, reflect on our the new
+                    observations we have obtained through experimenting, and ...
+            	Else if the experiment Does prove the null hypothesis, our story is incomplete. In
+                    this case, we make a list of the prior assumptions of our story, decide which
+                    assumption is probably wrong and needs changing, and ...
+            6.  ... loop back to stage 1!
 
         What was the experimental observation that we sought to explain with our story?
         """,
@@ -295,10 +298,10 @@
                     they have no control: whether they happen to land on a food disc.
             -	Their genotype encodes an exploratory process that generates the phenotype;
 
-        These thoughts give us a way forward. If we want to reproduce the accelerated search of
+        These thoughts offer us a way forward. If we want to reproduce the accelerated search of
         Hinton and Nowlan, we might need to give our turtles three additional features:
             -	Selection OF recombinable genetic structure;
-            -	Selection OF structure-flow niches that focus problem-solving behaviour on ONE
+            -	Selection OF structure-field niches that focus problem-solving behaviour on ONE
                     SPECIFIC objective.
             -	Selection ON exploratory developmental processes;
 

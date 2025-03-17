@@ -5,13 +5,13 @@
 A simulation to evaluate Kull's proposal that development, rather than mutation,
 drives evolution.
 	
-Author: Niall Palfreyman (March 2023), Emilio Borrelli (May 2022).
+Author: Niall Palfreyman, March 2025.
 """
 module SemioticAdaptation
 
-include( "../../Tools/AgentTools.jl")
+include( "../../Development/Generative/AgentTools.jl")
 
-using Agents, GLMakie, InteractiveDynamics, .AgentTools
+using Agents, GLMakie, .AgentTools
 
 #-----------------------------------------------------------------------------------------
 # Module types:
@@ -24,7 +24,7 @@ concentrated within tiny feeding discs centred on integer-valued locations. In o
 turtles must first learn to stop within one of these discs to feed. This learning occurs both
 genetically and developmentally (model reaction_norm modifies their relationship).
 """
-@agent Turtle ContinuousAgent{2} begin
+@agent struct Turtle(ContinuousAgent{2,Float64})
 	energy::Float64							# Current energy of the Turtle
 	sniffing::Bool							# Is Turtle currently stationary: sniffing for food?
 	feeding::Bool							# Is the Turtle currently feeding: gaining energy?
@@ -47,7 +47,7 @@ function semiotic_adaptation(;
 	reaction_norm	= 0.2,					# 0.5
 )
 	pPop = 0.2								# Probability of a cell becoming populated
-	width = 40								# Width of the world
+	extent = (40,40)						# Extent of the world
 
 	properties = Dict(
 		:feeding_radius => feeding_radius,
@@ -59,10 +59,12 @@ function semiotic_adaptation(;
 		:search_speed => 1.0,
 		:mu_rate => 0.05,
 		:mu_extent => 0.1,
-		:max_pop => pPop*width*width,
+		:max_pop => pPop*prod(extent),
 	)
 
-	kull = ABM( Turtle, ContinuousSpace((width,width)); properties, scheduler=Schedulers.randomly)
+	kull = StandardABM( Turtle, ContinuousSpace(extent);
+		properties, agent_step!
+	)
 
 	for _ in 1:properties[:max_pop]
 		θ = 2π * rand()
@@ -88,10 +90,10 @@ One step in the life of a Turtle in Kull's model of semiotic adaptation.
 function agent_step!( turtle::Turtle, kull)
 	walk!( turtle, kull)
 	feed!( turtle, kull)
-	give_birth( turtle, kull)
+	reproduce( turtle, kull)
 	
 	if turtle.energy < 0
-		kill_agent!(turtle, kull)
+		remove_agent!(turtle, kull)
 	end
 end
 
@@ -137,12 +139,12 @@ end
 
 #-----------------------------------------------------------------------------------------
 """
-	give_birth( turtle, kull)
+	reproduce( turtle, kull)
 
 Have a baby with similar attributes to self, but possibly genetically mutated with probability
 kull.mu_rate.
 """
-function give_birth( turtle::Turtle, kull)
+function reproduce( turtle::Turtle, kull)
 	if turtle.energy > kull.birth_cost*kull.life_energy && nagents(kull) < kull.max_pop
 		# I've got enough energy and there's sufficient space to have kids:
 		θ = 2π * rand()
@@ -183,18 +185,18 @@ end
 """
 	set_exploitation!( turtle, kull)
 
-Set turtle's colour to indicate its quality of food exploitation, as measuree by the radius
-it uses to assess the presence of food resources.
+Set turtle's colour to indicate its ability to exploit food resources, as measuree by the radius
+it uses to assess the presence of food.
 """
 function set_exploitation!( turtle::Turtle, kull)
 	if turtle.genetic_radius < kull.feeding_radius
-		turtle.exploitation = :lime							# Genetically secured exploitation
+		turtle.exploitation = :lime							# Genetically guaranteed exploitation
 	elseif turtle.develop_radius < kull.feeding_radius
 		turtle.exploitation = :orange						# Purely developmental exploitation
 	elseif turtle.develop_radius < 5kull.feeding_radius
 		turtle.exploitation = :blue							# Moderate developmental exploitation
 	else
-		turtle.exploitation = :black						# Really crappy exploitation
+		turtle.exploitation = :red							# Really crappy exploitation
 	end
 end
 
@@ -204,7 +206,7 @@ end
 
 Calculate distance of current pos from nearest feeding position on integer-valued coordinates.
 """
-function food_proximity( pos::Tuple)
+function food_proximity( pos)
 	sqrt( sum((pos .- round.(pos)).^2))
 end
 
@@ -215,15 +217,14 @@ end
 Demonstrate Kull's SemioticAdaptation process.
 """
 function demo()
-	kull = semiotic_adaptation()
 	params = Dict(
 		:food_benefit => 0:0.1:5.0,
 		:feeding_radius => 1e-5:1e-5:1e-3,
 		:reaction_norm => 0:0.01:1,
 	)
 	plotkwargs = (
-		ac=(turtle->turtle.exploitation),
-		as=30,
+		agent_color=(turtle->turtle.exploitation),
+		agent_size=20,
 		mdata = [
 			(m->count(ag->(ag.genetic_radius<m.feeding_radius),allagents(m))),
 			(m->count(ag->(ag.develop_radius<m.feeding_radius),allagents(m))),
@@ -231,9 +232,7 @@ function demo()
 		mlabels = ["Genetic success","Developmental success"],
 	)
 
-	playground, = abmplayground( kull, semiotic_adaptation;
-		agent_step!, params, plotkwargs...
-	)
+	playground, = abmplayground( semiotic_adaptation; params, plotkwargs...)
 
 	playground
 end
