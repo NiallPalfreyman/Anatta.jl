@@ -350,8 +350,8 @@ Set up the Tools and Scripts in the home directory.
 """
 function setup()
 	# Ensure tools are set up:
-	tool_path = joinpath(session.home_dir,"Tools")
-	cp( joinpath( session.anatta_home, "Tools"), tool_path, force=true)
+#	tool_path = joinpath(session.home_dir,"Tools")
+#	cp( joinpath( session.anatta_home, "Tools"), tool_path, force=true)
 	# Ensure scripts are set up:
 	scripts_path = joinpath(session.home_dir,"Scripts")
 	cp( joinpath( session.anatta_home, "../Scripts"), scripts_path, force=true)
