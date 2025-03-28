@@ -14,10 +14,10 @@ Author: Niall Palfreyman, 01/01/2023
 """
 module Anatta
 
+using GLMakie
+
 # Externally callable methods of Anatta
 export Activity, act, ani, askme, hint, home, home!, lab, nextact, nextlab, reply, setup
-
-#using Pluto								# We want to be able to use Pluto notebooks
 
 #-----------------------------------------------------------------------------------------
 # Module fields:
@@ -245,31 +245,14 @@ function nextlab( lab_num::Int = -1, current_act::Int = 1)
 		lab_num = session.lab_num + 1
 	end
 
-	# Check validity of lab_file:
+	# Check validity of lab_file, then open it:
 	lab_file = labfile(session.anatta_home,lab_num)
 	if !isfile(lab_file)
 		# The new lab_file is not available in the lab directory:
 		println("Sorry: Lab number $(lab_num) is unavailable.")
 		return
 	end
-
-	# Open lab_file and offer help:
-	stream = open(lab_file)
-	session.is_pluto = occursin("Pluto.jl notebook",readline(stream))
-	close(stream)
-
-	if session.is_pluto
-		# Open a Pluto lab:
-		println( "You are trying to set up a Pluto lab - I'm afraid this option is still unavailable.")
-		return
-#		println( "I'm about to set up a Pluto lab. After it has loaded, if you wish to experiment")
-#		println( "in julia while the lab is running, you can press Ctrl-C in the julia console.")
-#		println( "...")
-#		@async Pluto.run(notebook=lab_file)
-	else
-		# Open a Julia lab:
-		session.activities = include(lab_file)
-	end
+	session.activities = include(lab_file)
 
 	# Update session information for the new laboratory:
 	session.lab_num = lab_num

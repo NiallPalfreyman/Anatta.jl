@@ -17,13 +17,14 @@ An Activity is the basic unit of learning in Anatta. It contains ...
 
 # Fields
 * `prompt`	: Text prompting an activity by the learner.
+* `example`	: Possible accompanying code to illustrate the Activity.
 * `hint`	: Text suggesting to the learner how to respond to the prompt.
 * `success`	: Boolean function that defines the criteria for a successful learner response.
 
 # Examples
 ```julia
 julia> act = Anatta.Activity( "What is 2+3?", "Add the numbers together", x -> x==5)
-Anatta.Activity("What is 2+3?", "Add the numbers together", var"#5#6"())
+Anatta.Activity("What is 2+3?", nothing, "Add the numbers together", var"#5#6"())
 
 julia> act.success(5)
 true
@@ -31,9 +32,20 @@ true
 """
 struct Activity
 	prompt :: String				# Prompt text
+	example :: Union{Expr,Nothing}	# Possible accompanying code to illustrate the Activity
 	hint :: String					# A hint to the learner, if she requires one
 	success :: Function				# The criterion for a successful response
 end
+
+# Outer constructors:
+Activity( prompt::String, hint::String="", success::Function=(x->true)) =
+	Activity( prompt, nothing, hint, success)
+Activity( prompt::String, success::Function) =
+	Activity( prompt, nothing, "", success)
+Activity( prompt::String, example::Expr, hint::String="") =
+	Activity( prompt, example, hint, (x->true))
+Activity( prompt::String, example::Expr, success::Function) =
+	Activity( prompt, example, "", success)
 
 #-----------------------------------------------------------------------------------------
 """
@@ -49,7 +61,6 @@ A Session maintains the current state of a learning laboratory experience. It co
 * `home_dir :: String`				: Home folder of the session learner
 * `learner :: String`				: Name of session learner
 * `lab_num :: Int`					: Number of the session laboratory
-* `is_pluto :: Bool`				: Is the session laboratory a Pluto workshop?
 * `current_act :: Int`				: Number of the session activity in the laboratory
 * `activities :: Vector{Activity}`	: Complete list of activities in this laboratory
 
@@ -67,12 +78,11 @@ mutable struct Session
 	home_dir :: String					# Learner's home directory
 	learner :: String					# Name of session learner
 	lab_num :: Int						# Number of current lab
-	is_pluto :: Bool					# Is this a Pluto session?
 	current_act :: Int					# Number of current activity
 	activities :: Vector{Activity}		# Set of activities in this session
 
 	# One and only constructor of Sessions:
-	Session() = new( "", "", "", "", 1, false, 1, Vector{Activity}())
+	Session() = new( "", "", "", "", 1, 1, Vector{Activity}())
 end
 
 #-----------------------------------------------------------------------------------------
@@ -86,6 +96,9 @@ Present the prompting text of the given Activity to the learner.
 """
 function pose( act::Activity)
 	print( act.prompt)
+	if !isnothing(act.example)
+		eval(act.example)
+	end
 end
 
 #-----------------------------------------------------------------------------------------
