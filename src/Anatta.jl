@@ -28,7 +28,6 @@ session = Session()						# Create the single Anatta session
 
 #-----------------------------------------------------------------------------------------
 # Module methods:
-
 #-----------------------------------------------------------------------------------------
 """
 	Anatta.go()
@@ -214,9 +213,15 @@ If act is provided, move to that number activity, otherwise move to the next act
 this lab. If that takes you beyond the end of this lab, move to the beginning of the next lab.
 """
 function nextact( act::Int = 0)
-	if act ≤ 0
+	if act == 0
 		# No activity given - default to next activity after current one:
 		act = session.current_act + 1
+	elseif act < 0
+		# Back up to earlier activity:
+		act = session.current_act + act
+		if act < 1
+			act = 1
+		end
 	end
 
 	if act ≤ length(session.activities)
