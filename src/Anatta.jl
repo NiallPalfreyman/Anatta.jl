@@ -14,8 +14,6 @@ Author: Niall Palfreyman, 01/01/2023
 """
 module Anatta
 
-#using GLMakie
-
 # Externally callable methods of Anatta
 export Activity, act, ani, askme, hint, home, home!, lab, nextact, nextlab, reply, setup
 
