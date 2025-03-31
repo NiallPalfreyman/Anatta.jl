@@ -5,6 +5,7 @@
 #
 # Author: Niall Palfreyman, 23/11/2024
 #========================================================================================#
+let
 include("../src/dev/Logic/Semantics.jl")
 [
     Activity(
@@ -426,3 +427,4 @@ include("../src/dev/Logic/Semantics.jl")
         x -> true
     ),
 ]
+end
