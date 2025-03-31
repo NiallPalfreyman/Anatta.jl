@@ -35,7 +35,7 @@
         shall see that we could not predict that pattern simply from knowing the agent's behavioural
         rule!. This unpredictability show us the limits of structural computability.
 
-        Include the file Computability.jl. At each step of Computability.demo(), the single
+        Include the file NonComputability.jl. At each step of NonComputability.demo(), the single
         Grasshopper agent (the green dot) randomly chooses one of the four available food sources
         (blue dots), then moves halfway towards that food source. Press the Step button several
         times to watch the agent jumping around. Wherever it lands, it leaves behind a tiny (1pt)
@@ -168,7 +168,7 @@
     Activity(
         """
         Before proceeding further with this lab, I want to draw your attention to a small coding
-        issue. Look at the graphics code in Computability.demo(). After setting up the playground,
+        issue. Look at the graphics code in NonComputability.demo(). After setting up the playground,
         we want to superimpose onto the basic ABM Observable abmobs all the footprints of each
         agent in the model. To achieve this, we use the method lift() to add a listener to abmobs,
         so that every time abmobs changes (for example, after each call to model_step!()), we can
@@ -203,9 +203,9 @@
         """
         Copy the file NonComputability.jl to a new file Leafy.jl, then modify its code to construct
         a new non-computable pattern through the movement of Builder agents. Create a 2-D continuous
-        world with extent 15x15, define a model property :base_point describing a point halfway
-        along the horizontal axis, and initialise all Builder agents in the Leafy model to this
-        base_point location.
+        world with extent 15x15, define a model Vector property :base_point that describes a point
+        halfway along the horizontal axis, and initialise all Builder agents in the Leafy model to
+        this base_point location.
 
         Now test your changes by running Leafy.demo(). What pattern should this run produce?
         """,
