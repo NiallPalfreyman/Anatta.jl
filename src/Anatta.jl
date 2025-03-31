@@ -85,8 +85,9 @@ function ani()
 
 	println( rand(greeting)*" :) Here's a complete list of Anatta commands:")
 	println( "   act()                : Display the current activity number")
-	println( "   ani()                : Display this list of Anatta functions")
+	println( "   ani()                : Ask me to display this list of Anatta functions")
 	println( "   askme()              : Tell you the current activity")
+	println( "   demo()               : Execute any available demo code for the current activity")
 	println( "   hint()               : Display a hint for the current activity")
 	println( "   home!(dir=pwd())     : Set your Anatta home folder")
 	println( "   home()               : Move to your Anatta home folder")
@@ -138,6 +139,16 @@ function hint( act::Activity=session.activities[session.current_act])
 		# Display the available hint:
 		println( "Hint:  ", act.hint)
 	end
+end
+
+#-----------------------------------------------------------------------------------------
+"""
+	demo( act::Activity=session.activity[session.current_act])
+
+Execute any available demonstration code for the current activity.
+"""
+function demo( act::Activity=session.activities[session.current_act])
+	eval(act.demo)
 end
 
 #-----------------------------------------------------------------------------------------
@@ -250,7 +261,7 @@ function nextlab( lab_num::Int = -1, current_act::Int = 1)
 		return
 	end
 	session.activities = include(lab_file)
-
+	
 	# Update session information for the new laboratory:
 	session.lab_num = lab_num
 	session.current_act = current_act

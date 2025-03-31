@@ -32,7 +32,7 @@ true
 """
 struct Activity
 	prompt :: String				# Prompt text
-	example :: Union{Expr,Nothing}	# Possible accompanying code to illustrate the Activity
+	demo :: Union{Expr,Nothing}		# Possible accompanying code to demonstrate the Activity
 	hint :: String					# A hint to the learner, if she requires one
 	success :: Function				# The criterion for a successful response
 end
@@ -96,9 +96,7 @@ Present the prompting text of the given Activity to the learner.
 """
 function pose( act::Activity)
 	print( act.prompt)
-	if !isnothing(act.example)
-		eval(act.example)
-	end
+	eval( act.demo)
 end
 
 #-----------------------------------------------------------------------------------------
