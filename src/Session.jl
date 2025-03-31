@@ -108,13 +108,11 @@ Apply the success criterion of the activity to the given response from a learner
 function evaluate( act::Activity, response)
 	success = true
 
-	if !isnothing(response)
-		try
-			success = act.success(response)
-		catch e
-			# Response is badly wrong:
-			success = false
-		end
+	try
+		success = act.success(response)
+	catch e
+		# Response is badly wrong:
+		success = false
 	end
 
 	if success

@@ -5,6 +5,7 @@
 #
 # Author: Niall Palfreyman, 8/12/2024
 #========================================================================================#
+let
 include("../src/dev/Logic/Proofs.jl")
 [
     Activity(
@@ -155,3 +156,4 @@ include("../src/dev/Logic/Proofs.jl")
         x -> true
     ),
 ]
+end

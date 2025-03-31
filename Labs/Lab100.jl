@@ -7,9 +7,9 @@
 #
 # Author: Niall Palfreyman, 8/11/2024.
 #========================================================================================#
-begin
+let
 include("../src/dev/Logic/Propositions.jl")
-const parse_tests = [
+parse_tests = [
     ("~p211","~p211",""),
     ("((a02|a5)->~a11)","((a02 | a5) -> ~a11)",""),
     ("((b|b5))", nothing, ""),
