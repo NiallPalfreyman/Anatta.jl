@@ -7,7 +7,7 @@ Non-computable properties are not necessarily irreducible, since they are certai
 the individual behaviours of system components. Nevertheless, non-computable properties are
 Reliable yet non-predictable. That is, we can generate them reliably out of randomised individual
 beviours, yet we cannot predict them using any computational process based purely on those
-individual behaviours. Nevertheless, ???
+individual behaviours.
 
 Author: Niall Palfreyman, February 2025.
 """
