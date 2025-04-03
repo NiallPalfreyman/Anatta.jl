@@ -208,7 +208,7 @@
                 they are reliable aspects of the dynamical organisation between boids' motion.
             2. This reliable dynamical organisation emerges from what is called Self-Organisation:
                 the emergence of collective order from the interactions of many individual agents.
-                I want you to notice that this  self-organisation is only made possible by the fact
+                I want you to notice that this self-organisation is only made possible by the fact
                 that the behaviour of each agent is constrained by the behaviour of several
                 neighbours. This is a general principle of complex systems.
         """,

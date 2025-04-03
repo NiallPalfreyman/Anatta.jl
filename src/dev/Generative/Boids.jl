@@ -83,6 +83,11 @@ function agent_step!(boid, flock)
 		nbrpos = flock[id].pos
 		heading = get_direction(boid.pos,nbrpos,flock)	# Periodic-respecting displacement vector
 
+		# Ignore boids that lie outside my visual angle (90°):
+		if sep_angle(boid.vel,heading) > pi/2
+			continue
+		end
+
 		# SEPARATE to avoid colliding with neighbouring boid:
 		if euclidean_distance(boid.pos, nbrpos, flock) < flock.min_separation
 			separate = separate .- heading
@@ -107,6 +112,16 @@ function agent_step!(boid, flock)
 
 	# Now move forward according to my newly adjusted velocity and speed:
 	move_agent!(boid, flock, boid.speed)
+end
+
+#-----------------------------------------------------------------------------------------
+"""
+	sep_angle( v1, v2)
+
+Calculate magnitude of angle of separation between two vectors.
+"""
+function sep_angle( v1, v2)
+	acos( clamp( sum((v1/norm(v1)).*(v2/norm(v2))), -1, 1))
 end
 
 #-----------------------------------------------------------------------------------------
