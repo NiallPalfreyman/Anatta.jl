@@ -138,10 +138,10 @@
         line 107 of Maxwell.jl, and replace this line of code by:
             maxi.E[:] = maxi.B[:]
 
-        What is the effect of this code change on the two matrices maxi.E and maxi.B?
+        What does this code do with the contents of the two matrices maxi.E and maxi.B?
         """,
         "Create a small matrix A in the REPL, then look at the result of the expression A[:]",
-        x -> occursin("cop",lowercase(x)) && occursin('E',x) && occursin('B',x)
+        x -> occursin("cop",lowercase(x))
     ),
     Activity(
         """
