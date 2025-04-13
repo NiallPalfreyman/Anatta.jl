@@ -94,8 +94,7 @@
         Test this search flexibility of the Stabilisation model: Adapt the method agent_step!()
         to create a specific 'sticky' location in the environment for agents to find. Then, when
         they have chosen this location, shift the sticky point to a new location to see if the
-        point for the agents to find, and then later move this sticky point to a new location
-        to see if the agents are capable of shifting their choice to the new location.
+        agents are capable of shifting their choice to the new location.
         """,
         "",
         x -> true
