@@ -47,7 +47,7 @@ function stabilisation(;
 	for _ in 1:prod(extent)
 		# Random facing direction:
 		theta = 2pi*rand()
-		add_agent!( world, (cos(theta),sin(theta)), 1.0)
+		add_agent!( world, (cos(theta),sin(theta)))
 	end
 
 	return world
