@@ -11,15 +11,36 @@
         Hi! Welcome to Anatta Subject 608: Stabilisation.
 
         Stabilisation is the construction process by which almost all systems build structure
-        over time. Imagine sand swirling around the bottom of the ocean: occasionally it comes to
-        rest at an obstacle, whereupon it creates even more of an obstacle for more sand, until
-        the sand builds up around the obstacle. This is Stabilisation: stability begets stability.
+        over time. Imagine sand swirling around the bottom of the ocean, and imagine a large
+        shipwreck lying stably in the sand. The shipwreck is already resting quite stably on the
+        ocean floor, so that randomly moving sand washes up against it, raising a sand-bank all
+        around the wreck. This sand-bank increases the stability of the shipwreck's position, thus
+        also increasing the possibility of more sand washing up against it. This is Stabilisation:
+            When stability is already present, random environmental fluctuations tend to
+            consolidate this stability!
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        The previous example assumes that a shipwreck is already resting stably on the ocean bed,
+        but of course some other object might also function as an anchor for stability ...
         
-        Now imagine an empty shell that falls onto the seabed: at first, it can float around
-        freely, but slowly it becomes stuck in sand. Then, because it is no longer moving, even
-        more sand gathers around the shell, making it even more stable. This process is called
-        Dynamical Stabilisation:
-            Things stay the same because randomly ocurring stability encourages more stability.
+        What about a single grain of sand? Well, this clearly wouldn't work, because it can be too
+        easily dislodged and pushed away by incoming sand.
+
+        But what about a small twig? It might not be at all heavy, at first floating around freely,
+        but slowly, sand arriving on one side supports the twig in one direction, settling it
+        slightly more firmly in the sand. Meanwhile, because the twig is now moving less, sand
+        arriving from the other side builds up against it nd supports the twig in the opposite
+        direction. Because the twig is long enough to weave together the effects of multiple grains
+        of sand, more and more sand accumulates around the twig, increasing its stability even
+        further. The twig links together the effect of multiple grains of sand, building structure
+        out of nothing at all through the process of Dynamical Stabilisation:
+            Provided some non-local field (such as the twig) is present that can link together the
+            influence of small, randomly occurring fluctuations in the environment, this field can
+            consolidate these fluctuations into larger scale stability.
         """,
         "",
         x -> true
