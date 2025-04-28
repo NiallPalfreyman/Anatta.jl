@@ -106,7 +106,7 @@
         principle of emergence in action.
         """,
         "",
-        x -> occursin("right",lowercase(x)) && occursin("up",lowercase(x))
+        x -> true
     ),
     Activity(
         """
@@ -134,18 +134,22 @@
     Activity(
         """
         As you can see, the upper-right quadrant contains deeper minima, and so traps many ants
-        where they cannot cross to - or even become aware of - the global minimum. I suspect that
-        it is possible to fix this problem using Simulated Annealing.
+        where they cannot cross to - or even become aware of - the global minimum. Our optimisation
+        method (PSO) tries to locate the global optimum using the agents' best-yet knowledge of
+        minima. However, in the De Jong 2 problem, precisely this information leads agents Away
+        from the global optimum! Because of this misleading difficulty, we call such optimisation
+        problems Deceptive. 
 
-        In practice, artificial intelligence systems often use Annealing to find solutions. That
+        Practical artificial intelligence systems often use Annealing to find solutions. That
         is, they start off the search with a high temperature in order to accelerate the search,
         and then gradually lower the temperature in order to improve the accuracy of its result.
-        Implement an annealing schedule to see if I am right in assuming that we can improve the
-        search quality for the dejong2() objective function.
 
-        But be careful! You may find that it is very difficult to find an annealing schedule
-        which is a perfect fit for both the valleys() AND the dejong2() objective functions.
-        This difficulty is a consequence of the so-called No-Free-Lunch Theorem! (Look this up!)
+        I wonder whether it may be possible to fix this problem using annealing? Implement an
+        annealing schedule to see if I am right in thinking that it may improve the search quality
+        for the dejong2() objective function. But be careful! You may find that it is difficult to
+        find an annealing schedule that is a perfect fit for both the valleys() AND the dejong2()
+        objective functions. This difficulty is a consequence of the so-called No-Free-Lunch
+        Theorem - look this up online! :)
         """,
         "",
         x -> true
