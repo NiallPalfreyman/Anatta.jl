@@ -64,22 +64,23 @@
         Geoffrey Hinton and Steven Nowlan (1987) used a computer simulation to show that semiotic
         adaptation can accelerate genetic search and help it out of suboptima. They designed a
         genetic algorithm based on three allele-values (0, 1 and 2) to discover a specific,
-        secret 30-bit number. How many different numbers would the algorithm need to search
-        through in order to guess their specific secret number?
+        secret 30-bit target number. How many different numbers would the algorithm need to search
+        through in order to guess their specific 30-bit target number?
         """,
         "Each bit can have 2 values - 0 or 1. How many different 30-bit permutations are there?",
         x -> (x>1e10)
     ),
     Activity(
         """
-        This search would take days on the computers Hinton and Nowland were using. Instead, they
+        This search would take weeks on the computers Hinton and Nowland were using. Instead, they
         designed their algorithm to generate candidate numbers both genetically and
         developmentally: The allele values 0 and 1 were interpreted as bits, but the allele value 2
         was interpreted as an unknown bit value, so in order to interpret a genome consisting of
-        values [0,1,2], the algorithm rolled a dice to explore 1000 candidates to fill in the
-        missing bits. These randomly generated bits corresponded to the developmental plasticity of
-        an organism. Hinton and Nowlan's semiotic adaptation algorithm was able to find the secret
-        number MUCH faster than would have been possible using purely random genetic search.
+        values [0,1,2], the algorithm rolled a dice to explore 1000 candidates to replace the
+        allele-2 locations by a random bit value 0 or 1. These randomly generated bits corresponded
+        to the developmental plasticity of an organism. Hinton and Nowlan's semiotic adaptation
+        algorithm was able to find the secret target number MUCH faster than would have been
+        possible using purely random genetic search.
 
         An important question for us in this course is therefore: How might we be able to make use
         of semiotic adaptation to accelerate genetic search algorithms?
@@ -261,8 +262,8 @@
             2.	We construct a Null Hypothesis which, if true, would destroy our lovely story.
             3.	We construct an experiment to prove the null hypothesis (and destroy our story).
             4.	If the experiment Fails to prove the null hypothesis, our story is well-aligned
-                    with our observations. After enjoying this, reflect on our the new
-                    observations we have obtained through experimenting, and ...
+                    with our observations. After enjoying this success, we reflect on the new
+                    observations we have obtained through experimenting; or ...
             	Else if the experiment Does prove the null hypothesis, our story is incomplete. In
                     this case, we make a list of the prior assumptions of our story, decide which
                     assumption is probably wrong and needs changing, and ...
@@ -292,11 +293,11 @@
     Activity(
         """
         Here are my thoughts contrasting our Turtle simulation with Hinton and Nowlan's model:
-        -	Their individuals have a genotypic structure that is mutated and recombined;
-        -	Their phenotypes are selected ONLY on their ability to guess the secret number, whereas
+        -	H&N's individuals have a genotypic structure that is mutated and recombined;
+        -	H&N's phenotypes are selected ONLY on their ability to guess the secret number, whereas
                 our turtles are also selected on environmental factors over which they have only
                 very limited control, such as whether they happen to land on a food disc;
-        -	Their genotype encodes an exploratory developmental process that can Only develop the
+        -	H&N's genotype encodes an exploratory developmental process that can Only develop the
                 phenotype In Collaboration With These Environmental Factors.
 
         These thoughts offer us a way forward. If we wish to accelerate the search for problem
