@@ -2,10 +2,10 @@
 """
 	WattWorlds
 
-Module WattWorlds: A model of rheolecsis to demonstrate narrative stabilisation. The WattWorld
-structure comprises a homogenous population of individually narrative Players, each characterised
-by a transient state a (0 < A_LWB < a < A_UPB) and its behaviour parameters B. Both behaviour
-parameters are constrained to lie between bounds:
+Module WattWorlds: A model of narrative stabilisation to demonstrate narrative stabilisation. The
+WattWorld structure comprises a homogenous population of individually narrative Players, each
+characterised by a transient state a (0 < A_LWB < a < A_UPB) and its behaviour parameters B. Both
+behaviour parameters are constrained to lie between bounds:
 	B ∈ (0 < B_LWB < abs(B[1]) < B_UPB) × (0 < C_LWB < B[2] < C_UPB).
 
 Players' actions are coordinated by their common access to a single, globally available resource R.
@@ -21,15 +21,16 @@ contributes one rein of an integral-rein Watt governor.
 
 Structural mutation of WattWorld occurs through stochastic variation of Players' B-values, the
 extent of this variation depending rheolectically upon the current coordination value R. In the
-simple WattWorld model, rheolecsis is trivial: B-variability is zero when R=1.0, rising
+simple WattWorld model, narrative stabilisation is trivial: B-variability is zero when R=1.0, rising
 monotonically to a maximum value of 1.0 as R moves further away from the value 1.0.
 
 The WattWorld model explores two research questions relating to this simple rheolectic function:
-	a) Can rheolecsis lead to stabilisation of the WattWorld narrative, and if so,
+	a) Can narrative stabilisation lead to stabilisation of the WattWorld narrative, and if so,
 	b) Does this stabilised narrative enact the dynamics of engagement with an exogenously
 		determined, time-dependent injection supply(t) of the resource R?
 
 Author: Niall Palfreyman, 15/09/2024
+Revised: 15/09/2025
 """
 module WattWorlds
 
