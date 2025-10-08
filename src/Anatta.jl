@@ -15,7 +15,7 @@ Author: Niall Palfreyman, 01/01/2023
 module Anatta
 
 # Externally callable methods of Anatta
-export Activity, act, ani, askme, hint, home, home!, lab, nextact, nextlab, reply, setup
+export Activity, act, ani, askme, hint, home, home!, lab, act!, lab!, reply, setup
 
 #-----------------------------------------------------------------------------------------
 # Module fields:
@@ -67,7 +67,7 @@ function go()
 
 	# Open the requested labfile:
 	home()
-	nextlab(session.lab_num,session.current_act)
+	lab!(session.lab_num,session.current_act)
 end
 
 #-----------------------------------------------------------------------------------------
@@ -85,6 +85,7 @@ function ani()
 
 	println( rand(greeting)*" :) Here's a complete list of Anatta commands:")
 	println( "   act()                : Display the current activity number")
+	println( "   act!(act=next)       : Move to the learning activity 'act'")
 	println( "   ani()                : Ask me to display this list of Anatta functions")
 	println( "   askme()              : Tell you the current activity")
 	println( "   demo()               : Execute any available demo code for the current activity")
@@ -92,8 +93,7 @@ function ani()
 	println( "   home!(dir=pwd())     : Set your Anatta home folder")
 	println( "   home()               : Move to your Anatta home folder")
 	println( "   lab()                : Display the current laboratory number")
-	println( "   nextact(act=next)    : Move to the learning activity 'act'")
-	println( "   nextlab(lab=next)    : Move to the laboratory 'lab'")
+	println( "   lab!(lab=next)       : Move to the laboratory 'lab'")
 	println( "   reply(response=skip) : Submit your response to the current activity")
 	println( "   setup(library)       : Copy Anatta library to home Development folder")
 	println( "   setup()              : Install any new Scripts after updating your Anatta version.")
@@ -165,7 +165,7 @@ function askme()
 		pose(session.activities[session.current_act])		# Display activity text
 	else
 		# Current activity was the last in the lab - go to next lab:
-		nextlab()
+		lab!()
 	end
 end
 
@@ -210,18 +210,18 @@ function reply( response=nothing)
 
 	# Whether response was correct, incorrect or missing, we're moving to the next activity:
 	println( "Let's move on ...\n")
-	nextact()
+	act!()
 end
 
 #-----------------------------------------------------------------------------------------
 """
-	nextact( act::Int = 0)
+	act!( act::Int = 0)
 
 Move to the next activity.
 If act is provided, move to that number activity, otherwise move to the next activity in
 this lab. If that takes you beyond the end of this lab, move to the beginning of the next lab.
 """
-function nextact( act::Int = 0)
+function act!( act::Int = 0)
 	if act ≤ 0
 		# act is not an activity, but a step forward (=0) or backward (<0):
 		act = max( 1, session.current_act + (iszero(act) ? 1 : act))
@@ -235,19 +235,19 @@ function nextact( act::Int = 0)
 	else
 		# We've completed last activity - go to next lab:
 		println( "That's the end of lab ", session.lab_num, ". Just preparing the next lab ...")
-		nextlab()
+		lab!()
 	end
 end
 
 #-----------------------------------------------------------------------------------------
 """
-	nextlab( lab_num::Int = -1, current_act::Int = 1)
+	lab!( lab_num::Int = -1, current_act::Int = 1)
 
 Move to the beginning of the next lab.
 If lab_num is specified, move to that number lab, otherwise move to the next lab. If that takes
 you beyond the end of the available labs, stay where you are and inform the learner.
 """
-function nextlab( lab_num::Int = -1, current_act::Int = 1)
+function lab!( lab_num::Int = -1, current_act::Int = 1)
 	if lab_num < 0
 		# No lab given - default to next lab after the current one:
 		lab_num = session.lab_num + 1

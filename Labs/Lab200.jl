@@ -1,215 +1,411 @@
 #========================================================================================#
-#	Laboratory 200
+#	Laboratory 200: Welcome to Subject 100: Formal structures
 #
-# Welcome to course 200: An Introduction to Physics!
+# This Subject draws heavily upon the ideas in the following excellent book:
+#   Gonczarowski, Y.A. & Nisan, N. (2022). Mathematical logic through Python. CUP.
 #
-# Author: Niall Palfreyman, 24/04/2022
+# Author: Niall Palfreyman, 8/11/2024.
 #========================================================================================#
+let
+include("../src/dev/Logic/Propositions.jl")
+parse_tests = [
+    ("~p211","~p211",""),
+    ("((a02|a5)->~a11)","((a02 | a5) -> ~a11)",""),
+    ("((b|b5))", nothing, ""),
+    ("c&","c","&"),
+    ("~~~d~","~~~d","~")
+]
 [
     Activity(
         """
         Hi! Welcome to Anatta Subject 200:
-            System dynamics - Dynamical stories can fill logical gaps
+            Formal structures - There is Always a gap between structure and experience
         
-        In Subject 100, we learned about Kurt Gödel's Incompleteness Theorems. These theorems form
-        the foundation of 21st-century mathematics; they show that EVERY structural system is
-        necessarily incomplete. In other words, whenever we construct some structure, we build it
-        by using structural relations to link together a countable number of concepts. This number
-        may be infinite, but it is necessarily only COUNTABLY infinite. This makes it impossible
-        for our structure to describe any situations that possess an UNcountable number of states.
+        Before continuing, I want to stop and think for a moment about what we have so far achieved
+        in Anatta. In Subject 000, we learned to use the Julia computer language to solve many
+        different kinds of problems, yet we also found that there are some problems that we cannot
+        solve with a computer - for example, predicting the outcome of a chaotic process. So it
+        seems that computational structures may not be powerful enough to describe all the possible
+        dynamical situations that we biological organisms must cope with.
+        
+        What do you think: might this be a problem for us as living organisms?
+        """,
+        "There's no right or wrong answer here - I just want you thinking about the issues involved.",
+        x -> true
+    ),
+    Activity(
+        """
+        In Subject 100, we study an important tension that faces all organisms: In order to survive
+        and to communicate with each other, we divide our experience into convenient structures
+        such as tables, chairs and tigers, yet we can never be quite sure whether these structures
+        describe "what is out there" accurately enough to cope with the survival-relevant processes
+        that we might have to face tomorrow.
 
-        Examples of such uncountable states are irrational or transcendental numbers such as √2 or
-        π, when a tap will next drip, living processes or even simply timing the boiling of an egg!
-        All these uncountable systems have an interesting aspect in common: they all involve the
-        unfolding over time of a dynamical Story. And stories are what Subject 200 is all about! :)
+        To investigate this tension, we shall define very precisely in lab 100 the language of
+        mathematical Logic. This language is of course not the language that bacteria, squirrels
+        or even humans use to communicate; however, it has all the basic components of all
+        languages: nouns, verbs and adjectives. Also, it is simple enough for us to be able to
+        define very precisely its sentence structure and the meaning of those sentences. We can
+        therefore use it as a test case for language structures to discover whether there is any
+        essential gap between structures and their meaning ...
         """,
         "",
         x -> true
     ),
     Activity(
         """
-        What do I mean by the unfolding of a dynamical story? Well, suppose you and your partner
-        both walk at precisely the same speed, but whereas your partner walks around the edge of a
-        perfectly circular park, you take a straight path directly through the middle of the park.
-        What is the ratio of their walking time to yours?
-        """,
-        "They walk round the circumference of the circle; you walk straight along its diameter",
-        x -> abs(x-pi/2) < 0.1
-    ),
-    Activity(
-        """
-        As you see, in this particular case, the transcendental number π/2 arises by comparing what
-        happens in a time-developing story of two participants. All non-countable phenomena arise in
-        this dynamical way, for example: How do we time the boiling of an egg? We allow the elastic
-        or electric dynamical processes of a clock's spring or capacitor to follow their own story
-        until the clock's hands point to specific numbers on its face. In general:
-        -   Structural Procedures calculate accurate answers to Countable questions;
-        -   Narrative (i.e., story) Processes develop accurate outcomes of Non-Countable situations.
+        Ferdinand de Saussure (1857-1913) suggested the idea that languages consist of signs
+        that possess two parts: a Signifier (a linguistic structure such as a word), and a
+        Signified (the meaning of that word). This idea developed during the twentieth century 
+        into the subject of Formal Linguistics, which divides the study of languages into two
+        separate areas:
+            - Syntax is the study of the formal structure of what we believe;
+            - Semantics is the study of the meanings signified by these syntactic forms.
+
+        In this lab, we explore the syntax of beliefs; in later labs, we look at their semantics.
         """,
         "",
         x -> true
     ),
     Activity(
         """
-        This seems like very good news indeed: narrative processes can fill in the logical gaps
-        left by logical structures. This is, indeed, exactly how science works - we use physical
-        experiments to fill in the gaps in our theories. However, we must also remember that in
-        order to discover the outcome of a narrative process, we need to MEASURE something, which
-        turns a non-countable value into a countable measurement. So perhaps it would be more
-        accurate to express the advantages of narrative processes like this:
-        -   By modelling narrative processes structurally (i.e., on a computer), we can calculate
-            answers to non-countable questions with ARBITRARY accuracy.
-            
-        We call this way of answering questions Simulation.
+        We will start off by thinking about a very simple language called Propositional Logic.
+        Propositional Logic is made up of sentences (Propositions) that can be either true ("T") or
+        false ("F"). We can also use the connectives "and" (&), "or" (|) and "not" (~) to link
+        together existing sentences into new ones. Here is an example proposition:
+            s1 = "If Ani goes to school, she walks to the bus-stop and takes the 465 bus."
+
+        We can construct s1 by linking together three simpler propositions:
+            p1 = "Ani goes to school"
+            p2 = "Ani walks to the bus-stop"
+            p3 = "Ani takes the 465 bus"
+
+        each of which is again definitely either true or false.
         """,
         "",
         x -> true
     ),
     Activity(
         """
-        Let's see how simulation works in a very simple case. Imagine Leicester City Council has
-        just counted the number of rabbits in Watermead Country Park as being 1000. The council
-        wants to know how this rabbit population will impact their city development plans over the
-        coming 8 years, and commissions us to forecast how it will develop over this period.
-        
-        Now, the development of any living population depends on many factors such as fertility,
-        mortality, predation, migration and so on. To simplify our model, we will reduce all these
-        factors down to two: births and (natural) deaths.
+        We can write the proposition s1 as a logical connection between the simpler propositions:
+            s1 = (p1 -> (p2 & p3))
 
-        To explain this model to the City Council, we draw the Structure-Process Diagram (SPD)
-        shown in Script200 in your Scripts directory. Take a look at this SPD now, and reply() me
-        the name of the Stock shown as a bubble in the centre of the diagram:
-        """,
-        "The bubble contains two names: the mathematical and the text name. Either will do :)",
-        x -> x == "u" || x == "Rabbits"
-    ),
-    Activity(
-        """
-        The elliptical stocks in this diagram represent the State Variables u[1], u[2], u[3], ...
-        of the system we are modelling. In our case, we have only one state variable, u, so I
-        have left away the vector indices.
+        In other words: "p1 implies that both p2 and p3." The aim of propositional logic is to help
+        us prove conclusions from the sentence s1 such as:
+            "If Ani doesn't walk to the bus-stop or doesn't take the 465 bus, she doesn't go to school"
 
-        Think of a stock as a bubble that water flows into and out of. The flow "births" represents
-        water flowing into the bubble, and the flow "deaths" represents water flowing out of the
-        bubble. The greater the flow, the faster it changes the level of water in the bubble.
-
-        We say that flows "cause" changes in the level of stocks. This means that a flow does not
-        determine the actual value of the stock, but instead, it determines the CHANGE in value of
-        the stock. What is mathematical name have I given to the flow "births"?
+        To achieve this, we will use julia Strings to denote propositional sentences, and then we
+        will program a way to analyse these sentences into well-formed propositional formulas. In
+        the next activity, I'll show you a set of grammar rules that define the structure of a
+        Well-Formed Formula (WFF) ...
         """,
         "",
-        x -> x=='b' || x=="b"
-    ),
-    Activity(
-        """
-        OK, so flows cause changes in stocks. In fact, quite generally:
-            EVERY flow is a term in the differential equations that describe the system's dynamics!
-
-        If you look lower at the single dynamical flow equation for the Rabbits system, you can
-        see that the rate of change of u (du/dt) is given by a positive term for the inflow births
-        and a negative term for the outflow deaths. We call this the Input-Output Principle:
-            du/dt = Sum of all inflows - (Sum of all outflows)
-
-        In other words, the rate of change of a state variable u is given by the sum of the various
-        positive and negative causal influences on u. We often implement the structural relations
-        specifying these causal flow values as additonal methods. For example, we might implement a
-        method deaths() to calculate the total death-rate of the rabbits. By which number would
-        this method need to divide the current number of rabbits (u)?
-        """,
-        "How long does each rabbit live?",
-        x -> x=='L' || x=="L"
-    ),
-    Activity(
-        """
-        We have seen that to define a dynamical model, we need stocks, flows and methods, but in
-        the end, our calculations must depend upon actual measured values that we call PARAMETERS.
-        The lifespan L of a typical rabbit is fairly easy: rabbits live about 4 years, which is
-        48 months. But what about the specific, or per-capita, birthrate (r) of rabbits?
-        
-        To calculate this, we need to investigate a little deeper. The specific birthrate is the
-        number of children that a typical rabbit produces in a typical month. On average, a single
-        mating pair of rabbits will produce during their entire life about 4 kits (or babies) that
-        actually survive in the wild. How many kits is this per rabbit per month?
-        """,
-        "Remember that we need the number of kits per individual rabbit",
-        x -> abs(x-0.0417) < 0.001
-    ),
-    Activity(
-        """
-        We have now collected all the information we need to build and run a dynamical model of
-        the Watermead Country Park rabbit population. Before we build our model, it is VERY
-        important that we first construct a Reference Narrative (RN) for the model. That is: How
-        SHOULD our model behave? Are there special circumstances where we already know what kind of
-        behaviour to expect from out model? If so, we can use this to verify our model's accuracy.
-
-        For example: What kind of BOT curve would we expect from the model if there were no births,
-        but only deaths?
-        """,
-        "What is the mathematical term for this behaviour?",
-        x -> occursin("exp",lowercase(x)) && occursin("decay",lowercase(x))
-    ),
-    Activity(
-        """
-        Here is another easy reference narrative: What kind of BOT curve would we expect from our
-        model if there were no deaths, but only births?
-        """,
-        "What is the mathematical term for this behaviour?",
-        x -> occursin("exp",lowercase(x)) && occursin("grow",lowercase(x))
-    ),
-    Activity(
-        """
-        Now we can start building our dynamical model of the Watermead Country Park rabbit
-        population. We will then use these two reference modes of exponential growth and decay to
-        test whether the model is behaving as it should.
-        
-        I have set up a template for the Rabbits model in the file SD/Rabbits.jl. To work with this
-        file, you first need to setup() the SD folder in your Anatta home Development directory.
-
-        When you have done this, study carefully the structure of the Rabbits module. Notice that
-        it contains a list of initial values of the stocks. Of course, in our simple model we have
-        only one stock - the number of rabbits - but in general, our models may contain many stocks
-        that together form a vector u of their individual values. Notice as well that we define a
-        dynamical rule flow!() that our model will use to update the values of this state vector u.
-
-        Notice in particular, that the dynamical rule must ALWAYS return which value?
-        """,
-        "What value does my dynamical rule return?",
-        x -> x===nothing
-    ),
-    Activity(
-        """
-        Now fill in all values that we have defined for our dynamical model, and then run the model
-        and reply() me the number of rabbits in Watermead Country Park after 8 years:
-        """,
-        "",
-        x -> 7000 < x < 8000
-    ),
-    Activity(
-        """
-        OK, now this number seems a little large for Watermead Park to sustain. We ought to check
-        our model using the reference modes. Test the decay reference mode now. That is: does the
-        population fall to zero if we set births to zero?
-        """,
-        "You may need to increase the duration of the simulation to check this",
-        x -> occursin('y',lowercase(x))
-    ),
-    Activity(
-        """
-        Is this decay exponential? You can test this by plotting an additional line in the same
-        axes, representing the quanity log(u). If the decay of u is exponential, then the graph of
-        log(u) should have which shape?
-        """,
-        "What is log(exp(-t))?",
-        x -> occursin("straight",lowercase(x))
-    ),
-    Activity(
-        """
-        The behaviour of the model seems to match our expectations. Of course, with this very
-        simple model, we have the advantage that we can test the numerical output of the
-        model against the exact solution shown at the end of Script200. Do this now, and find a way
-        of correcting any discrepancies you may find between the exact and the numerical solutions.
-        """,
-        "What can we do to make DynamicalSystem's numerical integration more accurate?",
         x -> true
+    ),
+    Activity(
+        """
+        Here is a set of grammar rules that define the structure of a WFF. In these rules, the symbol
+        ':' means "can be a ...", ';' means "or ...", and '*' means "concatenated with ..." :
+            wff         : variable; constant; unary_expr; binary_expr.
+            variable    : letter * number.
+            constant    : "T"; "F".
+            unary_wff   : "~" * wff.
+            binary_wff  : "("*wff * " & " * wff*")"; "("*wff * " | " *wff*")"; "("*wff * " -> " * wff*")".
+            letter      : "a"; "b"; "c"; ...; "x"; "y"; "z".
+            number      : digit; digit * number.
+            digit       : "0"; "1"; "2"; "3"; "4"; "5"; "6"; "7"; "8"; "9".
+
+        reply() me a String containing a valid constant.
+        """,
+        "Enter reply(string), where string obeys the above rules for a constant (no spaces!)",
+        x -> Propositions.isconstant(x)
+    ),
+    Activity(
+        """
+        Now reply() me a String containing the name of a valid variable.
+        """,
+        "Enter reply(string), where string obeys the above rules for a variable",
+        x -> Propositions.isvariable(x)
+    ),
+    Activity(
+        """
+        The single available unary operator means NOT, so
+            ~p3 means: "It is NOT the case that Ani takes the 465 bus"
+
+        reply() me the wff meaning "It is NOT the case that Ani goes to school":
+        """,
+        "You might need to scroll up a bit to remind yourself of the wff names",
+        x -> x == "~p1"
+    ),
+    Activity(
+        """
+        The available binary operators are "&" (AND), "|" (OR) and "->" (IMPLIES), so
+            (p2 & p3) means: "Ani walks to the bus-stop AND Ani takes the 465 bus"
+
+        reply() me ANY binary operator:
+        """,
+        "Remember that we are working specifically with String structures at the moment",
+        x -> Propositions.isbinary(x)
+    ),
+    Activity(
+        """
+        Over the last four activities, I have been checking your replies using the following
+        methods implemented in the module Propositions:
+            isconstant(), isvariable(), isunary() and isbinary()
+
+        Soon, I will ask you to implement some extra methods in the Propositions module, so please
+        now setup() the Logic library in your Anatta home folder, open the file Propositions.jl in
+        VSC and study the above four methods.
+
+        What is the name of the method I use to check whether a variable name ends in a number?
+        """,
+        "Remember that a variable consists of a letter concatenated with a number",
+        x -> x==Main.tryparse || occursin("tryparse",x)
+    ),
+    Activity(
+        """
+        To prepare for the implementation activities, make sure your julia console is located
+        within your Anatta home folder, then include and load the Propositions module:
+            include("Development/Logic/Propositions.jl")
+            using .Propositions
+        """,
+        "Follow all THREE instructions (home, include, using), then reply()",
+        x -> isfile("Development/Logic/Propositions.jl") && Main.Propositions.WFF isa Type
+    ),
+    Activity(
+        """
+        In the Propositions module, I have also defined a type WFF that stores well-formed formulae
+        in a tree structure. Study that definition in VSC, then enter the following line at the
+        julia prompt, which creates the WFF with string representation "~(s271 & s465)":
+            wff = WFF("~",WFF("&",WFF("s271"),WFF("s465")))
+        
+        Now first guess, and then reply() me the value of the following expression:
+            wff.arg1.arg1.head
+        """,
+        "Make sure you understand how this value relates to the definition of wff",
+        x -> x == "s271"
+    ),
+    Activity(
+        """
+        Before starting on your own implementation, I want you to understand how Very Important it
+        will be for us to use Recursion when we are analysing structures. Enter `wff` at the julia
+        prompt now, and notice that the representation you see is formatted prettily as a string ...
+
+        You should see the string: "~(s271 & s465)". Now, answer me this:
+            Which method in the Propositions module specifies how to convert a WFF into a String?
+        """,
+        "Take a look in the file Propositions.jl in VSC",
+        x -> x == Base.show || occursin("show",x)
+    ),
+    Activity(
+        """
+        Take a look at the method Base.show() in Propositions. This method extends the show()
+        method from the julia module Base, which is usually responsible for converting variables
+        into a String. However, since Base knows nothing about our WFF type, we must extend show()
+        to handle WFFs.
+
+        Notice the structure of the method Propositions.Base.show(). Do you see how it uses an if-
+        statement to choose how to handle wff? If wff were a variable or a constant, show() would
+        simply print the corresponding string. However, if wff were a binary formula, show() would
+        ask print() to link the individual arguments with the binary operator and place them
+        between brackets. And if print() discovers that arg1 is a WFF, it simply goes back to show()
+        to ask it how to print this new WFF as a string.
+
+            YOU will also need to use recursion to handle nested WFF structures in your code!
+
+        Test the show() method now by replying me the following String result:
+            string(WFF("->",WFF("->",WFF("p"),WFF("q")),WFF("->",WFF("~",WFF("q")),WFF("~",WFF("p")))))
+        """,
+        "Think carefully about how show() handles this WFF, and also consider the WFF's meaning",
+        x -> x == "((p -> q) -> (~q -> ~p))"
+    ),
+    Activity(
+        """
+        All of your coding exercises in these julia modules are marked with the following comment:
+            # Learning activity:
+            Stub code ...
+
+        "Stub code" is placeholder code that I have written to satisfy four conditions:
+        -   You can call the (unimplemented) method without raising any internal errors;
+        -   It does NOT implement the method's execution requirements: that's your job! :)
+        -   It gives you some implementation hints - like the control structure in the first activity;
+        -   When you call the module's demo() method, the screen output is still informative.
+        
+        reply() me now the method that contains the very first Learning activity in the file
+        Propositions.jl:
+        """,
+        "",
+        x -> x==Main.variables
+    ),
+    Activity(
+        """
+        OK, so now it's your turn to write some code - and remember that you'll need to use recursion!
+        
+        In the file Propositions.jl is the method Propositions.variables() which at present just
+        contains stub code. The aim of variables() is to return the Set of all variable names that
+        appear in a given WFF. Using our previous definition of wff:
+            wff = WFF("~",WFF("&",WFF("s271"),WFF("s465"))),
+
+        entering `variables(wff)` at the julia prompt should return: Set(["s271","s465"]). Write
+        your own implementation of `variables`, and when you are satisfied with your code, include
+        Propositions.jl, enter reply(), then I will perform my own check of your code to let you
+        know whether it passes my tests.
+        """,
+        "You will need to use recursion: variables(wff) calls itself on each argument of wff",
+        x -> let MFF = Main.Propositions.WFF
+            wff = MFF("|",MFF("~",MFF("->",MFF("p1"),MFF("q2"))),MFF("F"))
+            varset = Main.Propositions.variables(wff)
+            println("Testing variables in WFF ", wff, " ... ", "Returned result: ", varset)
+            varset == Set(["p1","q2"])
+        end
+    ),
+    Activity(
+        """
+        Now implement the method Propositions.operators(), which returns the Set of all operators that
+        appear in a WFF. By operators, I mean the following:
+            "&", "|", "~", "->", "T", "F"
+        
+        When you have successfully completed the implementation, entering `operators(wff)` at the
+        julia prompt should return the result: Set(["~","&"]). Then enter reply(), and I will
+        perform my own test of your code and let you know how it went.
+        """,
+        "Again, you need recursion: operators(wff) calls itself on each argument of wff",
+        x -> let MFF = Main.Propositions.WFF,
+            wff = MFF("|",MFF("~",MFF("->",MFF("p"),MFF("~",MFF("q")))),MFF("F"))
+            opset = Main.Propositions.operators(wff)
+            println("Testing operators in WFF ", wff, " ... ", "Returned result: ", opset)
+            opset == Set(["|","~","->","F"])
+        end
+    ),
+    Activity(
+        """
+        Great! We know how to use recursion to analyse the structure of a WFF: Give yourself a good
+        pat on the back! :)
+        
+        Our next task is to work out how to build a WFF from a String - this is called Parsing the
+        the String's structure. Parsing is extremely important in all formal languages, and
+        particularly in string-manipulation languages such as julia. Reply me the method that
+        julia uses to parse a string containing julia code:
+        """,
+        "Rather than giving me the name of the method, give me the method itself",
+        x -> x == Meta.parse
+    ),
+    Activity(
+        """
+        Our language for propositional logic is deliberately very simple. Sentence strings in this
+        language contain characters, and these characters form meaningful Tokens of the language,
+        such as "&", "q123" or "->". A very important feature of our language is that it is
+        Context-Free - that is, the meaning of each term of a sentence is attached ONLY to that
+        term, and never depends on the surrounding sentence context in which that term appears.
+
+        For example, take a look at this part of our propositional logic grammar:
+            wff         : variable; constant; unary_expr; binary_expr.
+            unary_wff   : "~" * wff.
+            binary_wff  : "("*wff * "&" * wff*")"; "("*wff * "|" *wff*")"; "("*wff * "->" * wff*")".
+
+        Notice that a binary_wff has the structure of two wff terms combined by a binary operator,
+        enclosed between brackets. The structures of these two terms are completely independent of
+        each other, so we can parse the first term without needing to think about the second term.
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        So our Propositional Logic language is entirely context-free, and this is very useful for
+        parsing sentence structures. To Parse a string means that we analyse the wff structure that
+        it describes, and simultaneously build that structure as a wff. The fact that our language
+        is context-free means that we can ALWAYS parse strings by moving strictly from left to
+        right. This is called "LL parsing": we both read the string and build its wff by starting
+        from its Left end, then moving steadily rightwards along the string.
+
+        For example, take a look now at the code for the learning activity method parse_binary().
+        You will see that the code first asks whether the string contains a leading '('. If that is
+        the case, the grammar rules tell us that the open bracket MUST be followed by a WFF,
+        followed by a binary operator ("&", "|", "->"), another WFF, and a closing bracket ')'. If
+        the string does not have precisely this structure, it does not represent a valid WFF.
+
+        What single character at the Left end of a string tells us that it describes a unary_wff?
+        """,
+        "",
+        x -> occursin('~',x)
+    ),
+    Activity(
+        """
+        If you study the code in Propositions.jl, you will see that I have implemented all of the
+        methods for parsing propositions apart from parse_binary(). Study all the methods that
+        I have implemented, to get a feel for how they work together to parse a string into a wff.
+        When you understand how parsing works, your next task is to use my parsing methods as
+        models to help you write your own implmentation of the method parse_binary().
+
+        Your parse_binary() implementation should do the following:
+        -   It accepts a single string as argument, and returns a Tuple containing two items;
+        =   It attempts to parse the string as a binary expression (either (wff1 & wff2),
+            (wff1 | wff2) or (wff1 -> wff2) ) at the string's Left end. If this parsing is
+            successful, the return Tuple looks like this: (wff::WFF,tail::String), where wff is the
+            parsed WFF and tail is the remainder string to the right of the parsed wff.
+        -   If parse_binary() cannot parse the string as a binary expression, it returns a Tuple
+            (nothing,"error msg"), whose first element is `nothing`, and whose second element is an
+            error string which helps users to understand what went wrong.
+        
+        Implement parse_binary() now, then load your new Propositions module and reply() me. I will
+        then perform my own tests on your code:
+        """,
+        "A binary_wff looks like this: (p5 & wff). Use parse_wff() to parse the terms p5 and wff.",
+        x -> begin 
+            for (s,w,r) in parse_tests
+                ww, rr = Main.Propositions.parse_wff(s)
+                print("Testing your parsing of ", s, " ... ")
+                if (string(ww)!==string(w)) || (ww!==nothing && r!=rr)
+                    println( "Returned result ", (ww,rr), " instead of: ", (w,r))
+                    return false
+                end
+                println()
+            end
+            println( "All tests passed with flying colours! :)")
+            true
+        end
+    ),
+    Activity(
+        """
+        Congratulations!! You have just successfully implemented an LL-parser for the entire
+        language (PL) of Propositional Logic. Well done!!
+
+        Before finishing this lab, take a moment to think a little about what your work proves ...
+        Our language PL for describing WFFs has the useful property that we can always recognise a
+        complete WFF by reading its PL description from left to right. This means that the trailing
+        tail-string at the end of a well-formed PL sentence is ALWAYS empty. For if it weren't, the
+        constructed WFF would be incomplete. Your work therefore proves the following important
+        theorem about WFFs:
+            As soon as we have recognised a WFF, it can NEVER be the first term in a longer WFF!
+
+        Use this theorem together with the method parse_wff() to implement the two methods iswff()
+        and parse(). Their specifications and skeleton code are contained in Propositions.jl.
+        """,
+        "Again, just implement the two methods, then reply() me, and I will check your code.",
+        x -> begin
+            for (s,w,r) in parse_tests
+                err = isnothing(w)
+                has_tail = !isempty(r)
+                is_wff = !err && !has_tail
+                print("Testing your iswff( \"$s\") ... ")
+                if Main.Propositions.iswff(s) != is_wff
+                    println( "Returned result ", !is_wff, " instead of: ", is_wff)
+                    return false
+                end
+                println()
+                if is_wff
+                    print("Testing your parse( WFF, \"$s\") ... ")
+                    ww = Main.Propositions.parse(Main.Propositions.WFF,s)
+                    if string(ww) != w
+                        println( "Returned result ", ww, " instead of: ", w)
+                        return false
+                    end
+                    println()
+                end
+            end
+            true
+        end
     ),
 ]
+end

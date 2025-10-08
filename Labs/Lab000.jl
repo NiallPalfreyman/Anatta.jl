@@ -31,7 +31,7 @@
     ),
     Activity(
         """
-        "Anatta" means: "Has no substantial structure".
+        "Anatta" means: "Has no material structure".
         
         Anatta is a philosophical position based on two interwoven ideas:
             i)  scientific knowledge is not Truth, but is rather something that living organisms
@@ -40,7 +40,7 @@
                 or shorter duration.
             
         These two ideas completely change the way we understand the world. We can immediately see
-        that together they mean we must find a new way of evaluating Knowledge. For we can no
+        that together they mean we must find a new way of evaluating Knowledge, since we can no
         longer think of knowledge as being true or false. Instead, we must think of knowledge as
         being more or less useful to us, as we try to protect our biological processes against
         external danger from our environment.
@@ -57,16 +57,17 @@
         """
         While exploring Anatta, we will investigate this question very deeply. To help us do so,
         I have divided our exploration into Subjects that build successively upon each other. Each
-        Subject corresponds roughly to a 5-credit undergraduate-level lecture course:
-            Subject 0: Computation            - We use belief structures to explore and predict experience
-            Subject 1: Formal structures      - There is Always a gap between structure and experience
-            Subject 2: System dynamics        - Dynamical stories can fill structural gaps
-            Subject 3: Simulation physics     - Structures can approximate stories efficiently
-            Subject 4: Quantum computing      - Simple stories can generate complex structures
-            Subject 5: Quantum thermodynamics - Simple structures can generate complex stories
-            Subject 6: Enactive dynamics      - Belief is a property of collectives, not individuals
-            Subject 7: Relativity theory      - Organisms ENACT: they abstract belief through action
-            Subject 8: Quantum-field theory   - Belief combines simple structures and complex stories
+        Subject supports the learning contained in a typical 5-credit undergraduate-level lecture
+        course:
+            Subject 0: Mathematics              - Mathemtaics abstracts structure from experience
+            Subject 1: Computation              - We use structure to discuss and predict experience
+            Subject 2: Formal structures        - There is Always a gap between structure and experience
+            Subject 3: Enactive dynamics        - Belief is a property of collectives, not individuals
+            Subject 4: System dynamics          - Dynamical stories can fill structural gaps
+            Subject 5: Covariant physics        - Organisms ENACT: they abstract belief through action
+            Subject 6: Quantum computing        - Simple stories can generate complex structures
+            Subject 7: Quantum thermodynamics   - Simple structures can generate complex stories
+            Subject 8: Quantum-field theory     - Belief combines simple structures and complex stories
         """,
         "reply() to move on :)",
         x -> true

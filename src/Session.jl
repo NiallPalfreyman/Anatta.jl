@@ -140,6 +140,9 @@ function congratulate()
 		"Good job!",
 		"Good work!",
 		"Nicely done!",
+		"Wow - that's great! :)",
+		"Wonderful - well done!",
+		"That'll do, Pig, that'll do! ;)",
 		"Yay! Well done!",
 	]
 

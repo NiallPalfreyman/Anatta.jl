@@ -1,366 +1,399 @@
 #========================================================================================#
 #	Laboratory 10
 #
-# Data visualisation and concrete data types
+# Mathematical thinking
+# (Based entirely on the book Mathematics Rebooted by Lara Alcock, 2017, OUP)
 #
-# Author: Niall Palfreyman, 06/09/2022
+# Author: Niall Palfreyman, April 2025.
 #========================================================================================#
+let
+include("../src/Development/Mathematics/MathTools.jl")
+using DataFrames
 [
     Activity(
         """
-        Hi! Welcome to Anatta Lab 010: Visualising data graphically
+        Hi! Welcome to Anatta Lab 010: Thinking about mathematics
 
-        In this laboratory we learn how to use Julia's Makie plotting package to create graphical
-        displays for data visualisation. Makie is the front-end for several different backend
-        graphics packages - for example, Cairo, GL and WebGL. We shall focus here on GLMakie,
-        which we now load with the following command:
-            using GLMakie
-
-        Be forewarned that the first time you do this, it may take a while, since GLMakie is quite
-        a large library ...
+        From here on in this Subject, we shall use our knowledge of computation and programming
+        to think about the Mathematics. Mathematics is the scientific study of structure, and
+        to understand it, we shall use the rather brilliant ideas in the small book "Mathematics
+        Rebooted" by Lara Alcock (2017). Prepare to to have some fun thinking about maths ... :)
         """,
-        "",
-        x -> true
     ),
     Activity(
         """
-        julia uses Just-in-Time (JiT) compilation, so the first time you call a graphics method, it
-        will always take longer than later calls. Enter the following command (being sure to
-        include the semicolon at the end!), then tell me the type of the return value fig:
-            fig = scatterlines( 0:10, (0:10).^2);
+        Have you ever heard of Pythagoras's Theorem? Or Fermat's Last Theorem? These are famous
+        examples of the central activity of mathematics: to prove statements about structure that
+        anyone, anywhere can use to solve problems. A Theorem is simply a Provably True
+        mathematical statement such as:
+            Theorem: The sum of two even numbers is always even.
+            Theorem: A number is divisible by 9 if and only if the sum of its digits is divisible by 9.
+
+        In this lab, we will learn about Pythagoras's Theorem and Fermat's Last Theorem by thinking
+        about a subject you are already quite familiar with: Multiplying.
+
+        Tell me whether you think the following statement is a true or false statement about numbers:
+            If you multiply one odd number by another odd number, the result is an odd number!
         """,
-        "Enter the command exactly as I have done here",
-        x -> x==Main.Makie.FigureAxisPlot
+        "Try out a few examples for yourself",
+        x -> (x isa Bool) && x || x=="true"
     ),
     Activity(
         """
-        This type description tells us that fig contains a graphics object; the only reason you can't
-        see this object is because of that semicolon you included. As always, a semicolon at the end
-        of a function call prevents the function's value being returned from the function-call.
-
-        A Makie plotting command such as scatterlines() creates three things: a Plot object such as
-        a curve or a text box; the Axis system inside which Makie draws the various Plot objects;
-        and a displayable Figure that contains one or more Axis systems. When we display our
-        Figure, it already contains one or more Axis systems, and one of these Axis systems
-        contains our scatterlines Plot.
-
-        Let's study this internal structure a little - reply() me the fieldnames of the Figure
-        structure `fig`:
-            fieldnames(typeof(fig))
+        Shown below is an Array diagram of the muliplication (3*5), showing 3 rows of 5 asterisks.
+        Now tell me: How many stars are there in this array diagram?
         """,
-        "",
-        x -> x == (:figure,:axis,:plot)
+        :(MathTools.array_diagram(fill('*',3,5))),
+        "Try counting them! :)",
+        x -> x==15
     ),
     Activity(
         """
-        Now we know about the structure of Figures, let's display our figure in graphical form.
-        Simply ask the julia prompt to display the value of fig:
-            fig
-
-        Doesn't it look pretty? :) What is the return type of the graphic you have just displayed?
+        Here is a new array diagram of the muliplication (5*3), showing 5 rows of 3 stars. Now tell
+        me: How many stars are in this diagram?
         """,
-        "typeof(ans)",
-        x -> x <: Main.Makie.FigureAxisPlot
+        :(MathTools.array_diagram(fill('*',5,3))),
+        "Try counting them! :)",
+        x -> x==15
     ),
     Activity(
         """
-        Our figure is still a little primitive - let's customise its attributes. First capture
-        the three different fields contained in fig, so that we can manipulate them for ourselves:
-            fg,ax,plt = fig;
+        You may think this result seems a little trivial, but isn't it really quite brilliant?
+        Just by turning your head on its side, you can see that 3*5 has exactly the same value as
+        5*3 ! And, of course, this is true of the product (m*n) of Any two integers (that is,
+        whole numbers) m and n! :-o
 
-        Every plot object (curve, text, etc.) has a whole bunch of attributes that we can adjust,
-        like colour, thickness, dotted line, and so on. Check out the `attributes` field of plt to
-        find out how many different attributes it has:
+        Since we can represent the product of any two integers m and n as an array of rows and
+        columns, we know that we can Always swap the order of multiplication:
+            m * n == n * m
+
+        We describe this swapping property by saying that multiplying is c_________e!
         """,
-        "",
-        x -> x >= 14
+        "reply() me the correct word as a string",
+        x -> occursin("commut",lowercase(x))
     ),
     Activity(
         """
-        We can inspect the available plot attributes by pressing the '?' character. Try:
-            ? scatterlines
+        Multiplication is Commutative. That is to say, we can swap the two numbers in a product
+        without it changing the product's value at all! And guess what? This commutative property
+        saves us a Huge amount of work! Let me tell you a little secret ...
 
-        As you see, scatterlines shares many attributes with the lines() command (a scatterline is
-        a line with marker points scattered along it), so we can get even more information by
-        looking up help on lines:
-            ? lines
-
-        Which attribute would you change if you wanted your graph curve to be a dotted line:
-        """,
-        "Study the list of attributes in help",
-        x -> x=="linestyle"
-    ),
-    Activity(
-        """
-        Now we'll use this information on line attributes to replot our curve. Try entering this:
-            fig = scatterlines(0:10,(0:10).^2,color=:red)
-
-        Now replot this graph using a line with thickness 9-point, then tell me exactly which value
-        you needed to assign to the relevant attribute in order to do this:
-        """,
-        "The important point here is that numbers are already symbols, so you don't need the colon",
-        x -> x==9
-    ),
-    Activity(
-        """
-        It might be useful to save our curve to a picture file, but to do this, we first need to
-        check out the filesystem. Enter the Present Working Directory command:
-            pwd()
-
-        In the chapter "Filesystem" of the Julia user manual you will find many other functions for
-        exploring the filesystem. If you are not currently in your Anatta home folder, move there
-        now by entering home(). You may also choose to create a new subfolder named "Graphics" in
-        which to save your wonderful pictures. In this case, enter:
-            mkdir("Graphics")
-            cd("Graphics")
-
-        Now we are ready to save our Makie figure. Enter the following command, go and look at the
-        resulting file using Adobe Acrobat, then come back here and tell me the highest number on
-        the vertical axis:
-            save("myfig.jpg", fig)
-        """,
-        "",
-        x -> x==100
-    ),
-    Activity(
-        """
-        OK, now let's get fancy. We don't always want the scatter points on our plot, so we'll try
-        out the lines() function. Also, it would be nice to plot something a little more exciting,
-        like maybe the Hill kinetics that I have implemented in the file FunGraphics.jl in the
-        Computation folder. Hill kinetics are a generalisation of the Michaelis-Menten reaction
-        kinetics used in bioreactor engineering. Hill kinetics describe the effect of a catalyst on
-        a chemical reaction - in particular, they model the activation or inhibition of DNA
-        expression in biological cells by a transcription factor (tf).
-
-        In VSC, open FunGraphics.jl and take a look at the overall structure of the file. I highly
-        recommend that you use this file as a model for all modules you write in the future. You
-        can see that it contains three basic items:
-            -   a public (i.e., exported) data type HillTF, which stores all information needed to
-                calculate the catalytic effect of a range of transcription factor concentrations;
-            -   a private (i.e., not exported) utility method hill() for calculating Hill kinetics;
-            -   a public method expression() for calculating expression rates of the entire
-                range of transcription factor concentrations stored in a HillTF variable.
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        Inside the HillTF type definition, I have also defined a Constructor: a special function
-        that can construct new variables of the type HillTF. Compile and load the FunGraphics module,
-        that is, compile using the Play button in VSC, then enter `using .FunGraphics`. All public
-        (exported) services provided by the FunGraphics module are now available to you at the julia
-        command line. Enter the following line now, then reply() me the new HillTF variable tf:
-            tf = HillTF(0:30,5)
-        """,
-        "",
-        x -> x==Main.HillTF(0:30,5)
-    ),
-    Activity(
-        """
-        By the way, here's a fun fact: When I first implemented this lab, students were surprised
-        that I didn't accept their (perfectly correct) answers to the previous activity. The
-        reason was that I had forgotten to implement the comparison == between two HillTFs. Please
-        take a moment now to study my example in FunGraphics.jl of how to implement the comparison
-        between two instances of a custom type (i.e., a user-defined type) such as HillTF. You may
-        well want to do this sometime with a custom type of your own!
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        Remember that you have now defined your own HillTF instance like this:
-            tf = HillTF(0:30,5)
-
-        Now load GLMakie, and use this function call to visualise the kinetics of your Hill
-        transcription factor tf, which possesses the default values K=3 and n=1:
-            lines(tf.range,expression(tf))
-            
-        The plotted Hill kinetics converge to a maximum upper limit; what is this limit?
-        """,
-        "The limiting value will probably not be labelled, but should be obvious to you",
-        x -> x==1.0
-    ),
-    Activity(
-        """
-        The lines() function returns a Plot object: the line that is to be plotted. This line is
-        positioned within a set of axes: an Axis object. We can make our plot a little easier to
-        understand by using the keyword argument `axis` to add labels to this Axis object:
-            lines( tf.range, expression(tf), axis=(;xlabel="TF", ylabel="Expression rate"))
-
-        What is the value of the expression rate when the TF concentration reaches the value K=5?
-        """,
-        "Again, the value will not be labelled, but you should be able to estimate it",
-        x -> x==0.5
-    ),
-    Activity(
-        """
-        Use the following commands to visualise Hill kinetics for several different values of K,
-        while keeping n at the default value of 1.0, for example:
-            tf = HillTF(0:30,10)
-            lines( tf.range, expression(tf), axis=(;xlabel="TF", ylabel="Expression rate"))
-
-        Use your visualisations to verify that the value of K in the Hill function always specifies
-        the "half-response" level of transcription factor concentration, at which the expression
-        rate is equal to half of its maximum value. Study the hill() method to see why this is so.
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        We can brighten up our Hill graphs by adding some interesting keyword attributes:
-            lines( tf.range, expression(tf), color=:blue, linewidth=3, linestyle=:dash)
+        Mathematicians are fundamentally lazy - in fact, they are too lazy to fail!
         
-        Experiment with your lines() plot by changing the keyword arguments. What linestyle value
-        displays a line consisting of a sequence of two dots and a dash (-..-..-..-)?
-        """,
-        "Search for keyword arguments on the site: https://makie.juliaplots.org/",
-        x -> x==:dashdotdot
-    ),
-    Activity(
-        """
-        We can specify the value of n by specifying a third argument in our HillTF constructor,
-        for example:
-            tf = HillTF(0:30,5,2)
+        For instance, suppose you, as a mathematician, want to memorise the times-table of numbers
+        up to 10. Since 3*5 is the same as 5*3, you must only memorise the single product: 3*5 == 15
 
-        Use lines() to discover which value, n=1 or n=-1, corresponds to inhibition of expression
-        by the transcription factor, then tell me your answer
+        In fact, the 1's and 10's are so easy that you actually don't need to remember them at all!
+        Study this times-table and tell me how many distinct products you need to memorise:
         """,
-        "Plot the Hill curve for each of these two values of n, and study the difference",
-        x -> x == -1
+        quote
+            N = 10
+            DataFrame(
+                [((i in [1,N] || j in [1,N] || i>j) ? "." : string(i*j)) for i in 1:N, j in 1:N],
+                string.(1:N)
+            )
+        end,
+        x -> x==36
     ),
     Activity(
         """
-        Experiment with other keyword arguments of the lines() function, for example:
-            figure=(; figure_padding=5, backgroundcolor=:green, fontsize=20)
+        In particular, mathematicians dislike remembering facts - they prefer to reconstruct those
+        facts for themselves using general relationships. In fact,
+            Mathematics is the study of Structures, and how to discover, manipulate and use them.
+
+        Some structures are more useful than others. For example, our array of 3*5 asterisks shows
+        us immediately that 3*5 == 5*3. But that is not the case for this structure of 15 asterisks:
+        """,
+        :(MathTools.array_diagram(fill('*',1,15)))
+    ),
+    Activity(
+        """
+        Nor is it at all easy to see three fives in this random jumble of 15 asterisks:
+        """,
+        :(MathTools.array_diagram(fill('*',3,5),:jumble))
+    ),
+    Activity(
+        """
+        This brings us to another interesting point... We discover new structures by scanning our
+        experience for relationships that are Invariant (i.e., stay the same) when we look at them
+        in different ways. For example, look at the following alternative ways of looking at an
+        array of 15 asterisks, and notice how the number (15) of asterisks does Not Vary (i.e., is
+        invariant), whether we think of that array as consisting of columns or of rows:
+        """,
+        quote
+            MathTools.array_diagram(fill('*',3,5),:vbar)
+            println()
+            MathTools.array_diagram(fill('*',3,5),:hbar)
+        end,
+    ),
+    Activity(
+        """
+        In fact, the entire reason why commutativity is so useful, is because it describes an
+        Invariant property of products: The value of the product is invariant whether we think of
+        this array as 3 rows of 5, or 5 rows of 3, asterisks. In mathematics, it is helpful if we
+        can find structures like this array, that make invariances very easy to notice.
+
+        For example, the following structure makes it easy to notice that another operation between
+        numbers is also commutative. What is the name of this new commutative arithmeticoperation?
+            * * * * * * *!* * *
+
+            * * *!* * * * * * *
+        """,
+        x -> occursin("add",lowercase(x))
+    ),
+    Activity(
+        """
+        So both multiplication and addition are commutative. An example of a Non-commutative
+        arithmetic operation is Subtraction, since:
+            10 - 3 ≠ 3 - 10
+
+        Can you tell me another arithmetic (that is, number-) operation that is Non-commutative?
+        """,
+        "",
+        x -> any( map(["/","^","div","pow","exp"]) do op
+                occursin( op, lowercase(x))
+            end
+        )
+    ),
+    Activity(
+        """
+        Let's return now to the Commutative arithmetic operations of multiplication (*) and
+        addition (+). These are linked by another invariance property called Distributivity. We
+        say that "Multiplication distributes over addition", which for example means that:
+            4 * (3 + 5) = (4 * 3) + (4 * 5)
+
+        I find it helpful to read the brackets in expressions like this by speeding up inside
+        brackets and slowing down between them, so ...
+            "Four times three-plus-five equals four-times-three plus four-times-five"
+
+        How would you read this: (3 + 4) * 5 ?
+        """,
+        "Practise saying it several times out loud",
+        x -> occursin("three-plus-four",lowercase(x)) && occursin("times five",lowercase(x))
+    ),
+    Activity(
+        """
+        Just as with commutativity, we can represent distributivity using arrays, only now we will
+        find it easier to display this structure in a graphics window. If you don't see this
+        graphics window immediately, bring it into the foreground on your screen now ...
+
+        This is an array representation of the distributive multiplication of 4*(3+5). Notice how
+        the total number of dots (32) in the array is invariant, whether we think of it as 4 rows
+        of (3+5) dots, or as two groups of (4*3) and (4*5) dots.
+        """,
+        :(MathTools.dots_diagram(4,[3,5]))
+    ),
+    Activity(
+        """
+        There are a couple of things we should remember about brackets in mathematics. Let's start
+        the distributive multiplication we've just been looking at:
+            4 * (3 + 5) = (4 * 3) + (4 * 5)
+
+        First, you may remember that we can leave out the multiplication sign in front of brackets:
+            4(3 + 5) = (4 * 3) + (4 * 5)
+
+        Also, since multiplication takes priority over addition, we could also write this as:
+            4(3 + 5) = 4*3 + 4*5
+
+        Make up your own mind which of these three forms you prefer. I like the brackets on the
+        right-hand side of the first one, because they make clear the distributive structure of the
+        equation. It's useful to have different notations for the same structure, because they help
+        us to view that structure in different ways.
+
+        We don't drop the multiplication sign between the 4 and 3, because that would look like ...?
+        """,
+        "",
+        x -> x == 43
+    ),
+    Activity(
+        """
+        Distributivity gets even more interesting when we think of multiplying two brackets:
+            (4 + 2) * (3 + 5) = (4*3 + 4*5) + (2*3 + 2*5)
+
+        Notice how distributivity here works in two stages: we distribute each term in the first
+        bracket over each term in the second bracket. Which (if any) of the following expressions
+        are the correct result of multiplying out the brackets (a + b) * (c + d) ... ?
+            1.  (a + b) * (c + d) = (a*c + a*d) + (b*c + b*d)
+            2.  (a + b) * (c + d) = (a*c + b*d) + (a*b + c*d)
+            3.  (a + b) * (c + d) = (a*c + b*d) + (a*d + b*c)
+        """,
+        :(MathTools.dots_diagram([4,2],[3,5])),
+        "Give me a vector of the numbers of any correct answers",
+        x -> Set(x) == Set([1,3])
+    ),
+    Activity(
+        """
+        At this point, our dot array diagrams are getting a little cumbersome, and also we shall
+        shortly be looking at how to multiply fractions. For these reasons, it will help if we
+        switch to using Area Diagrams to represent multiplication. In these digrams, instead of
+        representing whole integer numbers by dots, we shall represent fraction and decimal numbers
+        by squares that each have area 1.0. This doesn't change anything really, but it will help
+        us later to generalise our findings to new situations. Here is an area diagram for our
+        previous example:
+            (4 + 2) * (3 + 5) = 4*3 + 4*5 + 2*3 + 2*5
+
+        Notice how the area of the whole diagram is invariant, whether we think of it as a single
+        rectangle of area 6*8, or as the sum of the four smaller rectangles of areas 4*3, 4*5,
+        2*3 and 2*5. What is the area of this whole diagram?
+        """,
+        :(MathTools.area_diagram([4,2],[3,5])),
+        "Count the squares in the coloured area",
+        x -> x == 48
+    ),
+    Activity(
+        """
+        Has anyone ever told you that "Multiplication makes things bigger"? Well, for the numbers
+        we've looked at so far, this heuristic (or: rule of thumb) is true - for example,
+        4*3 = 12, which is bigger that either 4 or 3. But it is Not true for all numbers! For
+        example, think about:
+            1/2 * 6 = 3,
+
+        which is bigger that 1/2, but Smaller than 6. Apparently, multiplication can also make
+        things smaller! And now look at this area diagram of 1/2 * 1/3 ...
+
+        Is the result of this multiplication bigger than either of the two factors 1/2 and 1/3
+        that we are multiplying together here?
+        """,
+        :(MathTools.area_diagram(1//2,1//3)),
+        "How much of one complete square is yellow?",
+        x -> abs(6float(x)-1) < 1e-2
+    ),
+    Activity(
+        """
+        So you see that the heuristic "Multiplication makes things bigger" is really not true for
+        all numbers. So is there anything in multiplication that we can really rely on - anything
+        that we can guarantee is true for Any product of two numbers? Look at the area diagram of
+        the following product:
+            1/2 * (2 + 4)
+
+        Is the area of this diagram invariant under distributivity? That is, is its area the same
+        as the sum of the areas of the two smaller rectangles?
+        """,
+        :(display(MathTools.area_diagram(1//2,[2,4]))),
+        "Count the squares in the various coloured areas",
+        x -> occursin('y', lowercase(x))
+    ),
+    Activity(
+        """
+        The law of distributivity of multiplication over addition Is still true! And by swapping
+        the two factors (factor 1 and factor 2), you can see that commutativity is also true. In
+        fact, commutativity and distributivity are much more than just useful tricks: they are deep
+        structural properties of multiplication and addition, and this makes them Really useful!
+
+        You can test this for yourself using the Julia method MathTools.area_diagram(), which I
+        originally implemented in order to generate the area diagrams you've been looking at up
+        until now. In the REPL, include the file MathTools.jl from the Anatta subdirectory
+        "Development/Mathematics", then enter the following method call at the Julia prompt:
+            MathTools.area_diagram( [2,1//2], [6,4])
+
+        This displays the distributivity rule for the arithmetic expression
+            (2+1/2) * (6+4)
+
+        Does this diagram confirm the distributivity rule?
+        """,
+        "",
+        x -> occursin('y', lowercase(x))
+    ),
+    Activity(
+        """
+        Now experiment for yourself, using MathTools.area_diagram() to test the distributivity
+        rule. The first argument is factor 1, expressed as a vector list of additive terms;
+        likewise for the second argument (factor 2). Try out any form for the factors that you
+        like - you can even try using negative terms inside the brackets like this:
+            (4-2) * (3+1)
+
+        In the resulting diagram, positive areas are yellow, and negative areas are red. Orange
+        areas are positive and negative products that cancel each other out, and so do not
+        contribute to the final result of the multiplication. Any white areas lie outside the
+        multiplication and also do not count towards the final result of the multiplication.
+
+        Your mission: Can you convince yourself that commutativity and distributivity apply to
+        multiplication and addition of All Possible real numbers, whether positive, negative,
+        fractions, decimals or factors containing three or more terms!
         """,
         "",
         x -> true
     ),
     Activity(
         """
-        Once we have set up a Plot object inside an Axis, we can add extra Plot objects to this
-        same Axis using bang! methods that update the current Axis, for example:
-            tf = HillTF(0:30,10,-5)
-            scatterlines!( tf.range, expression(tf), color=:red, label="repression", linewidth=3)
-
-        At any time, we can view the result by redisplaying the current figure:
-            current_figure()
+        These laws of commutativity and distributivity became particularly important when we don't
+        know the numbers that appear inside the brackets. For example, what is ???
         """,
         "",
         x -> true
     ),
     Activity(
         """
-        Now we'll do something a little bit exciting: we will try to understand the meaning of the
-        cooperation number n by using animation to simulate changes in n over time. To do this, we
-        will create a series of curves using different values of n, but all with the SAME value of
-        K. We will use Observables to do this ...
-
-        To understand how Observables work, first enter the following lines at the julia prompt to
-        convince yourself that changing the value of t has no influence on the value of x:
-            t = 1
-            x = cos(t)
-            t = 2
-            x
-        """,
-        "Work very carefully: check the result of each individual line to be sure you understand",
-        x -> true
-    ),
-    Activity(
-        """
-        x and t are simply two different locations in memory, so if we change the value of t, it
-        has no effect at all on the value of x. Now we'll perform a similar experiment, but this
-        time we will make t an Observable:
-            using Observables
-            t = Observable(1)
-            t
-            t[]
-            x = cos(t[])
-            t[] = 2
-            t
-            x
-
-        Does the value of x change when we change the value of t?
-        """,
-        "",
-        x -> occursin('n',lowercase(x))
-    ),
-    Activity(
-        """
-        As you see, simply making t Observable doesn't yet influence the value of x. To achieve
-        this, we must first tell x that it is an observer of t - that is, its value depends on t.
-        Enter the following code, then reply() me the value of x[]:
-            t = Observable(1)
-            x = map(cos,t)
-            t
-            x
-            t[] = 2
-            t[]
-            x[]
-        """,
-        "",
-        x -> x == cos(2)
-    ),
-    Activity(
-        """
-        An Observable is a variable that contains a list of listeners that react to changes in its
-        value. We can make use of this idea to create an animation of the Hill function under
-        changes in the cooperativity n. I have done this in the method animate_hill() in the module
-        FunGraphics. Call this method now to see the animation, then change the range of values of
-        n to run downwards from -1 to -10.
         """,
         "",
         x -> true
     ),
     Activity(
         """
-        Finally, to round off this lab, you will use your new-found knowledge of plotting to solve
-        a puzzle. If you call the function fun_graphics() in the module FunGraphics like this:
-            fun_graphics()
-
-        you will find that it prints out 11 scrambled lines of julia graphics code. Try this now ...
         """,
         "",
         x -> true
     ),
     Activity(
         """
-        You will also notice that the call fun_graphics() returns the value false, indicating that
-        this code is too scrambled to be properly executable. Your job is to find a permutation of
-        these lines of code that will execute properly. To see how permutations work, first define
-        these vectors - data vector d and a permutation vector p:
-            d = [2,4,6,8,10]
-            p = [3,1,2,4,5]
-        
-        To see the permutation effect of p on d, reply() me the value of d[p]:
         """,
-        "p selects a new ordering of the elements of d",
-        x -> x==[6,2,4,8,10]
+        "",
+        x -> true
     ),
     Activity(
         """
-        As you can see, p cyclically permutes the first three elements of d. Now, we want to change
-        the order of the 11 lines of code in fun_graphics(). You can do this by passing to
-        fun_graphics() a permutation vector of length 11 containing a single number for each line
-        of code in the new ordering. For example, if you enter this method call:
-            fun_graphics([2,1,3,4,5,6,7,8,9,10,11])
-
-        you will see that this permutation vector swaps the first two lines of code; unfortunately,
-        the resulting code is still not executable. reply() me various permutation vectors until I
-        tell you that your permutation will unscramble the graphics code to make it executable.
-        When you have found this permutation, you can execute the resulting unscrambled code by
-        specifying the named argument evaluate=true in fun_graphics().
-        
-        Good luck - may the Force be with you! :)
         """,
+        "",
+        x -> true
+    ),
+    Activity(
         """
-        A permutation vector such as p=[2,3,1] specifies the order in which we want to access the
-        elements of an array. To understand this at the julia console, first define this vector p,
-        then define a = ["yah!","Hal","lelu"], and try calling a[p] and join(a[p]).
         """,
-        x -> Main.fun_graphics(x)
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
     ),
 ]
+
+end

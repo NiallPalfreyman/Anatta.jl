@@ -1,7 +1,5 @@
 #========================================================================================#
-#	Laboratory 400
-#
-# Welcome to course 400: Introduction to Quantum Computation!
+#	Laboratory 400: An Introduction to Physics and System Dynamics
 #
 # Author: Niall Palfreyman, 24/04/2022
 #========================================================================================#
@@ -9,416 +7,207 @@
     Activity(
         """
         Hi! Welcome to Anatta Subject 400:
-            Quantum computing - Small stories generate large structures
+            System Dynamics - Dynamical stories can fill logical gaps - especially in physics!
         
-        Course 300 is unfortunately still under construction. However, you can read this
-        laboratory to gain an idea of what is going to come in the future ...
+        In Subject 200, we learned about Kurt Gödel's Incompleteness Theorems. These theorems form
+        the foundation of 21st-century mathematics; they show that EVERY structural system is
+        necessarily incomplete. In other words, whenever we construct some structure, we build it
+        by using structural relations to link together a countable number of concepts. This number
+        may be infinite, but it is necessarily only COUNTABLY infinite. This makes it impossible
+        for our structure to describe any situations that possess an UNcountable number of states.
 
-        In this course we explore the wonderful world of quantum physics, quantum computing and
-        quantum information. In this introductory lab, we first gather the various mathematical
-        tools we need for dealing with quantum systems - in particular, we will need to extend
-        our knowledge of Julia to include complex numbers!
-
-        You might be asking yourself: Why do we need complex numbers? The answer is that quantum
-        theory teaches us that particles possess certain probabilities that can interfere with
-        each other, and the only way we can calculate these interferences is by using complex
-        numbers. So let's start ...
-
-        Recall that a complex number z has the general form x+iy, where x and y are real numbers,
-        and i^2==-1. Check this now: In Julia, the number i is written "im", so tell me the
-        value of
-            im^2
-        """,
-        "Notice the way in which Julia writes this number - does it make sense to you?",
-        x -> x == -1
-    ),
-    Activity(
-        """
-        Any complex number has a REAL part x and an IMAGINARY part y. Form the following two
-        complex numbers and tell me their sum:
-            z1 = 4+5im
-            z2 = 3-5im
-            z1 + z2
+        Examples of such uncountable states are irrational or transcendental numbers such as √2 or
+        π, when a tap will next drip, living processes or even simply timing the boiling of an egg!
+        All these uncountable systems have an interesting aspect in common: they all involve the
+        unfolding over time of a dynamical Story. And stories are what Subject 200 is all about! :)
         """,
         "",
-        x -> x == 7
+        x -> true
     ),
     Activity(
         """
-        What is the value of the difference z1 - z2?
+        What do I mean by the unfolding of a dynamical story? Well, suppose you and your partner
+        both walk at precisely the same speed, but whereas your partner walks around the edge of a
+        perfectly circular park, you take a straight path directly through the middle of the park.
+        What is the ratio of their walking time to yours?
+        """,
+        "They walk round the circumference of the circle; you walk straight along its diameter",
+        x -> abs(x-pi/2) < 0.1
+    ),
+    Activity(
+        """
+        As you see, in this particular case, the transcendental number π/2 arises by comparing what
+        happens in a time-developing story of two participants. All non-countable phenomena arise in
+        this dynamical way, for example: How do we time the boiling of an egg? We allow the elastic
+        or electric dynamical processes of a clock's spring or capacitor to follow their own story
+        until the clock's hands point to specific numbers on its face. In general:
+        -   Structural Procedures calculate accurate answers to Countable questions;
+        -   Narrative (i.e., story) Processes develop accurate outcomes of Non-Countable situations.
         """,
         "",
-        x -> x == 1+10im
+        x -> true
     ),
     Activity(
         """
-        We calculate the CONJUGATE of a complex number by simply reversing the sign of its
-        imaginary part. Calculate the complex conjugate of 5+2im:
-            conj(5+2im)
+        This seems like very good news indeed: narrative processes can fill in the logical gaps
+        left by logical structures. This is, indeed, exactly how science works - we use physical
+        experiments to fill in the gaps in our theories. However, we must also remember that in
+        order to discover the outcome of a narrative process, we need to MEASURE something, which
+        turns a non-countable value into a countable measurement. So perhaps it would be more
+        accurate to express the advantages of narrative processes like this:
+        -   By modelling narrative processes structurally (i.e., on a computer), we can calculate
+            answers to non-countable questions with ARBITRARY accuracy.
+            
+        We call this way of answering questions Simulation.
         """,
         "",
-        x -> x == 5-2im
+        x -> true
     ),
     Activity(
         """
-        We can also use the operator ' to take the conjugate of a complex number. Calculate
-        the value of the complex conjugate of z1:
-            z1'
-
-        """,
-        "",
-        x -> x == 4-5im
-    ),
-    Activity(
-        """
-        The conjugate of a product of complex numbers is equal to the product of their
-        individual conjugates. Check that this is true:
-            (z1*z2)' == a1' * z2'
-        """,
-        "",
-        x -> x == true
-    ),
-    Activity(
-        """
-        If we think of a complex number as a vector in the Gaussian plane, its real part is
-        its coordinate along the horizontal real axis, and its imaginary part is its coordinate
-        along the vertical imaginary axis. In this case, we can calculate the NORM of a complex
-        number by using Pythagoras: We square its real and imaginary parts, add them together,
-        then take the square-root of the result. Check that this is true by using the Julia
-        function abs():
-            abs(z1)^2 == real(z1)^2 + imag(z1)^2
-        """,
-        "",
-        x -> x == true
-    ),
-    Activity(
-        """
-        We can also compute the norm of a complex number by multiplying the number by its
-        conjugate and taking its square-root. Check that this is correct:
-            a = abs(z2)
-            b = sqrt(z2 * conj(z2))
-            a == b
-        """,
-        "",
-        x -> x == true
-    ),
-    Activity(
-        """
-        We calculate complex exponents using Euler's famous formula:
-            θ = 3
-            a = exp(θ*im)
-            b = cos(θ) + sin(θ)*im
-            a == b
-        """,
-        "",
-        x -> x == true
-    ),
-    Activity(
-        """
-        In general, we can express any complex number as the product of its norm and a complex
-        exponentiation:
-            abs(z1) * exp(angle(z1)*im)
-
-        If you calculate this value, you will see that rounding errors make it not quite equal to
-        z1, but it is very close. Approximately how big is the absolute magnitude of the difference
-        between these two complex numbers?
-        """,
-        "Notice we are asking whether z1 == abs(z1) * exp(angle(z1)*im)",
-        x -> x < 1e-15
-    ),
-    Activity(
-        """
-        In classical computing, the state of a bit in computer memory can only have ONE value:
-        EITHER 0 OR 1 (but not both!). The very crucial difference in quantum computing is that
-        the state of a bit in a quantum computer memory can SIMULTANEOUSLY have the two different
-        values 0 and 1 with certain probabilities. We call this probabilistic state of a quantum
-        bit a QUBIT.
+        Let's see how simulation works in a very simple case. Imagine Leicester City Council has
+        just counted the number of rabbits in Watermead Country Park as being 1000. The council
+        wants to know how this rabbit population will impact their city development plans over the
+        coming 8 years, and commissions us to forecast how it will develop over this period.
         
-        We think of a qubit as an N-dimensional column vector of complex numbers, where N is
-        usually a power of 2. We call such a column vector a KET, written mathematically as "|x>".
-        In Julia, we will use small letters to identify kets, for example:
-            x = [-1, 2im,  1]
+        Now, the development of any living population depends on many factors such as fertility,
+        mortality, predation, migration and so on. To simplify our model, we will reduce all these
+        factors down to two: births and (natural) deaths.
 
-        Use Julia to calculate the norm of the ket x by squaring the absolute value of each
-        complex component, adding these together, then taking the square root:
+        To explain this model to the City Council, we draw the Structure-Process Diagram (SPD)
+        shown in Script200 in your Scripts directory. Take a look at this SPD now, and reply() me
+        the name of the Stock shown as a bubble in the centre of the diagram:
         """,
-        "sqrt(sum(abs.(x).^2))",
-        x -> 2.44 < x < 2.45
+        "The bubble contains two names: the mathematical and the text name. Either will do :)",
+        x -> x == "u" || x == "Rabbits"
     ),
     Activity(
         """
-        We know how to use ' to calculate the conjugate of a complex number; now we will see that
-        this operator has a more general purpose. Use Julia to check that the size of x is (3,1),
-        then find the size of x' :
-        """,
-        "size(x')",
-        x -> x == (1,3)
-    ),
-    Activity(
-        """
-        x' is the ADJOINT of x; we calculate it by transposing x (i.e., swapping rows and columns),
-        then taking the complex conjugate of each element of x. We can calculate the adjoint of
-        any matrix. What is the adjoint of the following matrix?
-            M = [
-                1+4im 2-3im -2+im
-                2-5im 2+3im    5
-                  2     3    3-5im
-            ]
+        The elliptical stocks in this diagram represent the State Variables u[1], u[2], u[3], ...
+        of the system we are modelling. In our case, we have only one state variable, u, so I
+        have left away the vector indices.
+
+        Think of a stock as a bubble that water flows into and out of. The flow "births" represents
+        water flowing into the bubble, and the flow "deaths" represents water flowing out of the
+        bubble. The greater the flow, the faster it changes the level of water in the bubble.
+
+        We say that flows "cause" changes in the level of stocks. This means that a flow does not
+        determine the actual value of the stock, but instead, it determines the CHANGE in value of
+        the stock. What is mathematical name have I given to the flow "births"?
         """,
         "",
-        x -> x == [1-4im  2+5im  2+0im; 2+3im  2-3im  3+0im; -2-1im  5+0im  3+5im]
+        x -> x=='b' || x=="b"
     ),
     Activity(
         """
-        We call a row vector of complex numbers a BRA, written mathematically as "<x|". In Julia,
-        we will use small letters followed by a bang (!) to identify bras, for example:
-            y! = [ 1,   0, im]'
+        OK, so flows cause changes in stocks. In fact, quite generally:
+            EVERY flow is a term in the differential equations that describe the system's dynamics!
 
-        Use Julia to calculate the norm of the bra y! by squaring the absolute value of each
-        complex component, adding these together, then taking the square root:
-        """,
-        "sqrt(sum(abs.(y!).^2))",
-        x -> 1.41 < x < 1.42
-    ),
-    Activity(
-        """
-        We can use the adjoint operation to turn a ket into a bra or to turn a bra into a ket.
-        Look at the values of x and x', and check that they are respectively a ket and a bra:
-            x
-            x'
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        Verify that taking the adjoint twice returns us to the original ket:
-            x'' == x
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        Verify that taking the adjoint twice returns us to the original bra:
-            y!'' == y!
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        We calculate the INNER product (also called the dot product) by matrix-multiplying a
-        bra and a ket: <y|.|x> = <y||x> = <y|x> . Paul Dirac suggested the names bra and ket
-        because together they form the BRAcKETs <y|x> that we use to calculate probabilities
-        in quantum theory. Calculate the following inner product:
-            y! * x
-        """,
-        "",
-        x -> x == -1-im
-    ),
-    Activity(
-        """
-        Verify that <y|x> is not the same as <x|y>:
-            y!*x != x' * y!'
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        Do you think the following rule is generally true: <x|y>' == <y|x> ?
-        """,
-        "This rule is indeed correct - can you verify it using x and y (= y!')?",
-        x -> occursin('y',lowercase(x))
-    ),
-    Activity(
-        """
-        Two non-zero vectors are ORTHOGONAL if their inner product is zero. For example,
-        define the following vector:
-            z = [1,im,-1]
+        If you look lower at the single dynamical flow equation for the Rabbits system, you can
+        see that the rate of change of u (du/dt) is given by a positive term for the inflow births
+        and a negative term for the outflow deaths. We call this the Input-Output Principle:
+            du/dt = Sum of all inflows - (Sum of all outflows)
 
-        Now verify that z is orthogonal to x:
-            <z|x> == <x|z> == 0
+        In other words, the rate of change of a state variable u is given by the sum of the various
+        positive and negative causal influences on u. We often implement the structural relations
+        specifying these causal flow values as additonal methods. For example, we might implement a
+        method deaths() to calculate the total death-rate of the rabbits. By which number would
+        this method need to divide the current number of rabbits (u)?
         """,
-        "z'*x == x'*z == 0",
-        x -> true
+        "How long does each rabbit live?",
+        x -> x=='L' || x=="L"
     ),
     Activity(
         """
-        A bra or ket whose inner product with itself is equal to 1.0 is called NORMALISED. In
-        quantum computing, qubits are state vectors that represent probability distributions,
-        so the sum of the individual probabilities must equal 1. Because of this, we always use
-        normalised vectors to represent qubits.
-
-        Verify that this ket is normalised:
-            n = [0.6,0.8im]
-        """,
-        "<n|n> == n'*n == 1.0",
-        x -> true
-    ),
-    Activity(
-        """
-        We form the OUTER product of two vectors by matrix-multiplying a ket and a bra:
-            |x><y| = x*y!
-
-        NOTICE: We calculate an INNER product as (bra*ket), but we calculate the OUTER product
-        as (ket*bra). The size of our ket x is (3,1), and the size of our bra y! is (1,3). What
-        will be the size of the outer product x*y! ?
-        """,
-        "Remember the rules for multiplying matrices!",
-        x -> x == (3,3)
-    ),
-    Activity(
-        """
-        What is the value of the matrix |x><y| ?
-        """,
-        "x*y!",
-        x -> x == [-1  0  im; 2im  0  2; 1  0  -im]
-    ),
-    Activity(
-        """
-        A square matrix A is HERMITIAN if A is equal to its own adjoint:
-            A == A'
-
-        Verify that the following matrix is Hermitian:
-            A = [
-                1		3+2im
-                3-2im	0
-            ]
-        """,
-        "",
-        x -> x == -1
-    ),
-    Activity(
-        """
-        The special point about Hermitian matrices is that their eigenvalues are always real
-        numbers. In quantum theory, eigenvalues are the values that we can measure in physical
-        experiments, so it makes sense that we want these to be real numbers. Consequently,
-        Hermitian matrices represent physical measurements like: "Is this qubit equal to 1?"
-
-        Is this matrix Hermitian?
-            B = [
-                -5			99-5im
-                99+5im		2
-            ]
-        """,
-        "Remember: Transpose B, then take the complex conjugate",
-        x -> occursin('y',lowercase(x))
-    ),
-    Activity(
-        """
-        A matrix U is UNITARY if the adjoint of U is equal to its own inverse:
-            U * U' == U' * U == I
-
-        (where I is the identity matrix). Is the following matrix U unitary?
-            U = [0 im;-im 0]
-        """,
-        "Test whether U'*U==I, and whether U*U'==I",
-        x -> occursin('y',lowercase(x))
-    ),
-    Activity(
-        """
-        Did you notice that U is not only unitary, but also Hermitian? Verify this now:
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        The special point about unitary matrices is that they do not change the norm of a vector.
-        They are like rotations in a complex vector space that change the orientation of the
-        vector, but not its norm. We will see that this is important for describing how a qubit
-        changes over time. Is the following matrix S unitary?
-            S = [1 0;0 exp(im)]
-        """,
-        "",
-        x -> occursin('y',lowercase(x))
-    ),
-    Activity(
-        """
-        Is the matrix X Hermitian?
-        """,
-        "",
-        x -> occursin('n',lowercase(x))
-    ),
-    Activity(
-        """
-        To summarise our findings so far, adjoining turns kets into bras, turns bras into kets,
-        and reverses the order of multiplications:
-            x! = x'
-            y  = y!'
-            <y|x>' == <x|y>
-            (|x><y|)' == |y>'<x|'
-            (A * x)' == x' * A'
-            (A * S)' == S' * A'
-
-        Verify each of these rules now ...
-        """,
-        "Remember that <x|y> simply means x'*y",
-        x -> true
-    ),
-    Activity(
-        """
-        In general, multiplying a matrix M with a ket x will change the direction of x; however,
-        there is often a special set of kets |ψ> (the EIGENVECTORS of M) and complex numbers λ (the
-        EIGENVALUES), for which the following equation applies:
-            M |ψ> == λ |ψ>
-
-        That is, M only changes the magnitude of |ψ> (multiplies it by λ), but doesn't change the
-        direction of |ψ>. For example, here is one of the famous Pauli spin matrices:
-            S_y = [0 -im;im 0]
-
-        Verify that the vector
-            ψ_yp = [1,im]
+        We have seen that to define a dynamical model, we need stocks, flows and methods, but in
+        the end, our calculations must depend upon actual measured values that we call PARAMETERS.
+        The lifespan L of a typical rabbit is fairly easy: rabbits live about 4 years, which is
+        48 months. But what about the specific, or per-capita, birthrate (r) of rabbits?
         
-        is an eigenvector of S_y, and tell me the corresponding eigenvalue:
+        To calculate this, we need to investigate a little deeper. The specific birthrate is the
+        number of children that a typical rabbit produces in a typical month. On average, a single
+        mating pair of rabbits will produce during their entire life about 4 kits (or babies) that
+        actually survive in the wild. How many kits is this per rabbit per month?
         """,
-        "Remember, we require: S_y ψ_yp == λ ψ_yp",
-        x -> x == 1
+        "Remember that we need the number of kits per individual rabbit",
+        x -> abs(x-0.0417) < 0.001
     ),
     Activity(
         """
-        Now verify that ψ_ym = [1,-im] is also an eigenvector of S_y, and tell me the corresponding
-        eigenvalue:
-        """,
-        "",
-        x -> x == -1
-    ),
-    Activity(
-        """
-        To end this mathematical introduction, let me remind you that the TRACE of a matrix A is
-        sum of the elements along its leading diagonal. What is the trace of the following matrix?
-            M = [1 2;3 4]
-        """,
-        "",
-        x -> x == 5
-    ),
-    Activity(
-        """
-        The special point about the trace of a matrix is that the trace of an outer product is
-        equal to the corresponding inner product. Let's verify this using the two Pauli spin
-        eigenkets ψ_yp and ψ_ym. Suppose x is one of these two kets, and y is again either of
-        the two (y might even be the same as x), then we can combine these two kets either as an
-        inner or an outer product:
-            <x|y> == (x' * y) , or
-            |x><y| == (x * y')
+        We have now collected all the information we need to build and run a dynamical model of
+        the Watermead Country Park rabbit population. Before we build our model, it is VERY
+        important that we first construct a Reference Narrative (RN) for the model. That is: How
+        SHOULD our model behave? Are there special circumstances where we already know what kind of
+        behaviour to expect from out model? If so, we can use this to verify our model's accuracy.
 
-        The first of these expressions is a number - the INNER product of x and y - while the
-        second expression is a matrix - the OUTER product of x and y. Now take the trace of the
-        outer product - is it equal to the inner product?
+        For example: What kind of BOT curve would we expect from the model if there were no births,
+        but only deaths?
         """,
-        "",
-        x -> x == occursin('y',lowercase(x))
+        "What is the mathematical term for this behaviour?",
+        x -> occursin("exp",lowercase(x)) && occursin("decay",lowercase(x))
     ),
     Activity(
         """
-        OK, now we have all the mathematical apparatus we need to get started with quantum
-        computation! The first thing we will do in the following lab is to build Our Very
-        Own Quantum Computer simulator, so that we can get started writing quantum algorithms
-        to run on it. What fun! :)
+        Here is another easy reference narrative: What kind of BOT curve would we expect from our
+        model if there were no deaths, but only births?
+        """,
+        "What is the mathematical term for this behaviour?",
+        x -> occursin("exp",lowercase(x)) && occursin("grow",lowercase(x))
+    ),
+    Activity(
+        """
+        Now we can start building our dynamical model of the Watermead Country Park rabbit
+        population. We will then use these two reference modes of exponential growth and decay to
+        test whether the model is behaving as it should.
+        
+        I have set up a template for the Rabbits model in the file SD/Rabbits.jl. To work with this
+        file, you first need to setup() the SD folder in your Anatta home Development directory.
+
+        When you have done this, study carefully the structure of the Rabbits module. Notice that
+        it contains a list of initial values of the stocks. Of course, in our simple model we have
+        only one stock - the number of rabbits - but in general, our models may contain many stocks
+        that together form a vector u of their individual values. Notice as well that we define a
+        dynamical rule flow!() that our model will use to update the values of this state vector u.
+
+        Notice in particular, that the dynamical rule must ALWAYS return which value?
+        """,
+        "What value does my dynamical rule return?",
+        x -> x===nothing
+    ),
+    Activity(
+        """
+        Now fill in all values that we have defined for our dynamical model, and then run the model
+        and reply() me the number of rabbits in Watermead Country Park after 8 years:
         """,
         "",
+        x -> 7000 < x < 8000
+    ),
+    Activity(
+        """
+        OK, now this number seems a little large for Watermead Park to sustain. We ought to check
+        our model using the reference modes. Test the decay reference mode now. That is: does the
+        population fall to zero if we set births to zero?
+        """,
+        "You may need to increase the duration of the simulation to check this",
+        x -> occursin('y',lowercase(x))
+    ),
+    Activity(
+        """
+        Is this decay exponential? You can test this by plotting an additional line in the same
+        axes, representing the quanity log(u). If the decay of u is exponential, then the graph of
+        log(u) should have which shape?
+        """,
+        "What is log(exp(-t))?",
+        x -> occursin("straight",lowercase(x))
+    ),
+    Activity(
+        """
+        The behaviour of the model seems to match our expectations. Of course, with this very
+        simple model, we have the advantage that we can test the numerical output of the
+        model against the exact solution shown at the end of Script200. Do this now, and find a way
+        of correcting any discrepancies you may find between the exact and the numerical solutions.
+        """,
+        "What can we do to make DynamicalSystem's numerical integration more accurate?",
         x -> true
     ),
 ]

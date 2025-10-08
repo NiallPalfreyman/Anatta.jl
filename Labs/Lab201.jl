@@ -1,578 +1,466 @@
 #========================================================================================#
-#	Laboratory 201
+#	Laboratory 201: Semantics.
 #
-# Archetypal narratives and causal loops.
-#
-# Author: Niall Palfreyman, 06/12/2023
+# Author: Niall Palfreyman, 8/11/2024
 #========================================================================================#
+let
+include("../src/dev/Logic/Semantics.jl")
 [
     Activity(
         """
-        Hi! Welcome to Anatta Lab 201: What kinds of systemic behaviours cause problems?
+        Hi! Welcome to Anatta Lab 201: The semantics of propositions
 
-        In this Subject, we will use system dynamics to model many different kinds of system in
-        nature, and we will discover that the same patterns of behaviour occur over and over again
-        in systems that at first appear completely different from each other. We will also see
-        that these similar behaviours are produced by interestingly similar mechanisms. In this
-        laboratory, we look at six archetypal narratives that occur in many different systems:
+        In lab 100, we built an LL-parser for the syntax of the language PL for Propositional
+        Logic. In lab 101, we look at the Semantics of PL. For Saussure, and indeed still for many
+        people today, it seems very obvious what semantics is about: it describes the meaning of
+        syntactically correct sentences. But what do you think the following line of code means:
+            #include <string.h>
 
-        Growth, Decay, Goal-seeking, Overshoot, Oscillation and Switching.
+        A C compiler interprets this line by inserting the library header string.h into the
+        current program file. But what value will a julia compiler return from this code-line?
+        """,
+        "Try it out for yourself in the julia REPL",
+        x -> isnothing(x)
+    ),
+    Activity(
+        """
+        So meaning depends not only on the sentence, but also on who is reading it! We will see
+        later in Subject 600 (Enactive dynamics) how meaning is linked to the autonomy of
+        organisms, but for now, we shall think of meaning as depending on the belief-Model that an
+        organism uses to organise its ongoing perceptual experience.
+
+        A syntactically correct sentence in PL is a Proposition, and can contain constants and
+        variables. The truth-value meaning of a constant is clear: WFF("T") is true and WFF("F") is
+        false. But variables have no clear truth-value; it can become very difficult to decide the
+        truth-value of a proposition containing several different variables. For example, what do
+        you imagine is the truth-value of this proposition:
+            "If unicorns are orange, then cows eat grass."
+
+        To determine the semantics of propositions, we use WFFs: computer-manipulable structures
+        that represent propositions. If p = "Unicorns are red" and q = "Cows eat grass", which
+        WFF represents the above proposition regarding unicorns?
+        """,
+        "You can give it to me in either WFF or String form",
+        x -> string(x) == "(p -> q)"
+    ),
+    Activity(
+        """
+        To define the meaning of a WFF, we first introduce the idea of a Model: an assignment of
+        T/F values to all the variables in a proposition. The module Semantics, contained in the
+        file Semantics.jl, contains our julia definition of a model. Look at this definition now,
+        then reply() me the julia type on which our definition of a model is based:
+        """,
+        "Give me the type itself - not a string",
+        x -> (x <: Dict)
+    ),
+    Activity(
+        """
+        Suppose wff, wff1 and wff2 are all well-formed formulae (WFF). Then we use the following
+        recursive definition for the Truth-value of a WFF in a particular model M:
+        -   The truth-value of WFF("T") is TRUE; the truth-value of WFF("F") is FALSE.
+        -   The truth-value of the variable WFF("a41") in the model M is M["a41"] (that is, it is
+            equal to the truth-value of "a41" in the model M).
+        -   The truth-value of the Negation WFF("~",wff)) is TRUE in the model M if and only if the
+            truth-value of wff is FALSE in M. Otherwise, the negation's truth-value is FALSE.
+        -   The truth-value of the Conjunction WFF("&",wff1,wff2) in M is TRUE iff (if and only if)
+            both wff1 and wff2 are TRUE in M; otherwise, the conjunction's truth-value is FALSE.
+        -   The truth-value of the Disjunction WFF("|",wff1,wff2) in M is FALSE iff both wff1 and
+            wff2 are FALSE in M; otherwise, the disjunction's truth-value is TRUE.
+        -   The truth-value of the Implication WFF("->",wff1,wff2) in M is TRUE iff either wff1 is
+            FALSE in M, or wff2 is TRUE in M; otherwise, the implication's truth-value is FALSE.
+
+        What is the truth-value of the following proposition in your personal belief model?
+            "If cows have four legs and unicorns are orange, then pigs can fly."
+        """,
+        "You may be surprised at this result, but don't worry - we shall study it right away! :)",
+        x -> x==true
+    ),
+    Activity(
+        """
+        Let's study the previous activity in a little more detail. Define these propositions:
+            c = "Cows have four legs"
+            u = "Unicorns are orange"
+            p = "Pigs can fly"
+
+        Give me the WFF that represents the proposition from the previous activity, that is:
+            "If cows have four legs and unicorns are orange, then pigs can fly."
+        """,
+        "You can give me your reply in either WFF or String format",
+        x -> string(x) == "((c & u) -> p)"
+    ),
+    Activity(
+        """
+        In my personal belief-model, c is TRUE, while u and p are both FALSE, so "(c & u)" is FALSE
+        in my model. Just to remind you, here again is the recursive rule for the truth-value of an
+        implication:
+        -   The truth-value of the Implication WFF("->",wff1,wff2) in M is TRUE iff either wff1 is
+            FALSE in M, or wff2 is TRUE in M; otherwise, the implication's truth-value is FALSE.
+        
+        Apply this rule very carefully to find the truth-value of the proposition
+            "((c & u) -> p)" = "If cows have four legs and unicorns are orange, then pigs can fly."
         """,
         "",
         x -> true
     ),
     Activity(
         """
-        Let's start with a very simple narrative that we already know quite well: Growth.
+        It may seem strange to you that this implication is true, even though everyone know that
+        pigs CAN'T fly! The purpose of an implication (u -> p) is to say that if u is true, then p
+        must also be true, but how can we even make sense of this implication if u is false?!
 
-        How does growth occur? Well, from a systems perspective, we are not very interested in
-        external influences like the migration of rabbits into a field, but rather in the internal
-        mechanisms of how rabbits increase their numbers.
+        Believe me, you are not alone! Over many centuries, students of logic have asked themselves
+        this same puzzled question. The key is to think about models not as reality, but as BELIEFS.
+        Immanuel Kant pointed out that we can never know what is Absolutely True, but only what we
+        believe to be true. Suppose we define the following two propositions:
+            c = "Ani is a computer program."; f = "Ani lacks free will."
         
-        This system-oriented perspective makes perfect sense if we want to nurture and heal
-        systems. In order to heal you, your doctor is not interested in who gave you your current
-        infection, but in how that infection is interacting with your body to make you ill.
-        Similarly, if I am feeling depressed, it does not help if I expect others to make me happy:
-        I need to discover how behave in ways that to do it for myself.
-
-        So when we talk about Growth in systems, we mean INTRINSIC growth that is generated by each
-        individual part of the system. What is the individual behaviour that contributes to the
-        growth of a rabbit colony?
+        If the implication (c -> f) is true in your belief-model, then whenever you believe that
+        Ani is a computer program, you also believe that Ani lacks free will. Now, even if you one
+        day discovered that Ani is actually a human being, this probably wouldn't change your belief
+        that computer programs lack free will! Therefore, we build logic in such a way that the only
+        way I can change your belief (c -> f) is by convincing you that c is true AND f is ... ?
         """,
         "",
-        x -> any(occursin.(["birth","repro","sex"],lowercase(x)))
+        x -> x==false
     ),
     Activity(
         """
-        Requiring that growth comes from within a system u means that the growth of u is a function
-        of u itself, so that the current state of u determines how fast it will grow in the future:
-            du/dt = f(u)
+        Exciting, this, isn't it! :)
 
-        A very simple example of intrinsic growth is exponential growth, in which the growth of the
-        entire system is equal to the sum of the Specific growth of each individual part:
-            du/dt = r u
+        To check your understanding of all we've discussed so far, I want you now to implement the
+        method evaluate(WFF,Model) in the module Semantics, which returns the truth value of a
+        given WFF within a given model.
 
-        Include the file Archetypes.jl in the SD subfolder, then execute the following command:
-            Archetypes.demo(1)
+        In the previous lab, I checked your answers myself, but please note that I am now passing
+        that job over to you. In the method Semantics.demo(), you will find a whole variety of
+        wff definitions that have been commented out. By activating each of these definitions
+        alternately, you can create a good test environment for your own implementation of the
+        evaluate(WFF,Model) method. Implement and test your code with each of these possible wffs,
+        and if it produces correct output for ALL of them, you can be satisfied that your work is
+        reasonably correct.
 
-        to see a demonstration of the first archetypal narrative, Growth. In this demonstration
-        program, what are the intrinsic parts of the system that implement the growing process?
+        In particular, make sure that demo()'s explicit call to the method evaluate(WFF,Model)
+        generates correct output. To do this, you'll need to experiment with various models and
+        wffs, but make sure you restore both model and evaluated wff to their original values after
+        experimenting. Then reply() me ...
         """,
         "",
-        x -> any(occursin.(["protein","molecule","concentration"],lowercase(x)))
+        x -> begin
+            Main.Semantics.evaluate(
+                Main.Propositions.parse( Main.Propositions.WFF, "((p->~q)&r)"),
+                Main.Semantics.Model("p"=>true,"q"=>false,"r"=>true)
+            )
+        end
     ),
     Activity(
         """
-        What is the value of the specific growth rate β in our demonstration program?
+        Julius Caesar asked: "What is Truth?", and Kant's answer is: "Truth consists of those
+        propositions that are true in all possible belief-models. E.g., the contrapositive rule:
+            ((p->q) -> (~q->~p))
+
+        is a true proposition if and only if it evaluates as true in Every Possible model. We call
+        such a proposition, that is true under ALL circumstances in ALL belief-models, a Tautology.
+        In order to test whether the contrapositive rule is a tautology, we must therefore generate
+        all possible belief models of 2 variables. We do this in a Truth-Table:
+            Model( "p"=>false, "q"=>false),
+            Model( "p"=>false, "q"=>true ),
+            Model( "p"=>true,  "q"=>false),
+            Model( "p"=>true,  "q"=>true )
+              
+        Notice how I have ordered this truth-table in Binary Counting Order, where the rightmost
+        variable (q) changes value most rapidly. How many different models would the truth-table
+        contain if we wanted to test the truth of a proposition containing 7 different variables?
         """,
         "",
-        x -> x==0.4
+        x -> x==128
     ),
     Activity(
         """
-        Make a note of the value of the protein concentration P after 15 minutes (that is, after
-        15 unspecified time units of the graph):
-        """,
-        "",
-        x -> abs(x-40) < 2.0
-    ),
-    Activity(
-        """
-        Nature has many examples of intrinsic growth: monoclonal replication of immune cells,
-        bacterial division, sexual reproduction of organisms, nuclear chain reactions. The example
-        I have chosen here is auto-regulation of gene expression. The idea is that a protein with
-        concentration P activates its own expression by docking to the promoter DNA of its own
-        gene. Therefore, the greater the value of P, the more protein is available to dock onto the
-        promoter and so promote faster expression.
+        As you see from the previous activity, the number of models in a truth-table increases
+        exponentially with the number of variables in the proposition we want to test. For this
+        reason, we shouldn't generate these models carelessly. For example, it would be a terrible
+        waste of space and time if we were testing for a tautology in N variables, and generated
+        ALL 2^N possible models in the truth-table, and then found that the proposition we are
+        testing was already false in the first or second model.
         
-        In our implementation, we assume that doubling the value of P also doublse its expression
-        rate. This seems a reasonable idea when P is small, since then the P-molecules will only
-        infrequently dock to the promoter, but what if P is large? In this case, molecules will
-        dock rapidly, and may have to wait for each other to undock again. This means there must be
-        a critical concentration K of P, at which the expression rate dP/dt becomes saturated and
-        is no longer proportional to P. We often model this saturation using the Hill function:
-            dP/dt = β * hill(P,K,1) ≡ β P/(K+P)
-        
-        To which value does this expression rate converge as P approaches infinity?
-        """,
-        "In your head, set P equal to some extremely large number like 1 gazillion",
-        x -> x=='β' || x=="β" || x==0.4
-    ),
-    Activity(
-        """
-        Again, assuming that expression rate is given by the Growth DE
-            dP/dt = β * hill(P,K,1) ≡ β P/(K+P),
-
-        what is the value of this expression rate when P=K?
+        We shall therefore be very cunning: Rather than generating all models in the truth-table at
+        once, we shall instead implement the truth-table as a Lazy Iterator that generates the
+        individual models ONLY when we ask for them in a for-loop. To see how to do this, first
+        enter the following lines in the REPL, then reply() me the answer that julia constructs:
+            Model = Dict{String,Bool}
+            vars = Set(["p","q"])
+            tt_row = [false,true]
+            Model(vars.=>tt_row)
         """,
         "",
-        x -> x==1/2
+        x -> x == Dict{String,Bool}("p"=>false,"q"=>true)
     ),
     Activity(
         """
-        As you see, when P is much smaller than the saturation constant K, its expression rate is
-        approximately proportional to P. However, when P=K, the expression rate is β/2, and for
-        P > K, P's expression rate is no longer proportional to P, but instead becomes almost:
-        """,
-        "β = 0.4 is a constant number",
-        x -> occursin("const",lowercase(x))
-    ),
-    Activity(
-        """
-        Our above argument means that protein concentrations in the cell grow exponentially so long
-        as they are only small, but as the concentration increases, it is expressed linearly with a
-        constant expression rate β.
-        
-        Experiment with this idea: In the appropriate line in Archetypes, change the dynamical rule
-        from   "dP[1] = β[1] * P[1]"   to   "dP[1] = β[1] * hill(P[1],1,1)".
-        
-        If you study the new plot, you will see that by the time P reaches the value 1 (=K), the
-        previously exponential curve has straightened considerably. By the time P=2 (from around
-        t = 10), the curve seems almost straight. Check that its gradient is approximately β = 0.4.
+        OK, so we now know how to create a Model, and this model forms a row in a Truth-Table that
+        will display all possible assignments of truth-values to the variables in a proposition.
+        Our next step is to create the full truth-table using comprehension like this:
+            tt1 = [Model(vars.=>row) for row in [[false,false],[false,true],[true,false],[true,true]]]
+
+        What type of container have I used here to collect together the 2^2==4 rows of the
+        truth-table?
         """,
         "",
-        x -> true
+        x -> (x <: Vector)
     ),
     Activity(
         """
-        Now let's move on to study the Decay archetype. Again, decay is an intrinsic process that
-        comes from within a system, and again we will take a protein concentration P as our
-        example. In the cell, ALL gene products are broken down by chemical processes, and of
-        course the more molecules are present, the more can be broken down per second. That is:
-                dP/dt = -g(P)
+        Now we'll do something really interesting. Use the up-arrow key to retrieve your truth-
+        table definition from the previous activity. Now edit your definition: replace the very
+        first and last square brackets of the comprehension by Round brackets, like this:
+            tt2 = (Model(vars.=>row) for row in [[false,false],[false,true],[true,false],[true,true]])
 
-        In practical biological systems, the function g(P) has the property that g(P) ≥ 0, and
-        g(P) approaches 0 as P approaches 0. To see why this is the case, consider what would
-        happen if g(P) remained large as P approached 0. What might then happen to P as it got
-        very close to zero?
-        """,
-        "What do you get if you subtract a large positive number from a small positive number?",
-        x -> occursin("negativ",lowercase(x))
-    ),
-    Activity(
-        """
-        Run Archetypes.demo(2) to view the typical exponential decay curve. Notice that the DE
-            dP/dt = -α P
+        Now compare the contents of tt1 and tt2. Notice how the variable names "p" and "q" are
+        contained explicitly in tt1, whereas in tt2, there is only a DataType variable looking
+        something like this: `var"#3#4"`. This immediately saves space in our iterator, since it is
+        a reference that outsources the names of the variables p and q to the Set `vars` that we
+        defined earlier to store those names.
 
-        in line 52 of Archetypes.jl does indeed satisfy the condition that g(P)≡αP approaches 0 as
-        P approaches 0. Also, since α=0.4, and 0.4 * 2.5 = 1.0, we would expect the concentration P
-        to be divided by e=2.718 every 2.5 minutes. Check that this is true of our simulation.
-        """,
-        "Remember that you can measure the 2.5 minutes starting from ANY point on the curve!",
-        x -> true
-    ),
-    Activity(
-        """
-        The next archetypal narrative is Goal-seeking. Goal-seeking is any behaviour that always
-        tries to approach a particular limiting value over time (i.e., as t approaches infinity).
-        Run the demonstration method Archetypes.demo(3) now to see a typical goal-seeking
-        narrative, then come back and tell me to which value P converges as t approaches infinity.
-        """,
-        "",
-        x -> abs(x-3.0) < 0.1
-    ),
-    Activity(
-        """
-        Now, the interesting question here is: Why does P tend toward the particular concentration
-        3.0? Again, we are taking protein expression as our example of a goal-seeking narrative. In
-        the Growth narrative, we saw that in the long-term, the expression of P is a constant value
-        β. However, we also know from the Decay narrative that P is broken down exponentially at A
-        rate αP. Remember that each term of a DE is a single cause of change in the system, so the
-        DE for a general gene product is:
-            dP/dt = β - α P
-
-        This is indeed the DE given in the script for this lab. A Fixed Point P* of this DE is any
-        value of P for which dP/dt disappears. That is, when P=P*, its value will not change any
-        more over time: P* is an Equilibrium value of P.
-
-        Calculate the fixed point P* by equating the right-hand side of this DE to zero and subs-
-        tituting the values for α and β in Archetypes.demo(3). What is the fixed point value P*?
-        """,
-        "",
-        x -> x==3.0
-    ),
-    Activity(
-        """
-        So here we have the answer to our question: A cell can regulate its concentration of any
-        gene product P by combining constant expression β with chemical breakdown αP to form a
-        so-called Proportional (P-) Controller, for which the equilibrium concentration is β/α.
-
-        In actual fact, P-controllers are notoriously unstable, so protein concentrations regulated
-        in this way can vary by up to 80%. For this reason, many sensitive cellular systems use a
-        more robust regulation (i.e. goal-seeking) mechanism called PI-control (proportional-
-        integral control). We will look more closely at PI-controllers later in this Subject.
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        Now let's move on to the Overshoot archetype. Run Archetypes.demo(4) to see what Overshoot
-        looks like, then refer to the script and code to tell me the initial biomass of Algae in
-        the simulation:
-        """,
-        "The value is in the graph in the script, but the code tells you which curve represents Algae",
-        x -> x==100.0
-    ),
-    Activity(
-        """
-        Overshoot means that the system grows, but then undermines its own growth by overshooting
-        its sustainability limits. You can see this story in the BOTG for the dugong-algae system.
-
-        The Overshoot archetype is more complex than anything we have seen up to now, so we will
-        need to gather some information to understand it. First, what is the order of our Overshoot
-        system? That is, how many stocks does it contain?
-        """,
-        "Each stock in the system is a bubble representing one state variable",
-        x -> x==2
-    ),
-    Activity(
-        """
-        We have two stocks in our system: Dugongs and Algae. The initial number of dugongs is 40,
-        and the initial biomass of the algae is 100. Looking at the first DE for the dugongs, we
-        see that the first term is a logistic term with a fixed point when D=A. That is, this term
-        can sustain exactly as many dugongs as the current quantity of algae in the system.
-
-        Notice, however, that there is a second, negative, term in the dugong equation, that equals
-        the number of dugongs multiplied by a Hill function. The Hill function is always positive,
-        so this means that the growth rate of the dugongs is reduced by the presence of this Hill
-        function.
-
-        NOTE: We met Hill functions in Subject 1 Computation. You should remember that Hill
-        functions model saturated growth and decay - if the second argument (half-response) is
-        positive, the function INcreases from 0 to 1, whereas if the half-rresponse is negative,
-        the function DEcreases from 1 to 0. Refer back to lab 10 if you are unsure about this.
-
-        Which variable determines the value of this Hill function?
-        """,
-        "Look at the arguments of the call to the Hill function",
-        x -> occursin("algae",lowercase(x)) || occursin("u[2]",x)
-    ),
-    Activity(
-        """
-        We should expect this reduction in dugong growth rate if the number of algae falls, since
-        of course the dugong eat the algae. But look carefully at the form of this Hill function:
-            hill(u[2],-60,9)
-
-        Does this Hill function rise or fall with the number of algae?
-        """,
-        "Look at the sign of the second argument",
-        x -> occursin("rise",lowercase(x))
-    ),
-    Activity(
-        """
-            hill(u[2],-60,9)
-
-        At which value of Algae does this value drop to 0.5?
-        """,
-        "Look at the magnitude of the second argument",
-        x -> x == 60
-    ),
-    Activity(
-        """
-           hill(u[2],-60,9)
-
-        Would you describe this value of cooperativity as high or low?
-        """,
-        "Look at the third argument",
-        x -> occursin("high",lowercase(x))
-    ),
-    Activity(
-        """
-        Yes, this value of cooperativity is indeed very high, and implies that the Hill curve is
-        almost a step function, staying close to 1 for algae values lower than 60, and falling
-        rapidly to zero for algae values above 60.
-            
-        So, when there are large numbers of algae in the system, the dugong thrive and stay close
-        to the sustainable capacity given by the current number of algae, however if the algae fall
-        below 60, the dugong find it so difficult to find the algae that their survival rate
-        rapidly falls towards zero due to the increased death rate represented by the Hill function.
-
-        Now look at the second differential equation for the algae growth. The entire rght-hand
-        side has a mathematical form that you should recognise easily by now. What is this form?
-        """,
-        "Imagine setting the Hill function equal to 1",
-        x -> occursin("logistic",lowercase(x))
-    ),
-    Activity(
-        """
-        The DE for the algae is also a logistic equation, as you can see if you imagine setting
-        the Hill function hill(u[1],-55,9) in the second DE equal to 1. Also, the sustainable
-        capacity p[2] of the algae is indeed 100, which is also their initial value, so
-        theoretically, the system should be able to sustain 100 algae and 100 dugongs. Check that
-        this is correct by switching off the two Hill functions by placing a 0 in front of the
-        Dugong Hill function and raising the Algae half-response value (K) to 1e6. What is stable
-        limit value of Dugong and Algae?
-        """,
-        "",
-        x -> x == 100
-    ),
-    Activity(
-        """
-        OK, so in a perfect world, our dugong-algae system is perfectly sustainable. Now we'll
-        slowly switch the Hill functions back on again. We have just seen that the first Hill
-        function (in line 68 of Archetypes.jl) reduces the number of dugong drastically if the
-        number of algae falls below a threshold level that makes the dugong colony unsustainable.
-        Now remove the 0 in front of the Hill function in the first DE. How many dugongs can the
-        system sustain now?
-        """,
-        "Remember, we are only switching the FIRST Hill function back on!",
-        x -> abs(x-100)<5.0
-    ),
-    Activity(
-        """
-        This is a surprise! :-o Switching on the reduction in dugong growth rate has no effect on
-        their final value of 100! To understand what is happening, it is useful to compare the
-        causal-loop diagram (CLD) with the structure-process-diagram (SPD) of the Overshoot
-        archetype in the script. Make sure you can see these diagrams now ...
-        """,
-        "Keep the script open at the diagrams for Overshoot, while we continue chatting",
-        x -> true
-    ),
-    Activity(
-        """
-        CLDs are useful as a presentation tool for explaining SPDs to lay people - they demonstrate
-        well how stocks and processes influence each other in a model. This CLD contains four
-        feedback loops: two reinforcing loops (+) and two balancing loops (-).
-        
-        The simplest causal loops in Overshoot are the algae and dugong reinforcing loops. In both
-        cases, the algae or dugong give birth to new individuals: the more algae there are, the
-        more regrowth occurs, and the more regrowth happens, the more algae there are. These two
-        reproductive loops maintain the dynamics of the system.
-
-        The next interesting loop is the balancing (-) loop in which dugongs graze on the algae,
-        thereby reducing the number of algae, and also reducing the number of dugong deaths. We can
-        tell that this is a balancing loop because it contains an ODD number of negative causal
-        influences. How many negative causes are contained in this loop?
-        """,
-        "Count the number of negative signs on the arrowheads in the loop",
-        x -> x==3
-    ),
-    Activity(
-        """
-        In our previous experiment, it was this grazing loop that we switched back on. The dugong
-        graze on the mature algae, reducing their biomass, but this merely lowers their growth rate
-        while still leaving them able to regrow. As a result, the dugong-algae system takes longer
-        to build up from the initial value of 40 dugong, but it is still capable of sustaining 100
-        dugong.
-
-        However, this situation becomes very different in situations where the dugong population
-        grows so large that they are forced to not only to eat mature algae, but also to dig out
-        the algae roots for extra nourishment, and so damage the algae's ability to replenish
-        themselves.
-
-        This is the final balancing loop in our model, in which the dugong undermine the
-        sustainable capacity of the algae. Turn on this loop now by inserting the value K=55 into
-        the second Hill function, and re-running the simulation. What is the resulting sustainable
-        level of algae?
-        """,
-        "Your answer is only a visual approximation to the limit value",
-        x -> abs(x-74) < 4
-    ),
-    Activity(
-        """
-        This is the essence of the Overshoot archetype: By growing too large, the dugong population
-        undermines the sustainability of the algae population on which it depends. Does this story
-        sound familiar in relation to human populations?
-
-        To see how this undermining is implemented mathematically, notice how the Hill function in
-        the second equation appears multiplicatively:
-            du[2] = p[2]*u[2] * (1 - u[2]/(p[3] * hill(u[1],-55,9)))
-
-        By carefully studying the positioning of the brackets in this DE, you should see the
-        influence that the Hill function has on the carrying capacity of the algae. Do dugong
-        populations greater than 55 mean that the logistically sustainable number of algae gets
-        bigger or smaller?
-        """,
-        "Think about what happens to the value of the Hill function",
-        x -> occursin("small",lowercase(x))
-    ),
-    Activity(
-        """
-        Before continuing to the next archetype, look carefully at the phase plot displayed by
-        Archetypes.demo(4). Instead of plotting phase variables against time, phase diagrams
-        plot state variables against each other. In our case here, I have plotted Algae against
-        Dugongs. As a result, the phase plot gives us no information about time. It does, however,
-        give us a good sketch of how the different state variables influence each other.
-
-        Notice that the phase curve runs down and rightwards from the initial state at the top of
-        the graph with 40 dugong and 100 units of algae. This indicates that the increase in number
-        of dugongs is associated with a drop in the amount of algae, suggesting that the two are
-        causally linked in some way. Of course, in this particular case, we already that rising
-        numbers of dugong are associated with higher feeding, but what about situations where other
-        food sources or other grazers exist? In such cases, the phase plot picks out the dugong as
-        probable consumers of the algae.
-
-        Continuing along the phase curve, the algae fall continuously, while the number of dugong
-        rises to a maximum, and only then starts falling more rapidly than the algae. Does this
-        suggest rather that dugong or that algae drive this steep decline?
-        """,
-        "Which species starts falling first?",
-        x -> occursin("algae",lowercase(x))
-    ),
-    Activity(
-        """
-        We have now learned how four different common narrative operate in the real world: Growth,
-        Decay, Goal-seeking and Overshoot. Let's move on now to the next archetype: Oscillation.
-
-        Run the method Archetypes.demo(5) to see the Oscillation narrative in action. Notice that
-        this oscillation is a little different from the sinusoidal simple harmonic motion (SHM)
-        with which you may be more familiar. Unlike SHM, this is a Relaxation Oscillator that
-        drives itself from incoming energy, so that its amplitude grows to a steady value over
-        time. What is the period of this oscillator?
-        """,
-        "Since phase plots contain no time information, you need to estimate this value from " *
-            "the BOTG",
-        x -> abs(x-11.0)<2
-    ),
-    Activity(
-        """
-        OK, let's look at how a relaxation oscillator works. Our example is Sel’kov’s model of
-        glycolysis oscillations in yeast. We will need to know some chemistry to analyse it.
-        
-        Fructose-6-phosphate (F) is supplied to the system at a constant, moderate rate p[2], where
-        it accumulates slowly. This is the process "supply" shown in the SPD in the script. Now
-        look down at the DEs for this system. Notice that both equations contain terms p[1]*F and
-        A^2*F, but with opposite signs in each equation. It looks as if something is being taken
-        away from F and being given to A.
-        
-        What kind of natural process takes quantity away from F6P and gives it to ADP?
-        """,
-        "It almost looks as if F6P is being turned into ADP! ;-)",
-        x -> occursin("chemical",lowercase(x)) || occursin("reaction",lowercase(x))
-    ),
-    Activity(
-        """
-        That's right: F6P is reacting to ADP along two different chemical routes: dissociation and
-        reaction. First, F6P converts spontaneously into ADP. As we might expect, this is an
-        exponential process, since its rate is proportional to the amount of F6P is present. What
-        is the value of the rate constant of this chemical conversion?
-        """,
-        "Look up the numerical value in the julia code of the oscillator model",
-        x -> x==0.06
-    ),
-    Activity(
-        """
-        This constant is very small, so the conversion of F6P to ADP is only a slow trickle -
-        certainly less than the supply rate of 0.6 - so F must be accumulating. Let's look at the
-        second chemical reaction, represented by the terms in A^2*F. What kind of reaction is this?
-
-        To understand this reaction, we need to think about Mass-Action. Remember that A and F are
-        the chemical concentrations of ADP and F6P, and so each is proportional to the probability
-        that a molecule of ADP or F6P is present within any tiny volume in the cell. In this case,
-        which mathematical expression is proportional to the probability that BOTH molecules (i.e.,
-        one of ADP AND one of F6P) are present within this tiny volume?
-        """,
-        "How do we calculate the probability of two independent statistical events occurring?",
-        x -> (y=replace(x," "=>""); occursin("A*F",y) || occursin("F*A",y))
-    ),
-    Activity(
-        """
-        So A*F is proportional to the probability that a reaction between A and F occurs, but what
-        if the reaction requires TWO molecules of ADP to be present? In that case, the probability
-        is proportional to A^2*F - which is precisely the DE term that we are analysing!
-
-        So the positive and negative terms in A^2*F represent a reaction looking like this:
-            2ADP + F6P -> ADP
-
-        However, we still need to balance this reaction - it is in fact a catalytic reaction:
-            2ADP + F6P -> 3ADP
-
-        In other words, in this reaction, one molecule of F6P is converted by two molecules of ADP
-        into a new molecule of ADP. What is the rate constant of this reaction?
-        """,
-        "The rate constant multiplied by the probability term A^2*F gives us the reaction speed",
-        x -> x==1.0
-    ),
-    Activity(
-        """
-        That's right - I have simplified the dimensions in this equation so as to reduce this rate
-        constant to 1. We call this simplification process Non-Dimensionalising the equation.
-
-        Now we can start to see how our relaxation oscillator works. The rate of the catalysis of
-        F6P to ADP is much faster than the spontaneous conversion; however, because it requires TWO
-        molecules of ADP, it takes a long time to start: it is LAGGED. Remember that if A is small,
-        then A^2 is VERY small, so there is a lag-time before the catalysis starts. So what happens
-        in the oscillator is this:
-
-        F6P build up, while some trickles into ADP at a very slow rate. Eventually, the amount of
-        ADP reaches a tipping point where it catalyses the F6P rapidly into ADP. When there is too
-        little F6P to continue, the catalytic reaction stops, the ADP is exponentially broken down,
-        and F6P starts to accumulate again. Clever, huh? :)
-
-        Question: Which feature of the phase plot indicates that this reaction is oscillatory?
-        """,
-        "What can you say about the oscillation curve in the phase plot?",
-        x -> occursin("closed",lowercase(x))
-    ),
-    Activity(
-        """
-        Finally, we now look at the Switch archetype. This switch involves an interaction between
-        a protein P and the RNA (R) from which it is translated. Again, the switch contains a
-        lagged reaction indicated by the squared dependency in the third argument of the Hill
-        function. Look at the julia implementation of hill() to tell me the meaning of this third
-        argument:
-        """,
-        "You will need to look at the docstring of the hill() method",
-        x -> occursin("cooperat",lowercase(x))
-    ),
-    Activity(
-        """
-        The third argument n of the hill() describes the "cooperation" involved in the regulation
-        described by the Hill function. If the activation or inhibition requires more than one
-        molecule to interact, then squared or higher order combinations of probabilities are
-        involved. This is the case in our Switch example.
-
-        While the translation rate of P is directly proportional to the amount of RNA present in
-        the cell, the transcription rate of RNA requires the cooperation of TWO molecules of P in
-        docking onto its promoter. This raises the cooperativity level to 2 in the DEs, and this
-        results in lagged, or delayed, transcription of RNA. This lag is essential to the operation
-        of this genetic switch.
-
-        Run Archetypes.demo(6) now to see the switch in action.
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        Again, the displayed diagram shows you both a BOTG and a phase plot. Concentrate first on
-        the phase plot. The simulation starts with both P and R having the initial value 0.1.
-
-        Following the phase trajectory down, we see both of the conentrations P and R falling
-        towards zero - the cell does not contain enough of either for P to be continuously
-        expressed. If P were the pax6 protein, it would mean that this cell cannot differentiate
-        into a light-sensitive optical cell.
-
-        However, at time 10, there is an brief injection of P into the cell (see the time
-        information in the BOTG). Perhaps there is a slight seepage of pax6 from a neighbouring
-        cell. This injection drives the P concentration up to around 0.8, and suddenly the
-        transcription of RNA is switched on. Both P and R now drive each other up to long-term
-        expression of pax6, and the cell switches into differentiation.
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        Experiment with the Switch archetype to discover how small the injection can be, while
-        still switching the cell on. Also: Can you switch the cell on by injecting RNA instead?
+        Use the following for-loop to access the individual models in tt2. Does your printout
+        accurately reflect the contents of tt1?
+            for model in tt2 println(model) end
         """,
         "",
         x -> occursin('y',lowercase(x))
     ),
     Activity(
         """
-        And now your final challenge for this laboratory: In the SPDs for the Oscillation and
-        Switch archetypes, I have indicated with brackets (  ) that the loops in the diagrams are
-        either balancing or reinforcing. It is your task to write in the diagram whether each loop
-        is balancing (-) or reinforcing (+).
-        
-        You can check your answer by replying() me here the name of ONE archetype and its
-        associated sign (+ or -). Can you also explain to a friend WHY each sign applies?
+        tt2 is an Iterator: it uses Lazy Evaluation to generate the models of the truth-table when
+        they are needed, without wasting computer memory by storing those models explicitly.
+
+        The only problem with this iterator is that we still had to explicitly provide the binary
+        ordered truth-value assignments [[false,false],[false,true],[true,false],[true,true]], and
+        you can imagine that this list of possible assignments would get exponentially large if we
+        had to take account of 3, 4, 5, ... different variables in a proposition. To avoid this
+        exponential increase in the length of the iterator specification, we shall make us of the
+        Base.product() function, but in order to do so, we first need to understand how the
+        Splat (...) operator works in julia. To start off, reply() me the value of
+            ^(3,4)
         """,
-        "For example, you might enter: reply(\"Oscillation +\")",
-        x -> (y=lowercase(x);(occursin("osc",y)&&occursin('-',y) ||
-                occursin("swi",y)&&occursin('+',y)))
+        "",
+        x -> x==81
+    ),
+    Activity(
+        """
+        As you can see, the function ^ takes its first argument and raises it to the power of the
+        second argument. Now, we are looking for ways to use one programm to build and run another
+        program (the iterator), so it is natural for us to ask whether there is some way of storing
+        the arguments 3 and 4 as a vector, and then inserting this vector as a single argument into
+        the ^ function - like this:
+            ^([3,4])
+
+        Try this now: enter the above command at the julia prompt - does it work ok?
+        """,
+        "",
+        x -> occursin('n',lowercase(x))
+    ),
+    Activity(
+        """
+        Oh dear! The problem is that ^ treats our vector [3,4] as a single (Vector) arguement,
+        rather than as two separate values 3 and 4. And this is where the splat operator is very
+        useful! What answer do you get back if you enter the following line?
+            ^([3,4]...)
+        """,
+        "",
+        x -> x==81
+    ),
+    Activity(
+        """
+        Bingo! :) The splat operator takes a vector (or Tuple or Range) and 'splats' its values out
+        into an argument list that can be used in a method call. Now let's use this idea to build
+        all those truth assignments ([false,false],[false,true],...) that were so troublesome in
+        our earlier iterator. Just to remind you, here's the current state of our iterator code :
+            tt2 = (Model(vars.=>row) for row in [[false,false],[false,true],[true,false],[true,true]])
+
+        Now, wouldn't it be nice if we could construct all those assignments automatically? This
+        is exactly what the function Base.operator() does! At the julia REPL, enter the following
+        command now, and reply() me the answer:
+            tuples = Base.product([1,2],[3,4,5])
+        """,
+        "Your answer will look quite confusing, but don't worry! I'll test it",
+        x -> collect(x) == [(1,3) (1,4) (1,5);(2,3) (2,4) (2,5)]
+    ),
+    Activity(
+        """
+        The object `tuples` that you just created is an Iterator over the entire product space of
+        Tuples of the form (i,j), where i ∈ 1:2 and j ∈ 3:5. To see this, enter this command:
+            for tup in tuples println(tup) end
+
+        Now enter collect(tuples) to see the way in which this product space iterator orders the
+        individual Tuples, and reply() me the type of this structure:
+        """,
+        "",
+        x -> (x <: Array)
+    ),
+    Activity(
+        """
+        OK, now let's gather all these partial solutions together. Remember: we want to generate an
+        Iterator over all possible models of a set of variables. Here is the code we have so far:
+            Model = Dict{String,Bool}
+            vars = Set(["p","q"])
+            tt = (Model(vars.=>row) for row in [[false,false],[false,true],[true,false],[true,true]])
+            collect(tt)
+
+        First create and reply() me a product space iterator that will generate a complete list of
+        true/false assignment Tuples for 2 variables In Any Order:
+        """,
+        "",
+        x -> begin
+            typeof(x) <: Base.Iterators.ProductIterator &&
+            Set(collect(x)) == Set([(false,false),(false,true),(true,false),(true,true)])
+        end
+    ),
+    Activity(
+        """
+        Great! Now we build this idea into our definition of a truth-table:
+            tt = (Model(vars.=>row) for row in Base.product([[false,true] for _ in vars]...))
+
+        Try this out now at the julia REPL. Notice that truth assignments are still not in binary
+        counting order. Fix this problem, then use your result to implement the method
+        Semantics.truth_table() in the file Semantics.jl. Include your modified version of this
+        file, then reply() me so that I can test your code...
+        """,
+        "Use the function reverse() at an appropriate point in the code",
+        x -> begin
+            true
+        end
+    ),
+    Activity(
+        """
+        Now implement the method Semantics.truth_values(), which creates an Iterator over the
+        truth-values of a wff in each of a sequence of models.
+        """,
+        "",
+        x -> begin
+            true
+        end
+    ),
+    Activity(
+        """
+        You are now in a position to describe the complete semantics of a wff - its truth-value in
+        every possible model. Look at the method Semantics.print_ttable(), which prints to screen a
+        pretty version of the truth-table of a given wff. Notice how the first three lines of this
+        method call the methods you yourself implemented. Use print_ttable() to check the
+        correctness of your implementation of those methods on the various wffs I have commented
+        out in demo().
+        """,
+        "You should not proceed with this Subject until all four wffs in demo() work properly",
+        x -> true
+    ),
+    Activity(
+        """
+        These three definitions are important in studying the semantics of logical structures:
+        -   A proposition is a Tautology if it is True in EVERY possible model.
+        -   A proposition is a Contradiction if it is False in EVERY possible moel.
+        -   A proposition is Satisfiable if it is True in SOME possible model.
+
+        Now use the methods you have implemented so far to implement the following three methods
+        in the Semantics module, and check them using the wffs in demo():
+            istautology(wff), issatisfiable(wff), iscontradiction.
+        """,
+        "The code for all these three methods is basically the same: iterate through the models",
+        x -> true
+    ),
+    Activity(
+        """
+        Notice that the following wff is a tautology, which under Kant's terminology makes it
+        law of Logic. This is our old friend the Contrapositive Law:
+            ((c -> f) -> (~f -> ~c))
+
+        The contrapositive rule says that if we believe that statement c implies statement f, we
+        must automatically also believe that not-f implies not-c. Let's take our earlier example:
+            c = "Ani is a computer program."; f = "Ani lacks free will."
+
+        If you believe (c -> f), the contrapositive law means you also believe (~f -> ~c), i.e.:
+            "If Ani has free will then she is NOT a computer program."
+
+        This way of manipulating beliefs and arguments is very useful in science!
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        Before we finish this labe, I want to remind you of the Anatta project's long-term goals.
+        It is our aim in the Anatta project to discover how a world consisting of non-local
+        processes can produce things like tables and chairs that seem so structurally stable and
+        tangible. To explore this, we have developed two different ways of describing our beliefs
+        about our experience: Propositional WFFs and Semantic Meaning.
+
+        WFFs are governed by the syntactic combination rules specified in the WFF constructor,
+        while Semantics are generated by the truth-value rules specified in the method
+        Semantics.evaluate(WFF,Model). But do wffs and truth-tables describe the same beliefs? Do
+        syntactic structures truly cover PRECISELY the same ground as their dynamical meaning?
+        
+        For example, can you think of a proposition that has no meaning?
+        Or do there exist meanings that cannot be expressed in a proposition?
+        
+        Think very carefully about the importance of these questions for discussing beliefs ...
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        These questions concern the issues of Soundness and Completeness of the relationship
+        between syntactic structures and their semantic meaning:
+        -   Soundness: Does every propositional structure describe a truth-table meaning?
+        -   Completeness: Can every truth-table meaning be described by some propositional structure?
+
+        In fact, YOU have already proven that the wffs of PL are sound! Which method did you
+        implement that generates truth-table semantics from a wff?
+        """,
+        "Give me the method as a function object",
+        x -> x==Main.truth_table
+    ),
+    Activity(
+        """
+        To round off this lab, we will prove computationally that wffs are Complete with respect to
+        truth-table semantics. That is, you will now finish writing two methods that construct, for
+        any truth-table, a proposition whose semantics correspond precisely to that truth-table.
+
+        In Semantics.jl, you will find that I have already implemented the method dnf(), which
+        takes a list of variables and a list of truth-values that we wish to assign to each
+        poossible model containing those variables. That is, the two arguments `vars` and `tvalues`
+        together define a unique truth table, or truth-value function, over the variables. The aim
+        of the method dnf() is to compute a wff that generates exactly this truth-table.
+
+        This wff is in Disjunctive Normal Form - it consists of a chain of Terms linked by the
+        Disjunction operator `|`, and each of these terms consists of a chain of Factors linked by
+        the Conjunction operator `&`. The idea is that each term in the disjunctive chain completely
+        specifies a single model in the table, while each factor in a conjunctive chain completely
+        specifies a single truth-value in that model. Check out carefully all of the code relating
+        to dnf(), run the Semantics.demo() function, make sure you understand how its (mistaken)
+        output arises, then complete this lab by implementing the method conjunctive_wff().
+        """,
+        "The conjunctive_wff() code is similar to the method dnf(), although you can make it more\n" *
+            "efficient by using foldl() instead of the iteration that I used in dnf()",
+        x -> true
+    ),
+    Activity(
+        """
+        Congratulations! You have now proven the Soundness and Completeness of wffs! :))
+
+        I should make a cautionary comment here: The aim of Logic is not only to express beliefs,
+        but also to find out whether those beliefs are useful. Later in this Subject, we will
+        extend the syntax of PL by introducing the idea of proofs, and this will make it necessary
+        to prove soundness and completeness again for this new proof syntax.
+        
+        But for now, we can take pride in achieving a very important goal along the way: soundness
+        an completeness of the Expressivity of wffs! For, although we cannot yet predict whether
+        or not a wff is true, we Can be certain that the wff expresses some kind of meaning, and
+        this expressivity is vital to our project of building a foundation for science. After all,
+        we need to be able to express both true And false beliefs in order to discuss them.
+
+        In the next lab we will look at how incompleteness can arise in syntactic structures.
+        """,
+        "",
+        x -> true
     ),
 ]
+end

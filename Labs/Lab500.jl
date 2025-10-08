@@ -1,7 +1,5 @@
 #========================================================================================#
-#	Laboratory 500
-#
-# Welcome to course 500: Quantum thermodynamics
+#	Laboratory 500: Covariant physics
 #
 # Author: Niall Palfreyman, 24/04/2022
 #========================================================================================#
@@ -9,10 +7,9 @@
     Activity(
         """
         Hi! Welcome to Anatta Subject 500:
-            Quantum thermodynamics - Small structures generate large stories
+            Covariant physics - Organisms ENACT: they abstract knowledge through action
         
-        Course 500 is unfortunately still under construction. However, you will see that there are
-        already a couple of laboratories available to give an idea of what is to come.
+        This course is fortunately still open for construction!
         """,
         "",
         x -> true

@@ -1,7 +1,5 @@
 #========================================================================================#
-#	Laboratory 800
-#
-# Welcome to course 800: Quantum field theory
+#	Laboratory 800: Quantum field theory
 #
 # Author: Niall Palfreyman, 24/04/2022
 #========================================================================================#
@@ -11,7 +9,7 @@
         Hi! Welcome to Anatta Subject 800:
             Quantum-field theory - Knowledge combines both large and small stories
         
-        Course 800 is unfortunately still under construction.
+        This course is fortunately still open for construction!
         """,
         "",
         x -> true

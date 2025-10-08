@@ -1,18 +1,157 @@
 #========================================================================================#
-#	Laboratory 204
+#	Laboratory 204: Proof
 #
-# Pendulum
-#
-# Author: Niall Palfreyman, 26/03/2024
+# Author: Niall Palfreyman, 8/12/2024
 #========================================================================================#
+let
+include("../src/dev/Logic/Proofs.jl")
 [
     Activity(
         """
-        Hi! Welcome to Anatta Lab 204: How do I implement a simple pendulum?
+        Hi! Welcome to Anatta Lab 204: How does Inference implement Proof?
 
-        Please work through the script file Script204.pdf, referring to the demo Pendulum.jl.
+        ??? Section 4.3, p 59
+         """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
         """,
         "",
         x -> true
     ),
 ]
+end
