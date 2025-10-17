@@ -34,7 +34,7 @@ Revised: 15/09/2025
 """
 module WattWorlds
 
-using GLMakie, Random
+using CairoMakie, Random
 
 #-----------------------------------------------------------------------------------------
 # Module constants:
@@ -68,9 +68,9 @@ const n_SPAN = n_UPB - n_LWB
 "Upper bound of WattWorld resource value R"
 const R_UPB = 10.0
 "Depletion constant for Players' activation state a"
-const ALPHA_A = 0.1
+const BETA_A = 0.1
 "Depletion constant for resource R"
-const ALPHA_R = 1.0
+const BETA_R = 1.0
 "Radius of stability well"
 const CAPTURE_RADIUS = 1.0
 "Monomial steepness of stability well"
@@ -257,8 +257,8 @@ function time_generator( watt::WattWorld)
 	inhibition = saturation(action(watt),-1)			# Players' action inhibits own activation
 	net_activation = inhibition * activation			# Net growth of each Player's activation
 
-	da = (net_activation .- ALPHA_A) .* acts			# Growth - depletion of activations
-	dR = watt.feed - ALPHA_R*watt.R - sum(Ks.*acts)		# Feed rate minus depletion and
+	da = (net_activation .- BETA_A) .* acts				# Growth - depletion of activations
+	dR = watt.feed - BETA_R*watt.R - sum(Ks.*acts)		# Feed rate minus depletion and
 														# consumption/production
 	(da,dR)
 end
@@ -518,7 +518,8 @@ end
 """
 	publish()
 
-Build and run WattWorld, and save results to publishable graphic.
+Build and run WattWorld, and save results to the publishable graphics used in
+Constructivist Foundations article.
 """
 function publish( regime::Int=1)
 	watt = WattWorld(N_PLAYERS,regime=regime)
@@ -531,7 +532,7 @@ function publish( regime::Int=1)
 	report(watt)
 
 	# Display resource, activation and behaviour parameters graphically:
-	fig = Figure( fontsize=30,linewidth=5,resolution=(1500,1200))
+	fig = Figure( fontsize=30,linewidth=5,size=(1500,1200))
 	compressed_t = 1:GRAPHICS_COMPRESSION:length(snapshots)
 	t_axis = ((s->s.t).(snapshots))[compressed_t]
 	ax_R = Axis(fig[1,1], xlabel="time", title="Regime $regime: R, Ω, F(t)")
@@ -554,7 +555,8 @@ function publish( regime::Int=1)
 		end
 	end
 	Legend( fig[2,2], ax_a)
-	save( "Publish$regime.jpg", fig)
+	save( "Figure$regime.pdf", fig)
+	nothing
 end
 
 end
