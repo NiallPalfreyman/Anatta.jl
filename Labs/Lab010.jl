@@ -309,7 +309,26 @@ using DataFrames
 
         Your mission: Can you convince yourself that commutativity and distributivity apply to
         multiplication and addition of All Possible real numbers, whether positive, negative,
-        fractions, decimals or factors containing three or more terms!
+        fractions, decimals or factors containing three or more terms?
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
+        Well done for working through the activities in this lab! The cross that all mathematicians
+        must bear is that our subject seems so trivial to the rest of the world: Of Course 3*2 is
+        the same as 2*3! So why do we need to talk so long about it?!
+        
+        Hopefully, through this lab you have now gained some insight into why commutativity is such
+        a useful property of multiplication, and one that we cannot take for granted! For example,
+        division is NOT commutative: 2/3 != 3/2. The job of mathematicians is to find out exactly
+        when and how we can make use of structural properties like commutativity.
+
+        Also, you have seen a little of the power of the julia graphics that we used to visualise
+        these mathematical structures. To continue with this investigation, I would like you now to
+        skip straight to lab 110 to find out how to generate your own graphics:
+            lab!(110)
         """,
         "",
         x -> true
