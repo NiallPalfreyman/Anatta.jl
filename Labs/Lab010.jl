@@ -7,6 +7,7 @@
 # Author: Niall Palfreyman, April 2025.
 #========================================================================================#
 let
+println( "Just loading graphics libraries - on the first run, this may take a couple of minutes ...")
 include("../src/Development/Mathematics/MathTools.jl")
 using DataFrames
 [
@@ -15,9 +16,15 @@ using DataFrames
         Hi! Welcome to Anatta Lab 010: Thinking about mathematics
 
         From here on in this Subject, we shall use our knowledge of computation and programming
-        to think about the Mathematics. Mathematics is the scientific study of structure, and
-        to understand it, we shall use the rather brilliant ideas in the small book "Mathematics
-        Rebooted" by Lara Alcock (2017). Prepare to to have some fun thinking about maths ... :)
+        to think about the Mathematics of computation. Both mathematics and computation concern
+        the study of Structure: mathematics is the study of the nature of structure, while
+        computation is the study of how we can use structures to solve problems. Although it is
+        perfectly possible to solve computational problems without thinking about the mathematical
+        nature of structure, our problem-solving algorithms become far more ingenious and efficient
+        when we take the time to understand the mathematics that underlies those algorithms.
+        
+        To understand mathematics, we shall use some rather brilliant ideas from the small book
+        "Mathematics Rebooted" by Lara Alcock (2017). Prepare to to have some fun ... :)
         """,
     ),
     Activity(
