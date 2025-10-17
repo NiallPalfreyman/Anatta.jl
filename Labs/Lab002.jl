@@ -467,10 +467,10 @@
     ),
     Activity(
         """
-        <sigh> But you know, it isn't much fun typing all these lines out, is it? And we'll be
-        doing a lot more code-testing later in this course, so how can we save ourselves all this
-        effort? Fortunately, offers us a way to save ourselves all this typing by first using the
-        arrow symbol `->` to quickly create a small "anonymous" function:
+        <sigh> But you know, it isn't much fun typing out all these test scenarios, is it? And
+        we'll be doing a lot more code-testing later in this course, so how can we save ourselves
+        all this effort? Fortunately, Julia offers us a way to save ourselves all this work by
+        first using the arrow symbol `->` to quickly create a small "anonymous" function:
             (n -> Computation.count_common( "abcde", "xyzcdegh", n))
             
         and then using the `.` operator to "broadcast" this anonymous function over each component
@@ -582,11 +582,11 @@
     ),
     Activity(
         """
-        Just one closing comment before we end this first lab. Programming is actually just the
-        science of problem-solving: we will learn how to use julia to solve problems. But we also
-        want to solve problems EFFICIENTLY. In other words, we want to keep the complexity of our
-        solution methods as low as possible. Our count_common() method is not particularly
-        efficient - we can do better than O(n^2) complexity by using Hashing Structures.
+        Just one closing comment before we end this lab. Programming is actually just the science
+        of problem-solving: we will learn how to use julia to solve problems. But we also want to
+        solve problems EFFICIENTLY. In other words, we want to keep the complexity of our solution
+        methods as low as possible. Our count_common() method is not particularly efficient = we
+        can do better than O(n^2) complexity by using Hashing Structures.
         
         But that is a story for a later lab - bye! :)
         """,

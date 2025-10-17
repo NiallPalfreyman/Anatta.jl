@@ -434,7 +434,6 @@
             -   julia> using Anatta
             -   julia> Anatta.go()
             -   Enter your name (case sensitive!)
-            -   julia> home()
             -   Follow my suggested activities ... and have fun! :)
         """,
         "",

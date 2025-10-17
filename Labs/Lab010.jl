@@ -256,7 +256,7 @@ using DataFrames
         """,
         :(MathTools.area_diagram(1//2,1//3)),
         "How much of one complete square is yellow?",
-        x -> abs(6float(x)-1) < 1e-2
+        x -> occursin("no",lowercase(x))
     ),
     Activity(
         """
@@ -269,7 +269,7 @@ using DataFrames
         Is the area of this diagram invariant under distributivity? That is, is its area the same
         as the sum of the areas of the two smaller rectangles?
         """,
-        :(display(MathTools.area_diagram(1//2,[2,4]))),
+        :(MathTools.area_diagram(1//2,[2,4])),
         "Count the squares in the various coloured areas",
         x -> occursin('y', lowercase(x))
     ),
@@ -310,86 +310,6 @@ using DataFrames
         Your mission: Can you convince yourself that commutativity and distributivity apply to
         multiplication and addition of All Possible real numbers, whether positive, negative,
         fractions, decimals or factors containing three or more terms!
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        These laws of commutativity and distributivity became particularly important when we don't
-        know the numbers that appear inside the brackets. For example, what is ???
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
-        """,
-        "",
-        x -> true
-    ),
-    Activity(
-        """
         """,
         "",
         x -> true
