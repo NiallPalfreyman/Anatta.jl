@@ -24,14 +24,14 @@
     ),
     Activity(
         """
-        We will start by looking at the structure of a julia program. Any julia program starts life
+        We will start by looking at the structure of a julia program. Every julia program starts off
         as a text string - usually stored in a file or entered at the julia prompt. For example:
             prog = "8 / (2 + 3.0)"
 
-        Enter this tiny program, then reply() me the string prog to make sure you have typed it
-        correctly:
+        Enter this tiny program, then reply() me the string prog, so I can check you have typed it
+        in correctly:
         """,
-        "Just enter: reply(prog)",
+        "Or just enter: reply(prog)",
         x -> (replace(strip(x)," "=>"") == "8/(2+3.0)")
     ),
     Activity(
@@ -44,7 +44,7 @@
         Now, check that you have understood this by entering `prog`, then reply() me the `ans`
         that you receive back from julia:
        """,
-        "Again, simply enter: reply(prog)",
+        "Or else, simply enter: reply(prog)",
         x -> (replace(strip(x)," "=>"") == "8/(2+3.0)")
     ),
     Activity(
@@ -61,12 +61,12 @@
         By the way, please note that in julia it makes a very big difference whether you spell a
         name using upper- or lowercase letters, for example: `expr` and `Expr`. In the previous
         activity, `expr` is our own name for a new variable containing your parsed (i.e.
-        translated) program, whereas `Expr` is the type of the value that julia has stored under
-        that name in computer memory. Check for yourself that typeof(expr) == Expr.
+        translated) program, whereas `Expr` is the type of the value that julia has stored in
+        computer memory under that name. Check for yourself that typeof(expr) == Expr.
 
-        Quite generally, every item of data, and every program, function, expression, statement in
-        julia is simply an Expression object with the type Expr. Expr is the fundamental type of
-        EVERYTHING in the julia language!
+        Quite generally, every item of data, and every program, function, expression or statement
+        in julia is simply an Expression object with the type Expr. Expr is the fundamental type
+        of EVERYTHING in the julia language!
         
         So let's investigate what objects of type Expr look like. An Expr is a structure with two
         parts: a head (named `expr.head`) and a vector (named `expr.args`) of arguments of that
@@ -104,7 +104,7 @@
         has been interpreted as a floating-point number (e.g. Float64).
         
         We can execute (that is, evaluate) your expression `expr` using the function `eval()`.
-        What is the value of expr?
+        What is the evaluated value of expr?
         """,
         "eval(expr)",
         x -> x==1.6
@@ -137,7 +137,7 @@
     ),
     Activity(
         """
-        Bingo! Your program works! :) julia has created a variable called `susan`, containing the
+        Bingo! Your program works! :D julia has created a variable called `susan`, containing the
         value 3.0! Now let's move on to more complicated things. We'll stop parsing the expressions
         ourselves from now on, and instead, we'll just enter them at the julia prompt and let julia
         do all the parsing work for us ...
@@ -199,8 +199,8 @@
             fact(3.1) == 3.1 * 2.1 * 1.1 * 0.1 * 1 == 0.7161...
         
         As I said, julia gives us PERFECT feedback on the result of our implementation method if we
-        use it with floating-point numbers - it's just that this result turns out to be not quite
-        what we expected!
+        use it with floating-point numbers - it's just that this result turns out to be different
+        from what we expected!
 
         However, there does exist a library function that does what we want with floating-point
         values - this is the Γ-function gamma(), contained in the SpecialFunctions library:
@@ -214,9 +214,10 @@
     ),
     Activity(
         """
-        Of course, the difficulty with the gamma() function is that it is a little expensive to
-        evaluate - our method fact() is faster for integer arguments. So let's define two
-        different methods - one for Ints and one for Reals:
+        Of course, the difficulty with the gamma() function is that its method requires Julia to
+        evaluate a complex integral, which makes it a little expensive to evaluate - our method
+        fact() is faster for integer arguments. So let's define two different methods - one for
+        Ints and one for Reals:
             fact(n::Int) = if (n <= 0) 1 else (n * fact(n-1)) end
             fact(x::Real) = gamma(x+1)
 
@@ -230,7 +231,7 @@
         """
         OK, so now what is the value of fact(3.1)?
         """,
-        "eval(fact(5.01))",
+        "Enter fact(3.1)",
         x -> 6.812<x<6.813
     ),
     Activity(
@@ -242,9 +243,12 @@
         stored (at least) 2 different methods: one for when you call fact() with an Integer
         argument, and one for when you call fact() with a Real (floating-point) argument.
 
-        julia takes over this decision for you at the instant when you call fact() with either
-        an integer or a floating-point argument: the decision-process is called DISPATCHING,
-        and we will see that it makes programming very much easier!
+        julia takes over this decision for you: whenever you invoke, or call, the function fact()
+        with an integer argument, Julia automatically dispatches this invocation to the method
+        fact(n::Int). Similarly, whenever you call fact() with a floating-point argument, Julia
+        automatically dispatches this invocation to the method fact(x::Real). This decision is
+        called Dispatching, and it is performed completely transparently at invocation time by the
+        Julia Dispatcher. We will see that dispatching makes programming very much easier!
         
         What is the typeof the return value of the methods() function?
         """,
@@ -336,7 +340,7 @@
             "Animal: an animate Organism."
             abstract type Animal <: Organism end
 
-        Now modify Weasel to announce that it is a subtype of Animal:
+        Now modify the Weasel code to announce that it is a subtype of Animal:
             struct Weasel <: Animal
                 name::String
                 age::Int
