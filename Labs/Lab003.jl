@@ -375,7 +375,7 @@
         Use the function fieldnames() to inspect the individual fields of the Weasel
         type, then give me the descriptor of the second field.
         """,
-        "subtypes(Organism)",
+        "fieldnames(Weasel)",
         x -> x == :age
     ),
     Activity(
@@ -389,10 +389,10 @@
         lowercase letter. By default, Julia creates structs as IMMUTABLE - that is, we
         cannot modify the value of their fields. This means Julia can always know exactly
         how much memory an object needs, which provides major performance advantages. Try
-        changing the value of Wendy's gender to see that this is not allowed. What word
+        changing the value of Wendy's age to see that this is not allowed. What word
         does the resulting exception message use to describe the struct you tried to modify?
         """,
-        "wendy.female = false",
+        "wendy.age = 5",
         x -> lowercase(strip(x)) == "immutable"
     ),
     Activity(

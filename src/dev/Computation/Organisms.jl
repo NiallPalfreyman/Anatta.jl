@@ -2,21 +2,21 @@
 """
 	Organisms
 
-Module Organisms: This is a weasel module. It contains a data type Weasel, plus a list of methods
-that users can use to work with your data type. Use this file as a template for creating your
-own julia programs.
+Module Organisms: This is an organism module. It contains a data type Organism, plus a list of
+methods that users can use to work with this data type. Use this file as a template for creating
+your own julia programs.
 
-Author: Niall Palfreyman, 05/07/2023
+Author: Niall Palfreyman, 23/10/2025
 """
 module Organisms
 
 # Externally callable symbols of the Organisms module:
-export Weasel, greeting, Organism, Animal
+export Weasel, greeting, Organism, Animal, Rabbit, Tree, encounter
 
 #-----------------------------------------------------------------------------------------
 # Module types:
 #-----------------------------------------------------------------------------------------
-"Organism: a general living being."
+"Organism: a general living organisation."
 abstract type Organism end
 
 "Animal: an animate Organism."
@@ -44,21 +44,46 @@ This is a (mutable) Rabbit data type.
 """
 mutable struct Rabbit <: Animal
 	name::String
-	length::Integer
+	age::Integer
 end
+
+"This is a Tree data type."
+struct Tree <: Organism; name::String; age::Integer end
 
 #-----------------------------------------------------------------------------------------
 # Module methods:
 #-----------------------------------------------------------------------------------------
 """
-	greeting( weasel)
+	greeting( organism)
 
-Create a greeting from the Weasel. This is just an example method to show you how to write your own
-methods for manipulating the Weasel data type defined above.
+Create a greeting from an Organism. This is just an example method to show you how to write your own
+methods for manipulating the Organism data type defined above.
 """
-function greeting( weasel::Weasel)
-	string( "Hello, I am a Weasel named ", weasel.name, ". I am ", weasel.age, " years old! :)")
+function greeting( orgy:: Organism)
+	string( "Hello, I am a $(typeof(orgy)) named ", orgy.name, ". I am ", orgy.age, " years old! :)")
 end
+
+#-----------------------------------------------------------------------------------------
+"""
+	encounter( meeter::Organism, meetee::Organism)
+
+Simulate an encounter between two organisms.
+"""
+function encounter( meeter::Organism, meetee::Organism)
+	println( meeter.name, " meets ", meetee.name, " and ", meet(meeter,meetee), ".")
+end
+
+#-----------------------------------------------------------------------------------------
+"""
+	meet( organism1, organism2)
+
+Implement interactional behaviour between two organisms.
+"""
+meet( meeter::Weasel, meetee::Rabbit) = "attacks"
+meet( meeter::Weasel, meetee::Weasel) = "challenges"
+meet( meeter::Rabbit, meetee::Rabbit) = "sniffs"
+meet( meeter::Rabbit, meetee::Weasel) = "hides"
+meet( meeter::Organism, meetee::Organism) = "ignores"
 
 #-----------------------------------------------------------------------------------------
 """
@@ -70,14 +95,39 @@ Notice that I haven't exported the demo() method - users should call it explicit
 """
 function demo()
 	println("\n============ Demonstrate Organisms: ===============")
-	println("First create a Weasel:")
-	wendy = Weasel( "Wendy", 3.1415)
+	println("First create two Weasels:")
+	wendy = Weasel( "Wendy", 3)
+	willy = Weasel( "Willy", 2)
+	display( willy)
 	display( wendy)
-	println()
 
-	println("Now display the Weasel's greeting:")
+	println("Now display a Weasel's greeting:")
 	println( greeting(wendy))
 	println()
+
+	println( "Is Willy an Organism? $((typeof(willy) <: Organism) ? "Yes" : "No")")
+	println( "The supertype of Weasel is: ", supertype( typeof(willy)))
+	println( "The fields of the Weasel type are: ", fieldnames( Weasel))
+	println()
+
+	println("Now create a rabbit:")
+	rabia = Rabbit( "Rabia", 5)
+	println( greeting(rabia))
+	println("... and after changing rabia's age:")
+	rabia.age = 4
+	println( greeting(rabia))
+	println()
+
+	tilly = Tree( "Tilly", 200)
+	println( greeting( tilly))
+	println()
+
+	println( "Here is a simulation of several encounters:")
+	encounter( wendy, willy)
+	encounter( willy, rabia)
+	encounter( rabia, wendy)
+	encounter( rabia, tilly)
+	encounter( tilly, wendy)
 end
 
 end
