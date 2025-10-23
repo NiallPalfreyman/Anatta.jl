@@ -44,7 +44,7 @@ const DURATION = 15e6
 "Step length for RK2 simulation"
 const RK2_STEP = 2.0
 "Stride length for graphical data display compression"
-const GRAPHICS_COMPRESSION = 500
+const GRAPHICS_COMPRESSION = 50000
 "Maximum magnitude of stochastic B-variation"
 const DELTA = 0.05
 "Default number of WattWorld Players"
@@ -557,6 +557,30 @@ function publish( regime::Int=1)
 	Legend( fig[2,2], ax_a)
 	save( "Figure$regime.pdf", fig)
 	nothing
+end
+
+#-----------------------------------------------------------------------------------------
+"""
+	demo_all()
+
+Call demo() for all regimes.
+"""
+function demo_all()
+	for regime in 1:length(REGIMES)
+		demo(regime)
+	end
+end
+
+#-----------------------------------------------------------------------------------------
+"""
+	publish_all()
+
+Call publish() for all regimes.
+"""
+function publish_all()
+	for regime in 1:length(REGIMES)
+		publish(regime)
+	end
 end
 
 end
