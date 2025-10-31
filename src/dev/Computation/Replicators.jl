@@ -89,6 +89,8 @@ function demo()
 	println("Run population with initial size x0=3 and growth constant mu=1:")
 	display( run!(repl,3))
 	println()
+
+	repl
 end
 
 end		# ... of module Replicators
