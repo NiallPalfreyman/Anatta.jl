@@ -285,8 +285,8 @@
     ),
     Activity(
         """
-        Clearly, there is an important question in this clip: Which evolutionary pressures might
-        lead to the helping rat experiencing this empathic connection with their cage-mate? At
+        Clearly, there is an important question in this clip: Which evolutionary selection pressure
+        might lead to the helping rat experiencing this empathic connection with their cage-mate? At
         first sight, we might expect evolutionary survival to lead the helper to Defect - that is,
         to stay safely at the edge of the apparatus and leave their mate in the cage at the centre.
         
@@ -305,7 +305,7 @@
     ),
     Activity(
         """
-        In the unittest() method of the Rats module, enter this client use-case:
+        In the demo() method of the Rats module, enter this client use-case:
         ```julia
         rats = Rats( nStrategies)           % Create n-strategy population
         for mut in 1:nMutations
@@ -381,23 +381,28 @@
     ),
     Activity(
         """
-        OK, now use your Cooperation module to investigate an evolutionary problem of your
-        own choosing. First choose a research question that you wish to explore - discuss this
-        question with your instructor. Then decide how you are going to answer your research
-        question using your simulator. Finally, use all of the techniques you have learned in
-        this course to develop your unittest() method into a full-scale presentation() of your
-        research investigation.
-        
-        Your presentation will use attractive Makie graphics elements and text to convince users
-        of the importance and correctness of your results. You may wish to make use of Makie's wide
-        variety of Blocks and Plots that are described here:
-            https://docs.makie.org/stable/reference/
+        OK, now use your Cooperation module to investigate an evolutionary problem of your own
+        choosing. First choose a research question that you wish to explore, then decide how you
+        will answer your research question by reference to my example Cooperation project contained
+        in the following three files:
 
-        IMPORTANT: In these course labs, I have written equations out in terms of their matrix
-        components, for example: sum([a[i]*b[i] for i in 1:N]). But of course in julia you can
-        write this expression much more simply as a dot product: a'*b or dot(a,b). My assessment of
-        your project will depend in part upon how effectively you make full use in your
-        presentation code of julia's high-level matrix notation.
+        Scripts/CooperationAbstract.pdf
+            This file shows you how I used a sequence of headings to design a research project
+            investigating cooperation. Use this as a template to formulate your own project.
+
+        Scripts/CooperationInfoSheet.pdf
+            This shows how I used the abstract to design a presentation of my experimental results.
+
+        Computation/Cooperation.jl
+            Finally, this skeleton program gives you an idea of how I used Makie graphics to
+            generate the visual presentation in the file CooperationInfoSheet.pdf.
+        
+        The single deliverable for your own project will be a julia file that I can execute to
+        reproduce your experiment and generate a corresponding . Remember to write high-quality
+        code and make full use of julia's high-level matrix notation. For example, it is easy in
+        julia to rewrite the expression: sum([a[i]*b[i] for i in 1:N]) as the more compact dot
+        product of two vectors: a'*b or dot(a,b). My assessment of your work will depend in part
+        upon how effectively you make full use of julia's matrix capabilities.
         
         Good luck! :)
         """,
