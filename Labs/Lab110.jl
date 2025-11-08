@@ -211,10 +211,10 @@
         We can brighten up our Hill graphs by adding some interesting keyword attributes:
             lines( tf.range, expression(tf), color=:blue, linewidth=3, linestyle=:dash)
         
-        Experiment with your lines() plot by changing the keyword arguments. What linestyle value
-        displays a line consisting of a sequence of two dots and a dash (-..-..-..-)?
+        Experiment with your lines() plot by changing the keyword arguments. Search for keyword
+        arguments on the Makie documentation site https://docs.makie.org/stable/, then tell me what
+        linestyle displays a line consisting of a sequence of two dots and a dash (-..-..-..-)?
         """,
-        "Search for keyword arguments on the site: https://makie.juliaplots.org/",
         x -> x==:dashdotdot
     ),
     Activity(
@@ -357,7 +357,7 @@
         """
         A permutation vector such as p=[2,3,1] specifies the order in which we want to access the
         elements of an array. To understand this at the julia console, first define this vector p,
-        then define a = ["yah!","Hal","lelu"], and try calling a[p] and join(a[p]).
+        then define a = ["yah!","Hal","lelu"], and try calling first a[p], and then join(a[p]).
         """,
         x -> Main.fun_graphics(x)
     ),
