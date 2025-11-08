@@ -92,20 +92,20 @@
     Activity(
         """
         Think back to what you already know about matrices and linear algebra. The fixed points of
-        mutation dynamics are defined by dx/dt(x*) = 0. Substitute this constraint into the above
-        mutation dynamical equation. What does this tell us about the mathematical relationship
-        between Q, x* and R?
+        mutation dynamics are defined by dx/dt = 0. Substitute this constraint into the above
+        mutation dynamical equation, and prove that in this case, x must be an Eigenvector of the
+        mutation matrix Q, with corresponding Eigenvalue R = 1.
         """,
         "When is (Q - R*I)*x = 0?",
-        x -> occursin("eigen",lowercase(x))
+        x -> true
     ),
     Activity(
         """
         In julia, create a module Mutators containing a dataype Mutator that is mutated according
         to a pure mutation matrix of your choice that mutates three types cyclically into each
-        other: 1 → 2 → 3 → 1. Use an appropriate julia function to calculate the fixed point of
-        your chosen mutation matrix, and then verify the result of this calculation by visualising
-        the mutation dynamics graphically in a 3-simplex.
+        other: 1 → 2 → 3 → 1. Use the julia function eigen() in the LinearAlgebra library to
+        calculate the possible fixed points of mutation for your chosen mutation matrix, and then
+        verify your calculation by visualising the mutation dynamics graphically in a 3-simplex.
         """,
         "I recommend using the function eigen() in the LinearAlgebra library",
         x -> true

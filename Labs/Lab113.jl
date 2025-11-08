@@ -87,7 +87,7 @@
         the populations x and y will grow toward a point where the total population (x + y) stays
         constant, so that if x gets infinitely bigger than y, this must mean that y → 0.
 
-        This is selection: where the growth of x drives y to extinction. For selection to happen,
+        This is selection: where the growth of x drives y to extinction. For selection to operate,
         we need different rates of growth of the populations x and y, plus resource limitation.
         
         To study selection situations, we often use two simple modelling tricks:
@@ -96,8 +96,13 @@
             the combined population that are x-individuals, while y describes the proportion that
             are y-individuals.
         - In addition, we think of the growth rates r and s as FITNESS values: r describes how
-            fit the type x is, in terms of how effectively it grows by comparison with y.
-
+            fit the type x is, in terms of how effectively it replicates in comparison to y.
+        """,
+        "",
+        x -> true
+    ),
+    Activity(
+        """
         We want to make sure that the sum x + y = 1 of the two frequencies stays constant. To
         achieve this, we will reduce the growth rates of x and y by equal amounts R in the
         selection equations:

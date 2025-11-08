@@ -8,16 +8,17 @@
         """
         Hi! Welcome to Anatta Lab 115: Implementing non-linear fitness
 
-        Until now, we have made a very simple, but also an over-simple assumption: We have assumed
-        that the fitness r[i] of a type i is a constant number independent of the frequencies x[i]
-        of the various types. However, we know that there are many situations where this is just
-        not true. For example, a rabbit's fitness definitely depends on the frequency of lynxes out
-        hunting near it, and also on how many other rabbits might be smaller and easier to hunt!
+        Until now, we have made a very simple, but also an excessively simple assumption about
+        evolutionary systems: We have assumed that the fitness r[i] of a type i is a constant
+        number independent of the frequencies x[i] of the various types. Yet we know that there
+        are many situations where this is simply not true. For example, a rabbit's fitness
+        definitely depends on the frequency of lynxes out hunting near it, and also on how many
+        other rabbits might be smaller and easier to hunt!
         
         The important point here is that simplistic slogans like “Survival of the Fittest!” often
         rely on the unjustified assumption that you as an organism have a constant, measurable
         "fitness" number that is determined only by the genomic makeup of your type. But fitness is
-        the specific growth rate of a population type, and we cannot measure it by simply inspecting
+        the specific growth rate of a population type, and we cannot measure this by simply studying
         your body, but only by studying how your population type grows wthin_a_specific_context:
 
         Genes are a determinant of fitness, but fitness also always depends upon ecology!
@@ -181,15 +182,16 @@
         others. A simple example is the 3-strategy game rock-scissors-paper (RSP), in which three
         strategies cyclically dominate each other: R beats S, S beats P, and P beats R.
         
-        There is in fact a species of lizard whose interactions with each other form a cyclical
-        3-strategy game in which strategy 1 beats strategy 2, 2 beats 3 and 3 beats 1. The (3x3)
-        payoff matrix for the lizards' interaction looks like this:
+        There is in fact a species of lizard whose mating dominance forms a cyclical 3-strategy
+        game in which strategy 1 beats strategy 2, 2 beats 3 and 3 beats 1. The (3x3) payoff matrix
+        for the lizards' interaction looks like this:
             Aliz = [4 2 1;3 1 3;5 0 2]
 
-        The dynamics defined by the Replicator Equation remain unchanged if we subtract an
-        arbitrary constant from any column of the payoff matrix. Reduce Aliz to a simpler form Arsp
-        by subtracting 4 from the first column, 1 from the second column, and 2 from the third
-        column. Tell me the new payoff matrix Arsp that you obtain by doing this:
+        The dynamics defined by the Replicator Equation always remain unchanged if we subtract an
+        arbitrary constant from all entries in any column of the payoff matrix. Use this idea to
+        reduce Aliz to a simpler form Arsp by subtracting 4 from the first column, 1 from the second
+        column, and 2 from the third column. Tell me the new payoff matrix Arsp that you obtain by
+        doing this:
         """,
         "",
         x -> x==[0 1 -1;-1 0 1;1 -1 0]
@@ -198,16 +200,16 @@
         """
         Define three strategy vectors r = [1,0,0], s = [0,1,0] and p = [0,0,1] at the julia prompt.
         Using your simplified payoff matrix Arsp, find the results of playing these strategies
-        against each other by comparing products like r'*A*s and s'*A*r . Do your results support
-        your expectations from the RSP game?
+        against each other by comparing products like r'*Arsp*s and s'*Arsp*r . Do your results
+        support your expectations from the RSP game?
         """,
         "",
         x -> occursin("y",lowercase(x))
     ),
     Activity(
         """
-        Now set up the Replicator Equation for the RSP game using the simplified matrix A. Build a
-        julia module Interactors comtaining a datatype Interactor that simulates 3-strategy
+        Now set up the Replicator Equation for the lizard game using the simplified matrix Arsp.
+        Build a julia module Interactors comtaining a datatype Interactor that simulates 3-strategy
         population dynamics. To test your Interactor type, implement a use-case in which the
         payoff matrix is that of the RSP game. Simulate this game and display its results in a
         3-simplex.
@@ -217,7 +219,7 @@
     ),
     Activity(
         """
-        Now you will use your RSPs module to verify that the lizard dynamics are the same as RSP
+        Finally, use your RSPs module to verify that the lizard dynamics are the same as RSP
         dynamics. Adapt your RSP implementation to use the original lizard payoff matrix Aliz, then
         display your results for the three lizard types in a 3-simplex. Verify that these dynamics
         are identical to those of RSP.
