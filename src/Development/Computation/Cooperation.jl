@@ -113,26 +113,26 @@ behavioural type:
 
 	(0.0,0.0) : AllD - Always defect
 	(0.0,0.5) : Xplt - Exploiting
-	(0.0,1.0) : AlDG - Always disagree
+	(0.0,1.0) : Ctry - Contrary
 	(0.5,0.0) : STFT - Selfish TFT
-	(0.5,0.5) : Dthr - Dithering
+	(0.5,0.5) : Gmbl - Gambling
 	(0.5,1.0) : Plac - Placating
-	(1.0,0.0) :  TFT - Tit-for-tat
+	(1.0,0.0) : RTFT - Rulebook Tit-for-tat
 	(1.0,0.5) : GTFT - Generous TFT
 	(1.0,1.0) : AllC - Always cooperate
 """
 function behaviour( strategy::Vector)
-	cutoff = 0.2				# Strategy classification cutoff
 	p,q = strategy
 	
 	if q > 1-cutoff
-		return (p<cutoff) ? "AlDG" : ((p<1-cutoff) ? "Plac" : "AllC")
+		return (p<cutoff) ? "Ctry" : ((p<1-cutoff) ? "Plac" : "AllC")
 	elseif q > cutoff
-		return (p<cutoff) ? "Xplt" : ((p<1-cutoff) ? "Dthr" : "GTFT")
+		return (p<cutoff) ? "Xplt" : ((p<1-cutoff) ? "Gmbl" : "GTFT")
 	else
-		return (p<cutoff) ? "AllD" : ((p<1-cutoff) ? "STFT" : " TFT")
+		return (p<cutoff) ? "AllD" : ((p<1-cutoff) ? "STFT" : "RTFT")
 	end
 end
+const cutoff = 0.2						# Strategy classification cutoff
 
 #-----------------------------------------------------------------------------------------
 """
