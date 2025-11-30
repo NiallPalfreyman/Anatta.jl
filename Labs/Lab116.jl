@@ -398,11 +398,11 @@
             generate the visual presentation in the file CooperationInfoSheet.pdf.
         
         The single deliverable for your own project will be a julia file that I can execute to
-        reproduce your experiment and generate a corresponding . Remember to write high-quality
-        code and make full use of julia's high-level matrix notation. For example, it is easy in
-        julia to rewrite the expression: sum([a[i]*b[i] for i in 1:N]) as the more compact dot
-        product of two vectors: a'*b or dot(a,b). My assessment of your work will depend in part
-        upon how effectively you make full use of julia's matrix capabilities.
+        reproduce your experiment and generate a corresponding poster. Remember to write high-
+        quality code and make full use of julia's high-level matrix notation. For example, it is
+        easy in julia to rewrite the expression: sum([a[i]*b[i] for i in 1:N]) as the more compact
+        dot product of two vectors: a'*b or dot(a,b). My assessment of your work will depend in
+        part upon how effectively you make full use of julia's matrix capabilities.
         
         Good luck! :)
         """,

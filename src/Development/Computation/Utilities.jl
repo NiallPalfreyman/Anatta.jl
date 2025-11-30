@@ -157,10 +157,10 @@ Assumes `isprime` starts counting from 1.
 """
 function crossout_prime_multiples!( isprime::AbstractVector{Bool})
 	N = length(isprime)
-	for i in 2:round(Int, sqrt(N)+1)
-		if isprime[i]
-			for j in 2i:i:N
-				isprime[j] = false
+	for n in 2:ceil( Int, sqrt(N))
+		if isprime[n]
+			for multiple in 2n:n:N
+				isprime[multiple] = false
 			end
 		end
 	end
