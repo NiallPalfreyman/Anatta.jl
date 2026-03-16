@@ -15,8 +15,8 @@
         living systems. We will also use the julia programming language to build Agent-Based Models
         (ABMs) that can help us to understand the enactive dynamics of living systems.
 
-        The following basic concepts of Enactive Dynamics are merely definitions - we will explore
-        whether we believe them to be true or not in the course of this Subject ...
+        The following basic concepts of Enactive Dynamics are merely definitions - in the course of
+        this Subject, we will explore whether or not we believe them to be true ...
         """,
         "",
         x -> true
@@ -37,10 +37,10 @@
             Computes a dynamical response to some destabilising processes, and this response non-
             computably Selects those structural operations that avoid internal destabilisation.
 
-        We sometimes say that Enactive Dynamics are Emergent. By this we mean organisms survive
+        We sometimes say that Enactive Dynamics are Emergent. By this we mean that organisms survive
         using complex actions that are not predictable from the structure of the organism alone.
-        Therefore Biology CANNOT be a purely computational/deductive subject, but must use Generative
-        Science (GS) to understand living systems by Generating their behaviour from the Enactive
+        Therefore Biology CANNOT be a purely computational/deductive subject, but must use Enactive
+        Modelling to understand living systems by Generating their behaviour from the Enactive
         Dynamics of Agent-Based collectives.
         """,
         "",
@@ -127,16 +127,16 @@
     ),
     Activity(
         """
-        If you display the object abm at the julia prompt, you see that it currently contains no
-        agents. Enter:
+        If you display the object abm at the julia prompt, you see that it currently contains just
+        one agent. Enter:
             Schelling.add_agent!(abm; tribe=1)
 
         You immediately see that a Person agent has been created belonging to the tribe 1 and with
         the default value comfort=false. If you now display abm again, you see that it does indeed
-        contain 1 Person. We can add more Persons, but in the Schelling model we want to be sure
+        contain 2 Persons. We can add more Persons, but in the Schelling model we want to be sure
         that each grid-point contains only one Person, so we prefer to use add_agent_single!(). Do
         this now and confirm that the new Person is at a new position, and that abm now contains
-        2 agents.
+        3 agents.
 
         Use fieldnames() and fieldtypes() to investigate the fields of abm, then reply() me the
         width of the abm space.
