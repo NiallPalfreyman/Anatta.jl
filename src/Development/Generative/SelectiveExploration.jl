@@ -21,8 +21,8 @@ using Agents, GLMakie, .AgentTools
 """
 	ExploratoryAgent
 
-ExploratoryAgents chase around the world looking for a partner to reproduce with. They only survive as long
-as they have positive energy, and their initial energy depends on how well they minimise a
+ExploratoryAgents chase around the world looking for a partner to reproduce with. They only survive
+as long as they have positive energy, and their initial energy depends on how well they minimise a
 particular objective function: dissonance.
 """
 @agent struct ExploratoryAgent(ContinuousAgent{2,Float64})
