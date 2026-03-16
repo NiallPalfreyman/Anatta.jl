@@ -228,8 +228,8 @@ Demonstrate a simple genetic algorithm.
 function demo()
 	params = Dict(
 		:crossover => false:true,
-		:mu_rate => 0:0.001:0.1,
-		:elitism => -1:0.1:0.5,
+		:mu_rate => 0:1e-4:0.01,
+		:elitism => -2:0.1:0.2,
 		:unimodal_fitness => (false, true),
 	)
 	plotkwargs = (
