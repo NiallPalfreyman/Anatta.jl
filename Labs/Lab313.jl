@@ -223,7 +223,7 @@ using CairoMakie
         
         The suggestion of H&N's work, therefore, is that agents who inherit not just one candidate
         solution, but rather a life-story of exploring many potential solutions, may be more
-        successful in finding problem solutions. This will be our next exciting step!
+        successful in finding problem solutions. Implementing this is our next exciting step!
         """,
     ),
 ]
