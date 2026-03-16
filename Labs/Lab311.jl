@@ -32,14 +32,15 @@
     ),
     Activity(
         """
-        We often think of evolution as being driven by some random genetic mutation that happens
-        to improve an organism's ability to produce offspring. Yet we can calculate that such
+        We often think of evolution as being driven by some random genetic mutation that by chance
+        improves an organism's ability to produce offspring. Yet we can calculate that such purely
         purely random changes would require far longer than the current age of the Earth to produce
         organisms as complex as ourselves. Is there some other evolutionary mechanism at work here?
 
         Mary-Jane West-Eberhard (2005) suggested that the chief driver of evolutionary change is
-        not genetic mutation, but Developmental Plasticity. Kalevi Kull (2014) formalised this idea
-        under the title of Semiotic Adaptation: Organisms make meaningful choices that affect their
+        not genetic mutation, but Developmental Plasticity: the idea that during our lives, we
+        explore useful survival possibilities. Kalevi Kull (2014) formalised this idea under the
+        title of Semiotic Adaptation: Organisms make meaningful choices that affect their
         development; if some particular choice has a beneficial effect on the development that
         persists over many generations, genetic drift will shape their evolution in ways that make
         that benefit essential for their survival. If we then remove this external influence,
@@ -62,10 +63,10 @@
         Geoffrey Hinton and Steven Nowlan (1987) used a computer simulation to show that semiotic
         adaptation can accelerate genetic search and help it out of suboptima. They designed a
         genetic algorithm based on three allele-values (0, 1 and 2) to discover a specific,
-        secret 30-bit target number. How many different numbers would the algorithm need to search
-        through in order to guess their specific 30-bit target number?
+        secret 20-bit target number. How many different numbers would the algorithm need to search
+        through in order to guess their specific 20-bit target number?
         """,
-        "Each bit can have 2 values - 0 or 1. How many different 30-bit permutations are there?",
+        "Each bit can have 2 values - 0 or 1. How many different 20-bit permutations are there?",
         x -> (x>1e10)
     ),
     Activity(
@@ -227,7 +228,7 @@
         simulation, and the results were very informative! On the basis of what you have observed,
         what is your opinion: Does plasticity accelerate genetic search?
         """,
-        "",
+        "There is no right or wrong answer to this question: only your opinion.",
         x -> occursin("yes",lowercase(x)) || occursin("no",lowercase(x))
     ),
     Activity(
@@ -283,7 +284,8 @@
             Randomising the route from genotype to phenotype does NOT accelerate genetic search!
 
         Think about what aspects of Hinton and Nowlan's work we missed out of our story. If you
-        are interested, you can find the Hinton & Nowlan (1987) paper in the Docs subdirectory.
+        are interested, you can find a summary of their work in the paper by Ruben Puentedura
+        (2003) in the Scripts subdirectory.
         """,
         "",
         x -> true
@@ -293,18 +295,18 @@
         Here are my thoughts contrasting our Turtle simulation with Hinton and Nowlan's model:
         -	H&N's individuals have a genotypic structure that is mutated and recombined;
         -	H&N's phenotypes are selected ONLY on their ability to guess the secret number, whereas
-                our turtles are also selected on environmental factors over which they have only
-                very limited control, such as whether they happen to land on a food disc;
-        -	H&N's genotype encodes an exploratory developmental process that can Only develop the
-                phenotype In Collaboration With These Environmental Factors.
+                our turtles are also selected on environmental factors over which they have very
+                little control, such as whether they happen to land on a food disc;
+        -	H&N's genotype does not encode a phenotype, but instead encodes an exploratory
+                developmental process that develops the phenotype in the context of such
+                environmental factors.
 
         These thoughts offer us a way forward. If we wish to accelerate the search for problem
-        solutions using the work of Hinton and Nowlan, we might need to model three further
-        characteristics of our turtles:
-        -	Selection OF recombinable genetic structure;
-        -	Selection OF structure-field niches that focus problem-solving behaviour on very
-                Specific objectives;
-        -	Selection ON exploratory developmental processes.
+        solutions using the work of Hinton and Nowlan, we might need to model three new
+        characteristics of evolution:
+        -	Selecting recombinable genetic structures;
+        -	Selecting very specific structure-field objectives;
+        -	Selecting developmental processes that explore solutions to these objectives.
 
         That's a lot to do - maybe we'd better get started! :)
         """,
