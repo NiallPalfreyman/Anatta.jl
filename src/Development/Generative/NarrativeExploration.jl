@@ -34,7 +34,7 @@ expression is chosen randomly from the available alleles on each life-step.
 	plasticity::Float64			# Amount of plasticity in agent's genome
 	min_diss::Float64			# Best dissonance achieved so far
 	colour::Symbol				# Colour indicating agent's energy status
-	locked::Bool				# Lock an agent's exploration as soon as it finds the jackpot
+	fixed::Bool					# Fix an agent's phenotype by ceasing all further exploration
 end
 
 #--------------------------------------------------------------------------------------------------
@@ -49,15 +49,16 @@ const benchtest_alphabet = 'A':'Z'
 	narrative_exploration()
 
 Initialise the NarrativeExploration Simulation.
-??? Problem: How can I specify the target and available alleles as parameters?
 """
 function narrative_exploration(;
 	narrative = false,
 	mu_rate = 2e-3,
-	benefit = 0.99,
+	benefit = 2.0,
 	difficulty = 1.0,
 	allele_count = 2,
 	target_length = 21,
+	life_energy = 2.0,
+	unimodal_fitness = true,
 )
 	pPop = 0.3											# Probability of a cell becoming populated
 	extent = (40,40)
@@ -70,21 +71,21 @@ function narrative_exploration(;
 		:narrative				=> narrative,			# Using narrative exploration?
 		:mu_rate				=> mu_rate,				# Allele mutation probabiliy
 		:benefit				=> benefit,				# Benefit of correctly guessing the target
-		:unimodal_fitness		=> true,				# Use unimodal fitness landscape?
+		:unimodal_fitness		=> unimodal_fitness,	# Use unimodal fitness landscape?
 		:difficulty				=> difficulty,			# Difficulty of comparing larger dissonances
-		:life_energy			=> 5.0,					# Average initial energy of agents
+		:life_energy			=> life_energy,			# Average initial energy of agents
 		:living_cost			=> living_cost,			# Energy cost of each life-step
-		:birth_cost				=> living_cost,			# Energy cost of reproducing
+		:birth_cost				=> 2living_cost,		# Energy cost of reproducing
 		:search_speed			=> 1.0,					# Agents' speed
-		:interaction_distance	=> 5.0,					# Max interaction distance between agents
+		:interaction_distance	=> 3.0,					# Max interaction distance between agents
 		:alleles				=> alleles,				# Alphabet of available allele symbols
 		:allele_count			=> allele_count,		# Number of available alleles
 		:target					=> target,				# Target string to be discovered
 		:target_length			=> target_length,		# Length of target string
 		:problem_size			=> target_length*(allele_count-1),
 		:max_pop				=> pPop*prod(extent),	# Maximum (approx) allowed population size
-		:mean_diss				=> 0.0,					# Mean dissonance of population
-		:mean_plasticity		=> 0.0,					# Mean plasticity of population
+		:mean_diss				=> 0.5,					# Mean dissonance of population
+		:mean_plasticity		=> 0.5,					# Mean plasticity of population
 		:min_dissID				=> 1,					# ID of agent with minimum dissonance
 	)
 	ne = StandardABM( NarrativeAgent, ContinuousSpace(extent);
@@ -99,7 +100,7 @@ function narrative_exploration(;
 			rand() * ne.life_energy,					# Initial energy
 			1.0, 1.0, 1.0,								# Provisional dissonances
 			:black,										# Provisional colour
-			false										# Not locked
+			false										# Not fixed
 		)
 		set_dissonance!(natalia, ne)
 	end
@@ -161,19 +162,22 @@ end
 Agent explores developmental possibilities to gain energy and so live longer.
 """
 function explore!( natalia::NarrativeAgent, ne)
-	if ne.narrative && !natalia.locked
+	if ne.narrative && !natalia.fixed
 		# Narrative exploration:
 		natalia.phenotype[natalia.p_genome] = rand(ne.alleles,count(natalia.p_genome))
 		set_dissonance!( natalia, ne)
 	end
 
-	# Compare natalia's dissonance with that of a random nearby agent:
-	nbr = random_nearby_agent(natalia,ne,ne.interaction_distance)
-	if nbr !== nothing &&
-			spiky(1-natalia.dissonance,ne.difficulty) > spiky(1-nbr.dissonance,ne.difficulty)
-		# Reward natalia for having locally lower dissonance:
-		natalia.energy += ne.benefit * ne.birth_cost
-		natalia.locked = true
+	# Compare natalia's dissonance with that of an impressive nearby agent:
+	nbrs = nearby_agents(natalia, ne, ne.interaction_distance)
+	if !isempty(nbrs)
+		nbrs = collect(nbrs)
+		nbr = nbrs[findmax(ag->objective(ag,ne),nbrs)[2]]
+		if objective(natalia,ne) > objective(nbr,ne)
+			# Reward natalia for having locally lower dissonance:
+			natalia.energy += ne.benefit * ne.living_cost
+			natalia.fixed = true
+		end
 	end
 end
 
@@ -186,21 +190,25 @@ Mummy and Daddy agent give birth to two babies using mutation und crossover.
 function reproduce!(mummy::NarrativeAgent, ne)
 	if nagents(ne) < ne.max_pop && mummy.energy > ne.birth_cost
 		# I've got enough energy and there's sufficient space to have kids:
-		daddy = random_nearby_agent(mummy, ne)
-		if daddy !== nothing && daddy.energy > ne.birth_cost
-			# Create progeny ...
-			for (v_genome, p_genome) in crossover( mummy, daddy)
-				θ = 2π * rand()
-				natalia = add_agent!( ne, (cos(θ),sin(θ)), v_genome, p_genome, copy(v_genome),
-					ne.life_energy, 1.0, 1.0, 1.0, :black, false
-				)
-				mutate!( natalia, ne)
-				set_dissonance!( natalia, ne)
-			end
+		mating_pool = nearby_agents(mummy, ne, ne.interaction_distance)
+		if !isempty(mating_pool)
+			mating_pool = collect(mating_pool)
+			daddy = mating_pool[findmax(ag->objective(ag,ne),mating_pool)[2]]
+			if daddy.energy > ne.birth_cost
+				# Create progeny ...
+				for (v_genome, p_genome) in crossover( mummy, daddy)
+					θ = 2π * rand()
+					baby = add_agent!( ne, (cos(θ),sin(θ)), v_genome, p_genome, copy(v_genome),
+						ne.life_energy, 1.0, 1.0, 1.0, :black, false
+					)
+					mutate!( baby, ne)
+					set_dissonance!( baby, ne)
+				end
 
-			# ... then deplete parents' energy due to birth:
-			mummy.energy -= ne.birth_cost
-			daddy.energy -= ne.birth_cost
+				# ... then deplete parents' energy due to birth:
+				mummy.energy -= ne.birth_cost
+				daddy.energy -= ne.birth_cost
+			end
 		end
 	end
 end
@@ -278,6 +286,17 @@ function set_dissonance!( natalia::NarrativeAgent, ne)
 	end
 end
 
+#--------------------------------------------------------------------------------------------------
+"""
+	objective( natalia, ne)
+
+Calculate objective function of natalia within the given NarraticeExploration model.
+"""
+function objective( natalia::NarrativeAgent, ne)
+	spiky(1-natalia.dissonance, ne.difficulty)
+end
+
+#--------------------------------------------------------------------------------------------------
 """
 	create_problem(nalpha::Int, ntarget::Int)
 
@@ -315,7 +334,7 @@ function demo()
 	params = Dict(
 		:narrative			=> [false, true],
 		:mu_rate			=> 0:0.0005:0.005,
-		:benefit			=> 0.9:0.01:1.1,
+		:benefit			=> 1.0:0.1:3.0,
 		:unimodal_fitness	=> (false, true),
 		:difficulty			=> 0:0.1:1,
 		:allele_count		=> 1:10,
@@ -333,8 +352,8 @@ function demo()
 	playground,abmplt = abmplayground( narrative_exploration; params, plotkwargs...)
 
 	# Dynamic observation of current lowest dissonance pheotype:
-	best_v_genome = lift(wld -> String(wld[wld.min_dissID].v_genome), abmplt.model)
-	best_p_genome = lift((wld -> join(Int.(wld[wld.min_dissID].p_genome))), abmplt.model)
+	best_v_genome = lift( wld -> "v: "*String(wld[wld.min_dissID].v_genome), abmplt.model)
+	best_p_genome = lift((wld -> "p: "*join(Int.(wld[wld.min_dissID].p_genome))), abmplt.model)
 
 	# Display as text in the plot:
 	text!( 10,1.4, text=best_p_genome, color=:blue,

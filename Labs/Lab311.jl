@@ -6,7 +6,7 @@
 [
     Activity(
         """
-        Hi! Welcome to Anatta Subject 311: Semiotic adaptation and theory-development.
+        Hi - Welcome to Anatta Subject 311: Semiotic adaptation and theory-development.
 
         There are many indications that evolution is not primarily driven by random mutation. If I
         as a politician discourage some particular cultural group from having children, this will

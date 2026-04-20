@@ -6,7 +6,7 @@
 [
     Activity(
         """
-        Hi! Welcome to Anatta Subject 306:
+        Hi - Welcome to Anatta Subject 306:
             Fields as independent dynamical entities.
 
         Fields are not only produced and consumed by agents; they are also entities in their own

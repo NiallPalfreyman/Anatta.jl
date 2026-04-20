@@ -117,8 +117,7 @@ f(x) (in [0,1]) of some variable x (eg, distance to a target), and the abruptnes
 fitness function spiky(f(x), spikiness) rises as the spikiness parameter increases from 0 to 1.
 """
 function spiky( x::Real, spikiness::Real=0.0) :: Float64
-    @assert 0 <= spikiness <= 1
-    x = clamp(x, 0, 1)
+	x, spikiness = clamp.( (x,spikiness), 0.0, 1.0)
     if spikiness == 0
         return x
     elseif spikiness == 1

@@ -9,7 +9,7 @@ using CairoMakie
 [
     Activity(
         """
-        Hi! Welcome to Anatta Subject 313: How do we specify objectives to focus problem-solving?
+        Hi - Welcome to Anatta Subject 313: How do we specify objectives to focus problem-solving?
 
         Our simulation SelectiveSearch in the previous lab was really NOT a multi-agent simulation.
         Rather, it was a single-agent GA that used multiple candidate solutions to solve a problem.
@@ -185,23 +185,26 @@ using CairoMakie
         multimodal. We call such difficult objective functions "rugged", because their graph looks
         like the accompanying graphic: very jagged and rocky mountain landscapes, with many steep
         peaks and valleys. Suppose you went walking in the mountain range shown here. Then imagine
-        how difficult it would be if you had to find the deepest valley in this mountain range in
-        a mist that only allowed you to see about 10 metres in front of your face!
+        how difficult it would be if I asked you to find the deepest valley in this mountain range
+        in a mist that only allowed you to see about 10 metres in front of your face!
         """,
         :(lines(rand(30))),
     ),
     Activity(
         """
-        It is difficult to optimise a rugged objective function, yet Hinton and Nowlan
-        demonstrated that living systems can achieve practical solutions using Semiotic
-        Adaptation. Semiosis is the biological process by which organisms make Meaning from the
-        events that they experience. So what is meaning?
-
-        If I hear a footstep when walking in town one day, it will probably have little meaning
-        for you. But if I hear that same footstep behind me when walking alone at night, it might
-        have great meaning for me. Meaning is something I make out of the sounds, feelings and
-        sights that I experience. To have meaning for me, an event must influence my behaviour,
-        and this behavioural influence is a habit that I learn.
+        This is precisely the problem of evolution: species must find ways of surviving (i.e.,
+        finding safe valleys of survival) that may only be evolvable by first becoming less
+        able to survive (i.e., crossing a mountain ridge). It is very difficult to optimise a
+        rugged objective function, yet Hinton and Nowlan demonstrated that living systems can
+        achieve practical solutions to rugged problems using Semiotic Adaptation.
+        
+        Semiosis is the biological process by which organisms construct Meaning from the events
+        that they experience. So what is meaning? If you hear a footstep when walking in town one
+        day, it will probably have little meaning for you. However, if you hear that same
+        footstep behind you while walking home alone at night, it might have great meaning for
+        you! Meaning is something you construct out of the sounds, feelings and sights that you
+        experience. To have meaning for you, an event must influence you behaviour, and this
+        behavioural influence is a habit that you have learned.
         
         We say that organism development is Plastic: the structure and behaviour of our body
         changes in long-term ways during our lifetime, and becomes permanent, or habitual. These
@@ -210,19 +213,23 @@ using CairoMakie
     ),
     Activity(
         """
-        Now, the meanings that we learn can be either useful or unuseful for our survival. In
-        both cases, developmental plasticity (learning) is relevant for genetic selection. For
-        even if I do not possess the genetic ability to generate vitamin C in my body, I can still
-        survive by learning the habit of eating fruit or die through failing to learn this habit.
+        Learning involves two processes: exploration and plasticity. When we learn to walk, we try
+        out various different ways of moving our bodies, and in the process, we change our habits
+        to make it more or less likely that we will move that way in the future. Now, these new
+        habits can be either useful or unuseful for our survival. In both cases, developmental
+        plasticity (that is, learning) is relevant for genetic selection. Because even if my genome
+        doesn't give my body the ability to generate vitamin C, I can still either survive by
+        learning the habit of eating fruit, or else die through failing to learn this habit.
         
         So, whereas the genome of each SelectiveExploration agent encodes a single candidate
-        string, H&N's genome encodes the starting point and plasticity of an agent's lifelong
-        exploration for new possible candidate strings. If an agent is able, through exploration,
-        to find more effective ways of surviving, it cannot pass these ways on to its offspring,
-        but it can pass on its ability to explore in ways that promote survival.
+        string, H&N's genome defines the exploration and plasticity of an agent's lifelong
+        developmental journey to discover new possible candidate strings. Notice, however, that
+        if the agent, through exploration, finds a more string-production habit, it cannot pass
+        this on to its offspring, since the habit is not encoded in its genome. Rather, the agent
+        must can pass on its ability to explore in ways that may rediscover that habit.
         
         The suggestion of H&N's work, therefore, is that agents who inherit not just one candidate
-        solution, but rather a life-story of exploring many potential solutions, may be more
+        solution, but rather a life-narrative of how to explore solutions efficiently, may be more
         successful in finding problem solutions. Implementing this is our next exciting step!
         """,
     ),

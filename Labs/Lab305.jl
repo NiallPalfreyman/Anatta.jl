@@ -6,8 +6,8 @@
 [
     Activity(
         """
-        Hi! Welcome to Anatta Subject 305:
-            Fields - The environmental selection rules on agents' behaviours.
+        Hi - Welcome to Anatta Subject 305:
+            Fields: The environmental selection rules on agents' behaviours.
 
         Autonomous, living systems are not only embodied as collectives of agents, but are also
         embedded in an environment that influences them and which they themselves influence. In

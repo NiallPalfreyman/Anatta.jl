@@ -6,7 +6,7 @@
 [
     Activity(
         """
-        Hi! Welcome to Anatta Subject 308: Stabilisation.
+        Hi - Welcome to Anatta Subject 308: Stabilisation.
 
         Stabilisation is the construction process by which almost all systems build structure
         over time. Imagine sand swirling around the bottom of the ocean, and imagine a large
@@ -31,7 +31,7 @@
         But what about a small twig? It might not be at all heavy, at first floating around freely,
         but slowly, sand arriving on one side supports the twig in one direction, settling it
         slightly more firmly in the sand. Meanwhile, because the twig is now moving less, sand
-        arriving from the other side builds up against it nd supports the twig in the opposite
+        arriving from the other side builds up against it and supports the twig in the opposite
         direction. Because the twig is long enough to weave together the effects of multiple grains
         of sand, more and more sand accumulates around the twig, increasing its stability even
         further. The twig links together the effect of multiple grains of sand, building structure

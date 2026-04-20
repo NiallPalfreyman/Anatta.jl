@@ -6,7 +6,7 @@
 [
     Activity(
         """
-        Hi! Welcome to Anatta Subject 310: Particle-Swarm Optimisation (PSO).
+        Hi - Welcome to Anatta Subject 310: Particle-Swarm Optimisation (PSO).
 
         In the previous lab (Suboptimisation), we saw how a collective of agents using regular
         search methods can get trapped in suboptimal solutions of a difficult optimisation problem.

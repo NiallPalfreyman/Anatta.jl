@@ -6,8 +6,8 @@
 [
     Activity(
         """
-        Hi! Welcome to Anatta Subject 304:
-            Complex behaviour - Biological behaviour is non-computable, but Reliable!
+        Hi - Welcome to Anatta Subject 304:
+            Complex behaviour: Biological behaviour is non-computable, but Reliable!
 
         To summarise our discoveries so far in this course: We have reason to believe that
         biological systems are collectively embodied and non-computable. That is, their behaviour
@@ -160,7 +160,7 @@
         """
         Let's now investigate the individual parameters of Reynolds' rules. Set min_separation to
         its highest value, to keep the flocks open, then set cohesion_weight to its highest value,
-        while setting cohesion_weight, alignment_weight and separation_weight all at their lowest
+        while setting minimum_separation, alignment_weight and separation_weight all at their lowest
         value. If you run the model, you will see that the boids simply fly in random directions.
         This isn't really surprising, but now raise cohesion_weight to its highest value of 1.0,
         reset and re-run the simulation. This should cause the boids to form a single flock. Is

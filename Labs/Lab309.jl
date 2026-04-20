@@ -6,7 +6,7 @@
 [	
     Activity(
         """
-        Hi! Welcome to Anatta Subject 309: Suboptimisation.
+        Hi - Welcome to Anatta Subject 309: Suboptimisation.
 
         We have seen that agent-based systems are capable of making choices by acting collectively.
         Many important problems in biology and in industry involve making choices that are

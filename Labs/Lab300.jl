@@ -243,8 +243,8 @@
     Activity(
         """
         At present, our agents feel uncomfortable, but do nothing to change this - that is why the
-        sum_comfort values stay constant throughout our simulation. Generative Science shows us how
-        to develop our model further by generating collective behaviour from agent interactions:
+        sum_comfort values stay constant throughout our simulation. Generative Science (GS) shows us
+        how to develop our model further by generating collective behaviour from agent interactions:
         1.  We start from a Research Question about the causes of some collective behaviour;
         2.  Our existing theories suggest a Research Hypothesis (HR) about how simple, local agent
             interactions might generate that collective behaviour;

@@ -6,7 +6,7 @@
 [
     Activity(
         """
-        Hi! Welcome to Anatta Subject 312: How do we select recombinable genetic structures?
+        Hi - Welcome to Anatta Subject 312: How do we select recombinable genetic structures?
 
         We wish to endow our agents with a genetic structure that enables them to solve some kind
         of problem. The simplest such problem that occurs to me is that of guessing the contents of

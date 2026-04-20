@@ -6,7 +6,7 @@
 [
     Activity(
         """
-        Hi! Welcome to Anatta Subject 307: Biological choice and differential adhesion.
+        Hi - Welcome to Anatta Subject 307: Biological choice and differential adhesion.
         
         One of the most exciting aspects of modern biology is the interaction between genetic
         structures and developmental organisation. Stuart Newman and Gerd Müller's Differential

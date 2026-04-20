@@ -145,7 +145,7 @@
             vel = (cos(θ),sin(θ))
 
         Implement this using the following code. Do the Turtles move in different directions?
-            vel = ecosys.vo * rand() * (θ->[cos(θ),sin(θ)])(2π*rand())
+            vel = ecosys.v0 * rand() * (θ->[cos(θ),sin(θ)])(2π*rand())
         """,
         "",
         x -> occursin('y',lowercase(x))

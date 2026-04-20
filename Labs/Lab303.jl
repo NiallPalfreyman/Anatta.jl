@@ -6,8 +6,8 @@
 [
     Activity(
         """
-        Hi! Welcome to Anatta Subject 303:
-            Non-Computability - An important aspect of irreducible behaviour is unpredictability.
+        Hi - Welcome to Anatta Subject 303:
+            Non-Computability: An important aspect of irreducible behaviour is unpredictability.
 
         Reduction is the idea that we can understand system-level behaviours by reducing them to
         individual component behaviours, yet we demonstrated in the previous lab that this is not

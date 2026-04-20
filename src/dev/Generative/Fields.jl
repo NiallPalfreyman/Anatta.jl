@@ -111,7 +111,7 @@ function demo()
 	plotkwargs = (												# Plotting parameters:
 		agent_color=:red, 											# SlimeMould's colour
 		agent_marker=wedge,											# SlimeMould's marker
-		title = "Creation and manipulation of fields",				# Playground title
+#		title = "Creation and manipulation of fields",				# Playground title
 		heatarray=(model->model.cAMP), 								# Background map of cAMP
 		heatkwargs = (colormap=:thermal, colorrange=(0.0,10.0)),	# cAMP intensity colours
         mdata=[(m->mean(m.cAMP))], mlabels=["Mean cAMP density"],	# Mean cAMP density data
