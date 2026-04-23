@@ -72,8 +72,8 @@
     ),
     Activity(
         """
-        You may have come to the conclusion that the only way to measure fitness of an organism is
-        by counting the number of its offspring over several generations. But in that case, the
+        You may have come to the conclusion that the only way to measure the fitness of an organism
+        is by counting the number of its offspring over several generations. But in that case, the
         clarion call "Survival of the fittest!" that supposedly lies at the centre of evolutionary
         theory, actually means nothing more than this:
             Organisms that have more children, have more children!
