@@ -159,7 +159,7 @@ function demo()
 	)
 
 	plotkwargs = (
-		agent_colour=:lime,
+		agent_color=:lime,
 		agent_size=15,
 		add_colorbar=false,
 		heatarray=:objective,
