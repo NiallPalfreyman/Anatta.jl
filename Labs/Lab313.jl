@@ -5,7 +5,7 @@
 #========================================================================================#
 let
 println( "Just loading the graphics package ...")
-using CairoMakie
+using GLMakie
 [
     Activity(
         """
