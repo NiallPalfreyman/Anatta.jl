@@ -65,8 +65,8 @@ using GLMakie
         with their environment and with each other is likely to play a significant role in shaping
         the overall computational efficiency of the system. Each of the 500 agents in
         SelectiveExploration executes its own reproduce!() method, but only allocates a new baby
-        under certain conditions. How many different conditions might abort the reproduction of a
-        new baby in SelectiveExploration.reproduce!()?
+        under certain conditions. How many different if-statements in the source code of
+        SelectiveExploration.reproduce!() are in a position to abort the reproduction of a new baby?
         """,
         "Count how many if-conditions in reproduce!() might prevent reproduction of a new baby",
         x -> x==4
@@ -131,7 +131,7 @@ using GLMakie
     ),
     Activity(
         """
-        Why have I used spiky() the objective calculation? Remember that we want to test the
+        Why have I used spiky() in the objective calculation? Remember that we want to test the
         effectiveness of our evolutionary algorithm against the results of Hinton and Nowlan, who
         used a very "spiky" objective function that returns 0 for all pairs of strings except when
         the dissonance between them is zero, when the return value is 1. reply() me the result of
@@ -145,7 +145,7 @@ using GLMakie
         Compile AgentTools.jl in VSC or in a Julia console. Define the range
             x = 0:0.01:1
 
-        Now use a plotting package such as CairoMakie to plot the following curve:
+        Now use a plotting package such as GLMakie to plot the following curve:
             lines(x,spiky.(x,s))
 
         for values of s rising slowly from 0 to 1. What happens to the graph as s rises? Does the
@@ -208,7 +208,7 @@ using GLMakie
         
         We say that organism development is Plastic: the structure and behaviour of our body
         changes in long-term ways during our lifetime, and becomes permanent, or habitual. These
-        habits are the meanings that we construct and learn.
+        habits are the meanings that we construct and learn during our life.
         """,
     ),
     Activity(

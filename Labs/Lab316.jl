@@ -90,7 +90,7 @@
         you want to produce curly stripes:
         """,
         "Change each slider individually, noting first the value to return it to after experimenting",
-        x -> "a_diff_rate"
+        x -> occursin("a_diff_rate", lowercase(x))
     ),
     Activity(
         """

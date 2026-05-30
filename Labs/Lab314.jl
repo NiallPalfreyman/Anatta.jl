@@ -49,7 +49,7 @@
     Activity(
         """
         Please load the module NarrativeExploration now, and execute NarrativeExploration.demo().
-        Then, in the graphical interface, raise the dt slider to 200 and press Step model five
+        Then, in the graphical interface, raise the dt slider to 200 and press Step Model five
         times. You will see the results of 1000 generations of a simulation that reproduces the
         work of Hinton and Nowlan (H&N).
         
