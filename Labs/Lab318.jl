@@ -55,7 +55,7 @@
     ),
     Activity(
         """
-        The aim of your project work is to write your own program and paper to demonstrate how
+        The aim of your project work will be to write your own program and paper to demonstrate how
         stabilisation implements at least one of the following important functions of living
         systems:
             -   adaptation
@@ -72,12 +72,33 @@
     ),
     Activity(
         """
+        Now we come to the tasks of your project. The first step in any such research project
+        is to replicate the results of Palfreyman (2026). Then move on to extend Palfreyman's work
+        by adding your own original contribution. You should do this in the following way:
+            1.  Copy the WattWorlds.jl file and ensure that it works properly. Set it up to publish
+                a single plot chosen from one of the predefined WattWorld regimes. This plot will be
+                your reference mode: your baseline for evaluating the results of your own, modified
+                implementation. Also, cut away any code that you do not need for your project.
+            2.  Convert the WattWorld type implementation into an ABM and replace Players by Agents
+                in your new WattWorld ABM.
+            3.  Wattworld is currently stabilised on a single variable, the resource value R. Replace
+                R by a spatially varying field that diffuses across the world. This enables agents to
+                construct a localised niche within which they can locally stabilise their variation.
+            4.  Your agents currently have no life-cycle. Add to your agents a genome that determines
+                whether they move up or down the R-gradient, and whether they consume or emit R.
+                This enables them to adapt their environment to their needs, and to learn from their
+                interactions with the world.
+            5.  You have now implemented an ABM of a spatially structured WattWorld containing agents
+                that pursue a life-cycle. Use this ABM to formulate and test a research question and
+                hypothesis regarding the ABM's ability to use stabilisation to implement the aspects
+                of living system mentioned in the previous activity.
+        """,
+    ),
+    Activity(
+        """
         Keep the goals of your experimental system very simple! For example, you might decide to use
-        stabilisation to learn a particular class of Turing patterns. Remember that if you wish to
-        optimise some objective function, you will need to reformulate this optimisation problem as
-        a stabilisation problem!
-
-        You Must discuss your project ideas with your teacher before you start work on it!
+        stabilisation to learn some particular Turing pattern. You Must discuss your project ideas
+        with your teacher before you start work on it!
         """,
     ),
     Activity(
@@ -89,9 +110,9 @@
 
         Regarding your program: it should be a single Julia module containing one or more
         interacting types that can be run in the Anatta Lab environment. You should include a demo()
-        function that runs the program and demonstrates the argument in your paper. Keep the code as
-        simple and clear as possible, using all of the programming techniques that you have learned
-        in this and previous Subjects.
+        function that runs the program and publishes graphs that demonstrate the argument in your
+        paper. Keep the code as simple and clear as possible, using all of the programming techniques
+        that you have learned in this and previous Subjects.
 
         Good luck! :)
         """,
