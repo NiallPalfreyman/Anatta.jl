@@ -1,7 +1,8 @@
 name = "Anatta"
 uuid = "6ea38b10-3220-4105-9032-02c82e619cdd"
-version = "0.0.21"
 authors = ["Niall Palfreyman"]
+version = "0.0.21"
+license = "MIT"
 
 [deps]
 Agents = "46ada45e-f475-11e8-01d0-f70cc89e6671"
@@ -14,6 +15,7 @@ LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 Makie = "ee78f7c6-11fb-53f2-987a-cfe4a2b5a57a"
 Observables = "510215fc-4207-5dde-b226-833fc4488ee2"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
+Registrator = "4418983a-e44d-11e8-3aec-9789530b3b3e"
 Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
 
 [compat]
@@ -25,6 +27,7 @@ GLMakie = "0.11, 0.12, 0.13, 1"
 GeometryBasics = "0.4, 0.5"
 Makie = "0.22, 0.23, 0.24, 1"
 Observables = "0.5, 1"
+Registrator = "1.11.0"
 Statistics = "1"
 julia = "1.6"
 
