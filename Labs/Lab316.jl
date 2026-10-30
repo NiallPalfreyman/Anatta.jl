@@ -61,8 +61,8 @@
         will promote the production of Inhibitor, which then diffuses more quickly than Activator
         away from that location. This forms an inhibiting ring of Inhibitor around the area of high
         Activator concentration. In the Turing module, change the heatmap to :inhibitor to check
-        whether this theory is correct: does Inhibitor form spots that are wider than the Activator
-        spots?
+        whether this theory is correct: Can you see that the halos around the Inhibitor spots are
+        now wider than the previous Activator spots?
         """,
         "",
         x -> occursin('y',lowercase(x))

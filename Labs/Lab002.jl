@@ -517,7 +517,7 @@
         Our count_common() method seems to be working correctly - let's try it out with some real
         data. You already have the two variables data_hs and pax6_hs; now we will compare this
         Homo sapiens data with Mus musculus (mouse) data. First read in the data from the julia
-        propmpt, just as you did before for H. sapiens, using the following lines of code:
+        prompt, just as you did before for H. sapiens, using the following lines of code:
             is = open("Development/Computation/pax6_mm.dat","r")
             data_mm = readlines(is);
             close(is)
@@ -533,7 +533,7 @@
         """
         You can now analyse the common content of the pax6 gene for H. sapiens and M. musculus by
         entering commands such as the following:
-            Computation.count_common(pax6_hs,pax6_mm,5)
+            Computation.count_common(pax6_hs,pax6_mm,66)
 
         With this command, I look for common substrings of length 5. Experiment for yourself by
         finding out the maximum length of common substring contained in both pax6_hs and pax6mm:

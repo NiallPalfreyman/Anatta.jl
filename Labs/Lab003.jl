@@ -304,7 +304,7 @@
         own Weasel in the Main julia environment, you will need to enter this:
             willy = Organisms.Weasel( "Willy", 2)
 
-        Do this now. Is it possible for you to now to display Willy's greeting by entering the
+        Do this now. Is it possible for you to now display Willy's greeting by entering the
         following line of code at the julia prompt?
             greeting(willy)
         """,
@@ -426,7 +426,7 @@
         Change Rabia's age to 4, then give Rabia to me to look at for myself:
         """,
         "rabia.age = 4",
-        x -> (x.length == 4)
+        x -> (x.age == 4)
     ),
     Activity(
         """

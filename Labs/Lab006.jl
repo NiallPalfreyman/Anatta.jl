@@ -72,9 +72,9 @@
         """
         Aha! So although we can change the value of LOCAL paula inside the function change_paula(),
         this does not affect the value of GLOBAL paula. In fact, there exist two different variables
-        named paula: the GLOBAL variable containing the value 5, and a LOCAL variable containing
-        the value 7. When change_paula() ends, the variables in its local scope are thrown away,
-        and the LOCAL paula disappears.
+        named paula: the GLOBAL variable Main.paula containing the value 5, and a LOCAL variable
+        in change_paula()containing the value 7. When change_paula() ends, the variables in its
+        local scope are thrown away, and the LOCAL paula disappears.
 
         If we REALLY want to change the global value of paula, we can do so by redefining
         the function change_paula():
@@ -109,10 +109,10 @@
     ),
     Activity(
         """
-        The point here is that linus is a (global) Vector that refers to its contents (5,4,3,2,1).
-        If we do not use the keyword `global`, julia does not allow us to change linus itself,
-        however julia DOES allow us to change the CONTENTS that linus refers to. So global
-        variables are still very unsafe! What are we to do? Here is the solution:
+        The point here is that linus is a global reference to a Vector with contents (5,4,3,2,1).
+        If we do not use the keyword `global`, julia does not allow us to change the global
+        reference linus, however julia DOES allow us to change the CONTENTS that linus refers to.
+        So global variables are still very unsafe! What should we do? Here is the solution:
 
             ALWAYS encapsulate (i.e.: wrap/hide) EVERYTHING you do inside a MODULE!
 
@@ -150,17 +150,19 @@
     Activity(
         """
         Replicators.jl is the starting point of a project to simulate a growing population of bio-
-        logical replicators (e.g. genes, bacteria, yeast, ...). I recommend STRONGLY that you use
-        Replicators.jl as a general template for starting new projects of your own. When you start
-        a new project, copy Replicators.jl to a new file, then adapt its contents to fit your needs.
+        logical replicators (e.g. genes, bacteria, yeast, ...). I created the file Replicators.jl
+        by copying the file Dummies.jl in the same folder, then modifying it to suit our needs for
+        the Replicators project. I STRONGLY recommend that you do the same thing for starting new
+        projects of your own. When you start a new project, copy Dummies.jl to a new file, then
+        adapt its contents to fit your needs.
 
         Take a good look at the following important aspects of the file Replicators.jl:
             1.  It uses comment lines and boxes to divide the code into simple explanatory chunks.
-                Please never neglect these comments - ALWAYS keep their information up to date!
+                Please make sure you always keep the information in such comments up to date!
             2.  It contains just one module called Replicators, which will hold together all the
-                data and methods that we need for our coming project.
+                data and methods that we need for the Replicator data type.
             3.  The Replicators module contains the definition of a new data type Replicator which
-                will form the central storage point for the information in our simulation.
+                will form the central storage point for the time-series data of our simulation.
             4.  The Replicators module also contains just ONE method: the Use-Case demo() which
                 specifies and tests all the high-level actions that we will want our program to do.
                 For example, we intend to design a method run!() that will simulate a Replicator
@@ -194,7 +196,7 @@
     ),
     Activity(
         """
-        Ani's Law of Programming: You will ALWAYS get error messages, and this is a Good Thing! :)
+        Ani's Law of Programming: Compiler error messages are ... Wonderful! :)
 
         The point is this: NO-ONE else in your life is able to give you such consistently patient,
         supportive, nonjudgemental feedback as a compiler! Compilers never get cross - they simply
@@ -203,7 +205,7 @@
         You have already started making friends with the julia compiler by noting the line number
         in which the error occurred: 50. Now take it one step further - in the ERROR line, it says
         there is an UndefVarError. That is, we forgot to define something. What is the name of the
-        thing we forgot to define?
+        thing that we use in line 50, but forgot to define?
         """,
         "",
         x -> occursin("run!",x)

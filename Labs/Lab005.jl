@@ -49,8 +49,19 @@
     Activity(
         """
         1:2:7 creates a range of numbers from 1 to 7 in steps of 2: [1,3,5,7]. Reshape 1:81 into a
-        (9x9) matrix, then extract from it the (3x3) matrix obtained by taking the first, then
-        every third, row and column of your (9x9) matrix. Then tell me the result:
+        (9x9) matrix named A, then extract from A the (3x3) matrix obtained by taking the first,
+        then every third, row and column of your (9x9) matrix A. Then tell me the result:
+        """,
+        "",
+        x -> x == [1 28 55;4 31 58;7 34 61]
+    ),
+    Activity(
+        """
+        In Julia, we can always nest function calls within each other. For example, the call
+        sin.((101:120)[isodd.(1:20)]) first creates the range 101:120, then uses logical indexing
+        to select the odd elements of it. Use this idea to repeat your work from the previous
+        activity, but this time do it in one line of code without creating the (9x9) matrix A.
+        Then tell me the result:
         """,
         "",
         x -> x == [1 28 55;4 31 58;7 34 61]
