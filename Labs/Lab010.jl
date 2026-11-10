@@ -68,7 +68,7 @@ using DataFrames
         You may think this result seems a little trivial, but isn't it really quite brilliant?
         Just by turning your head on its side, you can see that 3*5 has exactly the same value as
         5*3 ! And, of course, this is true of the product (m*n) of Any two integers (that is,
-        whole numbers) m and n! :-o
+        whole numbers) m and n! :-O
 
         Since we can represent the product of any two integers m and n as an array of rows and
         columns, we know that we can Always swap the order of multiplication:
@@ -141,7 +141,7 @@ using DataFrames
         can find structures like this array, that make invariances very easy to notice.
 
         For example, the following structure makes it easy to notice that another operation between
-        numbers is also commutative. What is the name of this new commutative arithmeticoperation?
+        numbers is also commutative. What is the name of this new commutative arithmetic operation?
             * * * * * * *!* * *
 
             * * *!* * * * * * *
@@ -157,9 +157,9 @@ using DataFrames
         Can you tell me another arithmetic (that is, number-) operation that is Non-commutative?
         """,
         "",
-        x -> any( map(["/","^","div","pow","exp"]) do op
-                occursin( op, lowercase(x))
-            end
+        x -> x in [/,^,div,pow,exp] || any( map(["/","^","div","pow","exp"]) do op
+            occursin( op, lowercase(x))
+        end
         )
     ),
     Activity(
@@ -193,7 +193,7 @@ using DataFrames
     Activity(
         """
         There are a couple of things we should remember about brackets in mathematics. Let's start
-        the distributive multiplication we've just been looking at:
+        with the distributive multiplication that we've just been looking at:
             4 * (3 + 5) = (4 * 3) + (4 * 5)
 
         First, you may remember that we can leave out the multiplication sign in front of brackets:
@@ -250,12 +250,12 @@ using DataFrames
     Activity(
         """
         Has anyone ever told you that "Multiplication makes things bigger"? Well, for the numbers
-        we've looked at so far, this heuristic (or: rule of thumb) is true - for example,
-        4*3 = 12, which is bigger that either 4 or 3. But it is Not true for all numbers! For
+        we've looked at so far, this heuristic (or: rule of thumb) is correct - for example,
+        4*3 = 12, which is bigger that either 4 or 3. But it is Not correct for all numbers! For
         example, think about:
             1/2 * 6 = 3,
 
-        which is bigger that 1/2, but Smaller than 6. Apparently, multiplication can also make
+        which is bigger than 1/2, but Smaller than 6. Apparently, multiplication can also make
         things smaller! And now look at this area diagram of 1/2 * 1/3 ...
 
         Is the result of this multiplication bigger than either of the two factors 1/2 and 1/3
