@@ -18,9 +18,10 @@
     ),
     Activity(
         """
-        In this lab, we investigate DETERMINISTIC CHAOS. Chaos is extremely important in biology,
-        because it is the source of the spontaneity that we observe in living organisms. To see how
-        chaos works, start by loading my julia implementation of the Mathematica function nestlist():
+        In this lab, we investigate Deterministic Chaos. Chaos is extremely important in biology,
+        because it is the source of the autonomous freedom of action that we observe in living
+        organisms. To see how chaos works, start by loading my julia implementation of the
+        Mathematica function nestlist():
             include("Development/Computation/Utilities.jl")
             using .Utilities
 
@@ -419,7 +420,7 @@
         recursion or iteration, but instead uses the prod() function.
         """,
         "",
-        x -> occursin("->prod(1:",replace(x," "=>""))
+        x -> (x isa Function && x(7) == 5040) || occursin("->prod(",replace(x," "=>""))
     ),
     Activity(
         """

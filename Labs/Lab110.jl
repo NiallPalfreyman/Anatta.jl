@@ -93,11 +93,11 @@
         Now we'll use this information on line attributes to replot our curve. Try entering this:
             fig = scatterlines(0:10,(0:10).^2,color=:red)
 
-        Now replot this graph using a line with thickness 9-point, then tell me exactly which value
-        you needed to assign to the relevant attribute in order to do this:
+        Now replot this graph using a line with thickness 9-point, then tell me exactly which
+        attribute you needed to modify in order to do this:
         """,
         "The important point here is that numbers are already symbols, so you don't need the colon",
-        x -> x==9
+        x -> x=="linewidth"
     ),
     Activity(
         """
@@ -215,7 +215,7 @@
         arguments on the Makie documentation site https://docs.makie.org/stable/, then tell me what
         linestyle displays a line consisting of a sequence of two dots and a dash (-..-..-..-)?
         """,
-        x -> x==:dashdotdot
+        x -> x==:dashdotdot || occursin("dashdotdot",lowercase(x))
     ),
     Activity(
         """

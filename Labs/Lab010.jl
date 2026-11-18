@@ -140,8 +140,9 @@ using DataFrames
         this array as 3 rows of 5, or 5 rows of 3, asterisks. In mathematics, it is helpful if we
         can find structures like this array, that make invariances very easy to notice.
 
-        For example, the following structure makes it easy to notice that another operation between
-        numbers is also commutative. What is the name of this new commutative arithmetic operation?
+        For example, the following structure uses the separator '!' to demonstrate that another
+        simple arithmetic operation is also commutative. What is the name of this new arithmetic
+        operation?
             * * * * * * *!* * *
 
             * * *!* * * * * * *
@@ -314,9 +315,10 @@ using DataFrames
         contribute to the final result of the multiplication. Any white areas lie outside the
         multiplication and also do not count towards the final result of the multiplication.
 
-        Your mission: Can you convince yourself that commutativity and distributivity apply to
-        multiplication and addition of All Possible real numbers, whether positive, negative,
-        fractions, decimals or factors containing three or more terms?
+        Your mission: How might you use these diagrams to convince yourself that the laws of
+        commutativity and distributivity apply to multiplication and addition of All Possible
+        real numbers, whether positive, negative, fractions, decimals or factors containing three
+        or more terms?
         """,
         "",
         x -> true
