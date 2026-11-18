@@ -1,18 +1,30 @@
 #========================================================================================
-	QBOperators
+	Operators
 
 This file contains definitions of the type Operator for the module QuBits: A package for
 experimenting with quantum computation.
 
-Author: Niall Palfreyman, 25/05/22
+Author: Niall Palfreyman, 10/11/2026
 ========================================================================================#
-include( "./QBStates.jl")
+module Operators
 
-# Exports:
-export Operator, ishermitian, isunitary, paulix, pauliy, pauliz, PauliX, PauliY, PauliZ
+# Externally callable symbols of the Operators module:
+export Operator, identityop, density, ishermitian, isunitary, nbits,
+		paulix, pauliy, pauliz, PauliX, PauliY, PauliZ
+# Reexport States:
+export State, qubit, adj, ampl, phase, prob, maxprob, nbits, off, on, normalise!,
+		pure, mixed, uniform, bitstate, density, ON, OFF
+# Reexport Tensors:
+export Tensor, ⊗, ↑, kpow, isclose, ishermitian, isunitary, ispermutation
+
+# Imports:
+include( "States.jl")
+using .States
+import .States: nbits		# Explictly imported for extension to Operators
+using LinearAlgebra: I
 
 #========================================================================================#
-# Operator definitions:
+# Module definitions:
 #-----------------------------------------------------------------------------------------
 """
 	Operator
@@ -36,16 +48,16 @@ Base.length(op::Operator) = length(op.matrix)
 Base.size(op::Operator) = size(op.matrix)
 Base.getindex(op::Operator,i::Integer,j::Integer) = getindex(op.matrix,i,j)
 
-#-----------------------------------------------------------------------------------------
-# Operator constructors:
+#========================================================================================#
+# Module constructors:
 #-----------------------------------------------------------------------------------------
 """
-	identity( d::Int)
+	identityop( n::Int=1)
 
-Construct d-dimensional identity Operator.
+Construct an n-qubit identity Operator.
 """
-function identity( d::Int=1)
-	Operator([1 0;0 1] ↑ d)
+function identityop( n::Int=1)
+	Operator([1 0;0 1] ↑ n)
 end
 
 #-----------------------------------------------------------------------------------------
@@ -85,11 +97,11 @@ end
 Construct the density operator of the state s.
 """
 function density( s::State)
-	Operator(s.ket ? s * adj(s) : adj(s) * s)
+    Operator((s.ket) ? (s.amp * adj(s.amp)) : (adj(s.amp) * s.amp))
 end
 
-#-----------------------------------------------------------------------------------------
-# Operator methods:
+#========================================================================================#
+# Module methods:
 #-----------------------------------------------------------------------------------------
 """
 	Base.kron( op1::Operator, op2::Operator)
@@ -104,7 +116,7 @@ Base.kron( op1::Operator, op2::Operator) = Operator( kron(op1.matrix,op2.matrix)
 
 Inner product of two Operators is itself an Operator.
 """
-Base.:*( op1::Operator, op2::Operator) = Operator( *(op1.matrix,op2.matrix))
+Base.:*( op1::Operator, op2::Operator) = Operator( op1.matrix * op2.matrix)
 
 #-----------------------------------------------------------------------------------------
 """
@@ -116,7 +128,7 @@ function Base.:*( op::Operator, s::State)
 	if !s.ket
 		error("Operators can only be multiplied onto ket-States")
 	end
-	State( *(op.matrix,s.amp))
+	State( op.matrix * s.amp)
 end
 
 #-----------------------------------------------------------------------------------------
@@ -191,7 +203,7 @@ Check whether the Operator op is unitary.
 """
 function isunitary( op::Operator)
 	m = op.matrix
-	isclose(m*m',Matrix(I,size(m)))
+	isclose(m*m',Matrix(I(size(m,1))))
 end
 
 #-----------------------------------------------------------------------------------------
@@ -233,8 +245,8 @@ function Base.show( io::IO, ::MIME"text/plain", op::Operator)
 	end
 end
 
-#-----------------------------------------------------------------------------------------
-# Operator constants:
+#========================================================================================#
+# Module constants:
 #-----------------------------------------------------------------------------------------
 """
 	PauliX = paulix(1)
@@ -259,13 +271,13 @@ The 1-d Pauli Z-gate.
 """
 const PauliZ = pauliz()
 
-#-----------------------------------------------------------------------------------------
+#========================================================================================#
 """
-	demoops()
+	demo()
 
 Demonstrate how to create, compose and display Operators.
 """
-function demoops()
+function demo()
 	op1 = paulix()
 	op2 = pauliy()
 	print("op1 = "); display( op1)
@@ -274,3 +286,5 @@ function demoops()
 	print( "op1(op2) = op2 * op1 = ")
 	display( op1(op2))
 end
+
+end		# ... of module Operators

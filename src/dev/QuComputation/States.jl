@@ -1,18 +1,25 @@
 #========================================================================================
-	QBStates
+	States
 
-This file contains the definition of the type State for the module QuBits: A package for
-experimenting with quantum computation.
+This module contains the definition of the type State for quantum computation.
 
-Author: Niall Palfreyman, 25/05/22
+Author: Niall Palfreyman, 30/10/2026
 ========================================================================================#
-include( "./QBDefinitions.jl")
+module States
 
-# Exports:
-export State, qubit, ampl, phase, prob, maxprob, nbits, off, on, pure, bitstate, density, ON, OFF
+# Externally callable symbols of the States module:
+export State, qubit, adj, ampl, phase, prob, maxprob, nbits, off, on, normalise!,
+		pure, mixed, uniform, bitstate, density, ON, OFF
+# Reexport Tensors:
+export Tensor, ⊗, ↑, kpow, isclose, ishermitian, isunitary, ispermutation
+
+# Imports:
+include( "Tensors.jl")
+using .Tensors
+using LinearAlgebra: Adjoint, norm
 
 #========================================================================================#
-# State definitions:
+# Module types:
 #-----------------------------------------------------------------------------------------
 """
 	State
@@ -24,32 +31,28 @@ struct State <: Tensor{Complex,1}
 	ket::Bool												# Ket or bra?
 end
 
-Vectuple = Union{AbstractVector,Tuple}						# Useful for indexing States
+Vectuple = Union{AbstractVector,Tuple}				# Useful for indexing States
 
-#-----------------------------------------------------------------------------------------
-# Delegated State methods:
-Base.length(s::State) = length(s.amp)
-Base.size(s::State) = size(s.amp)
-Base.getindex(s::State,i::Integer) = getindex(s.amp,i)
-
-#-----------------------------------------------------------------------------------------
+#========================================================================================#
 # State constructors:
 #-----------------------------------------------------------------------------------------
 """
 	State( amp::Union{Vector,Adjoint,Matrix}, ket::Bool=true)
 
-Construct a State from the given amplitudes
+Construct a State from the given amplitudes - by default in ket mode. The amplitudes are
+normalised to unit length.
 """
-function State( amp::Union{Vector,Adjoint,Matrix})
+function State( amp::Union{Vectuple,Adjoint,Matrix})
+	amp = collect(amp)
 	len = length(amp)
 	siz = size(amp)
 	if !(len in siz)
 		# Amplitude structure is multi-dimensional:
-		error( "States must have dimensionality 1")
+		error( "States may contain only one dimension of amplitudes")
 	end
 
-	l2len = log2(len)
-	if !(isclose(l2len,round(l2len)))
+	log2len = log2(len)
+	if !(isclose(log2len,round(log2len)))
 		# length(amp) is not a power of 2:
 		error( "Number of State amplitudes must be a power of 2")
 	end
@@ -60,25 +63,106 @@ function State( amp::Union{Vector,Adjoint,Matrix})
 		error( "States must be non-zero")
 	end
 
-	# Convert to normalised complex Vector in either ket or bra mode
+	# Convert to normalised complex Vector in appropriate ket or bra mode
 	State( ComplexF64.(vec(collect(amp)))/nrm, !(siz[1]==1))
+end
+
+"Construct a State from the given amplitudes in ket mode."
+ket( amp::Union{Vectuple,Adjoint,Matrix}) = State(amp,true)
+
+"Construct a State from the given amplitudes in bra mode."
+bra( amp::Union{Vectuple,Adjoint,Matrix}) = State(amp,false)
+
+#-----------------------------------------------------------------------------------------
+"""
+	qubit( alpha::Complex, beta::Complex)
+
+Construct a single qubit State from precisely two given amplitudes.
+"""
+function qubit( alpha::Number, beta=nothing)
+	if beta===nothing
+		beta = sqrt(1.0 - alpha'*alpha)
+	end
+
+	State([alpha,beta])
 end
 
 #-----------------------------------------------------------------------------------------
 """
-	pure( d::Int=1, i::Int=1)
+	qubit(; alpha=nothing, beta=nothing)
 
-Construct an n-qubit State pure in the i-th amplitude.
+Construct a single qubit State from the named amplitudes.
 """
-function pure( d::Int=1, i::Int=1)
-	if d < 0
-		error("Rank must be at least 1")
+function qubit(; alpha=nothing, beta=nothing)
+	if alpha === beta === nothing
+		# Neither amplitude is given:
+		error("alpha, beta or both are required.")
 	end
 
-	amp = zeros(Float64,1<<d)
+	if alpha === nothing
+		# alpha not given:
+		alpha = sqrt(1.0 - beta'*beta)
+	end
+
+	qubit(alpha,beta)
+end
+
+#-----------------------------------------------------------------------------------------
+"""
+	pure( n::Int=1, i::Int=1)
+
+Construct an n-qubit State pure in the i-th amplitude. That is, the State is |0...010...0>,
+where the 1 is in the i-th position.
+"""
+function pure( n::Int=1, i::Int=1)
+	if n < 1 || i < 1 || i > (1<<n)
+		error( "Invalid number of qubits or amplitude index")
+	end
+
+	amp = zeros(Float64,1<<n)
 	amp[i] = 1.0
 	State(amp)
 end
+
+"Construct an n-qubit State pure in a randomly selected amplitude."
+pure( n::Int=1) = pure(n, rand(1:1<<n))
+
+#-----------------------------------------------------------------------------------------
+"""
+	mixed( n::Int=1, amps::Vectuple{Complex})
+
+Construct an n-qubit State mixed in the specified amplitudes.
+"""
+function mixed( amps::Vectuple)
+	n = log2(length(amps))
+	if !(isclose(n,round(n)))
+		# length(amps) is not a power of 2:
+		error( "Number of State amplitudes must be a power of 2")
+	end
+
+	State(ComplexF64.(collect(amps)))
+end
+
+#-----------------------------------------------------------------------------------------
+"""
+	uniform( distribution::BitVector)
+
+Construct an n-qubit State with uniformly distributed amplitudes in the given distribution.
+"""
+function uniform( distribution::BitVector)
+	n = log2(length(distribution))
+	if !(isclose(n,round(n)))
+		# length(distribution) is not a power of 2:
+		error( "Number of State amplitudes in distribution must be a power of 2")
+	end
+
+	amps = zeros(ComplexF64,length(distribution))
+	amps[distribution] .= exp.(im*2π*rand(sum(distribution)))	# Randomise phases of non-zero amplitudes
+	State(amps)
+end
+
+"Construct an n-qubit State with all amplitudes uniformly distributed."
+uniform( n::Int=1) = uniform(BitVector(trues(1<<n)))		# Randomly select a uniform state
 
 #-----------------------------------------------------------------------------------------
 """
@@ -104,55 +188,27 @@ end
 """
 	bitstate( bits)
 
-Construct a state from the given bits.
+Construct a state that is true at the given bits.
 """
 function bitstate( bits::Vectuple)
 	bv = BitVector(bits)
-	pure( length(bv), bits2dec(bv)+1)
+	pure( length(bv), bits2dec(bv))
 end
 
+"Construct a state that is true at the given decimal value."
+bitstate( bits::Int) = bitstate(dec2bits(bits))
+
+"Construct a state that is true at the given bit arguments."
 bitstate( bits...) = bitstate(bits)
 
+#========================================================================================#
+# Module methods:
 #-----------------------------------------------------------------------------------------
-"""
-	rand( n::Int)
+# Delegated State methods:
+Base.length(s::State) = length(s.amp)
+Base.size(s::State) = size(s.amp)
+Base.getindex(s::State,i::Integer) = getindex(s.amp,i)
 
-Construct a random combination of n |0> and |1> states.
-"""
-function rand( n::Int)
-	bitstate(Main.rand(Bool,n))
-end
-
-#-----------------------------------------------------------------------------------------
-"""
-	qubit( alpha::Complex, beta::Complex)
-
-Construct a single qubit State from the given amplitudes.
-"""
-function qubit( alpha::Number, beta=nothing)
-	if beta===nothing
-		beta = sqrt(1.0 - alpha'*alpha)
-	end
-
-	State([alpha,beta])
-end
-
-function qubit(; alpha=nothing, beta=nothing)
-	if alpha === beta === nothing
-		# Neither amplitude is given:
-		error("alpha, beta or both are required.")
-	end
-
-	if alpha === nothing
-		# alpha not given:
-		alpha = sqrt(1.0 - beta'*beta)
-	end
-
-	qubit(alpha,beta)
-end
-
-#-----------------------------------------------------------------------------------------
-# State methods:
 #-----------------------------------------------------------------------------------------
 """
 	getindex( s::State, bits::Vectuple)
@@ -161,7 +217,7 @@ Return the amplitude for qubit indexed by bits. Note: since binary values start 
 add 1 to the decimal conversion of bits.
 """
 function Base.getindex( s::State, bits::Vectuple)
-	s[bits2dec(BitVector(bits))+1]
+	s[bits2dec(bits)]
 end
 
 """
@@ -170,6 +226,14 @@ end
 Return the amplitude specified by the given bit values.
 """
 Base.getindex( s::State, bits...) = s[bits]
+
+#-----------------------------------------------------------------------------------------
+"""
+	Base.kron( s1::State, s2::State)
+
+Kronecker product of two States is itself a State.
+"""
+Base.kron( s1::State, s2::State) = State(kron(s1.amp,s2.amp))
 
 #-----------------------------------------------------------------------------------------
 """
@@ -184,14 +248,6 @@ function Base.:*( s1::State, s2::State)
 
 	s1.ket ? (s1.amp * permutedims(s2.amp)) : (permutedims(s1.amp) * s2.amp)[1]
 end
-
-#-----------------------------------------------------------------------------------------
-"""
-	Base.kron( s1::State, s2::State)
-
-Kronecker product of two States is itself a State.
-"""
-Base.kron( s1::State, s2::State) = State(kron(s1.amp,s2.amp))
 
 #-----------------------------------------------------------------------------------------
 """
@@ -223,20 +279,18 @@ phase( s::State, bits...) = phase(s,bits)
 Return probability for qubit indexed by bits.
 """
 function prob( s::State, bits::Vectuple)
-	amp = s[bits]							# Retrieve own amplitude
-	real(conj(amp)*amp)						# Calculate its squared norm
+	abs2(s[bits])						# Calculate squared norm of bits-th amplitude
 end
 
 prob( s::State, bits...) = prob(s,bits)
 
 function prob( s::State, i::Int)
-	amp = s[i]								# Retrieve own amplitude
-	real(amp'*amp)							# Calculate its squared norm
+	abs2(s[i])							# Calculate squared norm of i=th amplitude
 end
 
 #-----------------------------------------------------------------------------------------
 """
-	normalise( s::State)
+	normalise!( s::State)
 
 Normalise the state s (but throw an error if it's a zero state).
 """
@@ -265,15 +319,25 @@ end
 Return tuple (bitindex,prob) of highest probability qubit in this State.
 """
 function maxprob( s::State)
-	mxindex, mxprob = -1, 0.0
-	for i in 1:length(s)
-		thisprob = prob(s,i)
+	mxbits, mxprob = [], 0.0
+	for bits in bitprod(nbits(s))
+		thisprob = prob(s,bits)
 		if thisprob > mxprob
-			mxindex, mxprob = i, thisprob
+			mxbits, mxprob = bits, thisprob
 		end
 	end
 
-	(mxindex, mxprob)
+	(mxbits, mxprob)
+end
+
+#-----------------------------------------------------------------------------------------
+"""
+	bitprod( n::Int)
+
+Return a list of all binary numbers containing n bits in numerical order.
+"""
+function bitprod(nbits::Int)
+    [dec2bits(i,nbits) for i in 1:1<<nbits]
 end
 
 #-----------------------------------------------------------------------------------------
@@ -311,9 +375,9 @@ Display the given State in verbose form.
 function Base.show( io::IO, ::MIME"text/plain", s::State)
 	len = length(s)
 	nb = nbits(s)
-	bv = bitsvec(nb)
-	println( io, nb, "-bit, ", len, "-amplitude ", (s.ket ? "ket" : "bra"), "-State:")
-	for bits in bv
+
+	println( io, nb, "-qubit, ", len, "-amplitude ", (s.ket ? "ket" : "bra"), "-State:")
+	for bits in bitprod(nb)
 		ampl = s[bits]
 		println( io, " ",
 			bits2str(bits), " : ", rpad(round(ampl,digits=4),18),
@@ -323,13 +387,13 @@ function Base.show( io::IO, ::MIME"text/plain", s::State)
 	end
 end
 
-#-----------------------------------------------------------------------------------------
+#========================================================================================#
 # State constants:
 #-----------------------------------------------------------------------------------------
 """
 	OFF = off(1)
 
-The off qubit.
+The OFF qubit.
 """
 const OFF = off(1)
 
@@ -337,7 +401,7 @@ const OFF = off(1)
 """
 	ON = on(1)
 
-The on qubit.
+The ON qubit.
 """
 const ON = on(1)
 
@@ -349,26 +413,25 @@ const ON = on(1)
 
 Format bit vector as string
 """
-function bits2str( bits::Vectuple)
-	"|" * string([+s for s in bits]...) * ">=|" * string(bits2dec(bits)) * ">"
+function bits2str( bits::Vectuple, npad::Int=2)
+	"|" * string([+s for s in bits]...) * "> == |" * lpad(string(bits2dec(bits)), npad) * ">"
 end
 
 bits2str(bits...) = bits2str(bits)
 
 #-----------------------------------------------------------------------------------------
 """
-	bits2dec( bits::BitVector)
+	bits2dec( bits::AbstractVector)
 
-Compute decimal representation of a BitVector.
+Compute decimal representation of an AbstractVector interpreted as a binary number.
 """
-function bits2dec( bits::BitVector)
-	s = 0; v = 1
-	for i in view(bits,length(bits):-1:1)
-		s += v*i
-		v <<= 1
-	end 
-	s
+function bits2dec( bits::AbstractVector)
+	bits = bitvec(bits)
+	1+sum( v * (1 << (length(bits)-i)) for (i,v) in enumerate(bits))
 end
+
+bitvec(v::AbstractVector{Bool})			= BitVector(v)
+bitvec(v::AbstractVector{<:Integer})	= BitVector(v .!= 0)
 
 #-----------------------------------------------------------------------------------------
 """
@@ -376,29 +439,21 @@ end
 
 Compute a hi2lo nbit binary representation of a decimal value.
 """
-function dec2bits( dec::Int, nbits::Int)
-	BitVector(reverse( digits(dec, base=2, pad=nbits)))
+function dec2bits( ndec::Int, nbits::Int=2)
+#	BitVector(reverse( digits(dec-1, base=2, pad=nbits)))
+	ndec -= 1
+	BitVector(digits(ndec, base=2, pad=max(nbits, ndigits(ndec, base=2))) |> reverse)
 end
 
 #-----------------------------------------------------------------------------------------
 """
-	bitsvec( nbits::Int)
-
-Construct a list of all binary numbers containing nbits in numerical order.
-"""
-function bitsvec( nbits::Int)
-    [dec2bits(i,nbits) for i in 0:1<<nbits-1]
-end
-
-#-----------------------------------------------------------------------------------------
-"""
-	demostates()
+	demo()
 
 Demonstrate how to use a variety of State constructors and the display() method.
 """
-function demostates()
+function demo()
 	stt1 = bitstate(1,0,1)
-	stt2 = ON ⊗ OFF ⊗ ON
+	stt2 = ON ⊗  OFF ⊗  ON
 
 	println("Are these two states approximately equal?")
 	println( "stt1 ≡ bitstate(1,0,1) = ", stt1)
@@ -406,3 +461,5 @@ function demostates()
 	println( isclose(stt1,stt2) ? "Yes:" : "No:")
 	display(stt1)
 end
+
+end		# ... of module States

@@ -9,20 +9,16 @@
         Hi! Welcome to Anatta Subject 600:
             Quantum computing - Small stories generate large structures
         
-        This course is fortunately still open for construction. However, you can read this
-        laboratory to gain an idea of what is going to come in the future ...
-
         In this course we explore the wonderful world of quantum physics, quantum computing and
         quantum information. In this introductory lab, we first gather the various mathematical
-        tools we need for dealing with quantum systems - in particular, we will need to extend
-        our knowledge of Julia to include complex numbers!
+        tools we need for dealing with quantum systems. In particular, we will need to increase
+        our knowledge of Julia to include complex numbers and matrices!
 
         You might be asking yourself: Why do we need complex numbers? The answer is that quantum
-        theory teaches us that particles possess certain probabilities that can interfere with
-        each other, and the only way we can calculate these interferences is by using complex
-        numbers. So let's start ...
+        particles possess certain wave properties that can interfere with each other, and the
+        easiest way to calculate these interferences is by using complex numbers. So let's start...
 
-        Recall that a complex number z has the general form x+iy, where x and y are real numbers,
+        Remember that a complex number z has the general form x+iy, where x and y are real numbers,
         and i^2==-1. Check this now: In Julia, the number i is written "im", so tell me the
         value of
             im^2
@@ -32,7 +28,7 @@
     ),
     Activity(
         """
-        Any complex number has a REAL part x and an IMAGINARY part y. Form the following two
+        Any complex number has a Real part x and an Imaginary part y. Form the following two
         complex numbers and tell me their sum:
             z1 = 4+5im
             z2 = 3-5im
@@ -50,7 +46,7 @@
     ),
     Activity(
         """
-        We calculate the CONJUGATE of a complex number by simply reversing the sign of its
+        We calculate the Conjugate of a complex number by simply reversing the sign of its
         imaginary part. Calculate the complex conjugate of 5+2im:
             conj(5+2im)
         """,
@@ -80,7 +76,7 @@
         """
         If we think of a complex number as a vector in the Gaussian plane, its real part is
         its coordinate along the horizontal real axis, and its imaginary part is its coordinate
-        along the vertical imaginary axis. In this case, we can calculate the NORM of a complex
+        along the vertical imaginary axis. In this case, we can calculate the Norm of a complex
         number by using Pythagoras: We square its real and imaginary parts, add them together,
         then take the square-root of the result. Check that this is true by using the Julia
         function abs():
@@ -127,13 +123,13 @@
     Activity(
         """
         In classical computing, the state of a bit in computer memory can only have ONE value:
-        EITHER 0 OR 1 (but not both!). The very crucial difference in quantum computing is that
-        the state of a bit in a quantum computer memory can SIMULTANEOUSLY have the two different
+        Either 0 Or 1 (but not both!). The very crucial difference in quantum computing is that
+        the state of a bit in a quantum computer memory can Simultaneiously have the two different
         values 0 and 1 with certain probabilities. We call this probabilistic state of a quantum
-        bit a QUBIT.
+        bit a Qubit.
         
         We think of a qubit as an N-dimensional column vector of complex numbers, where N is
-        usually a power of 2. We call such a column vector a KET, written mathematically as "|x>".
+        usually a power of 2. We call such a column vector a Ket, written mathematically as "|x>".
         In Julia, we will use small letters to identify kets, for example:
             x = [-1, 2im,  1]
 
@@ -154,7 +150,7 @@
     ),
     Activity(
         """
-        x' is the ADJOINT of x; we calculate it by transposing x (i.e., swapping rows and columns),
+        x' is the Adjoint of x; we calculate it by transposing x (i.e., swapping rows and columns),
         then taking the complex conjugate of each element of x. We can calculate the adjoint of
         any matrix. What is the adjoint of the following matrix?
             M = [
@@ -168,7 +164,7 @@
     ),
     Activity(
         """
-        We call a row vector of complex numbers a BRA, written mathematically as "<x|". In Julia,
+        We call a row vector of complex numbers a Bra, written mathematically as "<x|". In Julia,
         we will use small letters followed by a bang (!) to identify bras, for example:
             y! = [ 1,   0, im]'
 
@@ -206,7 +202,7 @@
     ),
     Activity(
         """
-        We calculate the INNER product (also called the dot product) by matrix-multiplying a
+        We calculate the Inner product (also called the dot product) by matrix-multiplying a
         bra and a ket: <y|.|x> = <y||x> = <y|x> . Paul Dirac suggested the names bra and ket
         because together they form the BRAcKETs <y|x> that we use to calculate probabilities
         in quantum theory. Calculate the following inner product:
@@ -217,7 +213,7 @@
     ),
     Activity(
         """
-        Verify that <y|x> is not the same as <x|y>:
+        Verify experimentally that <y|x> is not the same as <x|y>:
             y!*x != x' * y!'
         """,
         "",
@@ -225,29 +221,40 @@
     ),
     Activity(
         """
-        Do you think the following rule is generally true: <x|y>' == <y|x> ?
+        Use experiments to find out, is the following rule correct: <x|y>' == <y|x> ?
         """,
         "This rule is indeed correct - can you verify it using x and y (= y!')?",
         x -> occursin('y',lowercase(x))
     ),
     Activity(
         """
-        Two non-zero vectors are ORTHOGONAL if their inner product is zero. For example,
+        Two non-zero vectors are Orthogonal if their inner product is zero. For example,
         define the following vector:
             z = [1,im,-1]
 
-        Now verify that z is orthogonal to x:
+        then verify that z is orthogonal to x:
             <z|x> == <x|z> == 0
         """,
-        "z'*x == x'*z == 0",
-        x -> true
+        "z'*x == x'*z == 0"
     ),
     Activity(
         """
-        A bra or ket whose inner product with itself is equal to 1.0 is called NORMALISED. In
-        quantum computing, qubits are state vectors that represent probability distributions,
-        so the sum of the individual probabilities must equal 1. Because of this, we always use
-        normalised vectors to represent qubits.
+        If two real-valued vectors a and b are orthogonal to each other, they always stand at an
+        right-angles to each other. For example, plot the following two real-valued vectors to
+        convince yourself that the angle between them is a right-angle, then use the inner product
+        to verify that they are also orthogonal:
+            a = [1,1]
+            b = [-1,1]
+        """,
+        "a'*b == b'*a == 0"
+    ),
+    Activity(
+        """
+        If the inner product of a bra or ket with itself is equal to 1.0, we say that the vector is
+        Normalised (that is, it has unit length). In quantum computing, a qubit is a state vector:
+        it represents the probability that a quantum bit is in the state 0 or 1. Of course, since
+        this quantum bit can Only be in one of these two states, the sum of their probabilities
+        must equal 1. Because of this, we always use normalised vectors to represent qubits.
 
         Verify that this ket is normalised:
             n = [0.6,0.8im]
@@ -260,7 +267,7 @@
         We form the OUTER product of two vectors by matrix-multiplying a ket and a bra:
             |x><y| = x*y!
 
-        NOTICE: We calculate an INNER product as (bra*ket), but we calculate the OUTER product
+        Notice: We calculate an Inner product as (bra*ket), but we calculate the Outer product
         as (ket*bra). The size of our ket x is (3,1), and the size of our bra y! is (1,3). What
         will be the size of the outer product x*y! ?
         """,
@@ -269,14 +276,14 @@
     ),
     Activity(
         """
-        What is the value of the matrix |x><y| ?
+        What is the value of the outer product matrix |x><y| ?
         """,
         "x*y!",
         x -> x == [-1  0  im; 2im  0  2; 1  0  -im]
     ),
     Activity(
         """
-        A square matrix A is HERMITIAN if A is equal to its own adjoint:
+        A square matrix A is Hermitian if A is equal to its own adjoint:
             A == A'
 
         Verify that the following matrix is Hermitian:
@@ -284,9 +291,7 @@
                 1		3+2im
                 3-2im	0
             ]
-        """,
-        "",
-        x -> x == -1
+        """
     ),
     Activity(
         """
@@ -306,7 +311,7 @@
     ),
     Activity(
         """
-        A matrix U is UNITARY if the adjoint of U is equal to its own inverse:
+        A matrix U is Unitary if the adjoint of U is equal to its own inverse:
             U * U' == U' * U == I
 
         (where I is the identity matrix). Is the following matrix U unitary?
@@ -317,16 +322,14 @@
     ),
     Activity(
         """
-        Did you notice that U is not only unitary, but also Hermitian? Verify this now:
-        """,
-        "",
-        x -> true
+        Did you notice that U is not only unitary, but also Hermitian? Verify this now.
+        """
     ),
     Activity(
         """
         The special point about unitary matrices is that they do not change the norm of a vector.
-        They are like rotations in a complex vector space that change the orientation of the
-        vector, but not its norm. We will see that this is important for describing how a qubit
+        They are like rotations in a complex vector space that change the direction of the
+        vector, but not its length. We will see that this is important for describing how a qubit
         changes over time. Is the following matrix S unitary?
             S = [1 0;0 exp(im)]
         """,
@@ -342,8 +345,8 @@
     ),
     Activity(
         """
-        To summarise our findings so far, adjoining turns kets into bras, turns bras into kets,
-        and reverses the order of multiplications:
+        To summarise our findings so far, forming the adjoint turns kets into bras, turns bras into
+        kets, and reverses the order of multiplications:
             x! = x'
             y  = y!'
             <y|x>' == <x|y>
@@ -353,14 +356,13 @@
 
         Verify each of these rules now ...
         """,
-        "Remember that <x|y> simply means x'*y",
-        x -> true
+        "Remember that <x|y> simply means x'*y"
     ),
     Activity(
         """
         In general, multiplying a matrix M with a ket x will change the direction of x; however,
-        there is often a special set of kets |ψ> (the EIGENVECTORS of M) and complex numbers λ (the
-        EIGENVALUES), for which the following equation applies:
+        there is often a special set of kets |ψ> (the Eigenvectors of M) and complex numbers λ (the
+        Eigenvalues), for which the following equation applies:
             M |ψ> == λ |ψ>
 
         That is, M only changes the magnitude of |ψ> (multiplies it by λ), but doesn't change the
@@ -385,7 +387,7 @@
     ),
     Activity(
         """
-        To end this mathematical introduction, let me remind you that the TRACE of a matrix A is
+        To end this mathematical introduction, let me remind you that the Trace of a matrix A is
         sum of the elements along its leading diagonal. What is the trace of the following matrix?
             M = [1 2;3 4]
         """,
@@ -402,8 +404,8 @@
             <x|y> == (x' * y) , or
             |x><y| == (x * y')
 
-        The first of these expressions is a number - the INNER product of x and y - while the
-        second expression is a matrix - the OUTER product of x and y. Now take the trace of the
+        The first of these expressions is a number - the Inner product of x and y - while the
+        second expression is a matrix - the Outer product of x and y. Now take the trace of the
         outer product - is it equal to the inner product?
         """,
         "",
@@ -411,12 +413,20 @@
     ),
     Activity(
         """
+        Sometimes during this course, we will want to use special matrix functions that are not
+        built into Julia. In such cases, we will load the LinearAlgebra package, which contains
+        many useful matrix functions. For example, LinearAlgebra contains a function for
+        calculating the trace of a matrix: tr(M). Use this function to repeat the previous two
+        exercises, calculating the trace of M and verifying that the trace of the outer product
+        of ψ_yp and ψ_ym is equal to their inner product.
+        """
+    ),
+    Activity(
+        """
         OK, now we have all the mathematical apparatus we need to get started with quantum
         computation! The first thing we will do in the following lab is to build Our Very
         Own Quantum Computer simulator, so that we can get started writing quantum algorithms
         to run on it. What fun! :)
-        """,
-        "",
-        x -> true
+        """
     ),
 ]
