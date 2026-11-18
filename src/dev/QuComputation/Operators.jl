@@ -20,7 +20,7 @@ export Tensor, ⊗, ↑, kpow, isclose, ishermitian, isunitary, ispermutation
 # Imports:
 include( "States.jl")
 using .States
-import .States: nbits		# Explictly imported for extension to Operators
+import .States: nbits		# Explicit import to enable extension to Operators
 using LinearAlgebra: I
 
 #========================================================================================#
@@ -32,7 +32,7 @@ using LinearAlgebra: I
 An Operator is a transformation of States.
 """
 struct Operator <: Tensor{Complex,2}
-	matrix::Matrix{Complex}									# The matrix operator
+	matrix::Matrix{Complex}									# The operator matrix
 
 	function Operator(matrix::Matrix)
 		if isclose(matrix,0.0)

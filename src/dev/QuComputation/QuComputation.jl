@@ -9,14 +9,16 @@ Author: Niall Palfreyman, 11/11/2026
 ========================================================================================#
 module QuComputation
 
-# Externally callable symbols of the Operators module: ??? Test nbits of both State and Operator!
-export Operator, identityop, density, ishermitian, isunitary, nbits,
-		paulix, pauliy, pauliz, PauliX, PauliY, PauliZ
+# Reexport Tensors:
+export Tensor, ⊗, ↑, kpow, isclose, ishermitian, isunitary, ispermutation
+
 # Reexport States:
 export State, qubit, adj, ampl, phase, prob, maxprob, nbits, off, on, normalise!,
 		pure, mixed, uniform, bitstate, density, ON, OFF
-# Reexport Tensors:
-export Tensor, ⊗, ↑, kpow, isclose, ishermitian, isunitary, ispermutation
+
+# Reexport Operators:
+export Operator, identityop, density, ishermitian, isunitary, nbits,
+		paulix, pauliy, pauliz, PauliX, PauliY, PauliZ
 
 # Imports:
 include( "Operators.jl")
