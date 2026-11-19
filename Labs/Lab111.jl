@@ -420,7 +420,8 @@
         recursion or iteration, but instead uses the prod() function.
         """,
         "",
-        x -> (x isa Function && x(7) == 5040) || occursin("->prod(",replace(x," "=>""))
+        x -> (x isa Function && x(7) == 5040) ||
+                (x isa String) && occursin("->prod(",replace(x," "=>""))
     ),
     Activity(
         """
