@@ -12,15 +12,15 @@ module Operators
 export Operator, identityop, density, ishermitian, isunitary, nbits,
 		paulix, pauliy, pauliz, PauliX, PauliY, PauliZ
 # Reexport States:
-export State, qubit, adj, ampl, phase, prob, maxprob, nbits, off, on, normalise!,
-		pure, mixed, uniform, bitstate, density, ON, OFF
+export State, @x_str, ket, bra, isket, isbra, qubit, ampl, phase, prob, maxprob, nbits,
+		off, on, OFF, ON, normalise!, pure, mixed, uniform, bitstate, density
 # Reexport Tensors:
 export Tensor, ⊗, ↑, kpow, isclose, ishermitian, isunitary, ispermutation
 
 # Imports:
 include( "States.jl")
 using .States
-import .States: nbits		# Explicit import to enable extension to Operators
+import .States: nbits				# Explicit import to enable method extension to Operators
 using LinearAlgebra: I
 
 #========================================================================================#
@@ -97,7 +97,7 @@ end
 Construct the density operator of the state s.
 """
 function density( s::State)
-    Operator((s.ket) ? (s.amp * adj(s.amp)) : (adj(s.amp) * s.amp))
+    Operator(isket(s) ? s*s' : s'*s)
 end
 
 #========================================================================================#
@@ -125,7 +125,7 @@ Base.:*( op1::Operator, op2::Operator) = Operator( op1.matrix * op2.matrix)
 Inner product of an Operator with a state is a transformed State.
 """
 function Base.:*( op::Operator, s::State)
-	if !s.ket
+	if !isket(s)
 		error("Operators can only be multiplied onto ket-States")
 	end
 	State( op.matrix * s.amp)
@@ -183,6 +183,16 @@ Return number of qubits on which the Operator op operates.
 """
 function nbits( op::Operator)
 	Int(log2(size(op.matrix,1)))
+end
+
+#-----------------------------------------------------------------------------------------
+"""
+	adj( op::Operator)
+
+Return adjoint of the Operator.
+"""
+function adj( op::Operator)
+	Operator(Matrix(adjoint(op.matrix)))
 end
 
 #-----------------------------------------------------------------------------------------

@@ -13,11 +13,11 @@ module QuComputation
 export Tensor, ⊗, ↑, kpow, isclose, ishermitian, isunitary, ispermutation
 
 # Reexport States:
-export State, qubit, adj, ampl, phase, prob, maxprob, nbits, off, on, normalise!,
-		pure, mixed, uniform, bitstate, density, ON, OFF
+export State, @x_str, ket, bra, isket, isbra, qubit, ampl, phase, prob, maxprob, nbits,
+		off, on, OFF, ON, normalise!, pure, mixed, uniform, bitstate, density
 
 # Reexport Operators:
-export Operator, identityop, density, ishermitian, isunitary, nbits,
+export Operator, identityop, density, ishermitian, isunitary, nbits, adj,
 		paulix, pauliy, pauliz, PauliX, PauliY, PauliZ
 
 # Imports:
