@@ -215,11 +215,11 @@ end
 # Controlled gate definitions:
 #-----------------------------------------------------------------------------------------
 """
-	controlled( d::Int=1)
+	controlled0( d::Int=1)
 
 ???
 """
-function controlled( d::Int=1)
+function controlled0( d::Int=1)
 	Operator( [1 1;1-1 -1]/sqrt(2), d)
 end
 
@@ -256,9 +256,10 @@ end
 
 #-----------------------------------------------------------------------------------------
 """
-	call( op::Operator, s::State, idx::Int=1)
+	op::Operator( s::State, idx::Int=1)
 
-Apply the Operator op to the State s at the idx-th bit.
+Apply the Operator op to the State s at the idx-th bit. Note that op is applied to s, and so may
+not address more bits than are available in s: nbits(op) <= nbits(s)
 """
 function (op::Operator)( s::State, idx::Int=1)
 	opbits = nbits(op)							# Number of Operator bits
@@ -281,10 +282,13 @@ end
 
 #-----------------------------------------------------------------------------------------
 """
-	op1::Operator( op2::Operator)
+	op1::Operator( op2::Operator, idx::Int=1)
 
-Compose the Operator op1 followed by the Operator op2. Note the reversed order of application:
-	op1(op2)(s) == op2(op1(s))			(First op1, then op2 is applied to s!)
+Compose the Operator op1 followed by the Operator op2 at the idx-th bit. Again, op2 is applied
+to op1, and so may not address more bits than are available in op1: nbits(op2) <= nbits(op1).
+
+Also, note the reversed order of application, in which we apply first op1, and then op2 to the
+State s: op1(op2)(s) == op2(op1(s)) !
 """
 function (op1::Operator)(op2::Operator, idx::Int=1)
 	op1bits = nbits(op1)						# Number of Operator bits in op1
@@ -306,10 +310,10 @@ function (op1::Operator)(op2::Operator, idx::Int=1)
 	op2 * op1
 end
 
-"Base.:∘	Infix form of Operator composition: (op1 ∘ op2)(s) == op2(op1(s))"
+"Infix form of Operator composition: (op1 ∘ op2)(s) == op2(op1(s))"
 Base.:∘( op1::Operator, op2::Operator) = op1(op2)
 
-"Base.:∘	Infix form of Operator composition at given index: (op1 ∘ (op2,d))(s) == (op1(op2,d))(s)"
+"Infix form of Operator composition at given index: (op1 ∘ (op2,idx))(s) == (op1(op2,idx))(s)"
 Base.:∘( op1::Operator, op2::Tuple{Operator, Int64}) = op1(op2...)
 
 #-----------------------------------------------------------------------------------------
