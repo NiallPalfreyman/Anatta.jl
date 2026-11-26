@@ -85,11 +85,11 @@ function simulate!( sel::Selector, x0::Vector{Float64}, T::Real)
 end
 
 """
-	unittest()
+	demo()
 
 Unit-test the Selectors module first with sublinear, then with superlinear selection.
 """
-function unittest()
+function demo()
 	println("\n============ Unit test Selectors: ===============")
 
 	# Set up plot:
@@ -99,12 +99,12 @@ function unittest()
 	
 	# Simulate sublinear selection dynamics of 3 population types:
 	sel = Selector( [2.,4.,5.], -0.3)
-	simulate!( sel, [10.,2.,1.], 100)
+	simulate!( sel, [10.,2.,1.], 200)
 	plot3!(ax1,sel)
 
 	# Simulate superlinear selection dynamics of 3 population types:
-	sel = Selector( [5.,4.,2.], +0.3)
-	simulate!( sel, [3.,3.,4.], 100)
+	sel = Selector( [2.,4.,5.], +0.3)
+	simulate!( sel, [10.,2.,1.], 200)
 	plot3!(ax2,sel).parent
 end
 

@@ -82,11 +82,11 @@ function simulate!( mut::Mutator, x0::Vector{Float64}, T::Real)
 end
 
 """
-	unittest()
+	demo()
 
 Simulate cyclic mutation and selection dynamics of 3 population types.
 """
-function unittest()
+function demo()
 	println("\n============ Unit test Mutators: ===============")
 
 	# Define cyclic mutation matrix (column sum = 1):

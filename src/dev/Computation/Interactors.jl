@@ -82,11 +82,11 @@ function simulate!( intrctr::Interactor, x0::Vector{Float64}, T::Real)
 end
 
 """
-	unittest()
+	demo()
 
 Use replicator dynamics to simulate cyclic dominance in 3 rock-scissors-paper population types.
 """
-function unittest()
+function demo()
 	println("\n============ Unit test Interactors: ===============")
 
 	# Define RSP payoff matrix:
