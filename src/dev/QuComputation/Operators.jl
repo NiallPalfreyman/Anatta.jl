@@ -1,16 +1,17 @@
-#========================================================================================
+#=======================================================================================#
+"""
 	Operators
 
-This file contains definitions of the type Operator for the module QuBits: A package for
+This module defines methods of the type Operator for the module Queenie: A package for
 experimenting with quantum computation.
 
 Author: Niall Palfreyman, 10/11/2026
-========================================================================================#
+"""
 module Operators
 
 # Externally callable symbols of the Operators module:
-export Operator, identityop, density, ishermitian, isunitary, nbits,
-		paulix, pauliy, pauliz, PauliX, PauliY, PauliZ
+export Operator, ∘, projector, ishermitian, isunitary, nbits, s_x, s_y, s_z,
+		g_X, g_Y, g_Z, g_Id, g_Rx, g_Ry, g_Rz, g_Rk, g_S, g_T, g_U1, g_V, g_Yroot, g_H
 # Reexport States:
 export State, @x_str, ket, bra, isket, isbra, qubit, ampl, phase, prob, maxprob, nbits,
 		off, on, OFF, ON, normalise!, pure, mixed, uniform, bitstate, density
@@ -21,10 +22,9 @@ export Tensor, ⊗, ↑, kpow, isclose, ishermitian, isunitary, ispermutation
 include( "States.jl")
 using .States
 import .States: nbits				# Explicit import to enable method extension to Operators
-using LinearAlgebra: I
 
 #========================================================================================#
-# Module definitions:
+# Type definition:
 #-----------------------------------------------------------------------------------------
 """
 	Operator
@@ -34,11 +34,11 @@ An Operator is a transformation of States.
 struct Operator <: Tensor{Complex,2}
 	matrix::Matrix{Complex}									# The operator matrix
 
-	function Operator(matrix::Matrix)
+	function Operator( matrix::Matrix, d::Int=1)
 		if isclose(matrix,0.0)
 			error("Operators must be non-zero")
 		end
-		new(matrix)
+		new(matrix ↑ d)
 	end
 end
 
@@ -49,55 +49,178 @@ Base.size(op::Operator) = size(op.matrix)
 Base.getindex(op::Operator,i::Integer,j::Integer) = getindex(op.matrix,i,j)
 
 #========================================================================================#
-# Module constructors:
+# Single-qubit gate definitions:
 #-----------------------------------------------------------------------------------------
 """
-	identityop( n::Int=1)
+	g_Id( d::Int=1)
 
-Construct an n-qubit identity Operator.
+Construct an d-qubit identity gate.
 """
-function identityop( n::Int=1)
-	Operator([1 0;0 1] ↑ n)
+function g_Id( d::Int=1)
+	Operator([1 0;0 1], d)
 end
 
 #-----------------------------------------------------------------------------------------
 """
-	paulix( d::Int=1)
+	g_X( d::Int=1)
 
-Construct d-dimensional Pauli-x Operator.
+The d-qubit Pauli X-gate, corresponding to a classical NOT gate.
 """
-function paulix( d::Int=1)
-	Operator([0 1;1 0] ↑ d)
+function g_X( d::Int=1)
+	Operator([0 1;1 0], d)
+end
+
+"Single-qubit Pauli spin-operator σ_x"
+const s_x = g_X()
+
+#-----------------------------------------------------------------------------------------
+"""
+	g_Y( d::Int=1)
+
+The d-qubit Pauli Y-gate.
+"""
+function g_Y( d::Int=1)
+	Operator([0 -im;im 0], d)
+end
+
+"Single-qubit Pauli spin-operator σ_y"
+const s_y = g_Y()
+
+#-----------------------------------------------------------------------------------------
+"""
+	g_Z( d::Int=1)
+
+The d-qubit Pauli Z-gate.
+"""
+function g_Z( d::Int=1)
+	Operator([1 0;0 -1], d)
+end
+
+"Single-qubit Pauli spin-operator σ_z"
+const s_z = g_Z()
+
+#-----------------------------------------------------------------------------------------
+"""
+	g_Rx( θ::Real)
+
+Single-qubit rotation through an angle θ about the x-axis.
+"""
+function g_Rx( θ::Real)
+	rotation( [1,0,0], θ)
 end
 
 #-----------------------------------------------------------------------------------------
 """
-	pauliy( d::Int=1)
+	g_Ry( θ::Real)
 
-Construct d-dimensional Pauli-y Operator.
+Single-qubit rotation through an angle θ about the y-axis.
 """
-function pauliy( d::Int=1)
-	Operator([0 -im;im 0] ↑ d)
+function g_Ry( θ::Real)
+	rotation( [0,1,0], θ)
 end
 
 #-----------------------------------------------------------------------------------------
 """
-	pauliz( d::Int=1)
+	g_Rz( θ::Real)
 
-Construct d-dimensional Pauli-z Operator.
+Single-qubit rotation through an angle θ about the z-axis.
 """
-function pauliz( d::Int=1)
-	Operator([1 0;0 -1] ↑ d)
+function g_Rz( θ::Real)
+	rotation( [0,0,1], θ)
 end
 
 #-----------------------------------------------------------------------------------------
 """
-	density( s::State)
+	g_Rk( k::Int, d::Int=1)
 
-Construct the density operator of the state s.
+Discrete S-gate: generalisation of the phase-gate. Performs a phase rotation about the z-axis
+through a phase 2π/2^k (i.e., 1/2^k of a complete revolution). Used in quantum Fourier Transform.
 """
-function density( s::State)
-    Operator(isket(s) ? s*s' : s'*s)
+function g_Rk( k::Int, d::Int=1)
+	Operator( [1 0; 0 exp(2π*im/2^k)], d)
+end
+
+#-----------------------------------------------------------------------------------------
+"""
+	g_S( d::Int=1)
+
+S-, or Phase, gate: A d-qubit pi/2 phase rotation of the |1> amplitude about the z-axis.
+"""
+function g_S( d::Int=1)
+	Operator( [1 0;0 im], d)
+end
+
+#-----------------------------------------------------------------------------------------
+"""
+	g_T( d::Int=1)
+
+T-gate: Square-root of the S-gate (Phase gate).
+"""
+function g_T( d::Int=1)
+	Operator( [1 0;0 exp(im*pi/4)], d)
+end
+
+#-----------------------------------------------------------------------------------------
+"""
+	g_U1( λ::Real, d::Int=1)
+
+U1 phase shift, or phase kick, gate: d-bit generalisation of the phase-gate. Similar to g_Rk, but
+for an arbitrary phase λ. For integer powers of 2, the relationship is:
+	g_Rk(k) == g_U1(2π/2^k)
+"""
+function g_U1( λ::Real, d::Int=1)
+	Operator( [1 0; 0 exp(λ*im)], d)
+end
+
+#-----------------------------------------------------------------------------------------
+"""
+	g_V( d::Int=1)
+
+Square-root of the d-qubit Pauli X-gate: sqrt(NOT).
+"""
+function g_V( d::Int=1)
+	Operator( 0.5*[1+im 1-im;1-im 1+im], d)
+end
+
+#-----------------------------------------------------------------------------------------
+"""
+	g_Yroot( d::Int=1)
+
+Square-root of the d-qubit Pauli Y-gate.
+"""
+function g_Yroot( d::Int=1)
+	Operator( [1+im -1-im;1+im 1+im], d)
+end
+
+#-----------------------------------------------------------------------------------------
+"""
+	projector( s::State)
+
+Projection (density) operator of the state s.
+"""
+function projector( s::State)
+    Operator( density(s))
+end
+
+"""
+	g_H( d::Int=1)
+
+Hadamard gate: Creates a superposition of the basis states |0> and |1>.
+"""
+function g_H( d::Int=1)
+	Operator( [1 1;1 -1]/sqrt(2), d)
+end
+
+#========================================================================================#
+# Controlled gate definitions:
+#-----------------------------------------------------------------------------------------
+"""
+	controlled( d::Int=1)
+
+???
+"""
+function controlled( d::Int=1)
+	Operator( [1 1;1-1 -1]/sqrt(2), d)
 end
 
 #========================================================================================#
@@ -138,17 +261,19 @@ end
 Apply the Operator op to the State s at the idx-th bit.
 """
 function (op::Operator)( s::State, idx::Int=1)
-	nbitsop = nbits(op)
+	opbits = nbits(op)							# Number of Operator bits
+	nleft  = idx - 1							# Number of bits to pad left of op
+	nright = nbits(s) - idx - opbits + 1		# Number of bits to pad right of op
+	@assert( nright ≥ 0, "Operator accesses more bits than its argument State")
 
 	if idx > 1
 		# Pad to the left:
-		op = identity(idx-1) ⊗ op
+		op = g_Id(nleft) ⊗ op
 	end
 
-	remainingdims = nbits(s) - idx - nbitsop + 1
-	if remainingdims > 0
+	if nright > 0
 		# Pad to the right:
-		op = op ⊗ identity(remainingdims)
+		op = op ⊗ g_Id(nright)
 	end
 	
 	op * s
@@ -156,24 +281,36 @@ end
 
 #-----------------------------------------------------------------------------------------
 """
-	call( op1::Operator, op2::Operator)
+	op1::Operator( op2::Operator)
 
-Compose the Operator op1 followed by the Operator op2. Note the reversed order of multiplication!!
+Compose the Operator op1 followed by the Operator op2. Note the reversed order of application:
+	op1(op2)(s) == op2(op1(s))			(First op1, then op2 is applied to s!)
 """
 function (op1::Operator)(op2::Operator, idx::Int=1)
-	nbitsop2 = nbits(op2)				# Save before possible left-padding
+	op1bits = nbits(op1)						# Number of Operator bits in op1
+	op2bits = nbits(op2)						# Number of Operator bits in op2
+	nleft  = idx - 1							# Number of bits to pad left of op1
+	nright = op1bits - idx - op2bits + 1		# Number of bits to pad right of op1
+	@assert( nright ≥ 0, "2nd Operator accesses more bits than the 1st Operator")
+
 	if idx > 1
 		# Pad to the left:
-		op2 = identity(idx-1) ⊗ op2
+		op2 = g_Id(nleft) ⊗ op2
 	end
 
-	if nbits(op1) > nbits(op2)
-		# Pad rightwards to match nbits of op2 to nbits of op1:
-		op2 = op2 ⊗ identity(nbits(op1)-(idx-1)-nbitsop2)
+	if nright > 0
+		# Pad right:
+		op2 = op2 ⊗ g_Id(nright)
 	end
 	
 	op2 * op1
 end
+
+"Base.:∘	Infix form of Operator composition: (op1 ∘ op2)(s) == op2(op1(s))"
+Base.:∘( op1::Operator, op2::Operator) = op1(op2)
+
+"Base.:∘	Infix form of Operator composition at given index: (op1 ∘ (op2,d))(s) == (op1(op2,d))(s)"
+Base.:∘( op1::Operator, op2::Tuple{Operator, Int64}) = op1(op2...)
 
 #-----------------------------------------------------------------------------------------
 """
@@ -187,11 +324,11 @@ end
 
 #-----------------------------------------------------------------------------------------
 """
-	adj( op::Operator)
+	Base.adjoint( op::Operator)
 
 Return adjoint of the Operator.
 """
-function adj( op::Operator)
+function Base.adjoint( op::Operator)
 	Operator(Matrix(adjoint(op.matrix)))
 end
 
@@ -214,6 +351,19 @@ Check whether the Operator op is unitary.
 function isunitary( op::Operator)
 	m = op.matrix
 	isclose(m*m',Matrix(I(size(m,1))))
+end
+
+#-----------------------------------------------------------------------------------------
+"""
+	rotation( axis::Vector, θ::Real)
+
+Construct a single-qubit rotation through an angle θ about the given ocoordinate axis.
+"""
+function rotation( ax::Vector, θ::Real)
+	@assert( length(ax)==3 && all(isa.(ax,Real)) && isclose(sum(abs2.(ax)),1),
+		"Rotation axis must be a real, 3-dimensional unit vector"
+	)
+	Operator( cos(θ/2)*g_Id() - im*sin(θ/2) * ax' * [X,Y,Z])
 end
 
 #-----------------------------------------------------------------------------------------
@@ -245,41 +395,15 @@ end
 Display the Operator op in verbose form.
 """
 function Base.show( io::IO, ::MIME"text/plain", op::Operator)
-	println( io, "Operator:")
+	println( io, nbits(op), "-qubit Operator:")
 	for i in 1:size(op.matrix,1)
 		print( io, " ")
 		for j in 1:size(op.matrix,2)
-			print( io, rpad(round(op.matrix[i,j],digits=4),20))
+			print( io, rpad(round(op.matrix[i,j],digits=2),16))
 		end
 		println()
 	end
 end
-
-#========================================================================================#
-# Module constants:
-#-----------------------------------------------------------------------------------------
-"""
-	PauliX = paulix(1)
-
-The 1-d Pauli X-gate.
-"""
-const PauliX = paulix()
-
-#-----------------------------------------------------------------------------------------
-"""
-	PauliY = pauliy(1)
-
-The 1-d Pauli Y-gate.
-"""
-const PauliY = pauliy()
-
-#-----------------------------------------------------------------------------------------
-"""
-	PauliZ = pauliz(1)
-
-The 1-d Pauli Z-gate.
-"""
-const PauliZ = pauliz()
 
 #========================================================================================#
 """

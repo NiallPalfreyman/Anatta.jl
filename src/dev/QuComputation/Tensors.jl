@@ -1,12 +1,13 @@
-#========================================================================================
+#=======================================================================================#
+"""
 	Tensors
 
 This module contains the basic mathematical structure underpinning quantum theory: Tensors.
-This forms the definitional base for the QuComputation package for experimenting with quantum
+It forms the definitional base for the Queenie package for experimenting with quantum
 computation.
 
 Author: Niall Palfreyman, 30/10/2026
-========================================================================================#
+"""
 module Tensors
 
 # Externally callable symbols of the Tensors module:
@@ -37,22 +38,22 @@ Define ∘ as an infix operator for the tensor (or Kronecker) product of two Ten
 
 #-----------------------------------------------------------------------------------------
 """
-	kpow( T::Tensor, n::Int)
+	kpow( T::Tensor, d::Int)
 
-Kronecker the Tensor T n times with itself.
+Kronecker the Tensor T d times with itself.
 """
-function kpow( T::Tensor, n::Int)
-	if n==0
+function kpow( T::Tensor, d::Int)
+	if d==0
 		# Base case:
 		return 1.0
 	end
 	
 	# Build Kronecker product:
-	Tn = T
-	for _ in 1:(n-1)
-		Tn = Tn ⊗ T
+	Td = T
+	for _ in 1:(d-1)
+		Td = Td ⊗ T
 	end
-	Tn
+	Td
 end
 # Define ↑ (\uparrow) as infix operator for kpow:
 ↑ = kpow

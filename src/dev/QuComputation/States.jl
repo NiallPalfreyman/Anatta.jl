@@ -1,10 +1,11 @@
-#========================================================================================
+#=======================================================================================#
+"""
 	States
 
-This module contains the definition of the type State for quantum computation.
+Implements methods of the type State for quantum computation.
 
 Author: Niall Palfreyman, 30/10/2026
-========================================================================================#
+"""
 module States
 
 # Externally callable symbols of the States module:
@@ -199,8 +200,7 @@ end
 Construct a state that is true at the given bits.
 """
 function bitstate( ax::AmplitudeIndex)
-	bv = BitVector(ax)
-	pure( length(bv), bits2dec(bv))
+	pure( length(ax), bits2dec(ax))
 end
 
 "Construct a state that is true at the given decimal value."
@@ -246,7 +246,7 @@ Base.kron( s1::State, s2::State) = State(kron(s1.amp,s2.amp))
 """
 	Base.*( s1::State, s2::State)
 
-Inner product of two States yields either a scalar (bra * ket) or a density matrix (ket * bra).
+Inner product of two States yields either a scalar (bra * ket) or a projection matrix (ket * bra).
 """
 function Base.:*( s1::State, s2::State)
 	@assert( isket(s1) ⊻ isket(s2), "Cannot multiply ket with ket or bra with bra.")
@@ -264,6 +264,10 @@ Return the adjoint of the state s.
 function Base.adjoint( s::State)
 	State(collect(s.amp'))
 end
+
+#-----------------------------------------------------------------------------------------
+"density( s::State): The density matrix of a state s is the projection matrix onto s."
+density( s::State) = isket(s) ? s*s' : s'*s
 
 #-----------------------------------------------------------------------------------------
 """
